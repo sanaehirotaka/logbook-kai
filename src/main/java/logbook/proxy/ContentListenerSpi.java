@@ -14,7 +14,7 @@ public interface ContentListenerSpi {
 
     /**
      * レスポンスを受け入れるかをテストします
-     * @param uri リクエスト先
+     * @param requestMetaData リクエストに含まれている情報
      * @return 受け入れる場合true
      */
     boolean test(RequestMetaData requestMetaData);

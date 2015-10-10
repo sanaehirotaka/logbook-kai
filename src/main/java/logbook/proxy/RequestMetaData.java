@@ -37,7 +37,7 @@ public interface RequestMetaData {
 
     /**
      * このリクエストから取得できるパラメータを返します
-     * @param パラメータのMap
+     * @return パラメータのMap
      */
     Map<String, Collection<String>> getParameterMap();
 
