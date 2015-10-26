@@ -39,10 +39,10 @@ public class JarBasedPlugin {
         try (JarFile file = new JarFile(path.toFile())) {
             this.manifest = (Manifest) file.getManifest().clone();
         }
-        URI jaruri = URI.create("jar:" + path.toUri());
+        URI jaruri = URI.create("jar:" + path.toUri()); //$NON-NLS-1$
         try (FileSystem fs = FileSystems.newFileSystem(jaruri, new HashMap<>())) {
             // collect ~.jar!META-INF/services/* files
-            Path sv = fs.getPath("META-INF", "services");
+            Path sv = fs.getPath("META-INF", "services"); //$NON-NLS-1$ //$NON-NLS-2$
             if (Files.exists(sv)) {
                 try (Stream<Path> stream = Files.list(sv)) {
                     this.services = stream
@@ -84,7 +84,7 @@ public class JarBasedPlugin {
      * @return 名称 見つからなかった場合、空の文字列
      */
     public String getName() {
-        return this.getAttributeValue("Bundle-Name", "Implementation-Title", "Specification-Title");
+        return this.getAttributeValue("Bundle-Name", "Implementation-Title", "Specification-Title"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
@@ -98,7 +98,7 @@ public class JarBasedPlugin {
      * @return ベンダー名 見つからなかった場合、空の文字列
      */
     public String getVendor() {
-        return this.getAttributeValue("Bundle-Vendor", "Implementation-Vendor", "Specification-Vendor");
+        return this.getAttributeValue("Bundle-Vendor", "Implementation-Vendor", "Specification-Vendor"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
@@ -112,7 +112,7 @@ public class JarBasedPlugin {
      * @return バージョン 見つからなかった場合、空の文字列
      */
     public String getVersion() {
-        return this.getAttributeValue("Bundle-Version", "Implementation-Version", "Specification-Version");
+        return this.getAttributeValue("Bundle-Version", "Implementation-Version", "Specification-Version"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /**
@@ -124,7 +124,7 @@ public class JarBasedPlugin {
      * @return ライセンス 見つからなかった場合、空の文字列
      */
     public String getLicense() {
-        return this.getAttributeValue("Bundle-License");
+        return this.getAttributeValue("Bundle-License"); //$NON-NLS-1$
     }
 
     private String getAttributeValue(String... atters) {
@@ -137,6 +137,6 @@ public class JarBasedPlugin {
                 }
             }
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 }
