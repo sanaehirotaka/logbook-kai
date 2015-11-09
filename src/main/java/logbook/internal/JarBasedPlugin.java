@@ -1,4 +1,4 @@
-package logbook.plugin;
+package logbook.internal;
 
 import java.io.IOException;
 import java.net.URI;

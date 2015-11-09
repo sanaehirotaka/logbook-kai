@@ -1,0 +1,115 @@
+package logbook.internal;
+
+import java.beans.ExceptionListener;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+
+import logbook.Messages;
+import logbook.internal.config.AppConfigBean;
+import logbook.internal.config.Config;
+import logbook.internal.gui.Main;
+import logbook.proxy.ProxyServer;
+
+/**
+ * アプリケーション
+ *
+ */
+public final class Launcher {
+
+    /**
+     * アプリケーションの起動
+     *
+     * @param args アプリケーション引数
+     */
+    public static void main(String[] args) {
+        Launcher launcher = new Launcher();
+        try {
+            launcher.initPlugin(args);
+            launcher.initLocal(args);
+        } catch (Exception | Error e) {
+            LogManager.getLogger(ProxyServer.class)
+                    .warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
+        } finally {
+            try {
+                launcher.exitLocal();
+            } finally {
+                launcher.exitPlugin();
+            }
+        }
+    }
+
+    /**
+     * アプリケーションの初期化処理
+     *
+     * @param args アプリケーション引数
+     */
+    void initLocal(String[] args) {
+        Main.main(args);
+    }
+
+    /**
+     * プラグインの初期化処理
+     *
+     * @param args アプリケーション引数
+     */
+    void initPlugin(String[] args) {
+        ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
+                .warn(Messages.getString("Launcher.1"), e); //$NON-NLS-1$
+
+        Path dir = Paths.get(AppConfigBean.get().getPluginDir());
+        PluginContainer container = PluginContainer.getInstance();
+
+        List<JarBasedPlugin> plugins = Collections.emptyList();
+        if (Files.isDirectory(dir)) {
+            try {
+                plugins = Files.list(dir)
+                        .map(p -> Launcher.toJarBasedPlugin(p, listener))
+                        .filter(Objects::isNull)
+                        .collect(Collectors.toList());
+
+            } catch (IOException e) {
+                listener.exceptionThrown(e);
+            }
+        }
+        container.init(plugins);
+    }
+
+    /**
+     * アプリケーションの終了処理
+     */
+    void exitLocal() {
+        Config.getDefault().store();
+        ProxyServer.getInstance().interrupt();
+    }
+
+    /**
+     * プラグインの初期化処理
+     */
+    void exitPlugin() {
+        ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
+                .warn(Messages.getString("Launcher.2"), e); //$NON-NLS-1$
+        try {
+            PluginContainer container = PluginContainer.getInstance();
+            container.close();
+        } catch (IOException e) {
+            listener.exceptionThrown(e);
+        }
+    }
+
+    private static JarBasedPlugin toJarBasedPlugin(Path p, ExceptionListener listener) {
+        try {
+            return new JarBasedPlugin(p);
+        } catch (IOException e) {
+            listener.exceptionThrown(e);
+            return null;
+        }
+    }
+}

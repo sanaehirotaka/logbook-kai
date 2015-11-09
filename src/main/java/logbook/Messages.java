@@ -16,7 +16,7 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
-import logbook.plugin.PluginContainer;
+import logbook.internal.PluginContainer;
 
 /**
  * 国際化対応

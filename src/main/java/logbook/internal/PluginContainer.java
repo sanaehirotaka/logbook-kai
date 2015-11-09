@@ -1,12 +1,10 @@
-package logbook.plugin;
+package logbook.internal;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
-
-import logbook.Messages;
 
 /**
  * プラグインを管理します
@@ -44,7 +42,7 @@ public class PluginContainer {
      */
     public List<JarBasedPlugin> getPlugins() {
         if (!this.initialized) {
-            throw new IllegalStateException(Messages.getString("PluginContainer.0")); //$NON-NLS-1$
+            throw new IllegalStateException("PluginContainer not initialized"); //$NON-NLS-1$
         }
         return this.plugins;
     }
@@ -55,7 +53,7 @@ public class PluginContainer {
      */
     public ClassLoader getClassLoader() {
         if (!this.initialized) {
-            throw new IllegalStateException(Messages.getString("PluginContainer.0")); //$NON-NLS-1$
+            throw new IllegalStateException("PluginContainer not initialized"); //$NON-NLS-1$
         }
         return this.classLoader;
     }

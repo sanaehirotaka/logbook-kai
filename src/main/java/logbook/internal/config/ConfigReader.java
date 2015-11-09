@@ -1,0 +1,49 @@
+package logbook.internal.config;
+
+import java.beans.ExceptionListener;
+import java.beans.XMLDecoder;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.apache.logging.log4j.LogManager;
+
+import logbook.Messages;
+
+/**
+ * 設定読み込み
+ * @param <T> Bean型パラメーター
+ */
+final class ConfigReader<T> {
+
+    private final Path path;
+
+    ConfigReader(Path path) {
+        this.path = path;
+    }
+
+    @SuppressWarnings("unchecked")
+    T read(Class<T> clazz) {
+        T instance = null;
+        Path filepath = this.path;
+        try {
+            if (!Files.isReadable(filepath) || (Files.size(filepath) <= 0)) {
+                // ファイルが読み込めないまたはサイズがゼロの場合バックアップファイルを読み込む
+                filepath = filepath.resolveSibling(filepath.getFileName() + ".backup"); //$NON-NLS-1$
+            }
+            if (Files.isReadable(filepath)) {
+                try (XMLDecoder encoder = new XMLDecoder(Files.newInputStream(filepath),
+                        this.getListener())) {
+                    instance = (T) encoder.readObject();
+                }
+            }
+        } catch (IOException e) {
+            this.getListener().exceptionThrown(e);
+        }
+        return instance;
+    }
+
+    ExceptionListener getListener() {
+        return e -> LogManager.getLogger(Config.class).warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
+    }
+}
