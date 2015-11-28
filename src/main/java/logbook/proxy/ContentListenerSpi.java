@@ -23,9 +23,6 @@ public interface ContentListenerSpi {
      * レスポンスを処理します
      * @param requestMetaData リクエストに含まれている情報
      * @param responseMetaData レスポンスに含まれている情報
-     * @param request リクエストボディ
-     * @param response レスポンスボディ
      */
-    void accept(RequestMetaData requestMetaData, ResponseMetaData responseMetaData, InputStream request,
-            InputStream response);
+    void accept(RequestMetaData requestMetaData, ResponseMetaData responseMetaData);
 }

@@ -1,5 +1,7 @@
 package logbook.proxy;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -7,6 +9,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
@@ -47,9 +50,11 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     private int serverPort;
 
+    private Optional<InputStream> requestBody;
+
     @Override
     public String getContentType() {
-        return contentType;
+        return this.contentType;
     }
 
     void setContentType(String contentType) {
@@ -58,7 +63,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public Collection<Cookie> getCookies() {
-        return cookies;
+        return this.cookies;
     }
 
     void setCookies(Collection<Cookie> cookies) {
@@ -67,7 +72,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public Map<String, Collection<String>> getHeaders() {
-        return headers;
+        return this.headers;
     }
 
     void setHeaders(Map<String, Collection<String>> headers) {
@@ -76,7 +81,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getMethod() {
-        return method;
+        return this.method;
     }
 
     void setMethod(String method) {
@@ -85,7 +90,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public Map<String, Collection<String>> getParameterMap() {
-        return parameterMap;
+        return this.parameterMap;
     }
 
     void setParameterMap(Map<String, Collection<String>> parameterMap) {
@@ -94,7 +99,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getProtocol() {
-        return protocol;
+        return this.protocol;
     }
 
     void setProtocol(String protocol) {
@@ -103,7 +108,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getQueryString() {
-        return queryString;
+        return this.queryString;
     }
 
     void setQueryString(String queryString) {
@@ -112,7 +117,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getRemoteAddr() {
-        return remoteAddr;
+        return this.remoteAddr;
     }
 
     void setRemoteAddr(String remoteAddr) {
@@ -121,7 +126,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public int getRemotePort() {
-        return remotePort;
+        return this.remotePort;
     }
 
     void setRemotePort(int remotePort) {
@@ -130,7 +135,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getRequestURI() {
-        return requestURI;
+        return this.requestURI;
     }
 
     void setRequestURI(String requestURI) {
@@ -139,7 +144,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getRequestURL() {
-        return requestURL;
+        return this.requestURL;
     }
 
     void setRequestURL(String requestURL) {
@@ -148,7 +153,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getScheme() {
-        return scheme;
+        return this.scheme;
     }
 
     void setScheme(String scheme) {
@@ -157,7 +162,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public String getServerName() {
-        return serverName;
+        return this.serverName;
     }
 
     void setServerName(String serverName) {
@@ -166,14 +171,27 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     @Override
     public int getServerPort() {
-        return serverPort;
+        return this.serverPort;
     }
 
     void setServerPort(int serverPort) {
         this.serverPort = serverPort;
     }
 
+    @Override
+    public Optional<InputStream> getRequestBody() {
+        return this.requestBody;
+    }
+
+    void setRequestBody(Optional<InputStream> requestBody) {
+        this.requestBody = requestBody;
+    }
+
     static RequestMetaData build(HttpServletRequest request) {
+        return build(request, null);
+    }
+
+    static RequestMetaData build(HttpServletRequest request, byte[] requestBody) {
         RequestMetaDataWrapper meta = new RequestMetaDataWrapper();
         // ContentType
         meta.setContentType(request.getContentType());
@@ -225,7 +243,9 @@ class RequestMetaDataWrapper implements RequestMetaData {
         meta.setServerName(request.getServerName());
         // ServerPort
         meta.setServerPort(request.getServerPort());
-
+        // RequestBody
+        meta.setRequestBody(
+                requestBody == null ? Optional.empty() : Optional.of(new ByteArrayInputStream(requestBody)));
         return meta;
     }
 }

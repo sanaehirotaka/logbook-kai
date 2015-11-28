@@ -21,8 +21,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import logbook.Messages;
+import logbook.bean.AppConfigBean;
 import logbook.internal.PluginContainer;
-import logbook.internal.config.AppConfigBean;
 
 /**
  * リバースプロキシ

@@ -1,4 +1,6 @@
-package logbook.internal.config;
+package logbook.bean;
+
+import logbook.internal.Config;
 
 /**
  * アプリケーションの設定

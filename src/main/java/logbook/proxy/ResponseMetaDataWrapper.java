@@ -1,10 +1,13 @@
 package logbook.proxy;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,31 +24,49 @@ class ResponseMetaDataWrapper implements ResponseMetaData {
 
     private Map<String, Collection<String>> headers;
 
+    private Optional<InputStream> responseBody;
+
+    @Override
     public int getStatus() {
-        return status;
+        return this.status;
     }
 
     void setStatus(int status) {
         this.status = status;
     }
 
+    @Override
     public String getContentType() {
-        return contentType;
+        return this.contentType;
     }
 
     void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    @Override
     public Map<String, Collection<String>> getHeaders() {
-        return headers;
+        return this.headers;
     }
 
     void setHeaders(Map<String, Collection<String>> headers) {
         this.headers = headers;
     }
 
+    @Override
+    public Optional<InputStream> getResponseBody() {
+        return this.responseBody;
+    }
+
+    void setResponseBody(Optional<InputStream> responseBody) {
+        this.responseBody = responseBody;
+    }
+
     static ResponseMetaData build(HttpServletResponse response) {
+        return build(response, null);
+    }
+
+    static ResponseMetaData build(HttpServletResponse response, byte[] responseBody) {
         ResponseMetaDataWrapper meta = new ResponseMetaDataWrapper();
         // ContentType
         meta.setContentType(response.getContentType());
@@ -59,6 +80,9 @@ class ResponseMetaDataWrapper implements ResponseMetaData {
         meta.setHeaders(Collections.unmodifiableMap(headers));
         // Status
         meta.setStatus(response.getStatus());
+        // ResponseBody
+        meta.setResponseBody(
+                responseBody == null ? Optional.empty() : Optional.of(new ByteArrayInputStream(responseBody)));
 
         return meta;
     }

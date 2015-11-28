@@ -1,7 +1,9 @@
 package logbook.proxy;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 
@@ -94,4 +96,10 @@ public interface RequestMetaData {
      * @return リクエストが送られたサーバのポート番号
      */
     int getServerPort();
+
+    /**
+     * リクエストに含まれるメッセージボディを返します
+     * @return リクエストに含まれるメッセージボディ
+     */
+    Optional<InputStream> getRequestBody();
 }

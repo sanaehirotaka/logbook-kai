@@ -1,4 +1,4 @@
-package logbook.internal.config;
+package logbook.internal;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

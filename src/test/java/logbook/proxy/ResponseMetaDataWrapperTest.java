@@ -2,7 +2,9 @@ package logbook.proxy;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,13 +14,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Random;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 public class ResponseMetaDataWrapperTest {
@@ -58,10 +62,22 @@ public class ResponseMetaDataWrapperTest {
     }
 
     /**
-     * {@link logbook.proxy.ResponseMetaDataWrapper#build(javax.servlet.http.HttpServletResponse)} のためのテスト・メソッド。
+     * {@link logbook.proxy.ResponseMetaDataWrapper#getResponseBody()} のためのテスト・メソッド。
      */
     @Test
-    public void testBuild() {
+    public void testGetResponseBody() {
+        ResponseMetaDataWrapper w = new ResponseMetaDataWrapper();
+        Optional<InputStream> req = Optional.of(new ByteArrayInputStream(new byte[] {}));
+        w.setResponseBody(req);
+        assertEquals(req, w.getResponseBody());
+    }
+
+    /**
+     * {@link logbook.proxy.ResponseMetaDataWrapper#build(javax.servlet.http.HttpServletResponse)} のためのテスト・メソッド。
+     * @throws IOException
+     */
+    @Test
+    public void testBuild() throws IOException {
         // expected data
 
         String contentType = "getContentType";
@@ -75,6 +91,8 @@ public class ResponseMetaDataWrapperTest {
         parameterMap.put("parametertest2", Arrays.asList("parameterMapvalue2"));
 
         int status = new Random().nextInt();
+
+        byte[] responseBody = "getResponseBody".getBytes();
 
         // mock Response
         HttpServletResponse Response = new MockHttpServletResponseAdapter() {
@@ -98,7 +116,7 @@ public class ResponseMetaDataWrapperTest {
                 return status;
             }
         };
-        ResponseMetaData data = ResponseMetaDataWrapper.build(Response);
+        ResponseMetaData data = ResponseMetaDataWrapper.build(Response, responseBody);
 
         // getContentType
         assertEquals(contentType, data.getContentType());
@@ -111,6 +129,8 @@ public class ResponseMetaDataWrapperTest {
         }
         // getStatus
         assertEquals(status, data.getStatus());
+        // getResponseBody
+        assertEquals(new String(responseBody), IOUtils.toString(data.getResponseBody().get()));
     }
 
     /**

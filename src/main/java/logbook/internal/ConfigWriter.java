@@ -1,4 +1,4 @@
-package logbook.internal.config;
+package logbook.internal;
 
 import java.beans.ExceptionListener;
 import java.beans.XMLEncoder;

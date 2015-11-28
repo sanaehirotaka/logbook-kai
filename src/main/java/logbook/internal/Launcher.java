@@ -13,8 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 
 import logbook.Messages;
-import logbook.internal.config.AppConfigBean;
-import logbook.internal.config.Config;
+import logbook.bean.AppConfigBean;
 import logbook.internal.gui.Main;
 import logbook.proxy.ProxyServer;
 

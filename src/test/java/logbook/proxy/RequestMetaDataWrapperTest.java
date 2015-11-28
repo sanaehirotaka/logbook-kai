@@ -3,7 +3,9 @@ package logbook.proxy;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Random;
 
 import javax.servlet.AsyncContext;
@@ -34,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.Test;
 
@@ -196,10 +200,22 @@ public class RequestMetaDataWrapperTest {
     }
 
     /**
-     * {@link logbook.proxy.RequestMetaDataWrapper#build(javax.servlet.http.HttpServletRequest)} のためのテスト・メソッド。
+     * {@link logbook.proxy.RequestMetaDataWrapper#getRequestBody()} のためのテスト・メソッド。
      */
     @Test
-    public void testBuild() {
+    public void testGetRequestBody() {
+        RequestMetaDataWrapper w = new RequestMetaDataWrapper();
+        Optional<InputStream> req = Optional.of(new ByteArrayInputStream(new byte[] {}));
+        w.setRequestBody(req);
+        assertEquals(req, w.getRequestBody());
+    }
+
+    /**
+     * {@link logbook.proxy.RequestMetaDataWrapper#build(javax.servlet.http.HttpServletRequest)} のためのテスト・メソッド。
+     * @throws IOException
+     */
+    @Test
+    public void testBuild() throws IOException {
         // expected data
 
         String contentType = "getContentType";
@@ -233,6 +249,8 @@ public class RequestMetaDataWrapperTest {
         String serverName = "getServerName";
 
         int serverPort = new Random().nextInt();
+
+        byte[] requestBody = "getRequestBody".getBytes();
 
         // mock request
         HttpServletRequest request = new MockHttpServletRequestAdapter() {
@@ -315,7 +333,7 @@ public class RequestMetaDataWrapperTest {
                 return serverPort;
             }
         };
-        RequestMetaData data = RequestMetaDataWrapper.build(request);
+        RequestMetaData data = RequestMetaDataWrapper.build(request, requestBody);
 
         // getContentType
         assertEquals(contentType, data.getContentType());
@@ -366,6 +384,8 @@ public class RequestMetaDataWrapperTest {
         assertEquals(serverName, data.getServerName());
         // getServerPort
         assertEquals(serverPort, data.getServerPort());
+        // getRequestBody
+        assertEquals(new String(requestBody), IOUtils.toString(data.getRequestBody().get()));
     }
 
     /**

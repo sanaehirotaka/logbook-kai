@@ -1,11 +1,8 @@
 package logbook.proxy;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +14,7 @@ import org.eclipse.jetty.proxy.ProxyServlet;
 import org.eclipse.jetty.util.Callback;
 
 import logbook.Messages;
+import logbook.internal.ThreadManager;
 
 /**
  * リバースプロキシ サーブレット
@@ -102,35 +100,30 @@ final class ReverseProxyServlet extends ProxyServlet {
             HttpServletRequest request,
             HttpServletResponse response,
             Response proxyResponse) {
-
-        byte[] reqBytes = (byte[]) request.getAttribute(REQUEST_BODY);
         ByteArrayOutputStream res = (ByteArrayOutputStream) request.getAttribute(RESPONSE_BODY);
 
         if (res != null) {
+            byte[] reqBytes = (byte[]) request.getAttribute(REQUEST_BODY);
             byte[] resBytes = res.toByteArray();
 
-            RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request);
-            ResponseMetaData responseMetaData = ResponseMetaDataWrapper.build(response);
+            for (ContentListenerSpi listener : this.services) {
 
-            Consumer<ContentListenerSpi> consumer = l -> {
-                InputStream requestIn = null;
-                if (reqBytes != null) {
-                    requestIn = new ByteArrayInputStream(reqBytes);
-                }
-                InputStream responseIn = new ByteArrayInputStream(resBytes);
+                Runnable task = () -> {
+                    try {
+                        RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request, reqBytes);
+                        ResponseMetaData responseMetaData = ResponseMetaDataWrapper.build(response, resBytes);
 
-                l.accept(requestMetaData, responseMetaData, requestIn, responseIn);
-            };
-            try {
-                this.services.stream()
-                        .filter(l -> l.test(requestMetaData))
-                        .forEach(consumer);
-            } catch (Exception e) {
-                LogManager.getLogger(ReverseProxyServlet.class)
-                        .warn(Messages.getString("ReverseProxyServlet.4"), e); //$NON-NLS-1$
+                        if (listener.test(requestMetaData)) {
+                            listener.accept(requestMetaData, responseMetaData);
+                        }
+                    } catch (Exception e) {
+                        LogManager.getLogger(ReverseProxyServlet.class)
+                                .warn(Messages.getString("ReverseProxyServlet.4"), e); //$NON-NLS-1$
+                    }
+                };
+                ThreadManager.getExecutorService().submit(task);
             }
         }
-
         super.onProxyResponseSuccess(request, response, proxyResponse);
     }
 }
