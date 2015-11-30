@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 
 import logbook.Messages;
-import logbook.bean.AppConfigBean;
+import logbook.bean.AppConfig;
 import logbook.internal.gui.Main;
 import logbook.proxy.ProxyServer;
 
@@ -63,7 +63,7 @@ public final class Launcher {
         ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
                 .warn(Messages.getString("Launcher.1"), e); //$NON-NLS-1$
 
-        Path dir = Paths.get(AppConfigBean.get().getPluginDir());
+        Path dir = Paths.get(AppConfig.get().getPluginsDir());
         PluginContainer container = PluginContainer.getInstance();
 
         List<JarBasedPlugin> plugins = Collections.emptyList();

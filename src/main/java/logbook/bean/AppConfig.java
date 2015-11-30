@@ -6,7 +6,7 @@ import logbook.internal.Config;
  * アプリケーションの設定
  *
  */
-public final class AppConfigBean {
+public final class AppConfig {
 
     /** ポート番号 */
     private int listenPort = 8888;
@@ -24,7 +24,10 @@ public final class AppConfigBean {
     private int proxyPort = 8080;
 
     /** プラグインディレクトリ */
-    private String pluginDir = "./plugins/"; //$NON-NLS-1$
+    private String pluginsDir = "./plugins/"; //$NON-NLS-1$
+
+    /** リソースディレクトリ */
+    private String resourcesDir = "./resources/"; //$NON-NLS-1$
 
     /**
      * ポート番号を取得します。
@@ -110,28 +113,44 @@ public final class AppConfigBean {
      * プラグインディレクトリを取得します。
      * @return プラグインディレクトリ
      */
-    public String getPluginDir() {
-        return this.pluginDir;
+    public String getPluginsDir() {
+        return this.pluginsDir;
     }
 
     /**
      * プラグインディレクトリを設定します。
-     * @param pluginDir プラグインディレクトリ
+     * @param pluginsDir プラグインディレクトリ
      */
-    public void setPluginDir(String pluginDir) {
-        this.pluginDir = pluginDir;
+    public void setPluginsDir(String pluginsDir) {
+        this.pluginsDir = pluginsDir;
+    }
+
+    /**
+     * リソースディレクトリを取得します。
+     * @return リソースディレクトリ
+     */
+    public String getResourcesDir() {
+        return this.resourcesDir;
+    }
+
+    /**
+     * リソースディレクトリを設定します。
+     * @param resourcesDir リソースディレクトリ
+     */
+    public void setResourcesDir(String resourcesDir) {
+        this.resourcesDir = resourcesDir;
     }
 
     /**
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(AppConfigBean.class)</code>
+     *     <code>Config.getDefault().get(AppConfig.class)</code>
      * </blockquote>
      *
      * @return アプリケーションの設定
      */
-    public static AppConfigBean get() {
-        return Config.getDefault().get(AppConfigBean.class);
+    public static AppConfig get() {
+        return Config.getDefault().get(AppConfig.class);
     }
 }

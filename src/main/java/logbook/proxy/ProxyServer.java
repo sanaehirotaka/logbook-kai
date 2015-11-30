@@ -21,7 +21,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import logbook.Messages;
-import logbook.bean.AppConfigBean;
+import logbook.bean.AppConfig;
 import logbook.internal.PluginContainer;
 
 /**
@@ -39,8 +39,8 @@ public final class ProxyServer extends Thread {
     @Override
     public void run() {
         try {
-            int port = AppConfigBean.get().getListenPort();
-            boolean isAllowOnlyFromLocalhost = AppConfigBean.get().isAllowOnlyFromLocalhost();
+            int port = AppConfig.get().getListenPort();
+            boolean isAllowOnlyFromLocalhost = AppConfig.get().isAllowOnlyFromLocalhost();
 
             Server server = new Server();
             ServerConnector connector = new ServerConnector(server);

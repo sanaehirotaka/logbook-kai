@@ -15,23 +15,23 @@ public interface ResponseMetaData {
      * レスポンスのステータスコードを取得します
      * @return レスポンスのステータスコード
      */
-    public int getStatus();
+    int getStatus();
 
     /**
      * コンテントタイプを取得します
      * @return コンテントタイプ
      */
-    public String getContentType();
+    String getContentType();
 
     /**
      * レスポンスヘッダを取得します
      * @return レスポンスヘッダのMap
      */
-    public Map<String, Collection<String>> getHeaders();
+    Map<String, Collection<String>> getHeaders();
 
     /**
      * レスポンスに含まれるメッセージボディを返します
      * @return レスポンスに含まれるメッセージボディ
      */
-    public Optional<InputStream> getResponseBody();
+    Optional<InputStream> getResponseBody();
 }
