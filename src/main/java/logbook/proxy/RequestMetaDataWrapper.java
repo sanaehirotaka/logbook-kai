@@ -1,9 +1,9 @@
 package logbook.proxy;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -14,6 +14,11 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+
+import org.eclipse.jetty.http.HttpFields;
+import org.eclipse.jetty.http.MimeTypes;
+import org.eclipse.jetty.util.MultiMap;
+import org.eclipse.jetty.util.UrlEncoded;
 
 /**
  * internal package private class.
@@ -30,7 +35,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     private String method;
 
-    private Map<String, Collection<String>> parameterMap;
+    private Map<String, List<String>> parameterMap;
 
     private String protocol;
 
@@ -89,11 +94,11 @@ class RequestMetaDataWrapper implements RequestMetaData {
     }
 
     @Override
-    public Map<String, Collection<String>> getParameterMap() {
+    public Map<String, List<String>> getParameterMap() {
         return this.parameterMap;
     }
 
-    void setParameterMap(Map<String, Collection<String>> parameterMap) {
+    void setParameterMap(Map<String, List<String>> parameterMap) {
         this.parameterMap = parameterMap;
     }
 
@@ -217,14 +222,24 @@ class RequestMetaDataWrapper implements RequestMetaData {
         // Method
         meta.setMethod(request.getMethod());
         // ParameterMap
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        Map<String, Collection<String>> newpara = new LinkedHashMap<>();
-        for (Map.Entry<String, String[]> e : parameterMap.entrySet()) {
-            String key = e.getKey();
-            String[] orig = e.getValue();
-            newpara.put(key, Collections.unmodifiableCollection(Arrays.asList(orig)));
+        if (requestBody != null) {
+            String contentType = HttpFields.valueParameters(meta.getContentType(), null);
+            if (MimeTypes.Type.FORM_ENCODED.is(contentType)) {
+                try (InputStream in = new ByteArrayInputStream(requestBody)) {
+                    MultiMap<String> parameter = new MultiMap<>();
+                    UrlEncoded.decodeTo(in, parameter, request.getCharacterEncoding(),
+                            Integer.MAX_VALUE, Integer.MAX_VALUE);
+                    meta.setParameterMap(Collections.unmodifiableMap(parameter));
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                meta.setParameterMap(Collections.emptyMap());
+            }
+        } else {
+            meta.setParameterMap(Collections.emptyMap());
         }
-        meta.setParameterMap(Collections.unmodifiableMap(newpara));
         // Protocol
         meta.setProtocol(request.getProtocol());
         // QueryString

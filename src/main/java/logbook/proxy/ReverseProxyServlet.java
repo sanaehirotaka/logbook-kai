@@ -39,10 +39,9 @@ final class ReverseProxyServlet extends ProxyServlet {
             HttpServletRequest clientRequest,
             HttpServletResponse proxyResponse,
             Request proxyRequest) {
-
-        RequestMetaData requestMetaData = RequestMetaDataWrapper.build(clientRequest);
-
         try {
+            RequestMetaData requestMetaData = RequestMetaDataWrapper.build(clientRequest);
+
             boolean require = this.services.stream()
                     .anyMatch(l -> l.test(requestMetaData));
             if (require) {
@@ -69,10 +68,9 @@ final class ReverseProxyServlet extends ProxyServlet {
             int offset,
             int length,
             Callback callback) {
-
-        RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request);
-
         try {
+            RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request);
+
             boolean require = this.services.stream()
                     .anyMatch(l -> l.test(requestMetaData));
             if (require) {
@@ -102,27 +100,30 @@ final class ReverseProxyServlet extends ProxyServlet {
             Response proxyResponse) {
         ByteArrayOutputStream res = (ByteArrayOutputStream) request.getAttribute(RESPONSE_BODY);
 
-        if (res != null) {
-            byte[] reqBytes = (byte[]) request.getAttribute(REQUEST_BODY);
-            byte[] resBytes = res.toByteArray();
+        try {
+            if (res != null) {
+                byte[] reqBytes = (byte[]) request.getAttribute(REQUEST_BODY);
+                byte[] resBytes = res.toByteArray();
+                for (ContentListenerSpi listener : this.services) {
+                    RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request, reqBytes);
+                    ResponseMetaData responseMetaData = ResponseMetaDataWrapper.build(response, resBytes);
 
-            for (ContentListenerSpi listener : this.services) {
-
-                Runnable task = () -> {
-                    try {
-                        RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request, reqBytes);
-                        ResponseMetaData responseMetaData = ResponseMetaDataWrapper.build(response, resBytes);
-
-                        if (listener.test(requestMetaData)) {
-                            listener.accept(requestMetaData, responseMetaData);
+                    Runnable task = () -> {
+                        try {
+                            if (listener.test(requestMetaData)) {
+                                listener.accept(requestMetaData, responseMetaData);
+                            }
+                        } catch (Exception e) {
+                            LogManager.getLogger(ReverseProxyServlet.class)
+                                    .warn(Messages.getString("ReverseProxyServlet.4"), e); //$NON-NLS-1$
                         }
-                    } catch (Exception e) {
-                        LogManager.getLogger(ReverseProxyServlet.class)
-                                .warn(Messages.getString("ReverseProxyServlet.4"), e); //$NON-NLS-1$
-                    }
-                };
-                ThreadManager.getExecutorService().submit(task);
+                    };
+                    ThreadManager.getExecutorService().submit(task);
+                }
             }
+        } catch (Exception e) {
+            LogManager.getLogger(ReverseProxyServlet.class)
+                    .warn(Messages.getString("ReverseProxyServlet.5"), e); //$NON-NLS-1$
         }
         super.onProxyResponseSuccess(request, response, proxyResponse);
     }

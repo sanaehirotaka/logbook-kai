@@ -2,6 +2,7 @@ package logbook.proxy;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public interface RequestMetaData {
      * このリクエストから取得できるパラメータを返します
      * @return パラメータのMap
      */
-    Map<String, Collection<String>> getParameterMap();
+    Map<String, List<String>> getParameterMap();
 
     /**
      * リクエストのプロトコル名とバージョンを返します

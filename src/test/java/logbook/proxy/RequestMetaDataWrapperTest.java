@@ -39,6 +39,7 @@ import javax.servlet.http.Part;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.eclipse.jetty.http.MimeTypes;
 import org.junit.Test;
 
 public class RequestMetaDataWrapperTest {
@@ -94,7 +95,7 @@ public class RequestMetaDataWrapperTest {
     @Test
     public void testGetParameterMap() {
         RequestMetaDataWrapper w = new RequestMetaDataWrapper();
-        Map<String, Collection<String>> expected = new HashMap<>();
+        Map<String, List<String>> expected = new HashMap<>();
         expected.put("test", Arrays.asList("testGetParameterMap"));
         w.setParameterMap(expected);
         assertEquals(expected, w.getParameterMap());
@@ -218,7 +219,7 @@ public class RequestMetaDataWrapperTest {
     public void testBuild() throws IOException {
         // expected data
 
-        String contentType = "getContentType";
+        String contentType = MimeTypes.Type.FORM_ENCODED.asString();
 
         List<Cookie> cookies = Arrays.asList(new Cookie("cookietest1", "cookievalue1"));
 
@@ -250,7 +251,7 @@ public class RequestMetaDataWrapperTest {
 
         int serverPort = new Random().nextInt();
 
-        byte[] requestBody = "getRequestBody".getBytes();
+        byte[] requestBody = "parametertest1=parameterMapvalue1&parametertest2=parameterMapvalue2".getBytes();
 
         // mock request
         HttpServletRequest request = new MockHttpServletRequestAdapter() {
@@ -280,12 +281,13 @@ public class RequestMetaDataWrapperTest {
             }
 
             @Override
+            public String getCharacterEncoding() {
+                return null;
+            }
+
+            @Override
             public Map<String, String[]> getParameterMap() {
-                Map<String, String[]> map = new LinkedHashMap<>();
-                for (Entry<String, List<String>> e : parameterMap.entrySet()) {
-                    map.put(e.getKey(), e.getValue().toArray(new String[e.getValue().size()]));
-                }
-                return map;
+                return new LinkedHashMap<>();
             }
 
             @Override
@@ -360,7 +362,7 @@ public class RequestMetaDataWrapperTest {
         // getMethod
         assertEquals(method, data.getMethod());
         // getParameterMap
-        Map<String, Collection<String>> actualParameterMap = data.getParameterMap();
+        Map<String, List<String>> actualParameterMap = data.getParameterMap();
         assertEquals(parameterMap.keySet(), actualParameterMap.keySet());
         for (Entry<String, List<String>> expectedParameter : parameterMap.entrySet()) {
             Collection<String> actualParameter = actualParameterMap.get(expectedParameter.getKey());

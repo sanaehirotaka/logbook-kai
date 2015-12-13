@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -87,6 +88,8 @@ public final class Launcher {
     void exitLocal() {
         Config.getDefault().store();
         ProxyServer.getInstance().interrupt();
+        ScheduledExecutorService executor = ThreadManager.getExecutorService();
+        executor.shutdownNow();
     }
 
     /**
