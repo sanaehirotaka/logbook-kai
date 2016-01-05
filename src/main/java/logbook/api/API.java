@@ -1,7 +1,7 @@
 package logbook.api;
 
 /**
- * {@code CAPIListenerSpi}が受け入れるAPIのURIを表す注釈です。
+ * {@code APIListenerSpi}が受け入れるAPIのURIを表す注釈です。
  */
 public @interface API {
 

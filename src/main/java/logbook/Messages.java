@@ -65,6 +65,15 @@ public class Messages {
     }
 
     /**
+     * リソース・バンドルを取得します
+     *
+     * @return リソース・バンドル
+     */
+    public static ResourceBundle getResourceBundle() {
+        return RESOURCE_BUNDLE;
+    }
+
+    /**
      * UTF-8でpropertiesファイルを読むためのResourceBundle.Control
      */
     private static final class UTF8Control extends ResourceBundle.Control {
