@@ -69,7 +69,7 @@ public final class APIListener implements ContentListenerSpi {
                         API target = service.getClass().getAnnotation(API.class);
                         boolean test = false;
                         if (target != null) {
-                            for (String uri : target.values()) {
+                            for (String uri : target.value()) {
                                 if (requri.equals(uri)) {
                                     test = true;
                                     break;

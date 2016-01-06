@@ -11,6 +11,9 @@ import logbook.proxy.ResponseMetaData;
  * 実装クラスはServiceLoaderより取得されます。
  * 実装クラスが呼び出されるようにするには  META-INF/services/logbook.api.APIListenerSpi に
  * 実装クラスの完全修飾名を記述します
+ *
+ * @see logbook.api.API
+ * @see logbook.internal.APIListener
  */
 public interface APIListenerSpi {
 
@@ -23,6 +26,7 @@ public interface APIListenerSpi {
      * @param json APIのレスポンスに含まれるJSONオブジェクト
      * @param requestMetaData リクエスト
      * @param responseMetaData レスポンス
+     * @see logbook.api.API
      */
     void accept(JsonObject json, RequestMetaData requestMetaData, ResponseMetaData responseMetaData);
 
