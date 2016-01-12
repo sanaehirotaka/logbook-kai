@@ -24,10 +24,10 @@ public interface APIListenerSpi {
      * 実装クラスに{@link API}注釈が付与されていない場合、すべてのURIに対して実装クラスが呼び出されます。
      *
      * @param json APIのレスポンスに含まれるJSONオブジェクト
-     * @param requestMetaData リクエスト
-     * @param responseMetaData レスポンス
+     * @param req リクエスト
+     * @param res レスポンス
      * @see logbook.api.API
      */
-    void accept(JsonObject json, RequestMetaData requestMetaData, ResponseMetaData responseMetaData);
+    void accept(JsonObject json, RequestMetaData req, ResponseMetaData res);
 
 }

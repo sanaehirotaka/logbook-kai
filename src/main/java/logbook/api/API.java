@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * {@code APIListenerSpi}が受け入れるAPIのURIを表す注釈です。<br>
  * 例えば次の記述は開発と建造時のみに受け入れることを表します。<br>
  * <pre><code>
- * @API({"/kcsapi/api_req_kousyou/createitem", "/kcsapi/api_req_kousyou/createship"})
+ * {@literal @API({"/kcsapi/api_req_kousyou/createitem", "/kcsapi/api_req_kousyou/createship"})}
  * </code></pre>
  *
  * @see logbook.api.APIListenerSpi
