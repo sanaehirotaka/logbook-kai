@@ -1,9 +1,16 @@
 package logbook.internal;
 
 import java.io.InputStream;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ServiceLoader;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import java.util.zip.GZIPInputStream;
 
@@ -12,6 +19,7 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import logbook.Messages;
 import logbook.api.API;
@@ -26,20 +34,30 @@ import logbook.proxy.ResponseMetaData;
  */
 public final class APIListener implements ContentListenerSpi {
 
-    private final List<APIListenerSpi> services;
+    private final Map<String, List<Pair>> services;
 
     public APIListener() {
         ServiceLoader<APIListenerSpi> loader = ServiceLoader.load(
                 APIListenerSpi.class,
                 PluginContainer.getInstance().getClassLoader());
 
+        Function<APIListenerSpi, Stream<Pair>> mapper = impl -> {
+            API target = impl.getClass().getAnnotation(API.class);
+            if (target != null) {
+                return Arrays.stream(target.value())
+                        .map(k -> new Pair(k, impl));
+            }
+            return Stream.empty();
+        };
         this.services = StreamSupport.stream(loader.spliterator(), false)
-                .collect(Collectors.toList());
+                .flatMap(mapper)
+                .collect(Collectors.groupingBy(Pair::getKey));
     }
 
     @Override
     public boolean test(RequestMetaData requestMetaData) {
-        return requestMetaData.getRequestURI().startsWith("/kcsapi/"); //$NON-NLS-1$
+        String uri = requestMetaData.getRequestURI();
+        return uri.startsWith("/kcsapi/") && this.services.containsKey(uri); //$NON-NLS-1$
     }
 
     @Override
@@ -61,38 +79,44 @@ public final class APIListener implements ContentListenerSpi {
             try (JsonReader jsonreader = Json.createReader(stream)) {
                 JsonObject json = jsonreader.readObject();
 
-                String requri = requestMetaData.getRequestURI();
+                String uri = requestMetaData.getRequestURI();
+                List<Pair> pairs = this.services.getOrDefault(uri, Collections.emptyList());
 
-                for (APIListenerSpi service : this.services) {
+                for (Pair pair : pairs) {
                     Runnable task = () -> {
-                        // アノテーションからURIを取り出し、リクエストのURIと一致するか調べます
-                        API target = service.getClass().getAnnotation(API.class);
-                        boolean test = false;
-                        if (target != null) {
-                            for (String uri : target.value()) {
-                                if (requri.equals(uri)) {
-                                    test = true;
-                                    break;
-                                }
-                            }
-                        } else {
-                            test = true;
-                        }
                         try {
-                            if (test) {
-                                service.accept(json, requestMetaData, responseMetaData);
+                            if (LoggerHolder.LOG.isDebugEnabled()) {
+                                String className = pair.getValue().getClass().getName();
+                                LoggerHolder.LOG.debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
+                                        className, uri);
                             }
+
+                            pair.getValue().accept(json, requestMetaData, responseMetaData);
                         } catch (Exception e) {
-                            LogManager.getLogger(APIListener.class).warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
-                            LogManager.getLogger(APIListener.class).warn(json);
+                            LoggerHolder.LOG.warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
+                            LoggerHolder.LOG.warn(json);
                         }
                     };
                     ThreadManager.getExecutorService().submit(task);
                 }
             }
         } catch (Exception e) {
-            LogManager.getLogger(APIListener.class).warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
         }
     }
 
+    private static final class Pair extends SimpleImmutableEntry<String, APIListenerSpi>
+            implements Entry<String, APIListenerSpi> {
+
+        private static final long serialVersionUID = 1L;
+
+        public Pair(String key, APIListenerSpi value) {
+            super(key, value);
+        }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(APIListener.class);
+    }
 }
