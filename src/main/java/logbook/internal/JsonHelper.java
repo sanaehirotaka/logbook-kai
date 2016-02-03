@@ -2,7 +2,9 @@ package logbook.internal;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -13,6 +15,7 @@ import javax.json.JsonValue;
 
 /**
  * JsonObjectを扱うための補助クラスです
+ *
  */
 public final class JsonHelper {
 
@@ -155,16 +158,36 @@ public final class JsonHelper {
     /**
      * JsonArrayをListに変換します
      *
-     * @param val 変換するJsonArray
+     * @param array 変換するJsonArray
      * @param function 変換Function
      * @return 変換後のList
      */
-    public static <R> List<R> toList(JsonArray val, Function<JsonValue, R> function) {
+    @SuppressWarnings("unchecked")
+    public static <T extends JsonValue, R> List<R> toList(JsonArray array, Function<T, R> function) {
         List<R> list = new ArrayList<>();
-        for (JsonValue num : val) {
-            list.add(function.apply(num));
+        for (JsonValue val : array) {
+            list.add(function.apply((T) val));
         }
         return list;
+    }
+
+    /**
+     * JsonArrayをMapに変換します
+     *
+     * @param array 変換するJsonArray
+     * @param keyMapper valueMapperで変換したオブジェクトからキーを取り出すFunction
+     * @param valueMapper array内のJsonValueを変換するFunction
+     * @return 変換後のMap
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends JsonValue, K, R> Map<K, R> toMap(JsonArray array, Function<R, K> keyMapper,
+            Function<T, R> valueMapper) {
+        Map<K, R> map = new HashMap<>();
+        for (JsonValue val : array) {
+            R r = valueMapper.apply((T) val);
+            map.put(keyMapper.apply(r), r);
+        }
+        return map;
     }
 
     /**
@@ -174,10 +197,21 @@ public final class JsonHelper {
      * JSON例<br>
      * <pre><code>{"api_id" : 558, "api_name" : "深海復讐艦攻改", "api_type" : [ 3, 5, 8, 8 ]}</code></pre>
      * Javaコード例<br>
-     * <pre><code>new JsonHelper.Bind(json)
+     * <pre><code>JsonHelper.bind(json)
      *      .set("api_id", bean::setId, JsonHelper::toInteger)
      *      .set("api_name", bean::setName, JsonHelper::toString)
      *      .set("api_type", bean::setType, JsonHelper::toIntegerList);</code></pre>
+     *
+     * @param json JsonObject
+     * @return {@link Bind}
+     */
+    public static Bind bind(JsonObject json) {
+        return new Bind(json);
+    }
+
+    /**
+     * JsonObjectから別のオブジェクトへの単方向バインディングを提供します。<br>
+     *
      */
     public static class Bind {
 
@@ -188,7 +222,7 @@ public final class JsonHelper {
          *
          * @param json JsonObject
          */
-        public Bind(JsonObject json) {
+        private Bind(JsonObject json) {
             this.json = json;
         }
 
@@ -202,6 +236,7 @@ public final class JsonHelper {
          * @param converter JsonValueを変換する {@link Function}
          * @return {@link Bind}
          */
+        @SuppressWarnings("unchecked")
         public <T extends JsonValue, R> Bind set(String key, Consumer<R> consumer, Function<T, R> converter) {
             JsonValue val = this.json.get(key);
             if (val != null) {

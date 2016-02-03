@@ -4,7 +4,7 @@ package logbook.bean;
  * 艦娘の名前と種別を表します
  *
  */
-public class ShipInfo {
+public class Ship {
 
     /** 名前 */
     private String name;

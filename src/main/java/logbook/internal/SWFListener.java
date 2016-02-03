@@ -17,7 +17,7 @@ import com.jpexs.decompiler.flash.tags.base.CharacterTag;
 import com.jpexs.decompiler.flash.tags.base.ImageTag;
 
 import logbook.bean.AppConfig;
-import logbook.bean.ShipInfoCollection;
+import logbook.bean.ShipCollection;
 import logbook.proxy.ContentListenerSpi;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
@@ -68,8 +68,8 @@ public class SWFListener implements ContentListenerSpi {
             Integer shipid = this.shipgraphCache.get(shipgraph);
             if (shipid == null) {
                 synchronized (this.shipgraphCache) {
-                    ShipInfoCollection.get()
-                            .getShipInfoMap()
+                    ShipCollection.get()
+                            .getShipMap()
                             .forEach((k, v) -> this.shipgraphCache.put(v.getGraph(), k));
                 }
                 shipid = this.shipgraphCache.get(shipgraph);
