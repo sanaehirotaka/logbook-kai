@@ -11,20 +11,20 @@ import logbook.internal.Config;
  */
 public class ShipCollection {
 
-    /** 艦娘の情報 */
+    /** 艦娘 */
     private Map<Integer, Ship> shipMap = new HashMap<>();
 
     /**
-     * 艦娘の情報を取得します。
-     * @return 艦娘の情報
+     * 艦娘を取得します。
+     * @return 艦娘
      */
     public Map<Integer, Ship> getShipMap() {
         return this.shipMap;
     }
 
     /**
-     * 艦娘の情報を設定します。
-     * @param shipMap 艦娘の情報
+     * 艦娘を設定します。
+     * @param shipMap 艦娘
      */
     public void setShipMap(Map<Integer, Ship> shipMap) {
         this.shipMap = shipMap;

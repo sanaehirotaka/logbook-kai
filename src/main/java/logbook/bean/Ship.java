@@ -1,10 +1,21 @@
 package logbook.bean;
 
+import javax.json.JsonObject;
+import javax.json.JsonString;
+
+import logbook.internal.JsonHelper;
+
 /**
  * 艦娘の名前と種別を表します
  *
  */
 public class Ship {
+
+    /** id */
+    private Integer id;
+
+    /** sortno */
+    private Integer sortno;
 
     /** 名前 */
     private String name;
@@ -13,16 +24,25 @@ public class Ship {
     private String yomi;
 
     /** 艦種 */
-    private String type;
+    private Integer stype;
 
     /** 改レベル */
-    private int afterlv;
+    private Integer afterlv;
 
-    /** 弾 */
-    private int maxBull;
+    /** 改装後id */
+    private Integer aftershipid;
+
+    /** 改装資材 燃料 */
+    private Integer afterfuel;
+
+    /** 改装資材 弾 */
+    private Integer afterbull;
 
     /** 燃料 */
-    private int maxFuel;
+    private Integer fuelMax;
+
+    /** 弾 */
+    private Integer bullMax;
 
     /** shipgraph */
     private String graph;
@@ -31,11 +51,43 @@ public class Ship {
     private String version;
 
     /**
+     * idを取得します。
+     * @return id
+     */
+    public Integer getId() {
+        return this.id;
+    }
+
+    /**
+     * idを設定します。
+     * @param id id
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * sortnoを取得します。
+     * @return sortno
+     */
+    public Integer getSortno() {
+        return this.sortno;
+    }
+
+    /**
+     * sortnoを設定します。
+     * @param sortno sortno
+     */
+    public void setSortno(Integer sortno) {
+        this.sortno = sortno;
+    }
+
+    /**
      * 名前を取得します。
      * @return 名前
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -51,7 +103,7 @@ public class Ship {
      * @return ふりがな/flagship
      */
     public String getYomi() {
-        return yomi;
+        return this.yomi;
     }
 
     /**
@@ -66,64 +118,112 @@ public class Ship {
      * 艦種を取得します。
      * @return 艦種
      */
-    public String getType() {
-        return type;
+    public Integer getStype() {
+        return this.stype;
     }
 
     /**
      * 艦種を設定します。
-     * @param type 艦種
+     * @param stype 艦種
      */
-    public void setType(String type) {
-        this.type = type;
+    public void setStype(Integer stype) {
+        this.stype = stype;
     }
 
     /**
      * 改レベルを取得します。
      * @return 改レベル
      */
-    public int getAfterlv() {
-        return afterlv;
+    public Integer getAfterlv() {
+        return this.afterlv;
     }
 
     /**
      * 改レベルを設定します。
      * @param afterlv 改レベル
      */
-    public void setAfterlv(int afterlv) {
+    public void setAfterlv(Integer afterlv) {
         this.afterlv = afterlv;
     }
 
     /**
-     * 弾を取得します。
-     * @return 弾
+     * 改装後idを取得します。
+     * @return 改装後id
      */
-    public int getMaxBull() {
-        return maxBull;
+    public Integer getAftershipid() {
+        return this.aftershipid;
     }
 
     /**
-     * 弾を設定します。
-     * @param maxBull 弾
+     * 改装後idを設定します。
+     * @param aftershipid 改装後id
      */
-    public void setMaxBull(int maxBull) {
-        this.maxBull = maxBull;
+    public void setAftershipid(Integer aftershipid) {
+        this.aftershipid = aftershipid;
+    }
+
+    /**
+     * 改装資材 燃料を取得します。
+     * @return 改装資材 燃料
+     */
+    public Integer getAfterfuel() {
+        return this.afterfuel;
+    }
+
+    /**
+     * 改装資材 燃料を設定します。
+     * @param afterfuel 改装資材 燃料
+     */
+    public void setAfterfuel(Integer afterfuel) {
+        this.afterfuel = afterfuel;
+    }
+
+    /**
+     * 改装資材 弾を取得します。
+     * @return 改装資材 弾
+     */
+    public Integer getAfterbull() {
+        return this.afterbull;
+    }
+
+    /**
+     * 改装資材 弾を設定します。
+     * @param afterbull 改装資材 弾
+     */
+    public void setAfterbull(Integer afterbull) {
+        this.afterbull = afterbull;
     }
 
     /**
      * 燃料を取得します。
      * @return 燃料
      */
-    public int getMaxFuel() {
-        return maxFuel;
+    public Integer getFuelMax() {
+        return this.fuelMax;
     }
 
     /**
      * 燃料を設定します。
-     * @param maxFuel 燃料
+     * @param fuelMax 燃料
      */
-    public void setMaxFuel(int maxFuel) {
-        this.maxFuel = maxFuel;
+    public void setFuelMax(Integer fuelMax) {
+        this.fuelMax = fuelMax;
+    }
+
+    /**
+     * 弾を取得します。
+     * @return 弾
+     */
+    public Integer getBullMax() {
+        return this.bullMax;
+    }
+
+    /**
+     * 弾を設定します。
+     * @param bullMax 弾
+     */
+    public void setBullMax(Integer bullMax) {
+        this.bullMax = bullMax;
     }
 
     /**
@@ -131,7 +231,7 @@ public class Ship {
      * @return shipgraph
      */
     public String getGraph() {
-        return graph;
+        return this.graph;
     }
 
     /**
@@ -147,7 +247,7 @@ public class Ship {
      * @return version
      */
     public String getVersion() {
-        return version;
+        return this.version;
     }
 
     /**
@@ -156,5 +256,22 @@ public class Ship {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public static Ship toShip(JsonObject json) {
+        Ship bean = new Ship();
+        JsonHelper.bind(json)
+                .set("api_id", bean::setId, JsonHelper::toInteger)
+                .set("api_sortno", bean::setSortno, JsonHelper::toInteger)
+                .set("api_name", bean::setName, JsonHelper::toString)
+                .set("api_yomi", bean::setYomi, JsonHelper::toString)
+                .set("api_stype", bean::setStype, JsonHelper::toInteger)
+                .set("api_afterlv", bean::setAfterlv, JsonHelper::toInteger)
+                .set("api_aftershipid", bean::setAftershipid, e -> Integer.valueOf(((JsonString) e).getString()))
+                .set("api_afterfuel", bean::setAfterfuel, JsonHelper::toInteger)
+                .set("api_afterbull", bean::setAfterbull, JsonHelper::toInteger)
+                .set("api_fuel_max", bean::setFuelMax, JsonHelper::toInteger)
+                .set("api_bull_max", bean::setBullMax, JsonHelper::toInteger);
+        return bean;
     }
 }

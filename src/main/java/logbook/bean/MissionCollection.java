@@ -11,20 +11,20 @@ import logbook.internal.Config;
  */
 public class MissionCollection {
 
-    /** 遠征の情報 */
+    /** 遠征 */
     private Map<Integer, Mission> missionMap = new HashMap<>();
 
     /**
-     * 遠征の情報を取得します。
-     * @return 遠征の情報
+     * 遠征を取得します。
+     * @return 遠征
      */
     public Map<Integer, Mission> getMissionMap() {
         return this.missionMap;
     }
 
     /**
-     * 遠征の情報を設定します。
-     * @param missionMap 遠征の情報
+     * 遠征を設定します。
+     * @param missionMap 遠征
      */
     public void setMissionMap(Map<Integer, Mission> missionMap) {
         this.missionMap = missionMap;

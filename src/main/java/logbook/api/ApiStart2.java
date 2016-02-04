@@ -4,9 +4,18 @@ import java.util.Map;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonValue;
 
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
+import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
+import logbook.bean.Slotitem;
+import logbook.bean.SlotitemCollection;
+import logbook.bean.SlotitemEquiptype;
+import logbook.bean.SlotitemEquiptypeCollection;
+import logbook.bean.Stype;
+import logbook.bean.StypeCollection;
 import logbook.bean.Useitem;
 import logbook.bean.UseitemCollection;
 import logbook.internal.JsonHelper;
@@ -40,7 +49,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_ship
      */
     private void apiMstShip(JsonArray array) {
-
+        Map<Integer, Ship> map = ShipCollection.get()
+                .getShipMap();
+        map.clear();
+        map.putAll(JsonHelper.toMap(array, Ship::getId, Ship::toShip));
     }
 
     /**
@@ -49,7 +61,16 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_shipgraph
      */
     private void apiMstShipgraph(JsonArray array) {
-
+        Map<Integer, Ship> map = ShipCollection.get()
+                .getShipMap();
+        for (JsonValue val : array) {
+            JsonObject json = (JsonObject) val;
+            Integer key = json.getInt("api_id");
+            Ship bean = map.get(key);
+            if (bean != null) {
+                bean.setGraph(json.getString("api_filename"));
+            }
+        }
     }
 
     /**
@@ -58,7 +79,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_slotitem_equiptype
      */
     private void apiMstSlotitemEquiptype(JsonArray array) {
-
+        Map<Integer, SlotitemEquiptype> map = SlotitemEquiptypeCollection.get()
+                .getEquiptypeMap();
+        map.clear();
+        map.putAll(JsonHelper.toMap(array, SlotitemEquiptype::getId, SlotitemEquiptype::toSlotitemEquiptype));
     }
 
     /**
@@ -67,7 +91,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_stype
      */
     private void apiMstStype(JsonArray array) {
-
+        Map<Integer, Stype> map = StypeCollection.get()
+                .getStypeMap();
+        map.clear();
+        map.putAll(JsonHelper.toMap(array, Stype::getId, Stype::toStype));
     }
 
     /**
@@ -76,7 +103,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_slotitem
      */
     private void apiMstSlotitem(JsonArray array) {
-
+        Map<Integer, Slotitem> map = SlotitemCollection.get()
+                .getSlotitemMap();
+        map.clear();
+        map.putAll(JsonHelper.toMap(array, Slotitem::getId, Slotitem::toSlotitem));
     }
 
     /**
@@ -85,11 +115,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_useitem
      */
     private void apiMstUseitem(JsonArray array) {
-        UseitemCollection collection = UseitemCollection.get();
-        Map<Integer, Useitem> map = collection.getUseitemMap();
+        Map<Integer, Useitem> map = UseitemCollection.get()
+                .getUseitemMap();
         map.clear();
         map.putAll(JsonHelper.toMap(array, Useitem::getId, Useitem::toMission));
-
     }
 
     /**
@@ -98,8 +127,8 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_mission
      */
     private void apiMstMission(JsonArray array) {
-        MissionCollection collection = MissionCollection.get();
-        Map<Integer, Mission> map = collection.getMissionMap();
+        Map<Integer, Mission> map = MissionCollection.get()
+                .getMissionMap();
         map.clear();
         map.putAll(JsonHelper.toMap(array, Mission::getId, Mission::toMission));
     }

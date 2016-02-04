@@ -11,20 +11,20 @@ import logbook.internal.Config;
  */
 public class UseitemCollection {
 
-    /** アイテムの情報 */
+    /** アイテム */
     private Map<Integer, Useitem> useitemMap = new HashMap<>();
 
     /**
-     * アイテムの情報を取得します。
-     * @return アイテムの情報
+     * アイテムを取得します。
+     * @return アイテム
      */
     public Map<Integer, Useitem> getUseitemMap() {
         return this.useitemMap;
     }
 
     /**
-     * アイテムの情報を設定します。
-     * @param useitemMap アイテムの情報
+     * アイテムを設定します。
+     * @param useitemMap アイテム
      */
     public void setUseitemMap(Map<Integer, Useitem> useitemMap) {
         this.useitemMap = useitemMap;

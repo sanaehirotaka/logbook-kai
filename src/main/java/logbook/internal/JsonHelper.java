@@ -27,8 +27,8 @@ public final class JsonHelper {
      * @param val 変換するJsonNumber
      * @return Long
      */
-    public static Long toLong(JsonValue val) {
-        return toObject((JsonNumber) val, JsonNumber::longValue);
+    public static Long toLong(JsonNumber val) {
+        return toObject(val, JsonNumber::longValue);
     }
 
     /**
@@ -39,8 +39,8 @@ public final class JsonHelper {
      * @param val 変換するJsonNumber
      * @return Integer
      */
-    public static Integer toInteger(JsonValue val) {
-        return toObject((JsonNumber) val, JsonNumber::intValue);
+    public static Integer toInteger(JsonNumber val) {
+        return toObject(val, JsonNumber::intValue);
     }
 
     /**
@@ -51,8 +51,8 @@ public final class JsonHelper {
      * @param val 変換するJsonNumber
      * @return Double
      */
-    public static Double toDouble(JsonValue val) {
-        return toObject((JsonNumber) val, JsonNumber::doubleValue);
+    public static Double toDouble(JsonNumber val) {
+        return toObject(val, JsonNumber::doubleValue);
     }
 
     /**
@@ -62,8 +62,8 @@ public final class JsonHelper {
      * @param val 変換するJsonNumber
      * @return BigDecimal
      */
-    public static BigDecimal toBigDecimal(JsonValue val) {
-        return toObject((JsonNumber) val, JsonNumber::bigDecimalValue);
+    public static BigDecimal toBigDecimal(JsonNumber val) {
+        return toObject(val, JsonNumber::bigDecimalValue);
     }
 
     /**
@@ -90,6 +90,8 @@ public final class JsonHelper {
     /**
      * JsonValueを任意のオブジェクトに変換します
      *
+     * @param <T> JsonValueの実際の型
+     * @param <R> functionの戻り値の型
      * @param val 変換するJsonValue
      * @param function 変換Function
      * @return 変換後のオブジェクト
@@ -158,6 +160,8 @@ public final class JsonHelper {
     /**
      * JsonArrayをListに変換します
      *
+     * @param <T> JsonArrayの内容の型
+     * @param <R> functionの戻り値の型
      * @param array 変換するJsonArray
      * @param function 変換Function
      * @return 変換後のList
@@ -174,6 +178,9 @@ public final class JsonHelper {
     /**
      * JsonArrayをMapに変換します
      *
+     * @param <T> JsonArrayの内容の型
+     * @param <K> Mapのキーの型
+     * @param <R> Mapの内容の型
      * @param array 変換するJsonArray
      * @param keyMapper valueMapperで変換したオブジェクトからキーを取り出すFunction
      * @param valueMapper array内のJsonValueを変換するFunction
@@ -187,6 +194,28 @@ public final class JsonHelper {
             R r = valueMapper.apply((T) val);
             map.put(keyMapper.apply(r), r);
         }
+        return map;
+    }
+
+    /**
+     * JsonObjectをMapに変換します
+     *
+     * @param <T> JsonObjectの内容の型
+     * @param <K> Mapのキーの型
+     * @param <R> Mapの内容の型
+     * @param obj 変換するJsonObject
+     * @param keyMapper JsonObjectのキーからキーを取り出すFunction
+     * @param valueMapper array内のJsonValueを変換するFunction
+     * @return 変換後のMap
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends JsonValue, K, R> Map<K, R> toMap(JsonObject obj, Function<String, K> keyMapper,
+            Function<T, R> valueMapper) {
+        Map<K, R> map = new HashMap<>();
+        obj.forEach((k, v) -> {
+            R r = valueMapper.apply((T) v);
+            map.put(keyMapper.apply(k), r);
+        });
         return map;
     }
 
@@ -232,8 +261,8 @@ public final class JsonHelper {
          * @param <T> JsonObject#get(Object) の戻り値の型
          * @param <R> converterの戻り値の型
          * @param key JsonObjectから取得するキー
-         * @param consumer converterの戻り値を消費する {@link Consumer}
-         * @param converter JsonValueを変換する {@link Function}
+         * @param consumer converterの戻り値を消費するConsumer
+         * @param converter JsonValueを変換するFunction
          * @return {@link Bind}
          */
         @SuppressWarnings("unchecked")
