@@ -5,15 +5,16 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * api_mst_useitem
+ * api_material
+ *
  */
-public class Useitem {
+public class Material {
 
     /** api_id */
     private Integer id;
 
-    /** api_name */
-    private String name;
+    /** api_value */
+    private Integer value;
 
     /**
      * api_idを取得します。
@@ -32,37 +33,32 @@ public class Useitem {
     }
 
     /**
-     * api_nameを取得します。
-     * @return api_name
+     * api_valueを取得します。
+     * @return api_value
      */
-    public String getName() {
-        return this.name;
+    public Integer getValue() {
+        return this.value;
     }
 
     /**
-     * api_nameを設定します。
-     * @param name api_name
+     * api_valueを設定します。
+     * @param value api_value
      */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return this.name;
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     /**
-     * JsonObjectから{@link Useitem}を構築します
+     * JsonObjectから{@link Material}を構築します
      *
      * @param json JsonObject
-     * @return {@link Useitem}
+     * @return {@link Material}
      */
-    public static Useitem toMission(JsonObject json) {
-        Useitem bean = new Useitem();
+    public static Material toBasic(JsonObject json) {
+        Material bean = new Material();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
-                .setString("api_name", bean::setName);
+                .setInteger("api_value", bean::setValue);
         return bean;
     }
 }

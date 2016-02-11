@@ -11,6 +11,7 @@ import java.util.function.Function;
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 
 /**
@@ -32,38 +33,47 @@ public final class JsonHelper {
     }
 
     /**
-     * JsonNumberをIntegerに変換します
+     * JsonValueをIntegerに変換します
      *
      * @see JsonNumber#intValue()
      * @see BigDecimal#intValue()
      * @param val 変換するJsonNumber
      * @return Integer
      */
-    public static Integer toInteger(JsonNumber val) {
-        return toObject(val, JsonNumber::intValue);
+    public static Integer toInteger(JsonValue val) {
+        if (val instanceof JsonNumber) {
+            return ((JsonNumber) val).intValue();
+        }
+        return new BigDecimal(toString(val)).intValue();
     }
 
     /**
-     * JsonNumberをDoubleに変換します
+     * JsonValueをDoubleに変換します
      *
      * @see JsonNumber#doubleValue()
      * @see BigDecimal#doubleValue()
      * @param val 変換するJsonNumber
      * @return Double
      */
-    public static Double toDouble(JsonNumber val) {
-        return toObject(val, JsonNumber::doubleValue);
+    public static Double toDouble(JsonValue val) {
+        if (val instanceof JsonNumber) {
+            return ((JsonNumber) val).doubleValue();
+        }
+        return new BigDecimal(toString(val)).doubleValue();
     }
 
     /**
-     * JsonNumberをBigDecimalに変換します
+     * JsonValueをBigDecimalに変換します
      *
      * @see JsonNumber#bigDecimalValue()
      * @param val 変換するJsonNumber
      * @return BigDecimal
      */
-    public static BigDecimal toBigDecimal(JsonNumber val) {
-        return toObject(val, JsonNumber::bigDecimalValue);
+    public static BigDecimal toBigDecimal(JsonValue val) {
+        if (val instanceof JsonNumber) {
+            return ((JsonNumber) val).bigDecimalValue();
+        }
+        return new BigDecimal(toString(val));
     }
 
     /**
@@ -74,17 +84,29 @@ public final class JsonHelper {
      * @return String
      */
     public static String toString(JsonValue val) {
-        return toObject(val, JsonValue::toString);
+        return toObject(val, v -> {
+            if (v instanceof JsonString) {
+                return ((JsonString) v).getString();
+            }
+            return v.toString();
+        });
     }
 
     /**
      * JsonValueをBooleanに変換します
      *
      * @param val 変換するJsonValue
-     * @return JsonValue.TRUEの場合にtrue、それ以外はfalse
+     * @return JsonNumber の場合、 BigDecimal.ZEROと等しくない場合 true、BigDecimal.ZEROと等しい場合はfalse<br>
+     * JsonNumber 以外の場合、JsonValue.FALSEと等しくない場合 true、sonValue.FALSEと等しい場合はfalse<br>
      */
     public static Boolean toBoolean(JsonValue val) {
-        return toObject(val, v -> v == JsonValue.TRUE);
+        return toObject(val, v -> {
+            if (v instanceof JsonNumber) {
+                // JsonNumber の場合、 BigDecimal.ZEROと等しくない場合 true、それ以外はfalse
+                return BigDecimal.ZERO.compareTo(((JsonNumber) v).bigDecimalValue()) != 0;
+            }
+            return v != JsonValue.FALSE;
+        });
     }
 
     /**
@@ -272,6 +294,66 @@ public final class JsonHelper {
                 consumer.accept(converter.apply((T) val));
             }
             return this;
+        }
+
+        /**
+         * keyで取得したJsonValueをStringに変換しconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer converterの戻り値を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonValue> Bind setString(String key, Consumer<String> consumer) {
+            return this.set(key, consumer, JsonHelper::toString);
+        }
+
+        /**
+         * keyで取得したJsonValueをIntegerに変換しconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer converterの戻り値を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonValue> Bind setInteger(String key, Consumer<Integer> consumer) {
+            return this.set(key, consumer, JsonHelper::toInteger);
+        }
+
+        /**
+         * keyで取得したJsonValueをDoubleに変換しconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer converterの戻り値を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonValue> Bind setDouble(String key, Consumer<Double> consumer) {
+            return this.set(key, consumer, JsonHelper::toDouble);
+        }
+
+        /**
+         * keyで取得したJsonValueをBigDecimalに変換しconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer converterの戻り値を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonValue> Bind setBigDecimal(String key, Consumer<BigDecimal> consumer) {
+            return this.set(key, consumer, JsonHelper::toBigDecimal);
+        }
+
+        /**
+         * keyで取得したJsonValueをBooleanに変換しconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer converterの戻り値を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonValue> Bind setBoolean(String key, Consumer<Boolean> consumer) {
+            return this.set(key, consumer, JsonHelper::toBoolean);
         }
     }
 }

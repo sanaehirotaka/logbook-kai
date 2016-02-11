@@ -127,6 +127,11 @@ public class Stype {
         this.equipType = equipType;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     /**
      * JsonObjectから{@link Stype}を構築します
      *

@@ -71,7 +71,7 @@ public final class Launcher {
         if (Files.isDirectory(dir)) {
             try {
                 plugins = Files.list(dir)
-                        .map(p -> Launcher.toJarBasedPlugin(p, listener))
+                        .map(p -> JarBasedPlugin.toJarBasedPlugin(p, listener))
                         .filter(Objects::isNull)
                         .collect(Collectors.toList());
 
@@ -103,15 +103,6 @@ public final class Launcher {
             container.close();
         } catch (IOException e) {
             listener.exceptionThrown(e);
-        }
-    }
-
-    private static JarBasedPlugin toJarBasedPlugin(Path p, ExceptionListener listener) {
-        try {
-            return new JarBasedPlugin(p);
-        } catch (IOException e) {
-            listener.exceptionThrown(e);
-            return null;
         }
     }
 }

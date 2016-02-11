@@ -1,5 +1,6 @@
 package logbook.internal;
 
+import java.beans.ExceptionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -138,5 +139,14 @@ public class JarBasedPlugin {
             }
         }
         return ""; //$NON-NLS-1$
+    }
+
+    static JarBasedPlugin toJarBasedPlugin(Path p, ExceptionListener listener) {
+        try {
+            return new JarBasedPlugin(p);
+        } catch (IOException e) {
+            listener.exceptionThrown(e);
+            return null;
+        }
     }
 }

@@ -5,6 +5,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import logbook.proxy.ProxyServer;
 
@@ -18,18 +19,27 @@ public class MainController {
     private String shipButtonFormat;
 
     @FXML
-    private Button itemButton;
+    private Button item;
 
     @FXML
-    private Button shipButton;
+    private Button ship;
+
+    @FXML
+    private VBox infobox;
+
+    @FXML
+    private VBox missionbox;
+
+    @FXML
+    private VBox ndockbox;
 
     @FXML
     void initialize() {
         // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
         ProxyServer.getInstance().start();
 
-        this.itemButtonFormat = this.itemButton.textProperty().get();
-        this.shipButtonFormat = this.shipButton.textProperty().get();
+        this.itemButtonFormat = this.item.textProperty().get();
+        this.shipButtonFormat = this.ship.textProperty().get();
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);

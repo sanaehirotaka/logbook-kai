@@ -67,6 +67,11 @@ public class SlotitemEquiptype {
         this.showFlg = showFlg;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     /**
      * JsonObjectから{@link SlotitemEquiptype}を構築します
      *
@@ -76,9 +81,9 @@ public class SlotitemEquiptype {
     public static SlotitemEquiptype toSlotitemEquiptype(JsonObject json) {
         SlotitemEquiptype bean = new SlotitemEquiptype();
         JsonHelper.bind(json)
-                .set("api_id", bean::setId, JsonHelper::toInteger)
-                .set("api_name", bean::setName, JsonHelper::toString)
-                .set("api_show_flg", bean::setShowFlg, JsonHelper::toInteger);
+                .setInteger("api_id", bean::setId)
+                .setString("api_name", bean::setName)
+                .setInteger("api_show_flg", bean::setShowFlg);
         return bean;
     }
 }

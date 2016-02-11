@@ -75,8 +75,13 @@ public class SWFListener implements ContentListenerSpi {
                 shipid = this.shipgraphCache.get(shipgraph);
             }
             if (shipid != null) {
-                // ./resources/ships/[shipid]
-                Path dir = Paths.get(AppConfig.get().getResourcesDir(), "ships", Integer.toString(shipid));
+                // ./resources/ships/[name]
+                Path res = ShipCollection.get()
+                        .getShipMap()
+                        .get(shipid)
+                        .resourcePathDir();
+                Path dir = Paths.get(AppConfig.get().getResourcesDir())
+                        .resolve(res);
                 this.storeShipImages(dir, in);
             }
         }

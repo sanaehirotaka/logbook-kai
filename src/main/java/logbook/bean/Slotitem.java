@@ -449,6 +449,11 @@ public class Slotitem {
         this.rare = rare;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     /**
      * JsonObjectから{@link Slotitem}を構築します
      *
@@ -458,29 +463,29 @@ public class Slotitem {
     public static Slotitem toSlotitem(JsonObject json) {
         Slotitem bean = new Slotitem();
         JsonHelper.bind(json)
-                .set("api_id", bean::setId, JsonHelper::toInteger)
-                .set("api_sortno", bean::setSortno, JsonHelper::toInteger)
-                .set("api_name", bean::setName, JsonHelper::toString)
+                .setInteger("api_id", bean::setId)
+                .setInteger("api_sortno", bean::setSortno)
+                .setString("api_name", bean::setName)
                 .set("api_type", bean::setType, JsonHelper::toIntegerList)
-                .set("api_taik", bean::setTaik, JsonHelper::toInteger)
-                .set("api_souk", bean::setSouk, JsonHelper::toInteger)
-                .set("api_houg", bean::setHoug, JsonHelper::toInteger)
-                .set("api_raig", bean::setRaig, JsonHelper::toInteger)
-                .set("api_soku", bean::setSoku, JsonHelper::toInteger)
-                .set("api_baku", bean::setBaku, JsonHelper::toInteger)
-                .set("api_tyku", bean::setTyku, JsonHelper::toInteger)
-                .set("api_tais", bean::setTais, JsonHelper::toInteger)
-                .set("api_atap", bean::setAtap, JsonHelper::toInteger)
-                .set("api_houm", bean::setHoum, JsonHelper::toInteger)
-                .set("api_raim", bean::setRaim, JsonHelper::toInteger)
-                .set("api_houk", bean::setHouk, JsonHelper::toInteger)
-                .set("api_raik", bean::setRaik, JsonHelper::toInteger)
-                .set("api_bakk", bean::setBakk, JsonHelper::toInteger)
-                .set("api_saku", bean::setSaku, JsonHelper::toInteger)
-                .set("api_sakb", bean::setSakb, JsonHelper::toInteger)
-                .set("api_luck", bean::setLuck, JsonHelper::toInteger)
-                .set("api_leng", bean::setLeng, JsonHelper::toInteger)
-                .set("api_rare", bean::setRare, JsonHelper::toInteger);
+                .setInteger("api_taik", bean::setTaik)
+                .setInteger("api_souk", bean::setSouk)
+                .setInteger("api_houg", bean::setHoug)
+                .setInteger("api_raig", bean::setRaig)
+                .setInteger("api_soku", bean::setSoku)
+                .setInteger("api_baku", bean::setBaku)
+                .setInteger("api_tyku", bean::setTyku)
+                .setInteger("api_tais", bean::setTais)
+                .setInteger("api_atap", bean::setAtap)
+                .setInteger("api_houm", bean::setHoum)
+                .setInteger("api_raim", bean::setRaim)
+                .setInteger("api_houk", bean::setHouk)
+                .setInteger("api_raik", bean::setRaik)
+                .setInteger("api_bakk", bean::setBakk)
+                .setInteger("api_saku", bean::setSaku)
+                .setInteger("api_sakb", bean::setSakb)
+                .setInteger("api_luck", bean::setLuck)
+                .setInteger("api_leng", bean::setLeng)
+                .setInteger("api_rare", bean::setRare);
         return bean;
     }
 }

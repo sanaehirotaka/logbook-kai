@@ -6,6 +6,7 @@ import logbook.internal.JsonHelper;
 
 /**
  * api_mst_mission
+ *
  */
 public class Mission {
 
@@ -85,6 +86,11 @@ public class Mission {
         this.time = time;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
     /**
      * JsonObjectから{@link Mission}を構築します
      *
@@ -94,10 +100,10 @@ public class Mission {
     public static Mission toMission(JsonObject json) {
         Mission bean = new Mission();
         JsonHelper.bind(json)
-                .set("api_id", bean::setId, JsonHelper::toInteger)
-                .set("api_name", bean::setName, JsonHelper::toString)
-                .set("api_details", bean::setDetails, JsonHelper::toString)
-                .set("api_time", bean::setTime, JsonHelper::toInteger);
+                .setInteger("api_id", bean::setId)
+                .setString("api_name", bean::setName)
+                .setString("api_details", bean::setDetails)
+                .setInteger("api_time", bean::setTime);
         return bean;
     }
 }

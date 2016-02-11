@@ -1,7 +1,9 @@
 package logbook.bean;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.json.JsonObject;
-import javax.json.JsonString;
 
 import logbook.internal.JsonHelper;
 
@@ -258,20 +260,39 @@ public class Ship {
         this.version = version;
     }
 
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    /**
+     * 艦娘リソースファイルのディレクトリを取得します。
+     * @return 艦娘リソースファイルのディレクトリ
+     */
+    public Path resourcePathDir() {
+        return Paths.get("ships", this.name);
+    }
+
+    /**
+     * JsonObjectから{@link Ship}を構築します
+     *
+     * @param json JsonObject
+     * @return {@link Ship}
+     */
     public static Ship toShip(JsonObject json) {
         Ship bean = new Ship();
         JsonHelper.bind(json)
-                .set("api_id", bean::setId, JsonHelper::toInteger)
-                .set("api_sortno", bean::setSortno, JsonHelper::toInteger)
-                .set("api_name", bean::setName, JsonHelper::toString)
-                .set("api_yomi", bean::setYomi, JsonHelper::toString)
-                .set("api_stype", bean::setStype, JsonHelper::toInteger)
-                .set("api_afterlv", bean::setAfterlv, JsonHelper::toInteger)
-                .set("api_aftershipid", bean::setAftershipid, e -> Integer.valueOf(((JsonString) e).getString()))
-                .set("api_afterfuel", bean::setAfterfuel, JsonHelper::toInteger)
-                .set("api_afterbull", bean::setAfterbull, JsonHelper::toInteger)
-                .set("api_fuel_max", bean::setFuelMax, JsonHelper::toInteger)
-                .set("api_bull_max", bean::setBullMax, JsonHelper::toInteger);
+                .setInteger("api_id", bean::setId)
+                .setInteger("api_sortno", bean::setSortno)
+                .setString("api_name", bean::setName)
+                .setString("api_yomi", bean::setYomi)
+                .setInteger("api_stype", bean::setStype)
+                .setInteger("api_afterlv", bean::setAfterlv)
+                .setInteger("api_aftershipid", bean::setAftershipid)
+                .setInteger("api_afterfuel", bean::setAfterfuel)
+                .setInteger("api_afterbull", bean::setAfterbull)
+                .setInteger("api_fuel_max", bean::setFuelMax)
+                .setInteger("api_bull_max", bean::setBullMax);
         return bean;
     }
 }
