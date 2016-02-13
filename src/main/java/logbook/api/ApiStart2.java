@@ -8,8 +8,8 @@ import javax.json.JsonValue;
 
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
-import logbook.bean.Ship;
-import logbook.bean.ShipCollection;
+import logbook.bean.ShipDescription;
+import logbook.bean.ShipDescriptionCollection;
 import logbook.bean.Slotitem;
 import logbook.bean.SlotitemCollection;
 import logbook.bean.SlotitemEquiptype;
@@ -49,10 +49,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_ship
      */
     private void apiMstShip(JsonArray array) {
-        Map<Integer, Ship> map = ShipCollection.get()
+        Map<Integer, ShipDescription> map = ShipDescriptionCollection.get()
                 .getShipMap();
         map.clear();
-        map.putAll(JsonHelper.toMap(array, Ship::getId, Ship::toShip));
+        map.putAll(JsonHelper.toMap(array, ShipDescription::getId, ShipDescription::toShip));
     }
 
     /**
@@ -61,12 +61,12 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_shipgraph
      */
     private void apiMstShipgraph(JsonArray array) {
-        Map<Integer, Ship> map = ShipCollection.get()
+        Map<Integer, ShipDescription> map = ShipDescriptionCollection.get()
                 .getShipMap();
         for (JsonValue val : array) {
             JsonObject json = (JsonObject) val;
             Integer key = json.getInt("api_id");
-            Ship bean = map.get(key);
+            ShipDescription bean = map.get(key);
             if (bean != null) {
                 bean.setGraph(json.getString("api_filename"));
             }

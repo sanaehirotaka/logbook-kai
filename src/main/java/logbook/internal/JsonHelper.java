@@ -321,6 +321,18 @@ public final class JsonHelper {
         }
 
         /**
+         * keyで取得したJsonValueをLongに変換しconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer converterの戻り値を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonValue> Bind setLong(String key, Consumer<Long> consumer) {
+            return this.set(key, consumer, JsonHelper::toLong);
+        }
+
+        /**
          * keyで取得したJsonValueをDoubleに変換しconsumerへ設定します<br>
          *
          * @param <T> JsonObject#get(Object) の戻り値の型

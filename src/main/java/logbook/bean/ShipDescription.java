@@ -11,7 +11,7 @@ import logbook.internal.JsonHelper;
  * 艦娘の名前と種別を表します
  *
  */
-public class Ship {
+public class ShipDescription {
 
     /** id */
     private Integer id;
@@ -274,13 +274,13 @@ public class Ship {
     }
 
     /**
-     * JsonObjectから{@link Ship}を構築します
+     * JsonObjectから{@link ShipDescription}を構築します
      *
      * @param json JsonObject
-     * @return {@link Ship}
+     * @return {@link ShipDescription}
      */
-    public static Ship toShip(JsonObject json) {
-        Ship bean = new Ship();
+    public static ShipDescription toShip(JsonObject json) {
+        ShipDescription bean = new ShipDescription();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_sortno", bean::setSortno)
