@@ -10,8 +10,8 @@ import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.bean.ShipDescription;
 import logbook.bean.ShipDescriptionCollection;
-import logbook.bean.Slotitem;
-import logbook.bean.SlotitemCollection;
+import logbook.bean.SlotitemDescription;
+import logbook.bean.SlotitemDescriptionCollection;
 import logbook.bean.SlotitemEquiptype;
 import logbook.bean.SlotitemEquiptypeCollection;
 import logbook.bean.Stype;
@@ -105,10 +105,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_slotitem
      */
     private void apiMstSlotitem(JsonArray array) {
-        Map<Integer, Slotitem> map = SlotitemCollection.get()
+        Map<Integer, SlotitemDescription> map = SlotitemDescriptionCollection.get()
                 .getSlotitemMap();
         map.clear();
-        map.putAll(JsonHelper.toMap(array, Slotitem::getId, Slotitem::toSlotitem));
+        map.putAll(JsonHelper.toMap(array, SlotitemDescription::getId, SlotitemDescription::toSlotitem));
     }
 
     /**

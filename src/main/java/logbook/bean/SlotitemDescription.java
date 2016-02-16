@@ -10,7 +10,7 @@ import logbook.internal.JsonHelper;
  * api_mst_slotitem
  *
  */
-public class Slotitem {
+public class SlotitemDescription {
 
     /** api_id */
     private Integer id;
@@ -455,13 +455,13 @@ public class Slotitem {
     }
 
     /**
-     * JsonObjectから{@link Slotitem}を構築します
+     * JsonObjectから{@link SlotitemDescription}を構築します
      *
      * @param json JsonObject
-     * @return {@link Slotitem}
+     * @return {@link SlotitemDescription}
      */
-    public static Slotitem toSlotitem(JsonObject json) {
-        Slotitem bean = new Slotitem();
+    public static SlotitemDescription toSlotitem(JsonObject json) {
+        SlotitemDescription bean = new SlotitemDescription();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_sortno", bean::setSortno)
