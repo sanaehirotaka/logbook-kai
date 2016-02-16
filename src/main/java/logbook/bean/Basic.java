@@ -242,11 +242,11 @@ public class Basic {
     /**
      * JsonObjectから{@link Basic}を構築します
      *
+     * @param bean Basic
      * @param json JsonObject
      * @return {@link Basic}
      */
-    public static Basic toBasic(JsonObject json) {
-        Basic bean = new Basic();
+    public static Basic updateBasic(Basic bean, JsonObject json) {
         JsonHelper.bind(json)
                 .setString("api_comment", bean::setComment)
                 .setInteger("api_count_deck", bean::setCountDeck)

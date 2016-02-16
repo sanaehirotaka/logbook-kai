@@ -54,7 +54,7 @@ public class Material {
      * @param json JsonObject
      * @return {@link Material}
      */
-    public static Material toBasic(JsonObject json) {
+    public static Material toMaterial(JsonObject json) {
         Material bean = new Material();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)

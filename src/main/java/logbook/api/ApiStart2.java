@@ -18,6 +18,7 @@ import logbook.bean.Stype;
 import logbook.bean.StypeCollection;
 import logbook.bean.Useitem;
 import logbook.bean.UseitemCollection;
+import logbook.internal.Config;
 import logbook.internal.JsonHelper;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
@@ -41,6 +42,7 @@ public class ApiStart2 implements APIListenerSpi {
             this.apiMstUseitem(data.getJsonArray("api_mst_useitem"));
             this.apiMstMission(data.getJsonArray("api_mst_mission"));
         }
+        Config.getDefault().store();
     }
 
     /**

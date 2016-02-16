@@ -2,7 +2,7 @@ package logbook.internal;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
@@ -21,7 +21,7 @@ public final class Config {
 
     private final Path dir;
 
-    private final Map<Class<?>, Object> map = new HashMap<>();
+    private final Map<Class<?>, Object> map = new IdentityHashMap<>();
 
     /**
      * アプリケーション設定の読み書きを指定のディレクトリで行います
@@ -74,11 +74,8 @@ public final class Config {
      *
      * @param clazz Bean型 Classオブジェクト
      */
-    public void store(Class<?> clazz) {
-        Object instance;
-        synchronized (this.map) {
-            instance = this.map.get(clazz);
-        }
+    private void store(Class<?> clazz) {
+        Object instance = this.map.get(clazz);
         if (instance == null) {
             instance = this.get(clazz);
         }

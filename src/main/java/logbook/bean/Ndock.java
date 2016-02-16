@@ -168,7 +168,7 @@ public class Ndock {
      * @param json JsonObject
      * @return {@link Ndock}
      */
-    public static Ndock toShip(JsonObject json) {
+    public static Ndock toNdock(JsonObject json) {
         Ndock bean = new Ndock();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)

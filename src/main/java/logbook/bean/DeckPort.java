@@ -132,7 +132,7 @@ public class DeckPort {
      * @param json JsonObject
      * @return {@link DeckPort}
      */
-    public static DeckPort toBasic(JsonObject json) {
+    public static DeckPort toDeckPort(JsonObject json) {
         DeckPort bean = new DeckPort();
         JsonHelper.bind(json)
                 .setInteger("api_flagship", bean::setFlagship)
