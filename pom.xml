@@ -83,14 +83,14 @@
 		<dependency>
 			<groupId>ffdec</groupId>
 			<artifactId>ffdec</artifactId>
-			<version>6.0.2</version>
+			<version>0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/ffdec_6.0.2_lib.jar</systemPath>
+			<systemPath>${basedir}/lib/ffdec_lib.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>cmykjpeg</groupId>
 			<artifactId>cmykjpeg</artifactId>
-			<version>0.0.0</version>
+			<version>0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/cmykjpeg.jar</systemPath>
 		</dependency>
