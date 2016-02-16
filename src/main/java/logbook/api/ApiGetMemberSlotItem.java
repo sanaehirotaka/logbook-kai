@@ -1,7 +1,13 @@
 package logbook.api;
 
+import java.util.Map;
+
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 
+import logbook.bean.SlotItem;
+import logbook.bean.SlotItemCollection;
+import logbook.internal.JsonHelper;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -14,8 +20,13 @@ public class ApiGetMemberSlotItem implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        // TODO 自動生成されたメソッド・スタブ
-
+        JsonArray array = json.getJsonArray("api_data");
+        if (array != null) {
+            Map<Integer, SlotItem> map = SlotItemCollection.get()
+                    .getSlotitemMap();
+            map.clear();
+            map.putAll(JsonHelper.toMap(array, SlotItem::getId, SlotItem::toSlotItem));
+        }
     }
 
 }

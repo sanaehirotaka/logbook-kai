@@ -14,6 +14,8 @@ import logbook.bean.Material;
 import logbook.bean.MaterialCollection;
 import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
+import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
 import logbook.internal.Config;
 import logbook.internal.JsonHelper;
 import logbook.proxy.RequestMetaData;
@@ -55,8 +57,10 @@ public class ApiPortPort implements APIListenerSpi {
      * @param array api_ship
      */
     private void apiShip(JsonArray array) {
-        // TODO 自動生成されたメソッド・スタブ
-
+        Map<Integer, Ship> map = ShipCollection.get()
+                .getShipMap();
+        map.clear();
+        map.putAll(JsonHelper.toMap(array, Ship::getId, Ship::toShip));
     }
 
     /**
