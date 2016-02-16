@@ -25,11 +25,14 @@ public final class JsonHelper {
      *
      * @see JsonNumber#longValue()
      * @see BigDecimal#longValue()
-     * @param val 変換するJsonNumber
+     * @param val Longに変換するJsonValue
      * @return Long
      */
-    public static Long toLong(JsonNumber val) {
-        return toObject(val, JsonNumber::longValue);
+    public static Long toLong(JsonValue val) {
+        if (val instanceof JsonNumber) {
+            return ((JsonNumber) val).longValue();
+        }
+        return new BigDecimal(toString(val)).longValue();
     }
 
     /**
@@ -37,7 +40,7 @@ public final class JsonHelper {
      *
      * @see JsonNumber#intValue()
      * @see BigDecimal#intValue()
-     * @param val 変換するJsonNumber
+     * @param val Integerに変換するJsonValue
      * @return Integer
      */
     public static Integer toInteger(JsonValue val) {
@@ -52,7 +55,7 @@ public final class JsonHelper {
      *
      * @see JsonNumber#doubleValue()
      * @see BigDecimal#doubleValue()
-     * @param val 変換するJsonNumber
+     * @param val Doubleに変換するJsonValue
      * @return Double
      */
     public static Double toDouble(JsonValue val) {
@@ -66,7 +69,7 @@ public final class JsonHelper {
      * JsonValueをBigDecimalに変換します
      *
      * @see JsonNumber#bigDecimalValue()
-     * @param val 変換するJsonNumber
+     * @param val BigDecimalに変換するJsonValue
      * @return BigDecimal
      */
     public static BigDecimal toBigDecimal(JsonValue val) {
@@ -79,8 +82,9 @@ public final class JsonHelper {
     /**
      * JsonValueをStringに変換します
      *
+     * @see JsonString#getString()
      * @see JsonValue#toString()
-     * @param val 変換するJsonValue
+     * @param val Stringに変換するJsonValue
      * @return String
      */
     public static String toString(JsonValue val) {
@@ -95,7 +99,7 @@ public final class JsonHelper {
     /**
      * JsonValueをBooleanに変換します
      *
-     * @param val 変換するJsonValue
+     * @param val Booleanに変換するJsonValue
      * @return JsonNumber の場合、 BigDecimal.ZEROと等しくない場合 true、BigDecimal.ZEROと等しい場合はfalse<br>
      * JsonNumber 以外の場合、JsonValue.FALSEと等しくない場合 true、sonValue.FALSEと等しい場合はfalse<br>
      */
@@ -114,7 +118,7 @@ public final class JsonHelper {
      *
      * @param <T> JsonValueの実際の型
      * @param <R> functionの戻り値の型
-     * @param val 変換するJsonValue
+     * @param val 型Rに変換するJsonValue
      * @param function 変換Function
      * @return 変換後のオブジェクト
      */
