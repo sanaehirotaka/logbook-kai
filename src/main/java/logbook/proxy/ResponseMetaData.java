@@ -1,6 +1,7 @@
 package logbook.proxy;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -9,7 +10,7 @@ import java.util.Optional;
  * レスポンスに含まれている情報を ContentListener に提供するオブジェクト
  *
  */
-public interface ResponseMetaData {
+public interface ResponseMetaData extends Serializable {
 
     /**
      * レスポンスのステータスコードを取得します

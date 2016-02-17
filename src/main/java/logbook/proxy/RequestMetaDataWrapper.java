@@ -3,6 +3,7 @@ package logbook.proxy;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +27,8 @@ import org.eclipse.jetty.util.UrlEncoded;
  * @see RequestMetaData
  */
 class RequestMetaDataWrapper implements RequestMetaData {
+
+    private static final long serialVersionUID = 8302943521163115949L;
 
     private String contentType;
 
@@ -55,7 +58,7 @@ class RequestMetaDataWrapper implements RequestMetaData {
 
     private int serverPort;
 
-    private Optional<InputStream> requestBody;
+    private transient Optional<InputStream> requestBody;
 
     @Override
     public String getContentType() {
@@ -262,5 +265,16 @@ class RequestMetaDataWrapper implements RequestMetaData {
         meta.setRequestBody(
                 requestBody == null ? Optional.empty() : Optional.of(new ByteArrayInputStream(requestBody)));
         return meta;
+    }
+
+    /**
+     * カスタム デシリアライズ.
+     *
+     * @param s ObjectInputStream
+     * @throws Exception デシリアライズに失敗した場合
+     */
+    private void readObject(ObjectInputStream s) throws Exception {
+        s.defaultReadObject();
+        this.requestBody = Optional.empty();
     }
 }

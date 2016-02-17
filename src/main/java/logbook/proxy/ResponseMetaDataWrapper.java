@@ -2,6 +2,7 @@ package logbook.proxy;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,13 +19,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 class ResponseMetaDataWrapper implements ResponseMetaData {
 
+    private static final long serialVersionUID = -5949586529255459874L;
+
     private int status;
 
     private String contentType;
 
     private Map<String, Collection<String>> headers;
 
-    private Optional<InputStream> responseBody;
+    private transient Optional<InputStream> responseBody;
 
     @Override
     public int getStatus() {
@@ -85,5 +88,16 @@ class ResponseMetaDataWrapper implements ResponseMetaData {
                 responseBody == null ? Optional.empty() : Optional.of(new ByteArrayInputStream(responseBody)));
 
         return meta;
+    }
+
+    /**
+     * カスタム デシリアライズ.
+     *
+     * @param s ObjectInputStream
+     * @throws Exception デシリアライズに失敗した場合
+     */
+    private void readObject(ObjectInputStream s) throws Exception {
+        s.defaultReadObject();
+        this.responseBody = Optional.empty();
     }
 }

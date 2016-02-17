@@ -1,6 +1,7 @@
 package logbook.proxy;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import javax.servlet.http.Cookie;
  * リクエストに含まれている情報を ContentListener に提供するオブジェクト
  *
  */
-public interface RequestMetaData {
+public interface RequestMetaData extends Serializable {
 
     /**
      * リクエストに含まれるメッセージボディの MIME タイプを返します
