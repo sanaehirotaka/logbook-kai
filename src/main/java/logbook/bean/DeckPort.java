@@ -18,9 +18,6 @@ public class DeckPort {
     /** api_id */
     private Integer id;
 
-    /** api_member_id */
-    private Integer memberId;
-
     /** api_mission */
     private List<Integer> mission;
 
@@ -60,22 +57,6 @@ public class DeckPort {
      */
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    /**
-     * api_member_idを取得します。
-     * @return api_member_id
-     */
-    public Integer getMemberId() {
-        return this.memberId;
-    }
-
-    /**
-     * api_member_idを設定します。
-     * @param memberId api_member_id
-     */
-    public void setMemberId(Integer memberId) {
-        this.memberId = memberId;
     }
 
     /**
@@ -137,7 +118,6 @@ public class DeckPort {
         JsonHelper.bind(json)
                 .setInteger("api_flagship", bean::setFlagship)
                 .setInteger("api_id", bean::setId)
-                .setInteger("api_member_id", bean::setMemberId)
                 .set("api_mission", bean::setMission, JsonHelper::toIntegerList)
                 .setString("api_name", bean::setName)
                 .set("api_ship", bean::setShip, JsonHelper::toIntegerList);

@@ -602,6 +602,16 @@ public class Ship {
     }
 
     /**
+     * 艦娘の艦船を取得します。
+     * @return 艦船
+     */
+    public ShipDescription shipDescription() {
+        return ShipDescriptionCollection.get()
+                .getShipMap()
+                .get(this.getShipId());
+    }
+
+    /**
      * JsonObjectから{@link Ship}を構築します
      *
      * @param json JsonObject

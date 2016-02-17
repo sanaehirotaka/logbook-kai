@@ -2,6 +2,8 @@ package logbook.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -16,6 +18,8 @@ import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.SlotItem;
+import logbook.bean.SlotItemCollection;
 import logbook.internal.Config;
 import logbook.internal.JsonHelper;
 import logbook.proxy.RequestMetaData;
@@ -59,8 +63,21 @@ public class ApiPortPort implements APIListenerSpi {
     private void apiShip(JsonArray array) {
         Map<Integer, Ship> map = ShipCollection.get()
                 .getShipMap();
+        // 差し替え前のID
+        Set<Integer> beforeShipIds = map.keySet();
+        // 差し替え後
+        Map<Integer, Ship> afterShipMap = JsonHelper.toMap(array, Ship::getId, Ship::toShip);
+        // 差し替え後のID
+        Set<Integer> afterShipIds = afterShipMap.keySet();
+
+        // 差し替え前に存在して、差し替え後に存在しない艦娘の装備を廃棄する
+        beforeShipIds.stream()
+                .filter(((Predicate<Integer>) afterShipIds::contains).negate())
+                .map(map::get)
+                .forEach(this::destryItem);
+
         map.clear();
-        map.putAll(JsonHelper.toMap(array, Ship::getId, Ship::toShip));
+        map.putAll(afterShipMap);
     }
 
     /**
@@ -115,4 +132,19 @@ public class ApiPortPort implements APIListenerSpi {
                 .setCombinedFlag(combinedFlag);
     }
 
+    /**
+     * 艦娘の装備を廃棄する
+     *
+     * @param ship 艦娘
+     */
+    private void destryItem(Ship ship) {
+        Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+        // 持っている装備を廃棄する
+        for (Integer itemId : ship.getSlot()) {
+            itemMap.remove(itemId);
+        }
+        // 補強増設
+        itemMap.remove(ship.getSlotEx());
+    }
 }

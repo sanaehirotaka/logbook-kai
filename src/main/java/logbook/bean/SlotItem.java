@@ -5,7 +5,7 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * slot_item
+ * 装備
  *
  */
 public class SlotItem {
@@ -15,6 +15,9 @@ public class SlotItem {
 
     /** api_level */
     private Integer level;
+
+    /** api_alv */
+    private Integer alv;
 
     /** api_locked */
     private Boolean locked;
@@ -55,6 +58,22 @@ public class SlotItem {
     }
 
     /**
+     * api_alvを取得します。
+     * @return api_alv
+     */
+    public Integer getAlv() {
+        return alv;
+    }
+
+    /**
+     * api_alvを設定します。
+     * @param alv api_alv
+     */
+    public void setAlv(Integer alv) {
+        this.alv = alv;
+    }
+
+    /**
      * api_lockedを取得します。
      * @return api_locked
      */
@@ -87,6 +106,16 @@ public class SlotItem {
     }
 
     /**
+     * 装備定義を取得します。
+     * @return 装備定義
+     */
+    public SlotitemDescription slotitemDescription() {
+        return SlotitemDescriptionCollection.get()
+                .getSlotitemMap()
+                .get(this.getSlotitemId());
+    }
+
+    /**
      * JsonObjectから{@link SlotItem}を構築します
      *
      * @param json JsonObject
@@ -97,6 +126,7 @@ public class SlotItem {
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_level", bean::setLevel)
+                .setInteger("api_alv", bean::setAlv)
                 .setBoolean("api_locked", bean::setLocked)
                 .setInteger("api_slotitem_id", bean::setSlotitemId);
         return bean;

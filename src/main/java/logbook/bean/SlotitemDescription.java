@@ -7,7 +7,7 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * api_mst_slotitem
+ * 装備定義
  *
  */
 public class SlotitemDescription {
