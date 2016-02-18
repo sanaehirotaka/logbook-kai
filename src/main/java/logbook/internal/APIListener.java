@@ -2,6 +2,7 @@ package logbook.internal;
 
 import java.io.InputStream;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,6 +37,8 @@ public final class APIListener implements ContentListenerSpi {
 
     private final Map<String, List<Pair>> services;
 
+    private final List<Pair> all = new ArrayList<>();
+
     public APIListener() {
         ServiceLoader<APIListenerSpi> loader = ServiceLoader.load(
                 APIListenerSpi.class,
@@ -46,6 +49,8 @@ public final class APIListener implements ContentListenerSpi {
             if (target != null) {
                 return Arrays.stream(target.value())
                         .map(k -> new Pair(k, impl));
+            } else {
+                this.all.add(new Pair(null, impl));
             }
             return Stream.empty();
         };
@@ -57,7 +62,7 @@ public final class APIListener implements ContentListenerSpi {
     @Override
     public boolean test(RequestMetaData requestMetaData) {
         String uri = requestMetaData.getRequestURI();
-        return uri.startsWith("/kcsapi/") && this.services.containsKey(uri); //$NON-NLS-1$
+        return uri.startsWith("/kcsapi/") && (!this.all.isEmpty() || this.services.containsKey(uri)); //$NON-NLS-1$
     }
 
     @Override
@@ -83,25 +88,32 @@ public final class APIListener implements ContentListenerSpi {
                 List<Pair> pairs = this.services.getOrDefault(uri, Collections.emptyList());
 
                 for (Pair pair : pairs) {
-                    Runnable task = () -> {
-                        try {
-                            if (LoggerHolder.LOG.isDebugEnabled()) {
-                                String className = pair.getValue().getClass().getName();
-                                LoggerHolder.LOG.debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
-                                        className, uri);
-                            }
+                    Runnable task = () -> this.createTask(pair, json, requestMetaData, responseMetaData);
+                    ThreadManager.getExecutorService().submit(task);
+                }
 
-                            pair.getValue().accept(json, requestMetaData, responseMetaData);
-                        } catch (Exception e) {
-                            LoggerHolder.LOG.warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
-                            LoggerHolder.LOG.warn(json);
-                        }
-                    };
+                for (Pair pair : this.all) {
+                    Runnable task = () -> this.createTask(pair, json, requestMetaData, responseMetaData);
                     ThreadManager.getExecutorService().submit(task);
                 }
             }
         } catch (Exception e) {
             LoggerHolder.LOG.warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
+        }
+    }
+
+    private void createTask(Pair pair, JsonObject json, RequestMetaData req, ResponseMetaData res) {
+        try {
+            if (LoggerHolder.LOG.isDebugEnabled()) {
+                String className = pair.getValue().getClass().getName();
+                LoggerHolder.LOG.debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
+                        className, req.getRequestURI());
+            }
+
+            pair.getValue().accept(json, req, res);
+        } catch (Exception e) {
+            LoggerHolder.LOG.warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(json);
         }
     }
 
