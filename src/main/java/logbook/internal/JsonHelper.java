@@ -189,7 +189,7 @@ public final class JsonHelper {
      * @param <T> JsonArrayの内容の型
      * @param <R> functionの戻り値の型
      * @param array 変換するJsonArray
-     * @param function 変換Function
+     * @param function JsonValueを受け取って変換するFunction
      * @return 変換後のList
      */
     @SuppressWarnings("unchecked")
@@ -199,6 +199,18 @@ public final class JsonHelper {
             list.add(function.apply((T) val));
         }
         return list;
+    }
+
+    /**
+     * JsonArrayをListに変換する関数を返します
+     *
+     * @param <T> JsonArrayの内容の型
+     * @param <R> functionの戻り値の型
+     * @param function JsonValueを受け取って変換するFunction
+     * @return Listに変換する関数
+     */
+    public static <T extends JsonValue, R> Function<JsonArray, List<R>> toList(Function<T, R> function) {
+        return val -> JsonHelper.toList(val, function);
     }
 
     /**
@@ -294,7 +306,7 @@ public final class JsonHelper {
         @SuppressWarnings("unchecked")
         public <T extends JsonValue, R> Bind set(String key, Consumer<R> consumer, Function<T, R> converter) {
             JsonValue val = this.json.get(key);
-            if (val != null) {
+            if (val != null && JsonValue.NULL != val) {
                 consumer.accept(converter.apply((T) val));
             }
             return this;

@@ -5,18 +5,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.commons.io.IOUtils;
 
 import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.base.CharacterTag;
 import com.jpexs.decompiler.flash.tags.base.ImageTag;
 
-import logbook.bean.AppConfig;
+import logbook.bean.ShipDescription;
 import logbook.bean.ShipDescriptionCollection;
 import logbook.proxy.ContentListenerSpi;
 import logbook.proxy.RequestMetaData;
@@ -27,6 +24,8 @@ import logbook.proxy.ResponseMetaData;
  *
  */
 public class SWFListener implements ContentListenerSpi {
+
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     /** shipgraph -> shipid */
     private Map<String, Integer> shipgraphCache = new HashMap<>();
@@ -76,12 +75,9 @@ public class SWFListener implements ContentListenerSpi {
             }
             if (shipid != null) {
                 // ./resources/ships/[name]
-                Path res = ShipDescriptionCollection.get()
+                Path dir = ShipDescription.getResourcePathDir(ShipDescriptionCollection.get()
                         .getShipMap()
-                        .get(shipid)
-                        .resourcePathDir();
-                Path dir = Paths.get(AppConfig.get().getResourcesDir())
-                        .resolve(res);
+                        .get(shipid));
                 this.storeShipImages(dir, in);
             }
         }
@@ -99,6 +95,7 @@ public class SWFListener implements ContentListenerSpi {
             Files.createDirectories(dir);
         }
         SWF swf = new SWF(in, false);
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         for (Entry<Integer, CharacterTag> e : swf.getCharacters().entrySet()) {
             if (e.getValue() instanceof ImageTag) {
                 ImageTag img = (ImageTag) e.getValue();
@@ -115,7 +112,12 @@ public class SWFListener implements ContentListenerSpi {
                 Path file = dir.resolve(img.getCharacterId() + "." + ext);
 
                 try (OutputStream out = Files.newOutputStream(file)) {
-                    IOUtils.copy(img.getImageData(), out);
+                    try (InputStream data = img.getImageData()) {
+                        int n = 0;
+                        while (-1 != (n = data.read(buffer))) {
+                            out.write(buffer, 0, n);
+                        }
+                    }
                 }
             }
         }

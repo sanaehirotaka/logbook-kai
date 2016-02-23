@@ -269,8 +269,9 @@ public class ShipDescription {
      * 艦娘リソースファイルのディレクトリを取得します。
      * @return 艦娘リソースファイルのディレクトリ
      */
-    public Path resourcePathDir() {
-        return Paths.get("ships", this.name);
+    public static Path getResourcePathDir(ShipDescription desc) {
+        String shipDir = desc.getId() + "_" + desc.getName();
+        return Paths.get(AppConfig.get().getResourcesDir(), "ships", shipDir);
     }
 
     /**
