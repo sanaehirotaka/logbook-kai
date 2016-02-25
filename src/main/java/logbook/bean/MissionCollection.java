@@ -40,6 +40,6 @@ public class MissionCollection {
      * @return <code>MissionCollection</code>
      */
     public static MissionCollection get() {
-        return Config.getDefault().get(MissionCollection.class);
+        return Config.getDefault().get(MissionCollection.class, MissionCollection::new);
     }
 }

@@ -23,13 +23,20 @@ public class PluginContainer {
     private PluginContainer() {
     }
 
-    void init(List<JarBasedPlugin> plugins) {
-        URL[] urls = plugins.stream()
-                .map(JarBasedPlugin::getURL)
-                .toArray(URL[]::new);
-        this.plugins = new ArrayList<>(plugins);
-        this.classLoader = new URLClassLoader(urls);
-        this.initialized = true;
+    /**
+     * プラグインコンテナを初期化します
+     *
+     * @param plugins プラグイン
+     */
+    public synchronized void init(List<JarBasedPlugin> plugins) {
+        if (!this.initialized) {
+            URL[] urls = plugins.stream()
+                    .map(JarBasedPlugin::getURL)
+                    .toArray(URL[]::new);
+            this.plugins = new ArrayList<>(plugins);
+            this.classLoader = new URLClassLoader(urls);
+            this.initialized = true;
+        }
     }
 
     void close() throws IOException {

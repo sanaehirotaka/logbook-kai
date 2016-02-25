@@ -30,12 +30,12 @@ public class ShipCollection {
      * アプリケーションのデフォルト設定ディレクトリから{@link ShipCollection}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(ShipCollection.class)</code>
+     *     <code>Config.getDefault().get(ShipCollection.class, ShipCollection::new)</code>
      * </blockquote>
      *
      * @return {@link ShipCollection}
      */
     public static ShipCollection get() {
-        return Config.getDefault().get(ShipCollection.class);
+        return Config.getDefault().get(ShipCollection.class, ShipCollection::new);
     }
 }

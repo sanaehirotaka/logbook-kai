@@ -2,7 +2,9 @@ package logbook.internal;
 
 import java.beans.ExceptionListener;
 import java.beans.XMLDecoder;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -32,9 +34,10 @@ final class ConfigReader<T> {
                 filepath = filepath.resolveSibling(filepath.getFileName() + ".backup"); //$NON-NLS-1$
             }
             if (Files.isReadable(filepath)) {
-                try (XMLDecoder encoder = new XMLDecoder(Files.newInputStream(filepath),
-                        this.getListener())) {
-                    instance = (T) encoder.readObject();
+                try (InputStream in = new BufferedInputStream(Files.newInputStream(filepath))) {
+                    try (XMLDecoder encoder = new XMLDecoder(in, this.getListener())) {
+                        instance = (T) encoder.readObject();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -44,6 +47,7 @@ final class ConfigReader<T> {
     }
 
     ExceptionListener getListener() {
-        return e -> LogManager.getLogger(Config.class).warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
+        return e -> LogManager.getLogger(ConfigReader.class)
+                .warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
     }
 }

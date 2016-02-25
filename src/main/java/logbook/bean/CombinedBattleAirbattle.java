@@ -7,10 +7,10 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * 戦闘(コピー元)
+ * 航空戦(連合艦隊)
  *
  */
-public class Battle {
+public class CombinedBattleAirbattle {
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;
@@ -57,12 +57,6 @@ public class Battle {
     /** api_formation */
     private List<Integer> formation;
 
-    /** api_touch_plane */
-    private List<Integer> touchPlane;
-
-    /** api_flare_pos */
-    private List<Integer> flarePos;
-
     /** api_stage_flag */
     private List<Integer> stageFlag;
 
@@ -75,29 +69,11 @@ public class Battle {
     /** api_support_info */
     private BattleTypes.SupportInfo supportInfo;
 
-    /** api_opening_flag */
-    private Boolean openingFlag;
+    /** api_stage_flag2 */
+    private List<Integer> stageFlag2;
 
-    /** api_opening_atack */
-    private BattleTypes.Raigeki openingAtack;
-
-    /** api_hourai_flag */
-    private List<Integer> houraiFlag;
-
-    /** api_hougeki */
-    private BattleTypes.MidnightHougeki hougeki;
-
-    /** api_hougeki1 */
-    private BattleTypes.Hougeki hougeki1;
-
-    /** api_raigeki */
-    private BattleTypes.Raigeki raigeki;
-
-    /** api_hougeki2 */
-    private BattleTypes.Hougeki hougeki2;
-
-    /** api_hougeki3 */
-    private BattleTypes.Hougeki hougeki3;
+    /** api_kouku2 */
+    private BattleTypes.Kouku kouku2;
 
     /**
      * api_dock_id/api_deck_idを取得します。
@@ -292,6 +268,70 @@ public class Battle {
     }
 
     /**
+     * api_eSlotを取得します。
+     * @return api_eSlot
+     */
+    public List<List<Integer>> geteSlot() {
+        return this.eSlot;
+    }
+
+    /**
+     * api_eSlotを設定します。
+     * @param eSlot api_eSlot
+     */
+    public void seteSlot(List<List<Integer>> eSlot) {
+        this.eSlot = eSlot;
+    }
+
+    /**
+     * api_eKyoukaを取得します。
+     * @return api_eKyouka
+     */
+    public List<List<Integer>> geteKyouka() {
+        return this.eKyouka;
+    }
+
+    /**
+     * api_eKyoukaを設定します。
+     * @param eKyouka api_eKyouka
+     */
+    public void seteKyouka(List<List<Integer>> eKyouka) {
+        this.eKyouka = eKyouka;
+    }
+
+    /**
+     * api_fParamを取得します。
+     * @return api_fParam
+     */
+    public List<List<Integer>> getfParam() {
+        return this.fParam;
+    }
+
+    /**
+     * api_fParamを設定します。
+     * @param fParam api_fParam
+     */
+    public void setfParam(List<List<Integer>> fParam) {
+        this.fParam = fParam;
+    }
+
+    /**
+     * api_eParamを取得します。
+     * @return api_eParam
+     */
+    public List<List<Integer>> geteParam() {
+        return this.eParam;
+    }
+
+    /**
+     * api_eParamを設定します。
+     * @param eParam api_eParam
+     */
+    public void seteParam(List<List<Integer>> eParam) {
+        this.eParam = eParam;
+    }
+
+    /**
      * api_fParam_combinedを取得します。
      * @return api_fParam_combined
      */
@@ -337,38 +377,6 @@ public class Battle {
      */
     public void setFormation(List<Integer> formation) {
         this.formation = formation;
-    }
-
-    /**
-     * api_touch_planeを取得します。
-     * @return api_touch_plane
-     */
-    public List<Integer> getTouchPlane() {
-        return this.touchPlane;
-    }
-
-    /**
-     * api_touch_planeを設定します。
-     * @param touchPlane api_touch_plane
-     */
-    public void setTouchPlane(List<Integer> touchPlane) {
-        this.touchPlane = touchPlane;
-    }
-
-    /**
-     * api_flare_posを取得します。
-     * @return api_flare_pos
-     */
-    public List<Integer> getFlarePos() {
-        return this.flarePos;
-    }
-
-    /**
-     * api_flare_posを設定します。
-     * @param flarePos api_flare_pos
-     */
-    public void setFlarePos(List<Integer> flarePos) {
-        this.flarePos = flarePos;
     }
 
     /**
@@ -436,141 +444,45 @@ public class Battle {
     }
 
     /**
-     * api_opening_flagを取得します。
-     * @return api_opening_flag
+     * api_stage_flag2を取得します。
+     * @return api_stage_flag2
      */
-    public Boolean getOpeningFlag() {
-        return this.openingFlag;
+    public List<Integer> getStageFlag2() {
+        return this.stageFlag2;
     }
 
     /**
-     * api_opening_flagを設定します。
-     * @param openingFlag api_opening_flag
+     * api_stage_flag2を設定します。
+     * @param stageFlag2 api_stage_flag2
      */
-    public void setOpeningFlag(Boolean openingFlag) {
-        this.openingFlag = openingFlag;
+    public void setStageFlag2(List<Integer> stageFlag2) {
+        this.stageFlag2 = stageFlag2;
     }
 
     /**
-     * api_opening_atackを取得します。
-     * @return api_opening_atack
+     * api_kouku2を取得します。
+     * @return api_kouku2
      */
-    public BattleTypes.Raigeki getOpeningAtack() {
-        return this.openingAtack;
+    public BattleTypes.Kouku getKouku2() {
+        return this.kouku2;
     }
 
     /**
-     * api_opening_atackを設定します。
-     * @param openingAtack api_opening_atack
+     * api_kouku2を設定します。
+     * @param kouku2 api_kouku2
      */
-    public void setOpeningAtack(BattleTypes.Raigeki openingAtack) {
-        this.openingAtack = openingAtack;
+    public void setKouku2(BattleTypes.Kouku kouku2) {
+        this.kouku2 = kouku2;
     }
 
     /**
-     * api_hourai_flagを取得します。
-     * @return api_hourai_flag
-     */
-    public List<Integer> getHouraiFlag() {
-        return this.houraiFlag;
-    }
-
-    /**
-     * api_hourai_flagを設定します。
-     * @param houraiFlag api_hourai_flag
-     */
-    public void setHouraiFlag(List<Integer> houraiFlag) {
-        this.houraiFlag = houraiFlag;
-    }
-
-    /**
-     * api_hougekiを取得します。
-     * @return api_hougeki
-     */
-    public BattleTypes.MidnightHougeki getHougeki() {
-        return this.hougeki;
-    }
-
-    /**
-     * api_hougekiを設定します。
-     * @param hougeki api_hougeki
-     */
-    public void setHougeki(BattleTypes.MidnightHougeki hougeki) {
-        this.hougeki = hougeki;
-    }
-
-    /**
-     * api_hougeki1を取得します。
-     * @return api_hougeki1
-     */
-    public BattleTypes.Hougeki getHougeki1() {
-        return this.hougeki1;
-    }
-
-    /**
-     * api_hougeki1を設定します。
-     * @param hougeki1 api_hougeki1
-     */
-    public void setHougeki1(BattleTypes.Hougeki hougeki1) {
-        this.hougeki1 = hougeki1;
-    }
-
-    /**
-     * api_raigekiを取得します。
-     * @return api_raigeki
-     */
-    public BattleTypes.Raigeki getRaigeki() {
-        return this.raigeki;
-    }
-
-    /**
-     * api_raigekiを設定します。
-     * @param raigeki api_raigeki
-     */
-    public void setRaigeki(BattleTypes.Raigeki raigeki) {
-        this.raigeki = raigeki;
-    }
-
-    /**
-     * api_hougeki2を取得します。
-     * @return api_hougeki2
-     */
-    public BattleTypes.Hougeki getHougeki2() {
-        return this.hougeki2;
-    }
-
-    /**
-     * api_hougeki2を設定します。
-     * @param hougeki2 api_hougeki2
-     */
-    public void setHougeki2(BattleTypes.Hougeki hougeki2) {
-        this.hougeki2 = hougeki2;
-    }
-
-    /**
-     * api_hougeki3を取得します。
-     * @return api_hougeki3
-     */
-    public BattleTypes.Hougeki getHougeki3() {
-        return this.hougeki3;
-    }
-
-    /**
-     * api_hougeki3を設定します。
-     * @param hougeki3 api_hougeki3
-     */
-    public void setHougeki3(BattleTypes.Hougeki hougeki3) {
-        this.hougeki3 = hougeki3;
-    }
-
-    /**
-     * JsonObjectから{@link Battle}を構築します
+     * JsonObjectから{@link CombinedBattleAirbattle}を構築します
      *
      * @param json JsonObject
-     * @return {@link Battle}
+     * @return {@link CombinedBattleAirbattle}
      */
-    public static Battle toBattle(JsonObject json) {
-        Battle bean = new Battle();
+    public static CombinedBattleAirbattle toBattle(JsonObject json) {
+        CombinedBattleAirbattle bean = new CombinedBattleAirbattle();
         JsonHelper.bind(json)
                 .setInteger("api_dock_id", bean::setDockId)
                 .setInteger("api_deck_id", bean::setDockId)
@@ -588,20 +500,12 @@ public class Battle {
                 .set("api_fParam_combined", bean::setFParamCombined, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_search", bean::setSearch, JsonHelper::toIntegerList)
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
-                .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
-                .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
                 .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku)
                 .setBoolean("api_support_flag", bean::setSupportFlag)
                 .set("api_support_info", bean::setSupportInfo, BattleTypes.SupportInfo::toSupportInfo)
-                .setBoolean("api_opening_flag", bean::setOpeningFlag)
-                .set("api_opening_atack", bean::setOpeningAtack, BattleTypes.Raigeki::toRaigeki)
-                .set("api_hourai_flag", bean::setHouraiFlag, JsonHelper::toIntegerList)
-                .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki)
-                .set("api_hougeki1", bean::setHougeki1, BattleTypes.Hougeki::toHougeki)
-                .set("api_raigeki", bean::setRaigeki, BattleTypes.Raigeki::toRaigeki)
-                .set("api_hougeki2", bean::setHougeki2, BattleTypes.Hougeki::toHougeki)
-                .set("api_hougeki3", bean::setHougeki3, BattleTypes.Hougeki::toHougeki);
+                .set("api_stage_flag2", bean::setStageFlag2, JsonHelper::toIntegerList)
+                .set("api_kouku2", bean::setKouku2, BattleTypes.Kouku::toKouku);
         return bean;
     }
 }

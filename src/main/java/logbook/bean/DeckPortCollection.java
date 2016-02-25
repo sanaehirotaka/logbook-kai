@@ -34,12 +34,12 @@ public class DeckPortCollection {
      * アプリケーションのデフォルト設定ディレクトリから<code>DeckPortCollection</code>を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(DeckPortCollection.class)</code>
+     *     <code>Config.getDefault().get(DeckPortCollection.class, DeckPortCollection::new)</code>
      * </blockquote>
      *
      * @return <code>DeckPortCollection</code>
      */
     public static DeckPortCollection get() {
-        return Config.getDefault().get(DeckPortCollection.class);
+        return Config.getDefault().get(DeckPortCollection.class, DeckPortCollection::new);
     }
 }

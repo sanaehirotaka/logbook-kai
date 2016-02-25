@@ -2,7 +2,9 @@ package logbook.internal;
 
 import java.beans.ExceptionListener;
 import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -16,6 +18,8 @@ import logbook.Messages;
  * 設定書き込み
  */
 final class ConfigWriter {
+
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 16;
 
     private final Path path;
 
@@ -38,10 +42,12 @@ final class ConfigWriter {
                 // ファイルが存在してかつサイズが0を超える場合、ファイルをバックアップにリネームする
                 Files.move(this.path, backup, StandardCopyOption.REPLACE_EXISTING);
             }
-            try (XMLEncoder encoder = new XMLEncoder(Files.newOutputStream(this.path,
-                    StandardOpenOption.CREATE))) {
-                encoder.setExceptionListener(this.getListener());
-                encoder.writeObject(instance);
+            try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(this.path,
+                    StandardOpenOption.CREATE), DEFAULT_BUFFER_SIZE)) {
+                try (XMLEncoder encoder = new XMLEncoder(out)) {
+                    encoder.setExceptionListener(this.getListener());
+                    encoder.writeObject(instance);
+                }
             }
         } catch (IOException e) {
             this.getListener().exceptionThrown(e);
@@ -49,6 +55,7 @@ final class ConfigWriter {
     }
 
     ExceptionListener getListener() {
-        return e -> LogManager.getLogger(Config.class).warn(Messages.getString("ConfigWriter.1"), e); //$NON-NLS-1$
+        return e -> LogManager.getLogger(ConfigWriter.class)
+                .warn(Messages.getString("ConfigWriter.1"), e); //$NON-NLS-1$
     }
 }

@@ -34,12 +34,12 @@ public class NdockCollection {
      * アプリケーションのデフォルト設定ディレクトリから<code>NdockCollection</code>を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(NdockCollection.class)</code>
+     *     <code>Config.getDefault().get(NdockCollection.class, NdockCollection::new)</code>
      * </blockquote>
      *
      * @return <code>NdockCollection</code>
      */
     public static NdockCollection get() {
-        return Config.getDefault().get(NdockCollection.class);
+        return Config.getDefault().get(NdockCollection.class, NdockCollection::new);
     }
 }

@@ -34,12 +34,12 @@ public class UseitemCollection {
      * アプリケーションのデフォルト設定ディレクトリから{@link UseitemCollection}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(UseitemCollection.class)</code>
+     *     <code>Config.getDefault().get(UseitemCollection.class, UseitemCollection::new)</code>
      * </blockquote>
      *
      * @return {@link UseitemCollection}
      */
     public static UseitemCollection get() {
-        return Config.getDefault().get(UseitemCollection.class);
+        return Config.getDefault().get(UseitemCollection.class, UseitemCollection::new);
     }
 }

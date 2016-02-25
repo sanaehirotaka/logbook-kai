@@ -34,12 +34,12 @@ public class ShipDescriptionCollection {
      * アプリケーションのデフォルト設定ディレクトリから{@link ShipDescriptionCollection}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(ShipDescriptionCollection.class)</code>
+     *     <code>Config.getDefault().get(ShipDescriptionCollection.class, ShipDescriptionCollection::new)</code>
      * </blockquote>
      *
      * @return {@link ShipDescriptionCollection}
      */
     public static ShipDescriptionCollection get() {
-        return Config.getDefault().get(ShipDescriptionCollection.class);
+        return Config.getDefault().get(ShipDescriptionCollection.class, ShipDescriptionCollection::new);
     }
 }

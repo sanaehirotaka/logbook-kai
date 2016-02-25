@@ -34,12 +34,12 @@ public class MaterialCollection {
      * アプリケーションのデフォルト設定ディレクトリから{@link MaterialCollection}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(MaterialCollection.class)</code>
+     *     <code>Config.getDefault().get(MaterialCollection.class, MaterialCollection::new)</code>
      * </blockquote>
      *
      * @return {@link MaterialCollection}
      */
     public static MaterialCollection get() {
-        return Config.getDefault().get(MaterialCollection.class);
+        return Config.getDefault().get(MaterialCollection.class, MaterialCollection::new);
     }
 }

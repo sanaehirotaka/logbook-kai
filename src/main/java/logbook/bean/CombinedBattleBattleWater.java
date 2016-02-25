@@ -7,10 +7,10 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * 戦闘(コピー元)
+ * 機動部隊(水上部隊)
  *
  */
-public class Battle {
+public class CombinedBattleBattleWater {
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;
@@ -57,12 +57,6 @@ public class Battle {
     /** api_formation */
     private List<Integer> formation;
 
-    /** api_touch_plane */
-    private List<Integer> touchPlane;
-
-    /** api_flare_pos */
-    private List<Integer> flarePos;
-
     /** api_stage_flag */
     private List<Integer> stageFlag;
 
@@ -84,20 +78,17 @@ public class Battle {
     /** api_hourai_flag */
     private List<Integer> houraiFlag;
 
-    /** api_hougeki */
-    private BattleTypes.MidnightHougeki hougeki;
-
     /** api_hougeki1 */
     private BattleTypes.Hougeki hougeki1;
-
-    /** api_raigeki */
-    private BattleTypes.Raigeki raigeki;
 
     /** api_hougeki2 */
     private BattleTypes.Hougeki hougeki2;
 
     /** api_hougeki3 */
     private BattleTypes.Hougeki hougeki3;
+
+    /** api_raigeki */
+    private BattleTypes.Raigeki raigeki;
 
     /**
      * api_dock_id/api_deck_idを取得します。
@@ -340,38 +331,6 @@ public class Battle {
     }
 
     /**
-     * api_touch_planeを取得します。
-     * @return api_touch_plane
-     */
-    public List<Integer> getTouchPlane() {
-        return this.touchPlane;
-    }
-
-    /**
-     * api_touch_planeを設定します。
-     * @param touchPlane api_touch_plane
-     */
-    public void setTouchPlane(List<Integer> touchPlane) {
-        this.touchPlane = touchPlane;
-    }
-
-    /**
-     * api_flare_posを取得します。
-     * @return api_flare_pos
-     */
-    public List<Integer> getFlarePos() {
-        return this.flarePos;
-    }
-
-    /**
-     * api_flare_posを設定します。
-     * @param flarePos api_flare_pos
-     */
-    public void setFlarePos(List<Integer> flarePos) {
-        this.flarePos = flarePos;
-    }
-
-    /**
      * api_stage_flagを取得します。
      * @return api_stage_flag
      */
@@ -484,22 +443,6 @@ public class Battle {
     }
 
     /**
-     * api_hougekiを取得します。
-     * @return api_hougeki
-     */
-    public BattleTypes.MidnightHougeki getHougeki() {
-        return this.hougeki;
-    }
-
-    /**
-     * api_hougekiを設定します。
-     * @param hougeki api_hougeki
-     */
-    public void setHougeki(BattleTypes.MidnightHougeki hougeki) {
-        this.hougeki = hougeki;
-    }
-
-    /**
      * api_hougeki1を取得します。
      * @return api_hougeki1
      */
@@ -513,22 +456,6 @@ public class Battle {
      */
     public void setHougeki1(BattleTypes.Hougeki hougeki1) {
         this.hougeki1 = hougeki1;
-    }
-
-    /**
-     * api_raigekiを取得します。
-     * @return api_raigeki
-     */
-    public BattleTypes.Raigeki getRaigeki() {
-        return this.raigeki;
-    }
-
-    /**
-     * api_raigekiを設定します。
-     * @param raigeki api_raigeki
-     */
-    public void setRaigeki(BattleTypes.Raigeki raigeki) {
-        this.raigeki = raigeki;
     }
 
     /**
@@ -564,13 +491,29 @@ public class Battle {
     }
 
     /**
-     * JsonObjectから{@link Battle}を構築します
+     * api_raigekiを取得します。
+     * @return api_raigeki
+     */
+    public BattleTypes.Raigeki getRaigeki() {
+        return this.raigeki;
+    }
+
+    /**
+     * api_raigekiを設定します。
+     * @param raigeki api_raigeki
+     */
+    public void setRaigeki(BattleTypes.Raigeki raigeki) {
+        this.raigeki = raigeki;
+    }
+
+    /**
+     * JsonObjectから{@link CombinedBattleBattleWater}を構築します
      *
      * @param json JsonObject
-     * @return {@link Battle}
+     * @return {@link CombinedBattleBattleWater}
      */
-    public static Battle toBattle(JsonObject json) {
-        Battle bean = new Battle();
+    public static CombinedBattleBattleWater toBattle(JsonObject json) {
+        CombinedBattleBattleWater bean = new CombinedBattleBattleWater();
         JsonHelper.bind(json)
                 .setInteger("api_dock_id", bean::setDockId)
                 .setInteger("api_deck_id", bean::setDockId)
@@ -588,8 +531,6 @@ public class Battle {
                 .set("api_fParam_combined", bean::setFParamCombined, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_search", bean::setSearch, JsonHelper::toIntegerList)
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
-                .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
-                .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
                 .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku)
                 .setBoolean("api_support_flag", bean::setSupportFlag)
@@ -597,11 +538,10 @@ public class Battle {
                 .setBoolean("api_opening_flag", bean::setOpeningFlag)
                 .set("api_opening_atack", bean::setOpeningAtack, BattleTypes.Raigeki::toRaigeki)
                 .set("api_hourai_flag", bean::setHouraiFlag, JsonHelper::toIntegerList)
-                .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki)
                 .set("api_hougeki1", bean::setHougeki1, BattleTypes.Hougeki::toHougeki)
-                .set("api_raigeki", bean::setRaigeki, BattleTypes.Raigeki::toRaigeki)
                 .set("api_hougeki2", bean::setHougeki2, BattleTypes.Hougeki::toHougeki)
-                .set("api_hougeki3", bean::setHougeki3, BattleTypes.Hougeki::toHougeki);
+                .set("api_hougeki3", bean::setHougeki3, BattleTypes.Hougeki::toHougeki)
+                .set("api_raigeki", bean::setRaigeki, BattleTypes.Raigeki::toRaigeki);
         return bean;
     }
 }

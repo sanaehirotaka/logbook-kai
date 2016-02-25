@@ -161,7 +161,7 @@ public class BattleTypes {
          * api_f_countを取得します。
          * @return api_f_count
          */
-        public Integer getfCount() {
+        public Integer getFCount() {
             return this.fCount;
         }
 
@@ -169,7 +169,7 @@ public class BattleTypes {
          * api_f_countを設定します。
          * @param fCount api_f_count
          */
-        public void setfCount(Integer fCount) {
+        public void setFCount(Integer fCount) {
             this.fCount = fCount;
         }
 
@@ -177,7 +177,7 @@ public class BattleTypes {
          * api_f_lostcountを取得します。
          * @return api_f_lostcount
          */
-        public Integer getfLostcount() {
+        public Integer getFLostcount() {
             return this.fLostcount;
         }
 
@@ -185,7 +185,7 @@ public class BattleTypes {
          * api_f_lostcountを設定します。
          * @param fLostcount api_f_lostcount
          */
-        public void setfLostcount(Integer fLostcount) {
+        public void setFLostcount(Integer fLostcount) {
             this.fLostcount = fLostcount;
         }
 
@@ -193,7 +193,7 @@ public class BattleTypes {
          * api_e_countを取得します。
          * @return api_e_count
          */
-        public Integer geteCount() {
+        public Integer getECount() {
             return this.eCount;
         }
 
@@ -201,7 +201,7 @@ public class BattleTypes {
          * api_e_countを設定します。
          * @param eCount api_e_count
          */
-        public void seteCount(Integer eCount) {
+        public void setECount(Integer eCount) {
             this.eCount = eCount;
         }
 
@@ -209,7 +209,7 @@ public class BattleTypes {
          * api_e_lostcountを取得します。
          * @return api_e_lostcount
          */
-        public Integer geteLostcount() {
+        public Integer getELostcount() {
             return this.eLostcount;
         }
 
@@ -217,7 +217,7 @@ public class BattleTypes {
          * api_e_lostcountを設定します。
          * @param eLostcount api_e_lostcount
          */
-        public void seteLostcount(Integer eLostcount) {
+        public void setELostcount(Integer eLostcount) {
             this.eLostcount = eLostcount;
         }
 
@@ -262,10 +262,10 @@ public class BattleTypes {
         public static Stage1 toStage1(JsonObject json) {
             Stage1 bean = new Stage1();
             JsonHelper.bind(json)
-                    .setInteger("api_f_count", bean::setfCount)
-                    .setInteger("api_f_lostcount", bean::setfLostcount)
-                    .setInteger("api_e_count", bean::seteCount)
-                    .setInteger("api_e_lostcount", bean::seteLostcount)
+                    .setInteger("api_f_count", bean::setFCount)
+                    .setInteger("api_f_lostcount", bean::setFLostcount)
+                    .setInteger("api_e_count", bean::setECount)
+                    .setInteger("api_e_lostcount", bean::setELostcount)
                     .setInteger("api_disp_seiku", bean::setDispSeiku)
                     .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList);
             return bean;
@@ -296,7 +296,7 @@ public class BattleTypes {
          * api_f_countを取得します。
          * @return api_f_count
          */
-        public Integer getfCount() {
+        public Integer getFCount() {
             return this.fCount;
         }
 
@@ -304,7 +304,7 @@ public class BattleTypes {
          * api_f_countを設定します。
          * @param fCount api_f_count
          */
-        public void setfCount(Integer fCount) {
+        public void setFCount(Integer fCount) {
             this.fCount = fCount;
         }
 
@@ -312,7 +312,7 @@ public class BattleTypes {
          * api_f_lostcountを取得します。
          * @return api_f_lostcount
          */
-        public Integer getfLostcount() {
+        public Integer getFLostcount() {
             return this.fLostcount;
         }
 
@@ -320,7 +320,7 @@ public class BattleTypes {
          * api_f_lostcountを設定します。
          * @param fLostcount api_f_lostcount
          */
-        public void setfLostcount(Integer fLostcount) {
+        public void setFLostcount(Integer fLostcount) {
             this.fLostcount = fLostcount;
         }
 
@@ -328,7 +328,7 @@ public class BattleTypes {
          * api_e_countを取得します。
          * @return api_e_count
          */
-        public Integer geteCount() {
+        public Integer getECount() {
             return this.eCount;
         }
 
@@ -336,7 +336,7 @@ public class BattleTypes {
          * api_e_countを設定します。
          * @param eCount api_e_count
          */
-        public void seteCount(Integer eCount) {
+        public void setECount(Integer eCount) {
             this.eCount = eCount;
         }
 
@@ -344,7 +344,7 @@ public class BattleTypes {
          * api_e_lostcountを取得します。
          * @return api_e_lostcount
          */
-        public Integer geteLostcount() {
+        public Integer getELostcount() {
             return this.eLostcount;
         }
 
@@ -352,7 +352,7 @@ public class BattleTypes {
          * api_e_lostcountを設定します。
          * @param eLostcount api_e_lostcount
          */
-        public void seteLostcount(Integer eLostcount) {
+        public void setELostcount(Integer eLostcount) {
             this.eLostcount = eLostcount;
         }
 
@@ -381,10 +381,10 @@ public class BattleTypes {
         public static Stage2 toStage2(JsonObject json) {
             Stage2 bean = new Stage2();
             JsonHelper.bind(json)
-                    .setInteger("api_f_count", bean::setfCount)
-                    .setInteger("api_f_lostcount", bean::setfLostcount)
-                    .setInteger("api_e_count", bean::seteCount)
-                    .setInteger("api_e_lostcount", bean::seteLostcount)
+                    .setInteger("api_f_count", bean::setFCount)
+                    .setInteger("api_f_lostcount", bean::setFLostcount)
+                    .setInteger("api_e_count", bean::setECount)
+                    .setInteger("api_e_lostcount", bean::setELostcount)
                     .set("api_air_fire", bean::setAirFire, AirFire::toAirFire);
             return bean;
         }

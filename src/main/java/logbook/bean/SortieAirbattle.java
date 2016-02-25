@@ -7,7 +7,7 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * 戦闘
+ * 航空戦
  *
  */
 public class SortieAirbattle {
@@ -166,7 +166,7 @@ public class SortieAirbattle {
      * api_eSlotを取得します。
      * @return api_eSlot
      */
-    public List<List<Integer>> geteSlot() {
+    public List<List<Integer>> getESlot() {
         return this.eSlot;
     }
 
@@ -174,7 +174,7 @@ public class SortieAirbattle {
      * api_eSlotを設定します。
      * @param eSlot api_eSlot
      */
-    public void seteSlot(List<List<Integer>> eSlot) {
+    public void setESlot(List<List<Integer>> eSlot) {
         this.eSlot = eSlot;
     }
 
@@ -182,7 +182,7 @@ public class SortieAirbattle {
      * api_eKyoukaを取得します。
      * @return api_eKyouka
      */
-    public List<List<Integer>> geteKyouka() {
+    public List<List<Integer>> getEKyouka() {
         return this.eKyouka;
     }
 
@@ -190,7 +190,7 @@ public class SortieAirbattle {
      * api_eKyoukaを設定します。
      * @param eKyouka api_eKyouka
      */
-    public void seteKyouka(List<List<Integer>> eKyouka) {
+    public void setEKyouka(List<List<Integer>> eKyouka) {
         this.eKyouka = eKyouka;
     }
 
@@ -198,7 +198,7 @@ public class SortieAirbattle {
      * api_fParamを取得します。
      * @return api_fParam
      */
-    public List<List<Integer>> getfParam() {
+    public List<List<Integer>> getFParam() {
         return this.fParam;
     }
 
@@ -206,7 +206,7 @@ public class SortieAirbattle {
      * api_fParamを設定します。
      * @param fParam api_fParam
      */
-    public void setfParam(List<List<Integer>> fParam) {
+    public void setFParam(List<List<Integer>> fParam) {
         this.fParam = fParam;
     }
 
@@ -214,7 +214,7 @@ public class SortieAirbattle {
      * api_eParamを取得します。
      * @return api_eParam
      */
-    public List<List<Integer>> geteParam() {
+    public List<List<Integer>> getEParam() {
         return this.eParam;
     }
 
@@ -222,7 +222,7 @@ public class SortieAirbattle {
      * api_eParamを設定します。
      * @param eParam api_eParam
      */
-    public void seteParam(List<List<Integer>> eParam) {
+    public void setEParam(List<List<Integer>> eParam) {
         this.eParam = eParam;
     }
 
@@ -370,10 +370,10 @@ public class SortieAirbattle {
                 .set("api_nowhps", bean::setNowhps, JsonHelper::toIntegerList)
                 .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
                 .setBoolean("api_midnight_flag", bean::setMidnightFlag)
-                .set("api_eSlot", bean::seteSlot, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_eKyouka", bean::seteKyouka, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_fParam", bean::setfParam, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_eParam", bean::seteParam, JsonHelper.toList(JsonHelper::toIntegerList))
+                .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
+                .set("api_eKyouka", bean::setEKyouka, JsonHelper.toList(JsonHelper::toIntegerList))
+                .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
+                .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_search", bean::setSearch, JsonHelper::toIntegerList)
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)

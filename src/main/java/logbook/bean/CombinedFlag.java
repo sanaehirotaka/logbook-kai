@@ -16,7 +16,7 @@ public class CombinedFlag {
      * @return api_combined_flag
      */
     public Boolean getCombinedFlag() {
-        return combinedFlag;
+        return this.combinedFlag;
     }
 
     /**
@@ -31,12 +31,12 @@ public class CombinedFlag {
      * アプリケーションのデフォルト設定ディレクトリから{@link CombinedFlag}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(CombinedFlag.class)</code>
+     *     <code>Config.getDefault().get(CombinedFlag.class, CombinedFlag::new)</code>
      * </blockquote>
      *
      * @return {@link CombinedFlag}
      */
     public static CombinedFlag get() {
-        return Config.getDefault().get(CombinedFlag.class);
+        return Config.getDefault().get(CombinedFlag.class, CombinedFlag::new);
     }
 }

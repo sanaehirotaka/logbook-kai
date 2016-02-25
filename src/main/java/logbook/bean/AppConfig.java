@@ -145,12 +145,12 @@ public final class AppConfig {
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(AppConfig.class)</code>
+     *     <code>Config.getDefault().get(AppConfig.class, AppConfig::new)</code>
      * </blockquote>
      *
      * @return アプリケーションの設定
      */
     public static AppConfig get() {
-        return Config.getDefault().get(AppConfig.class);
+        return Config.getDefault().get(AppConfig.class, AppConfig::new);
     }
 }

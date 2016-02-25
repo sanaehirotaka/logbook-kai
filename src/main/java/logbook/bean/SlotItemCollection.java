@@ -34,12 +34,12 @@ public class SlotItemCollection {
      * アプリケーションのデフォルト設定ディレクトリから{@link SlotItemCollection}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(SlotItemCollection.class)</code>
+     *     <code>Config.getDefault().get(SlotItemCollection.class, SlotItemCollection::new)</code>
      * </blockquote>
      *
      * @return {@link SlotItemCollection}
      */
     public static SlotItemCollection get() {
-        return Config.getDefault().get(SlotItemCollection.class);
+        return Config.getDefault().get(SlotItemCollection.class, SlotItemCollection::new);
     }
 }

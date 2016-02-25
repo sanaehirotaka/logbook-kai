@@ -7,10 +7,10 @@ import javax.json.JsonObject;
 import logbook.internal.JsonHelper;
 
 /**
- * 夜戦
+ * 長距離空襲戦
  *
  */
-public class BattleMidnightBattle {
+public class SortieLdAirbattle {
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;
@@ -27,6 +27,9 @@ public class BattleMidnightBattle {
     /** api_maxhps */
     private List<Integer> maxhps;
 
+    /** api_midnight_flag */
+    private Boolean midnightFlag;
+
     /** api_eSlot */
     private List<List<Integer>> eSlot;
 
@@ -39,14 +42,17 @@ public class BattleMidnightBattle {
     /** api_eParam */
     private List<List<Integer>> eParam;
 
-    /** api_touch_plane */
-    private List<Integer> touchPlane;
+    /** api_search */
+    private List<Integer> search;
 
-    /** api_flare_pos */
-    private List<Integer> flarePos;
+    /** api_formation */
+    private List<Integer> formation;
 
-    /** api_hougeki */
-    private BattleTypes.MidnightHougeki hougeki;
+    /** api_stage_flag */
+    private List<Integer> stageFlag;
+
+    /** api_kouku */
+    private BattleTypes.Kouku kouku;
 
     /**
      * api_dock_id/api_deck_idを取得します。
@@ -129,6 +135,22 @@ public class BattleMidnightBattle {
     }
 
     /**
+     * api_midnight_flagを取得します。
+     * @return api_midnight_flag
+     */
+    public Boolean getMidnightFlag() {
+        return this.midnightFlag;
+    }
+
+    /**
+     * api_midnight_flagを設定します。
+     * @param midnightFlag api_midnight_flag
+     */
+    public void setMidnightFlag(Boolean midnightFlag) {
+        this.midnightFlag = midnightFlag;
+    }
+
+    /**
      * api_eSlotを取得します。
      * @return api_eSlot
      */
@@ -193,61 +215,77 @@ public class BattleMidnightBattle {
     }
 
     /**
-     * api_touch_planeを取得します。
-     * @return api_touch_plane
+     * api_searchを取得します。
+     * @return api_search
      */
-    public List<Integer> getTouchPlane() {
-        return this.touchPlane;
+    public List<Integer> getSearch() {
+        return this.search;
     }
 
     /**
-     * api_touch_planeを設定します。
-     * @param touchPlane api_touch_plane
+     * api_searchを設定します。
+     * @param search api_search
      */
-    public void setTouchPlane(List<Integer> touchPlane) {
-        this.touchPlane = touchPlane;
+    public void setSearch(List<Integer> search) {
+        this.search = search;
     }
 
     /**
-     * api_flare_posを取得します。
-     * @return api_flare_pos
+     * api_formationを取得します。
+     * @return api_formation
      */
-    public List<Integer> getFlarePos() {
-        return this.flarePos;
+    public List<Integer> getFormation() {
+        return this.formation;
     }
 
     /**
-     * api_flare_posを設定します。
-     * @param flarePos api_flare_pos
+     * api_formationを設定します。
+     * @param formation api_formation
      */
-    public void setFlarePos(List<Integer> flarePos) {
-        this.flarePos = flarePos;
+    public void setFormation(List<Integer> formation) {
+        this.formation = formation;
     }
 
     /**
-     * api_hougekiを取得します。
-     * @return api_hougeki
+     * api_stage_flagを取得します。
+     * @return api_stage_flag
      */
-    public BattleTypes.MidnightHougeki getHougeki() {
-        return this.hougeki;
+    public List<Integer> getStageFlag() {
+        return this.stageFlag;
     }
 
     /**
-     * api_hougekiを設定します。
-     * @param hougeki api_hougeki
+     * api_stage_flagを設定します。
+     * @param stageFlag api_stage_flag
      */
-    public void setHougeki(BattleTypes.MidnightHougeki hougeki) {
-        this.hougeki = hougeki;
+    public void setStageFlag(List<Integer> stageFlag) {
+        this.stageFlag = stageFlag;
     }
 
     /**
-     * JsonObjectから{@link BattleMidnightBattle}を構築します
+     * api_koukuを取得します。
+     * @return api_kouku
+     */
+    public BattleTypes.Kouku getKouku() {
+        return this.kouku;
+    }
+
+    /**
+     * api_koukuを設定します。
+     * @param kouku api_kouku
+     */
+    public void setKouku(BattleTypes.Kouku kouku) {
+        this.kouku = kouku;
+    }
+
+    /**
+     * JsonObjectから{@link SortieLdAirbattle}を構築します
      *
      * @param json JsonObject
-     * @return {@link BattleMidnightBattle}
+     * @return {@link SortieLdAirbattle}
      */
-    public static BattleMidnightBattle toBattle(JsonObject json) {
-        BattleMidnightBattle bean = new BattleMidnightBattle();
+    public static SortieLdAirbattle toBattle(JsonObject json) {
+        SortieLdAirbattle bean = new SortieLdAirbattle();
         JsonHelper.bind(json)
                 .setInteger("api_dock_id", bean::setDockId)
                 .setInteger("api_deck_id", bean::setDockId)
@@ -255,13 +293,15 @@ public class BattleMidnightBattle {
                 .set("api_ship_lv", bean::setShipLv, JsonHelper::toIntegerList)
                 .set("api_nowhps", bean::setNowhps, JsonHelper::toIntegerList)
                 .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
+                .setBoolean("api_midnight_flag", bean::setMidnightFlag)
                 .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eKyouka", bean::setEKyouka, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
-                .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
-                .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki);
+                .set("api_search", bean::setSearch, JsonHelper::toIntegerList)
+                .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
+                .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
+                .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku);
         return bean;
     }
 }

@@ -34,12 +34,12 @@ public class StypeCollection {
      * アプリケーションのデフォルト設定ディレクトリから{@link StypeCollection}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(StypeCollection.class)</code>
+     *     <code>Config.getDefault().get(StypeCollection.class, StypeCollection::new)</code>
      * </blockquote>
      *
      * @return {@link StypeCollection}
      */
     public static StypeCollection get() {
-        return Config.getDefault().get(StypeCollection.class);
+        return Config.getDefault().get(StypeCollection.class, StypeCollection::new);
     }
 }

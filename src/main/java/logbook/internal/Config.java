@@ -4,6 +4,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * アプリケーションの設定を読み書きします
@@ -37,10 +40,14 @@ public final class Config {
      *
      * @param <T> Bean型
      * @param clazz Bean型 Classオブジェクト
+     * @param def デフォルト値を供給するSupplier
      * @return 設定
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(Class<T> clazz) {
+    public <T> T get(Class<T> clazz, Supplier<T> def) {
+        Objects.requireNonNull(clazz);
+        Objects.requireNonNull(def);
+
         T instance;
         synchronized (this.map) {
             instance = (T) this.map.get(clazz);
@@ -49,11 +56,7 @@ public final class Config {
                 instance = reader.read(clazz);
             }
             if (instance == null) {
-                try {
-                    instance = clazz.newInstance();
-                } catch (ReflectiveOperationException e) {
-                    throw new IllegalStateException(e);
-                }
+                instance = def.get();
             }
             this.map.put(clazz, instance);
         }
@@ -65,22 +68,20 @@ public final class Config {
      */
     public void store() {
         synchronized (this.map) {
-            this.map.forEach((clazz, instance) -> this.store(clazz));
+            this.map.entrySet()
+                .parallelStream()
+                .forEach(this::store);
         }
     }
 
     /**
-     * clazzで指定された型のBeanインスタンスをXMLEncoderテキスト表現でファイルに書き込みます
+     * BeanインスタンスをXMLEncoderテキスト表現でファイルに書き込みます
      *
-     * @param clazz Bean型 Classオブジェクト
+     * @param entry Classオブジェクトとオブジェクトのペア
      */
-    private void store(Class<?> clazz) {
-        Object instance = this.map.get(clazz);
-        if (instance == null) {
-            instance = this.get(clazz);
-        }
-        ConfigWriter writer = new ConfigWriter(this.getPath(clazz));
-        writer.write(instance);
+    private void store(Entry<Class<?>, ?> entry) {
+        ConfigWriter writer = new ConfigWriter(this.getPath(entry.getKey()));
+        writer.write(entry.getValue());
     }
 
     private <T> Path getPath(Class<T> clazz) {

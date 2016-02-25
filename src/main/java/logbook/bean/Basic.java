@@ -267,12 +267,12 @@ public class Basic {
      * アプリケーションのデフォルト設定ディレクトリから{@link Basic}を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(Basic.class)</code>
+     *     <code>Config.getDefault().get(Basic.class, Basic::new)</code>
      * </blockquote>
      *
      * @return {@link Basic}
      */
     public static Basic get() {
-        return Config.getDefault().get(Basic.class);
+        return Config.getDefault().get(Basic.class, Basic::new);
     }
 }
