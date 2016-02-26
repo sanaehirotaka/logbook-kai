@@ -11,7 +11,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Stage myStage = InternalFXMLLoader.load("logbook/gui/main.fxml"); //$NON-NLS-1$
+        Stage myStage = InternalFXMLLoader.load("logbook/gui/main.fxml").load(); //$NON-NLS-1$
         myStage.show();
     }
 
