@@ -107,6 +107,13 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/cmykjpeg.jar</systemPath>
 		</dependency>
+		<dependency>
+			<groupId>LZMA</groupId>
+			<artifactId>LZMA</artifactId>
+			<version>0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/LZMA.jar</systemPath>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

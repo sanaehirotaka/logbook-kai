@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.base.CharacterTag;
 import com.jpexs.decompiler.flash.tags.base.ImageTag;
@@ -46,7 +49,11 @@ public class SWFListener implements ContentListenerSpi {
             if (uri.startsWith("/kcs/resources/swf/icons.swf")) {
                 this.icons(request, response);
             }
+            if (uri.startsWith("/kcs/resources/swf/commonAssets.swf")) {
+                this.common(request, response);
+            }
         } catch (Exception e) {
+            LoggerHolder.LOG.warn("SWF処理中に例外が発生しました", e);
         }
     }
 
@@ -174,6 +181,22 @@ public class SWFListener implements ContentListenerSpi {
         if (response.getResponseBody().isPresent()) {
             InputStream in = response.getResponseBody().get();
             Path dir = SlotitemDescription.getResourcePathDir();
+            this.storeItemImages(dir, in);
+        }
+    }
+
+    /**
+     * /kcs/resources/swf/commonAssets.swf を処理します
+     *
+     * @param request リクエストに含まれている情報
+     * @param response レスポンスに含まれている情報
+     * @throws IOException 入出力例外またはSWFファイルの解析に失敗した場合
+     * @throws InterruptedException SWFファイルの解析に失敗した場合
+     */
+    void common(RequestMetaData request, ResponseMetaData response) throws IOException, InterruptedException {
+        if (response.getResponseBody().isPresent()) {
+            InputStream in = response.getResponseBody().get();
+            Path dir = ShipImage.getResourcePathDir();
             this.storeImages(dir, in);
         }
     }
@@ -216,5 +239,50 @@ public class SWFListener implements ContentListenerSpi {
                 }
             }
         }
+    }
+
+    /**
+     * 画像ファイルを保存します
+     * @param dir 保存先のディレクトリ
+     * @param in SWFファイル
+     * @throws IOException 入出力例外またはSWFファイルの解析に失敗した場合
+     * @throws InterruptedException SWFファイルの解析に失敗した場合
+     */
+    void storeItemImages(Path dir, InputStream in) throws IOException, InterruptedException {
+        if (!Files.exists(dir)) {
+            Files.createDirectories(dir);
+        }
+        SWF swf = new SWF(in, false);
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        for (Entry<Integer, CharacterTag> e : swf.getCharacters().entrySet()) {
+            if (e.getValue() instanceof ImageTag) {
+                ImageTag img = (ImageTag) e.getValue();
+                String ext;
+                switch (img.getImageFormat()) {
+                case JPEG:
+                    ext = "jpg";
+                    break;
+                default:
+                    ext = img.getImageFormat().toString().toLowerCase();
+                    break;
+                }
+
+                Path file = dir.resolve(img.getCharacterId() + "." + ext);
+
+                try (OutputStream out = Files.newOutputStream(file)) {
+                    try (InputStream data = img.getImageData()) {
+                        int n = 0;
+                        while (-1 != (n = data.read(buffer))) {
+                            out.write(buffer, 0, n);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(SWFListener.class);
     }
 }

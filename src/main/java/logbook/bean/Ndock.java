@@ -19,13 +19,13 @@ public class Ndock {
     /** api_item1 */
     private Integer item1;
 
-    /** api_item1 */
+    /** api_item2 */
     private Integer item2;
 
-    /** api_item1 */
+    /** api_item3 */
     private Integer item3;
 
-    /** api_item1 */
+    /** api_item4 */
     private Integer item4;
 
     /** api_ship_id */
@@ -83,48 +83,48 @@ public class Ndock {
     }
 
     /**
-     * api_item1を取得します。
-     * @return api_item1
+     * api_item2を取得します。
+     * @return api_item2
      */
     public Integer getItem2() {
         return this.item2;
     }
 
     /**
-     * api_item1を設定します。
-     * @param item2 api_item1
+     * api_item2を設定します。
+     * @param item2 api_item2
      */
     public void setItem2(Integer item2) {
         this.item2 = item2;
     }
 
     /**
-     * api_item1を取得します。
-     * @return api_item1
+     * api_item3を取得します。
+     * @return api_item3
      */
     public Integer getItem3() {
         return this.item3;
     }
 
     /**
-     * api_item1を設定します。
-     * @param item3 api_item1
+     * api_item3を設定します。
+     * @param item3 api_item3
      */
     public void setItem3(Integer item3) {
         this.item3 = item3;
     }
 
     /**
-     * api_item1を取得します。
-     * @return api_item1
+     * api_item4を取得します。
+     * @return api_item4
      */
     public Integer getItem4() {
         return this.item4;
     }
 
     /**
-     * api_item1を設定します。
-     * @param item4 api_item1
+     * api_item4を設定します。
+     * @param item4 api_item4
      */
     public void setItem4(Integer item4) {
         this.item4 = item4;

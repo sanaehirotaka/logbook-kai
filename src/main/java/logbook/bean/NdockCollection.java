@@ -1,7 +1,9 @@
 package logbook.bean;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import logbook.internal.Config;
 
@@ -13,6 +15,9 @@ public class NdockCollection {
 
     /** 入渠ドック */
     private Map<Integer, Ndock> ndockMap = new HashMap<>();
+
+    /** 入渠中の艦娘 */
+    private Set<Integer> ndockSet = new HashSet<>();
 
     /**
      * 入渠ドックを取得します。
@@ -28,6 +33,22 @@ public class NdockCollection {
      */
     public void setNdockMap(Map<Integer, Ndock> ndockMap) {
         this.ndockMap = ndockMap;
+    }
+
+    /**
+     * 入渠中の艦娘を取得します。
+     * @return 入渠中の艦娘
+     */
+    public Set<Integer> getNdockSet() {
+        return this.ndockSet;
+    }
+
+    /**
+     * 入渠中の艦娘を設定します。
+     * @param ndockSet 入渠中の艦娘
+     */
+    public void setNdockSet(Set<Integer> ndockSet) {
+        this.ndockSet = ndockSet;
     }
 
     /**

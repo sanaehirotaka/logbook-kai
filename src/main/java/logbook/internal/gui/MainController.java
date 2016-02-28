@@ -1,12 +1,19 @@
 package logbook.internal.gui;
 
+import java.util.Map;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import logbook.bean.NdockCollection;
+import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
 import logbook.proxy.ProxyServer;
 
 /**
@@ -75,6 +82,16 @@ public class MainController {
      * @param e
      */
     void update(ActionEvent e) {
-        // TODO 未実装
+        ObservableList<Node> ndock = this.ndockbox.getChildren();
+        ndock.clear();
+        Map<Integer, Ship> ships = ShipCollection.get()
+                .getShipMap();
+        NdockCollection.get()
+                .getNdockSet()
+                .stream()
+                .map(ships::get)
+                .map(ShipPane::new)
+                .forEach(ndock::add);
+
     }
 }

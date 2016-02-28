@@ -1,6 +1,7 @@
 package logbook.api;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -22,10 +23,20 @@ public class ApiGetMemberNdock implements APIListenerSpi {
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
         JsonArray array = json.getJsonArray("api_data");
         if (array != null) {
+            // 入渠
             Map<Integer, Ndock> map = NdockCollection.get()
                     .getNdockMap();
             map.clear();
             map.putAll(JsonHelper.toMap(array, Ndock::getId, Ndock::toNdock));
+            // 入渠中の艦娘
+            Set<Integer> set = NdockCollection.get()
+                    .getNdockSet();
+            set.clear();
+            map.entrySet()
+                    .stream()
+                    .map(Map.Entry::getValue)
+                    .map(Ndock::getShipId)
+                    .forEach(set::add);
         }
     }
 

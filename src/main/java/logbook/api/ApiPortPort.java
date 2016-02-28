@@ -98,10 +98,20 @@ public class ApiPortPort implements APIListenerSpi {
      * @param array api_ndock
      */
     private void apiNdock(JsonArray array) {
+        // 入渠
         Map<Integer, Ndock> map = NdockCollection.get()
                 .getNdockMap();
         map.clear();
         map.putAll(JsonHelper.toMap(array, Ndock::getId, Ndock::toNdock));
+        // 入渠中の艦娘
+        Set<Integer> set = NdockCollection.get()
+                .getNdockSet();
+        set.clear();
+        map.entrySet()
+                .stream()
+                .map(Map.Entry::getValue)
+                .map(Ndock::getShipId)
+                .forEach(set::add);
     }
 
     /**
