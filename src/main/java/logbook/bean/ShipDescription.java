@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -11,7 +12,9 @@ import logbook.internal.JsonHelper;
  * 艦娘の名前と種別を表します
  *
  */
-public class ShipDescription {
+public class ShipDescription implements Serializable {
+
+    private static final long serialVersionUID = 4329488719132098164L;
 
     /** id */
     private Integer id;

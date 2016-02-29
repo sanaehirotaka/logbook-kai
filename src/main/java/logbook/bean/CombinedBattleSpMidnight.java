@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -10,7 +11,9 @@ import logbook.internal.JsonHelper;
  * 夜戦(連合艦隊)
  *
  */
-public class CombinedBattleSpMidnight {
+public class CombinedBattleSpMidnight implements Serializable {
+
+    private static final long serialVersionUID = -3881074816952880520L;
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;

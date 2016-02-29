@@ -1,11 +1,14 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
 
-public class ShipCollection {
+public class ShipCollection implements Serializable {
+
+    private static final long serialVersionUID = -8680643608671594758L;
 
     /** 艦娘 */
     private Map<Integer, Ship> shipMap = new HashMap<>();

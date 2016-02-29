@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ import logbook.internal.Config;
  * 遠征のコレクション
  *
  */
-public class MissionCollection {
+public class MissionCollection implements Serializable {
+
+    private static final long serialVersionUID = 3540653891280633865L;
 
     /** 遠征 */
     private Map<Integer, Mission> missionMap = new HashMap<>();

@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,7 +12,9 @@ import logbook.internal.Config;
  * 入渠ドックのコレクション
  *
  */
-public class NdockCollection {
+public class NdockCollection implements Serializable {
+
+    private static final long serialVersionUID = 3570762805703032390L;
 
     /** 入渠ドック */
     private Map<Integer, Ndock> ndockMap = new HashMap<>();

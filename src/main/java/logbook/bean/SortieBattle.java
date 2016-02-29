@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -10,7 +11,9 @@ import logbook.internal.JsonHelper;
  * 昼戦
  *
  */
-public class SortieBattle {
+public class SortieBattle implements Serializable {
+
+    private static final long serialVersionUID = -6068428886000294930L;
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;

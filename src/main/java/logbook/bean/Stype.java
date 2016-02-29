@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -11,7 +12,9 @@ import logbook.internal.JsonHelper;
  * api_mst_stype
  *
  */
-public class Stype {
+public class Stype implements Serializable {
+
+    private static final long serialVersionUID = -8213373063199467493L;
 
     /** api_id */
     private Integer id;

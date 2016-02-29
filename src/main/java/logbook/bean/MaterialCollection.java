@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ import logbook.internal.Config;
  * 資材コレクション
  *
  */
-public class MaterialCollection {
+public class MaterialCollection implements Serializable {
+
+    private static final long serialVersionUID = 5006063137688404374L;
 
     /** 資材 */
     private Map<Integer, Material> materialMap = new HashMap<>();

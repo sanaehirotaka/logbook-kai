@@ -1,8 +1,8 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -19,7 +19,9 @@ public class BattleTypes {
     /**
      * 航空戦
      */
-    public static class Kouku {
+    public static class Kouku implements Serializable {
+
+        private static final long serialVersionUID = -4772699490686134759L;
 
         /** api_plane_from */
         private List<List<Integer>> planeFrom;
@@ -137,7 +139,9 @@ public class BattleTypes {
     /**
      * 航空戦 Stage1
      */
-    public static class Stage1 {
+    public static class Stage1 implements Serializable {
+
+        private static final long serialVersionUID = 4452384504283266181L;
 
         /** api_f_count */
         private Integer fCount;
@@ -275,7 +279,9 @@ public class BattleTypes {
     /**
      * 航空戦 Stage2
      */
-    public static class Stage2 {
+    public static class Stage2 implements Serializable {
+
+        private static final long serialVersionUID = -4886136119036663720L;
 
         /** api_f_count */
         private Integer fCount;
@@ -393,7 +399,9 @@ public class BattleTypes {
     /**
      * 航空戦 AirFire
      */
-    public static class AirFire {
+    public static class AirFire implements Serializable {
+
+        private static final long serialVersionUID = 9184007312267069221L;
 
         /** api_idx */
         private Integer idx;
@@ -471,7 +479,9 @@ public class BattleTypes {
     /**
      * 航空戦 Stage3
      */
-    public static class Stage3 {
+    public static class Stage3 implements Serializable {
+
+        private static final long serialVersionUID = -3123663766612134315L;
 
         /** api_frai_flag */
         private List<Integer> fraiFlag;
@@ -649,7 +659,9 @@ public class BattleTypes {
     /**
      * 航空戦 Stage3Combined
      */
-    public static class Stage3Combined {
+    public static class Stage3Combined implements Serializable {
+
+        private static final long serialVersionUID = -628911942142343461L;
 
         /** api_frai_flag */
         private List<Integer> fraiFlag;
@@ -747,7 +759,9 @@ public class BattleTypes {
     /**
      * 支援
      */
-    public static class SupportInfo {
+    public static class SupportInfo implements Serializable {
+
+        private static final long serialVersionUID = 4584855806683009170L;
 
         /** api_support_airatack */
         private SupportAiratack supportAiratack;
@@ -805,7 +819,9 @@ public class BattleTypes {
     /**
      * 支援 Airatack
      */
-    public static class SupportAiratack {
+    public static class SupportAiratack implements Serializable {
+
+        private static final long serialVersionUID = -152573445471984643L;
 
         /** api_deck_id */
         private Integer deckId;
@@ -983,7 +999,9 @@ public class BattleTypes {
     /**
      * 支援 Hourai
      */
-    public static class SupportHourai {
+    public static class SupportHourai implements Serializable {
+
+        private static final long serialVersionUID = 3060460027587015362L;
 
         /** api_deck_id */
         private Integer deckId;
@@ -1101,7 +1119,9 @@ public class BattleTypes {
     /**
      * 雷撃
      */
-    public static class Raigeki {
+    public static class Raigeki implements Serializable {
+
+        private static final long serialVersionUID = 4769524848250854584L;
 
         /** api_frai */
         private List<Integer> frai;
@@ -1279,7 +1299,9 @@ public class BattleTypes {
     /**
      * 砲撃
      */
-    public static class Hougeki {
+    public static class Hougeki implements Serializable {
+
+        private static final long serialVersionUID = -5339612671179791906L;
 
         /** api_at_list */
         public List<Integer> atList;
@@ -1288,16 +1310,16 @@ public class BattleTypes {
         public List<Integer> atType;
 
         /** api_df_list */
-        public JsonArray dfList;
+        public List<List<Integer>> dfList;
 
         /** api_si_list */
-        public JsonArray siList;
+        public List<List<Integer>> siList;
 
         /** api_cl_list */
-        public JsonArray clList;
+        public List<List<Integer>> clList;
 
         /** api_damage */
-        public JsonArray damage;
+        public List<List<Double>> damage;
 
         /**
          * api_at_listを取得します。
@@ -1335,7 +1357,7 @@ public class BattleTypes {
          * api_df_listを取得します。
          * @return api_df_list
          */
-        public JsonArray getDfList() {
+        public List<List<Integer>> getDfList() {
             return this.dfList;
         }
 
@@ -1343,7 +1365,7 @@ public class BattleTypes {
          * api_df_listを設定します。
          * @param dfList api_df_list
          */
-        public void setDfList(JsonArray dfList) {
+        public void setDfList(List<List<Integer>> dfList) {
             this.dfList = dfList;
         }
 
@@ -1351,7 +1373,7 @@ public class BattleTypes {
          * api_si_listを取得します。
          * @return api_si_list
          */
-        public JsonArray getSiList() {
+        public List<List<Integer>> getSiList() {
             return this.siList;
         }
 
@@ -1359,7 +1381,7 @@ public class BattleTypes {
          * api_si_listを設定します。
          * @param siList api_si_list
          */
-        public void setSiList(JsonArray siList) {
+        public void setSiList(List<List<Integer>> siList) {
             this.siList = siList;
         }
 
@@ -1367,7 +1389,7 @@ public class BattleTypes {
          * api_cl_listを取得します。
          * @return api_cl_list
          */
-        public JsonArray getClList() {
+        public List<List<Integer>> getClList() {
             return this.clList;
         }
 
@@ -1375,7 +1397,7 @@ public class BattleTypes {
          * api_cl_listを設定します。
          * @param clList api_cl_list
          */
-        public void setClList(JsonArray clList) {
+        public void setClList(List<List<Integer>> clList) {
             this.clList = clList;
         }
 
@@ -1383,7 +1405,7 @@ public class BattleTypes {
          * api_damageを取得します。
          * @return api_damage
          */
-        public JsonArray getDamage() {
+        public List<List<Double>> getDamage() {
             return this.damage;
         }
 
@@ -1391,7 +1413,7 @@ public class BattleTypes {
          * api_damageを設定します。
          * @param damage api_damage
          */
-        public void setDamage(JsonArray damage) {
+        public void setDamage(List<List<Double>> damage) {
             this.damage = damage;
         }
 
@@ -1406,10 +1428,10 @@ public class BattleTypes {
             JsonHelper.bind(json)
                     .set("api_at_list", bean::setAtList, JsonHelper::toIntegerList)
                     .set("api_at_type", bean::setAtType, JsonHelper::toIntegerList)
-                    .set("api_df_list", bean::setDfList, e -> (JsonArray) e)
-                    .set("api_si_list", bean::setSiList, e -> (JsonArray) e)
-                    .set("api_cl_list", bean::setClList, e -> (JsonArray) e)
-                    .set("api_damage", bean::setDamage, e -> (JsonArray) e);
+                    .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
+                    .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
+                    .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
+                    .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList));
             return bean;
         }
     }
@@ -1417,25 +1439,27 @@ public class BattleTypes {
     /**
      * 砲撃
      */
-    public static class MidnightHougeki {
+    public static class MidnightHougeki implements Serializable {
+
+        private static final long serialVersionUID = 8897484398602178656L;
 
         /** api_at_list */
         private List<Integer> atList;
 
         /** api_df_list */
-        private JsonArray dfList;
+        private List<List<Integer>> dfList;
 
         /** api_si_list */
-        private JsonArray siList;
+        private List<List<Integer>> siList;
 
         /** api_cl_list */
-        private JsonArray clList;
+        private List<List<Integer>> clList;
 
         /** api_sp_list */
         private List<Integer> spList;
 
         /** api_damage */
-        private JsonArray damage;
+        private List<List<Double>> damage;
 
         /**
          * api_at_listを取得します。
@@ -1457,7 +1481,7 @@ public class BattleTypes {
          * api_df_listを取得します。
          * @return api_df_list
          */
-        public JsonArray getDfList() {
+        public List<List<Integer>> getDfList() {
             return this.dfList;
         }
 
@@ -1465,7 +1489,7 @@ public class BattleTypes {
          * api_df_listを設定します。
          * @param dfList api_df_list
          */
-        public void setDfList(JsonArray dfList) {
+        public void setDfList(List<List<Integer>> dfList) {
             this.dfList = dfList;
         }
 
@@ -1473,7 +1497,7 @@ public class BattleTypes {
          * api_si_listを取得します。
          * @return api_si_list
          */
-        public JsonArray getSiList() {
+        public List<List<Integer>> getSiList() {
             return this.siList;
         }
 
@@ -1481,7 +1505,7 @@ public class BattleTypes {
          * api_si_listを設定します。
          * @param siList api_si_list
          */
-        public void setSiList(JsonArray siList) {
+        public void setSiList(List<List<Integer>> siList) {
             this.siList = siList;
         }
 
@@ -1489,7 +1513,7 @@ public class BattleTypes {
          * api_cl_listを取得します。
          * @return api_cl_list
          */
-        public JsonArray getClList() {
+        public List<List<Integer>> getClList() {
             return this.clList;
         }
 
@@ -1497,7 +1521,7 @@ public class BattleTypes {
          * api_cl_listを設定します。
          * @param clList api_cl_list
          */
-        public void setClList(JsonArray clList) {
+        public void setClList(List<List<Integer>> clList) {
             this.clList = clList;
         }
 
@@ -1521,7 +1545,7 @@ public class BattleTypes {
          * api_damageを取得します。
          * @return api_damage
          */
-        public JsonArray getDamage() {
+        public List<List<Double>> getDamage() {
             return this.damage;
         }
 
@@ -1529,7 +1553,7 @@ public class BattleTypes {
          * api_damageを設定します。
          * @param damage api_damage
          */
-        public void setDamage(JsonArray damage) {
+        public void setDamage(List<List<Double>> damage) {
             this.damage = damage;
         }
 
@@ -1543,11 +1567,11 @@ public class BattleTypes {
             MidnightHougeki bean = new MidnightHougeki();
             JsonHelper.bind(json)
                     .set("api_at_list", bean::setAtList, JsonHelper::toIntegerList)
-                    .set("api_df_list", bean::setDfList, e -> (JsonArray) e)
-                    .set("api_si_list", bean::setSiList, e -> (JsonArray) e)
-                    .set("api_cl_list", bean::setClList, e -> (JsonArray) e)
+                    .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
+                    .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
+                    .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_sp_list", bean::setSpList, JsonHelper::toIntegerList)
-                    .set("api_damage", bean::setDamage, e -> (JsonArray) e);
+                    .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList));
             return bean;
         }
     }

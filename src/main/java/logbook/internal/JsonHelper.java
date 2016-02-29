@@ -2,6 +2,7 @@ package logbook.internal;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,6 +142,21 @@ public final class JsonHelper {
     }
 
     /**
+     * JsonValueをLongのListに変換します<br>
+     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
+     *
+     * @param val 変換するJsonValue
+     * @return LongのList
+     */
+    public static List<Long> checkedToLongList(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toList((JsonArray) val, JsonHelper::toLong);
+        }
+        return Collections.emptyList();
+    }
+
+    /**
      * JsonArrayをIntegerのListに変換します<br>
      * JsonArrayの内容はすべてJsonNumberである必要があります
      *
@@ -149,6 +165,21 @@ public final class JsonHelper {
      */
     public static List<Integer> toIntegerList(JsonArray val) {
         return toList(val, JsonHelper::toInteger);
+    }
+
+    /**
+     * JsonValueをIntegerのListに変換します<br>
+     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return IntegerのList
+     */
+    public static List<Integer> checkedToIntegerList(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toList((JsonArray)val, JsonHelper::toInteger);
+        }
+        return Collections.emptyList();
     }
 
     /**
@@ -163,6 +194,21 @@ public final class JsonHelper {
     }
 
     /**
+     * JsonValueをDoubleのListに変換します<br>
+     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return DoubleのList
+     */
+    public static List<Double> checkedToDoubleList(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toList((JsonArray)val, JsonHelper::toDouble);
+        }
+        return Collections.emptyList();
+    }
+
+    /**
      * JsonArrayをBigDecimalのListに変換します<br>
      * JsonArrayの内容はすべてJsonNumberである必要があります
      *
@@ -174,6 +220,21 @@ public final class JsonHelper {
     }
 
     /**
+     * JsonValueをBigDecimalのListに変換します<br>
+     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return BigDecimalのList
+     */
+    public static List<BigDecimal> checkedToBigDecimalList(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toList((JsonArray)val, JsonHelper::toBigDecimal);
+        }
+        return Collections.emptyList();
+    }
+
+    /**
      * JsonArrayをStringのListに変換します<br>
      *
      * @param val 変換するJsonArray
@@ -181,6 +242,20 @@ public final class JsonHelper {
      */
     public static List<String> toStringList(JsonArray val) {
         return toList(val, JsonHelper::toString);
+    }
+
+    /**
+     * JsonValueをStringのListに変換します<br>
+     * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return StringのList
+     */
+    public static List<String> checkedToStringList(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toList((JsonArray)val, JsonHelper::toString);
+        }
+        return Collections.emptyList();
     }
 
     /**

@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ import logbook.internal.Config;
  * 艦娘のコレクション
  *
  */
-public class ShipDescriptionCollection {
+public class ShipDescriptionCollection implements Serializable {
+
+    private static final long serialVersionUID = 3473178293202796312L;
 
     /** 艦娘 */
     private Map<Integer, ShipDescription> shipMap = new HashMap<>();

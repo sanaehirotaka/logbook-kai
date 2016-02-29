@@ -1,12 +1,16 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import logbook.internal.Config;
 
 /**
  * アプリケーションの設定
  *
  */
-public final class AppConfig {
+public final class AppConfig implements Serializable {
+
+    private static final long serialVersionUID = 5901322418446624897L;
 
     /** ポート番号 */
     private int listenPort = 8888;

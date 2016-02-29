@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -12,11 +13,16 @@ import logbook.internal.JsonHelper;
  */
 public class MapTypes {
 
+    private MapTypes() {
+    }
+
     /**
      * ゲージ
      *
      */
-    public static class Eventmap {
+    public static class Eventmap implements Serializable {
+
+        private static final long serialVersionUID = -4400495600829555494L;
 
         /** api_max_maphp */
         private Integer maxMaphp;
@@ -95,7 +101,9 @@ public class MapTypes {
      * 接敵
      *
      */
-    public static class Enemy {
+    public static class Enemy implements Serializable {
+
+        private static final long serialVersionUID = 4031791674782777895L;
 
         /** api_result */
         private Integer result;
@@ -154,7 +162,9 @@ public class MapTypes {
      * うずしお
      *
      */
-    public static class Happening {
+    public static class Happening implements Serializable {
+
+        private static final long serialVersionUID = 1064277392880384826L;
 
         /** api_type */
         private Integer type;
@@ -293,7 +303,9 @@ public class MapTypes {
      * アイテム
      *
      */
-    public static class Itemget {
+    public static class Itemget implements Serializable {
+
+        private static final long serialVersionUID = -2502611126605062290L;
 
         /** api_getcount */
         private Integer getcount;
@@ -412,7 +424,9 @@ public class MapTypes {
      * 能動分岐
      *
      */
-    public static class SelectRoute {
+    public static class SelectRoute implements Serializable {
+
+        private static final long serialVersionUID = -9118982578510716000L;
 
         /** api_select_cells */
         private List<Integer> selectCells;

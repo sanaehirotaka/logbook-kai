@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -8,7 +10,9 @@ import logbook.internal.JsonHelper;
  * api_material
  *
  */
-public class Material {
+public class Material implements Serializable {
+
+    private static final long serialVersionUID = -6919096591550530580L;
 
     /** api_id */
     private Integer id;

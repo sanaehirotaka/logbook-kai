@@ -1,12 +1,16 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import logbook.internal.Config;
 
 /**
  * api_combined_flag
  *
  */
-public class CombinedFlag {
+public class CombinedFlag implements Serializable {
+
+    private static final long serialVersionUID = 2409953735583506908L;
 
     /** api_combined_flag */
     private Boolean combinedFlag = Boolean.FALSE;

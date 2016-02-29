@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -10,7 +11,9 @@ import logbook.internal.JsonHelper;
  * api_deck_port
  *
  */
-public class DeckPort {
+public class DeckPort implements Serializable {
+
+    private static final long serialVersionUID = -7415061750561409381L;
 
     /** api_flagship */
     private Integer flagship;

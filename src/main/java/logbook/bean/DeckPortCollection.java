@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,9 @@ import logbook.internal.Config;
  * 艦隊のコレクション
  *
  */
-public class DeckPortCollection {
+public class DeckPortCollection implements Serializable {
+
+    private static final long serialVersionUID = 2868235673692933578L;
 
     /** 艦隊 */
     private List<DeckPort> deckPorts = new ArrayList<>();

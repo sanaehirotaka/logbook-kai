@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -7,7 +9,9 @@ import logbook.internal.JsonHelper;
 /**
  * api_mst_useitem
  */
-public class Useitem {
+public class Useitem implements Serializable {
+
+    private static final long serialVersionUID = -3290324243327123224L;
 
     /** api_id */
     private Integer id;

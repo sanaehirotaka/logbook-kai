@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -8,7 +10,9 @@ import logbook.internal.JsonHelper;
  * api_ndock
  *
  */
-public class Ndock {
+public class Ndock implements Serializable {
+
+    private static final long serialVersionUID = 1739445888580394927L;
 
     /** api_id */
     private Integer id;

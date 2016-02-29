@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -12,7 +13,9 @@ import logbook.internal.JsonHelper;
  * 装備定義
  *
  */
-public class SlotitemDescription {
+public class SlotitemDescription implements Serializable {
+
+    private static final long serialVersionUID = 383813721548687786L;
 
     /** api_id */
     private Integer id;

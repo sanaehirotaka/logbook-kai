@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -10,7 +11,9 @@ import logbook.internal.JsonHelper;
  * 艦娘
  *
  */
-public class Ship {
+public class Ship implements Serializable {
+
+    private static final long serialVersionUID = 3598977177423429679L;
 
     /** ID */
     private Integer id;

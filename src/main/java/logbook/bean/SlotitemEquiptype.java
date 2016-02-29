@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -8,7 +10,9 @@ import logbook.internal.JsonHelper;
  * api_mst_slotitem_equiptype
  *
  */
-public class SlotitemEquiptype {
+public class SlotitemEquiptype implements Serializable {
+
+    private static final long serialVersionUID = 6987412391631651270L;
 
     /** api_id */
     private Integer id;

@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -8,7 +10,9 @@ import logbook.internal.JsonHelper;
  * 出撃/進撃
  *
  */
-public class MapStartNext {
+public class MapStartNext implements Serializable {
+
+    private static final long serialVersionUID = -3128114218760301060L;
 
     /** api_rashin_flg */
     private Integer rashinFlg;

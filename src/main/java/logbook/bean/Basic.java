@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.Config;
@@ -9,7 +11,9 @@ import logbook.internal.JsonHelper;
  * api_basic
  *
  */
-public class Basic {
+public class Basic implements Serializable {
+
+    private static final long serialVersionUID = -2392950337873034663L;
 
     /** api_comment */
     private String comment = "";

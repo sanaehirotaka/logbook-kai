@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.json.JsonObject;
@@ -10,7 +11,9 @@ import logbook.internal.JsonHelper;
  * 機動部隊(連合艦隊)
  *
  */
-public class CombinedBattleBattle {
+public class CombinedBattleBattle implements Serializable {
+
+    private static final long serialVersionUID = 2992547390187416190L;
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;

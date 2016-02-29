@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -8,7 +10,9 @@ import logbook.internal.JsonHelper;
  * api_mst_mission
  *
  */
-public class Mission {
+public class Mission implements Serializable {
+
+    private static final long serialVersionUID = 7503112116568598849L;
 
     /** api_id */
     private Integer id;

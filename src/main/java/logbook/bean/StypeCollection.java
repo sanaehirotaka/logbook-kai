@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +10,9 @@ import logbook.internal.Config;
  * 艦種のコレクション
  *
  */
-public class StypeCollection {
+public class StypeCollection implements Serializable {
+
+    private static final long serialVersionUID = -7530294903513038451L;
 
     /** 艦種 */
     private Map<Integer, Stype> stypeMap = new HashMap<>();

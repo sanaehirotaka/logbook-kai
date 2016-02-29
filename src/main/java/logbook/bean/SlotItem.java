@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -8,7 +10,9 @@ import logbook.internal.JsonHelper;
  * 装備
  *
  */
-public class SlotItem {
+public class SlotItem implements Serializable {
+
+    private static final long serialVersionUID = -5902864924857205128L;
 
     /** api_id */
     private Integer id;
@@ -62,7 +66,7 @@ public class SlotItem {
      * @return api_alv
      */
     public Integer getAlv() {
-        return alv;
+        return this.alv;
     }
 
     /**
