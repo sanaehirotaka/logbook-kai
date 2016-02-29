@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.util.Map;
+import java.util.Objects;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -82,6 +83,8 @@ public class MainController {
      * @param e
      */
     void update(ActionEvent e) {
+
+        // 入渠ドックの更新
         ObservableList<Node> ndock = this.ndockbox.getChildren();
         ndock.clear();
         Map<Integer, Ship> ships = ShipCollection.get()
@@ -90,6 +93,7 @@ public class MainController {
                 .getNdockSet()
                 .stream()
                 .map(ships::get)
+                .filter(Objects::nonNull)
                 .map(ShipPane::new)
                 .forEach(ndock::add);
 

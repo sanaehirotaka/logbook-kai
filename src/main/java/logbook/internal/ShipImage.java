@@ -77,44 +77,46 @@ class ShipImage {
         Canvas canvas = new Canvas(160, 40);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        Path base = getBaseImagePath(ship);
-        if (base != null) {
-            Image img = new Image(base.toUri().toString());
-            gc.drawImage(img, 0, 0);
-        }
-        List<Layer> layers = new ArrayList<>();
+        if (ship != null) {
+            Path base = getBaseImagePath(ship);
+            if (base != null) {
+                Image img = new Image(base.toUri().toString());
+                gc.drawImage(img, 0, 0);
+            }
+            List<Layer> layers = new ArrayList<>();
 
-        // 入渠中
-        boolean isOnNdock = NdockCollection.get()
-                .getNdockSet()
-                .contains(ship.getId());
-        // バッチ
-        if (isOnNdock) {
-            layers.add(LAYER_5);
-        } else if (Ships.isSlightDamage(ship)) {
-            layers.add(LAYER_1);
-        } else if (Ships.isHalfDamage(ship)) {
-            layers.add(LAYER_2);
-        } else if (Ships.isBadlyDamage(ship)) {
-            layers.add(LAYER_3);
+            // 入渠中
+            boolean isOnNdock = NdockCollection.get()
+                    .getNdockSet()
+                    .contains(ship.getId());
+            // バッチ
+            if (isOnNdock) {
+                layers.add(LAYER_5);
+            } else if (Ships.isSlightDamage(ship)) {
+                layers.add(LAYER_1);
+            } else if (Ships.isHalfDamage(ship)) {
+                layers.add(LAYER_2);
+            } else if (Ships.isBadlyDamage(ship)) {
+                layers.add(LAYER_3);
+            }
+            // 汚れ
+            if (Ships.isSlightDamage(ship)) {
+                layers.add(LAYER_6);
+            } else if (Ships.isHalfDamage(ship)) {
+                layers.add(LAYER_7);
+            } else if (Ships.isBadlyDamage(ship)) {
+                layers.add(LAYER_8);
+            }
+            // 疲労
+            if (Ships.isOrange(ship)) {
+                layers.add(LAYER_9);
+                layers.add(LAYER_10);
+            } else if (Ships.isRed(ship)) {
+                layers.add(LAYER_11);
+                layers.add(LAYER_12);
+            }
+            applyLayers(gc, layers);
         }
-        // 汚れ
-        if (Ships.isSlightDamage(ship)) {
-            layers.add(LAYER_6);
-        } else if (Ships.isHalfDamage(ship)) {
-            layers.add(LAYER_7);
-        } else if (Ships.isBadlyDamage(ship)) {
-            layers.add(LAYER_8);
-        }
-        // 疲労
-        if (Ships.isOrange(ship)) {
-            layers.add(LAYER_9);
-            layers.add(LAYER_10);
-        } else if (Ships.isRed(ship)) {
-            layers.add(LAYER_11);
-            layers.add(LAYER_12);
-        }
-        applyLayers(gc, layers);
 
         return canvas.snapshot(null, null);
     }

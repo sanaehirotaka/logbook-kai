@@ -38,7 +38,7 @@ public class ShipPane extends AnchorPane {
             loader.load();
         } catch (IOException e) {
             LogManager.getLogger(ShipPane.class)
-                    .error("logbook/gui/ship.fxml", e);
+                    .error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -57,7 +57,8 @@ public class ShipPane extends AnchorPane {
                 this.addItemIcon(this.bean.getSlotEx());
             }
         } catch (Exception e) {
-
+            LogManager.getLogger(ShipPane.class)
+                    .error("FXMLの初期化に失敗しました", e);
         }
     }
 

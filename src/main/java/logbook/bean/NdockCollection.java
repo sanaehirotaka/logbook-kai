@@ -1,8 +1,8 @@
 package logbook.bean;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,10 +17,10 @@ public class NdockCollection implements Serializable {
     private static final long serialVersionUID = 3570762805703032390L;
 
     /** 入渠ドック */
-    private Map<Integer, Ndock> ndockMap = new HashMap<>();
+    private Map<Integer, Ndock> ndockMap = new LinkedHashMap<>();
 
     /** 入渠中の艦娘 */
-    private Set<Integer> ndockSet = new HashSet<>();
+    private Set<Integer> ndockSet = new LinkedHashSet<>();
 
     /**
      * 入渠ドックを取得します。
