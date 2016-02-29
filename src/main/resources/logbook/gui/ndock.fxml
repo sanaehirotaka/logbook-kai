@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="HBox" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="40.0" prefWidth="160.0">
+         <children>
+            <ImageView fx:id="ship" fitHeight="40.0" fitWidth="160.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      </ImageView>
+            <HBox fx:id="items" prefHeight="24.0" prefWidth="120.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane minWidth="100.0" prefHeight="40.0" prefWidth="100.0">
+         <children>
+            <Label fx:id="name" layoutX="14.0" layoutY="7.0" text="Graf Zeppelin改" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="time" layoutX="14.0" layoutY="19.0" text="10日22時間10分" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0">
+               <font>
+                  <Font name="Meiryo UI Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</fx:root>

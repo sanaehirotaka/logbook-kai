@@ -1,8 +1,5 @@
 package logbook.internal.gui;
 
-import java.util.Map;
-import java.util.Objects;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
@@ -13,8 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import logbook.bean.NdockCollection;
-import logbook.bean.Ship;
-import logbook.bean.ShipCollection;
 import logbook.proxy.ProxyServer;
 
 /**
@@ -87,14 +82,12 @@ public class MainController {
         // 入渠ドックの更新
         ObservableList<Node> ndock = this.ndockbox.getChildren();
         ndock.clear();
-        Map<Integer, Ship> ships = ShipCollection.get()
-                .getShipMap();
         NdockCollection.get()
-                .getNdockSet()
+                .getNdockMap()
+                .values()
                 .stream()
-                .map(ships::get)
-                .filter(Objects::nonNull)
-                .map(ShipPane::new)
+                .filter(n -> 1 < n.getCompleteTime())
+                .map(NdockPane::new)
                 .forEach(ndock::add);
 
     }

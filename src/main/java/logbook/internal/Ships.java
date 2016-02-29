@@ -209,8 +209,8 @@ public class Ships {
             double height = image.getHeight();
 
             if (width != ITEM_ICON_SIZE) {
-                double x = (width - ITEM_ICON_SIZE) / 2;
-                double y = (height - ITEM_ICON_SIZE) / 2;
+                double x = (ITEM_ICON_SIZE - width) / 2;
+                double y = (ITEM_ICON_SIZE - height) / 2;
 
                 Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
                 GraphicsContext gc = canvas.getGraphicsContext2D();

@@ -94,17 +94,12 @@ class ShipImage {
                 layers.add(LAYER_5);
             } else if (Ships.isSlightDamage(ship)) {
                 layers.add(LAYER_1);
-            } else if (Ships.isHalfDamage(ship)) {
-                layers.add(LAYER_2);
-            } else if (Ships.isBadlyDamage(ship)) {
-                layers.add(LAYER_3);
-            }
-            // 汚れ
-            if (Ships.isSlightDamage(ship)) {
                 layers.add(LAYER_6);
             } else if (Ships.isHalfDamage(ship)) {
+                layers.add(LAYER_2);
                 layers.add(LAYER_7);
             } else if (Ships.isBadlyDamage(ship)) {
+                layers.add(LAYER_3);
                 layers.add(LAYER_8);
             }
             // 疲労
