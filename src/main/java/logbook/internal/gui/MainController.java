@@ -134,12 +134,19 @@ public class MainController {
         if (this.portHashCode != ports.hashCode()) {
             // ハッシュ・コードが変わっている場合遠征の更新
             mission.clear();
-            // TODO 未実装
+            ports.stream()
+                    .skip(1)
+                    .map(MissionPane::new)
+                    .forEach(mission::add);
             // ハッシュ・コードの更新
             this.portHashCode = ports.hashCode();
         } else {
             // ハッシュ・コードが変わっていない場合updateメソッドを呼ぶ
-            // TODO 未実装
+            for (Node node : mission) {
+                if (node instanceof MissionPane) {
+                    ((MissionPane) node).update();
+                }
+            }
         }
     }
 

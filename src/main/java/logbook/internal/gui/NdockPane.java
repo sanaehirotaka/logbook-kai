@@ -31,13 +31,13 @@ public class NdockPane extends HBox {
     private final Ndock ndock;
 
     /** 色変化1段階目 */
-    private final Duration stage1 = Duration.ofMinutes(20);
+    private final Duration stage1 = Duration.ofMinutes(40);
 
     /** 色変化2段階目 */
-    private final Duration stage2 = Duration.ofMinutes(10);
+    private final Duration stage2 = Duration.ofMinutes(20);
 
     /** 色変化3段階目 */
-    private final Duration stage3 = Duration.ofMinutes(5);
+    private final Duration stage3 = Duration.ofMinutes(10);
 
     @FXML
     private ImageView ship;
@@ -111,7 +111,7 @@ public class NdockPane extends HBox {
         // 残り時間を更新
         this.time.setText(timeText(d));
 
-        ObservableList<String> styleClass = this.time.getStyleClass();
+        ObservableList<String> styleClass = this.getStyleClass();
 
         styleClass.removeAll("stage1", "stage2", "stage3");
 
@@ -171,10 +171,10 @@ public class NdockPane extends HBox {
         if (minutes > 0) {
             sb.append(minutes + "分");
         }
-        if (seconds > 0 && days == 0) {
+        if (seconds > 0 && days == 0 && hours == 0) {
             sb.append(seconds + "秒");
         }
-        if (seconds <= 0) {
+        if (d.isZero() || d.isNegative()) {
             sb.append("修復完了");
         }
         return sb.toString();

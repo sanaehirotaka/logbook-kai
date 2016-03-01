@@ -17,10 +17,8 @@
       </AnchorPane>
       <AnchorPane prefHeight="40.0" prefWidth="100.0">
          <children>
-            <Label fx:id="time" layoutX="14.0" layoutY="19.0" styleClass="time" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0">
-            </Label>
-            <Label fx:id="name" layoutX="14.0" layoutY="7.0" styleClass="name" text="" AnchorPane.leftAnchor="2.0" AnchorPane.topAnchor="2.0">
-            </Label>
+            <Label fx:id="time" styleClass="time" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" />
+            <Label fx:id="name" styleClass="name" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="1.0" />
          </children>
       </AnchorPane>
    </children>

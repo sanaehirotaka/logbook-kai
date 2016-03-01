@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root prefHeight="40.0" prefWidth="260.0" styleClass="mission" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ProgressBar fx:id="progress" prefHeight="40.0" styleClass="progress" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Label fx:id="fleet" styleClass="fleet" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="1.0" />
+      <Label fx:id="name" styleClass="name" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" />
+      <Label fx:id="time" maxWidth="100.0" prefWidth="100.0" styleClass="time" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="160.0" />
+   </children>
+</fx:root>

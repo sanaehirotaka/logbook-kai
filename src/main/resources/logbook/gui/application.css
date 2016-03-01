@@ -9,15 +9,49 @@
     -fx-font-size: 10pt;
 }
 .ndock .time {
-    -fx-font-size: 15pt;
+    -fx-font-size: 14pt;
     -fx-font-weight: bold;
 }
-.ndock .stage1 {
+.ndock.stage1 {
     -fx-background-color: #FFF7CB;
 }
-.ndock .stage2 {
+.ndock.stage2 {
     -fx-background-color: #FFEF99;
 }
-.ndock .stage3 {
+.ndock.stage3 {
     -fx-background-color: #FFD700;
 }
+.mission .progress {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+.mission .progress .track{
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+.mission .progress .bar {
+    -fx-background-color: #fff3b3;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+.mission.stage1 .progress .bar {
+    -fx-background-color: #fff4b9;
+}
+.mission.stage2 .progress .bar {
+    -fx-background-color: #FFEF99;
+}
+.mission.stage3 .progress .bar {
+    -fx-background-color: #FFD700;
+}
+.mission .fleet {
+    -fx-font-size: 9pt;
+}
+.mission .name {
+    -fx-font-size: 14pt;
+}
+.mission .time {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+}
+
