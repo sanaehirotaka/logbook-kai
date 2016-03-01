@@ -49,7 +49,14 @@ public class ApiGetMemberShipDeck implements APIListenerSpi {
     private void apiDeckData(JsonArray array) {
         List<DeckPort> list = DeckPortCollection.get()
                 .getDeckPorts();
-        list.clear();
-        list.addAll(JsonHelper.toList(array, DeckPort::toDeckPort));
+        List<DeckPort> newList = JsonHelper.toList(array, DeckPort::toDeckPort);
+        for (DeckPort newPort : newList) {
+            list.replaceAll(e -> {
+                if (e.getId().equals(newPort.getId())) {
+                    return newPort;
+                }
+                return e;
+            });
+        }
     }
 }
