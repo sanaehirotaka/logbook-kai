@@ -158,10 +158,9 @@ public class Ships {
      *
      * @param item 装備
      * @return 装備の画像(36x36)
-     * @throws IOException 装備アイコンの調節に失敗した場合
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image borderedItemImage(SlotItem item) throws IOException {
+    public static Image borderedItemImage(SlotItem item) {
         SlotitemDescription description = item.slotitemDescription();
         Path path = SlotitemDescription.getBorderedImagePath(description);
 
@@ -198,10 +197,9 @@ public class Ships {
      *
      * @param p 装備アイコンへのパス
      * @return 装備アイコン
-     * @throws IOException 装備アイコンの調節に失敗した場合
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    private static Image optimizeItemIcon(Path p) throws IOException {
+    private static Image optimizeItemIcon(Path p) {
         if (Files.isReadable(p)) {
             Image image = new Image(p.toUri().toString());
 

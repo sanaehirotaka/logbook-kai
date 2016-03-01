@@ -22,7 +22,7 @@ public class DeckPort implements Serializable {
     private Integer id;
 
     /** api_mission */
-    private List<Integer> mission;
+    private List<Long> mission;
 
     /** api_name */
     private String name;
@@ -66,7 +66,7 @@ public class DeckPort implements Serializable {
      * api_missionを取得します。
      * @return api_mission
      */
-    public List<Integer> getMission() {
+    public List<Long> getMission() {
         return this.mission;
     }
 
@@ -74,7 +74,7 @@ public class DeckPort implements Serializable {
      * api_missionを設定します。
      * @param mission api_mission
      */
-    public void setMission(List<Integer> mission) {
+    public void setMission(List<Long> mission) {
         this.mission = mission;
     }
 
@@ -121,7 +121,7 @@ public class DeckPort implements Serializable {
         JsonHelper.bind(json)
                 .setInteger("api_flagship", bean::setFlagship)
                 .setInteger("api_id", bean::setId)
-                .set("api_mission", bean::setMission, JsonHelper::toIntegerList)
+                .set("api_mission", bean::setMission, JsonHelper::toLongList)
                 .setString("api_name", bean::setName)
                 .set("api_ship", bean::setShip, JsonHelper::toIntegerList);
         return bean;

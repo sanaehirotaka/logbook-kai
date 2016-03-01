@@ -1,5 +1,9 @@
 package logbook.internal.gui;
 
+import java.text.MessageFormat;
+import java.util.List;
+import java.util.Map;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
@@ -9,7 +13,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import logbook.bean.Basic;
+import logbook.bean.DeckPort;
+import logbook.bean.DeckPortCollection;
+import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
+import logbook.bean.ShipCollection;
+import logbook.bean.SlotItemCollection;
 import logbook.proxy.ProxyServer;
 
 /**
@@ -18,8 +28,15 @@ import logbook.proxy.ProxyServer;
  */
 public class MainController {
 
-    private String itemButtonFormat;
-    private String shipButtonFormat;
+    private String itemFormat;
+
+    private String shipFormat;
+
+    /** 艦隊コレクションのハッシュ・コード */
+    private int portHashCode;
+
+    /** 入渠ドックコレクションのハッシュ・コード */
+    private int ndockHashCode;
 
     @FXML
     private Button item;
@@ -41,8 +58,8 @@ public class MainController {
         // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
         ProxyServer.getInstance().start();
 
-        this.itemButtonFormat = this.item.textProperty().get();
-        this.shipButtonFormat = this.ship.textProperty().get();
+        this.itemFormat = this.item.getText();
+        this.shipFormat = this.ship.getText();
 
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
@@ -78,17 +95,78 @@ public class MainController {
      * @param e
      */
     void update(ActionEvent e) {
+        // 所有装備/所有艦娘
+        this.button();
+        // 遠征
+        this.mission();
+        // 入渠ドック
+        this.ndock();
+    }
 
-        // 入渠ドックの更新
+    /**
+     * 所有装備/所有艦娘の更新
+     */
+    private void button() {
+        // 装備
+        Integer slotitem = SlotItemCollection.get()
+                .getSlotitemMap()
+                .size();
+        Integer maxSlotitem = Basic.get()
+                .getMaxSlotitem();
+        this.item.setText(MessageFormat.format(this.itemFormat, slotitem, maxSlotitem));
+
+        // 艦娘
+        Integer chara = ShipCollection.get()
+                .getShipMap()
+                .size();
+        Integer maxChara = Basic.get()
+                .getMaxChara();
+        this.ship.setText(MessageFormat.format(this.shipFormat, chara, maxChara));
+    }
+
+    /**
+     * 遠征の更新
+     */
+    private void mission() {
+        List<DeckPort> ports = DeckPortCollection.get()
+                .getDeckPorts();
+        ObservableList<Node> mission = this.missionbox.getChildren();
+        if (this.portHashCode != ports.hashCode()) {
+            // ハッシュ・コードが変わっている場合遠征の更新
+            mission.clear();
+            // TODO 未実装
+            // ハッシュ・コードの更新
+            this.portHashCode = ports.hashCode();
+        } else {
+            // ハッシュ・コードが変わっていない場合updateメソッドを呼ぶ
+            // TODO 未実装
+        }
+    }
+
+    /**
+     * 入渠ドックの更新
+     */
+    private void ndock() {
+        Map<Integer, Ndock> ndockMap = NdockCollection.get()
+                .getNdockMap();
         ObservableList<Node> ndock = this.ndockbox.getChildren();
-        ndock.clear();
-        NdockCollection.get()
-                .getNdockMap()
-                .values()
-                .stream()
-                .filter(n -> 1 < n.getCompleteTime())
-                .map(NdockPane::new)
-                .forEach(ndock::add);
-
+        if (this.ndockHashCode != ndockMap.hashCode()) {
+            // ハッシュ・コードが変わっている場合入渠ドックの更新
+            ndock.clear();
+            ndockMap.values()
+                    .stream()
+                    .filter(n -> 1 < n.getCompleteTime())
+                    .map(NdockPane::new)
+                    .forEach(ndock::add);
+            // ハッシュ・コードの更新
+            this.ndockHashCode = ndockMap.hashCode();
+        } else {
+            // ハッシュ・コードが変わっていない場合updateメソッドを呼ぶ
+            for (Node node : ndock) {
+                if (node instanceof NdockPane) {
+                    ((NdockPane) node).update();
+                }
+            }
+        }
     }
 }

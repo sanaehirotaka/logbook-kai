@@ -1,9 +1,11 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import org.apache.logging.log4j.LogManager;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -25,12 +27,17 @@ import logbook.internal.Ships;
  */
 public class NdockPane extends HBox {
 
-    private static final int ONE_MINUTES = 60;
-    private static final int ONE_HOUR = 60 * 60;
-    private static final int ONE_DAY = 60 * 60 * 24;
-
     /** 入渠ドック */
     private final Ndock ndock;
+
+    /** 色変化1段階目 */
+    private final Duration stage1 = Duration.ofMinutes(20);
+
+    /** 色変化2段階目 */
+    private final Duration stage2 = Duration.ofMinutes(10);
+
+    /** 色変化3段階目 */
+    private final Duration stage3 = Duration.ofMinutes(5);
 
     @FXML
     private ImageView ship;
@@ -87,8 +94,7 @@ public class NdockPane extends HBox {
             }
             // 名前
             this.name.setText(desc.getName() + " (Lv" + ship.getLv() + ")");
-            // 名前
-            this.time.setText(dockTime(this.ndock));
+            this.update();
 
         } catch (Exception e) {
             LogManager.getLogger(NdockPane.class)
@@ -96,7 +102,36 @@ public class NdockPane extends HBox {
         }
     }
 
-    private void addItemIcon(Integer itemId) throws IOException {
+    /**
+     * 画面を更新します
+     */
+    public void update() {
+        // 残り時間を計算
+        Duration d = Duration.ofMillis(this.ndock.getCompleteTime() - System.currentTimeMillis());
+        // 残り時間を更新
+        this.time.setText(timeText(d));
+
+        ObservableList<String> styleClass = this.time.getStyleClass();
+
+        styleClass.removeAll("stage1", "stage2", "stage3");
+
+        // スタイルを更新
+        if (d.compareTo(this.stage3) < 0) {
+            styleClass.add("stage3");
+        } else if (d.compareTo(this.stage2) < 0) {
+            styleClass.add("stage2");
+        } else if (d.compareTo(this.stage1) < 0) {
+            styleClass.add("stage1");
+        }
+    }
+
+    /**
+     * 装備アイコンを追加します
+     *
+     * @param itemId 装備ID
+     * @throws IOException
+     */
+    private void addItemIcon(Integer itemId) {
         SlotItem item = SlotItemCollection.get()
                 .getSlotitemMap()
                 .get(itemId);
@@ -114,22 +149,34 @@ public class NdockPane extends HBox {
         }
     }
 
-    private static String dockTime(Ndock ndock) {
-        // TODO:クソみたいなコード あとで直したい
-        long r = (ndock.getCompleteTime() - System.currentTimeMillis()) / 1000;
-        if (r > 0) {
-            if (r > ONE_DAY) {
-                return (r / ONE_DAY) + "日" + ((r % ONE_DAY) / ONE_HOUR) + "時間"
-                        + ((r % ONE_HOUR) / ONE_MINUTES) + "分";
-            } else if (r > ONE_HOUR) {
-                return (r / ONE_HOUR) + "時間" + ((r % ONE_HOUR) / ONE_MINUTES) + "分";
-            } else if (r > ONE_MINUTES) {
-                return (r / ONE_MINUTES) + "分" + (r % ONE_MINUTES) + "秒";
-            } else {
-                return r + "秒";
-            }
-        } else {
-            return null;
+    /**
+     * 入渠時間のテキスト表現
+     *
+     * @param d 期間
+     * @return 入渠時間のテキスト表現
+     */
+    private static String timeText(Duration d) {
+        long days = d.toDays();
+        long hours = d.toHours() % 24;
+        long minutes = d.toMinutes() % 60;
+        long seconds = d.getSeconds() % 60;
+
+        StringBuilder sb = new StringBuilder();
+        if (days > 0) {
+            sb.append(days + "日");
         }
+        if (hours > 0) {
+            sb.append(hours + "時間");
+        }
+        if (minutes > 0) {
+            sb.append(minutes + "分");
+        }
+        if (seconds > 0 && days == 0) {
+            sb.append(seconds + "秒");
+        }
+        if (seconds <= 0) {
+            sb.append("修復完了");
+        }
+        return sb.toString();
     }
 }

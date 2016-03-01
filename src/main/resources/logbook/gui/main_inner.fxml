@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox stylesheets="@application.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -29,7 +29,7 @@
       </MenuBar>
       <HBox>
          <children>
-            <Button fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" text="所有装備(/)" HBox.hgrow="ALWAYS">
+            <Button fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" text="所有装備({0}/{1})" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
@@ -37,7 +37,7 @@
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="ship" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ships" text="所有艦娘(/)" HBox.hgrow="ALWAYS">
+            <Button fx:id="ship" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ships" text="所有艦娘({0}/{1})" HBox.hgrow="ALWAYS">
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>

@@ -1,0 +1,23 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root {
+    -fx-font-family: "Meiryo UI";
+    -fx-font-weight: normal;
+}
+
+.ndock .name {
+    -fx-font-size: 10pt;
+}
+.ndock .time {
+    -fx-font-size: 15pt;
+    -fx-font-weight: bold;
+}
+.ndock .stage1 {
+    -fx-background-color: #FFF7CB;
+}
+.ndock .stage2 {
+    -fx-background-color: #FFEF99;
+}
+.ndock .stage3 {
+    -fx-background-color: #FFD700;
+}
