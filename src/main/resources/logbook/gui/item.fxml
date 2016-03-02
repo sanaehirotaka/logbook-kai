@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.72" fx:controller="logbook.internal.gui.ItemController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="itemWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemController">
    <children>
       <MenuBar>
         <menus>
@@ -29,9 +30,9 @@
          <items>
             <AnchorPane>
                <children>
-                  <TableView fx:id="table" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="typeTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                      <TableColumn fx:id="name" prefWidth="120.0" text="名称" />
+                      <TableColumn fx:id="name" prefWidth="170.0" text="名称" />
                       <TableColumn fx:id="type" prefWidth="120.0" text="種別" />
                       <TableColumn fx:id="count" prefWidth="35.0" text="個数" />
                       <TableColumn fx:id="houg" prefWidth="35.0" text="火力" />
@@ -51,7 +52,14 @@
             </AnchorPane>
             <VBox>
                <children>
-                  <Label fx:id="dName" text="" />
+                  <Label styleClass="detailName" fx:id="detailName" text="" />
+                  <TableView fx:id="detailTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="alv" prefWidth="50.0" text="熟練" />
+                      <TableColumn fx:id="level" prefWidth="50.0" text="改修" />
+                      <TableColumn fx:id="ship" prefWidth="300.0" text="所持" />
+                    </columns>
+                  </TableView>
                </children>
             </VBox>
          </items>

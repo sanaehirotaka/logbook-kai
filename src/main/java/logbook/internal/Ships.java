@@ -161,8 +161,18 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image borderedItemImage(SlotItem item) {
-        SlotitemDescription description = item.slotitemDescription();
-        Path path = SlotitemDescription.getBorderedImagePath(description);
+        return borderedItemImage(item.slotitemDescription());
+    }
+
+    /**
+     * 装備の画像を取得します
+     *
+     * @param item 装備定義
+     * @return 装備の画像(36x36)
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image borderedItemImage(SlotitemDescription item) {
+        Path path = SlotitemDescription.getBorderedImagePath(item);
 
         return optimizeItemIcon(path);
     }
@@ -175,9 +185,20 @@ public class Ships {
      * @throws IOException 装備アイコンの調節に失敗した場合
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image itemImage(SlotItem item) throws IOException {
-        SlotitemDescription description = item.slotitemDescription();
-        Path path = SlotitemDescription.getImagePath(description);
+    public static Image itemImage(SlotItem item) {
+        return itemImage(item.slotitemDescription());
+    }
+
+    /**
+     * 装備の画像を取得します
+     *
+     * @param item 装備定義
+     * @return 装備の画像(36x36)
+     * @throws IOException 装備アイコンの調節に失敗した場合
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image itemImage(SlotitemDescription item) {
+        Path path = SlotitemDescription.getImagePath(item);
 
         return optimizeItemIcon(path);
     }
@@ -220,7 +241,12 @@ public class Ships {
                 return canvas.snapshot(sp, null);
             }
             return image;
+        } else {
+            Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
+            SnapshotParameters sp = new SnapshotParameters();
+            sp.setFill(Color.TRANSPARENT);
+
+            return canvas.snapshot(sp, null);
         }
-        return null;
     }
 }

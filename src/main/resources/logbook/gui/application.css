@@ -5,6 +5,10 @@
     -fx-font-weight: normal;
 }
 
+.table-cell {
+    -fx-alignment: CENTER-LEFT;
+}
+
 .ndock .name {
     -fx-font-size: 10pt;
 }
@@ -54,4 +58,6 @@
     -fx-font-size: 14pt;
     -fx-font-weight: bold;
 }
-
+.itemWindow .detailName {
+    -fx-font-size: 16pt;
+}

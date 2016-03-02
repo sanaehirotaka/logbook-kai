@@ -1,7 +1,9 @@
 package logbook.internal.gui;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.SlotItemCollection;
@@ -9,7 +11,7 @@ import logbook.bean.SlotitemDescription;
 import logbook.bean.SlotitemEquiptypeCollection;
 
 /**
- * 所有装備一覧のBean
+ * 所有装備
  *
  */
 public class Item {
@@ -58,6 +60,14 @@ public class Item {
 
     /** 装甲 */
     private IntegerProperty souk;
+
+    /**
+     * 自身を取得します。
+     * @return 自身
+     */
+    public Property<Item> thisProperty() {
+        return new SimpleObjectProperty<>(this);
+    }
 
     /**
      * 装備定義を取得します。
@@ -324,10 +334,10 @@ public class Item {
     }
 
     /**
-     * 装備定義から所有装備一覧のBeanを生成します
+     * 装備定義から所有装備を生成します
      *
      * @param slotitem 装備定義
-     * @return 所有装備一覧のBean
+     * @return 所有装備
      */
     public static Item toItem(SlotitemDescription slotitem) {
         String type = SlotitemEquiptypeCollection.get()
