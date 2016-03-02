@@ -1,6 +1,9 @@
 package logbook.internal.gui;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -11,8 +14,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Stage myStage = InternalFXMLLoader.load("logbook/gui/main.fxml").load(); //$NON-NLS-1$
-        myStage.show();
+        FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/main.fxml"); //$NON-NLS-1$
+        Parent root = loader.load();
+        stage.setScene(new Scene(root));
+
+        WindowController controller = loader.getController();
+        controller.setWindow(stage);
+
+        stage.setTitle("航海日誌");
+        stage.show();
     }
 
     /**

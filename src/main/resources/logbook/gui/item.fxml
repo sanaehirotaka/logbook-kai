@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.72" fx:controller="logbook.internal.gui.ItemController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
+         <items>
+            <AnchorPane>
+               <children>
+                  <TableView fx:id="table" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn fx:id="name" prefWidth="120.0" text="名称" />
+                      <TableColumn fx:id="type" prefWidth="120.0" text="種別" />
+                      <TableColumn fx:id="count" prefWidth="35.0" text="個数" />
+                      <TableColumn fx:id="houg" prefWidth="35.0" text="火力" />
+                      <TableColumn fx:id="houm" prefWidth="35.0" text="命中" />
+                      <TableColumn fx:id="leng" prefWidth="35.0" text="射程" />
+                      <TableColumn fx:id="luck" prefWidth="35.0" text="運" />
+                      <TableColumn fx:id="houk" prefWidth="35.0" text="回避" />
+                      <TableColumn fx:id="baku" prefWidth="35.0" text="爆装" />
+                      <TableColumn fx:id="raig" prefWidth="35.0" text="雷装" />
+                      <TableColumn fx:id="saku" prefWidth="35.0" text="索敵" />
+                      <TableColumn fx:id="tais" prefWidth="35.0" text="対潜" />
+                      <TableColumn fx:id="tyku" prefWidth="35.0" text="対空" />
+                      <TableColumn fx:id="souk" prefWidth="35.0" text="装甲" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+            <VBox>
+               <children>
+                  <Label fx:id="dName" text="" />
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</VBox>

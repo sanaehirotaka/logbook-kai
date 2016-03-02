@@ -1,14 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import java.lang.*?>
-<?import javafx.stage.Stage?>
-<?import javafx.scene.Scene?>
+<?import javafx.scene.layout.*?>
 
 
-<Stage title="航海日誌" xmlns:fx="http://javafx.com/fxml/1">
-  <scene>
-    <Scene>
-      <fx:include source="main_inner.fxml"/>
-    </Scene>
-  </scene>
-</Stage>
+<VBox stylesheets="@application.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox>
+         <children>
+            <Button fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" text="所有装備({0}/{1})" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="ship" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ships" text="所有艦娘({0}/{1})" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="infobox">
+               <children>
+                  <TitledPane animated="false" text="遠征">
+                     <content>
+                        <VBox fx:id="missionbox" />
+                     </content>
+                  </TitledPane>
+                  <TitledPane animated="false" text="入渠">
+                     <content>
+                        <VBox fx:id="ndockbox" />
+                     </content>
+                  </TitledPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

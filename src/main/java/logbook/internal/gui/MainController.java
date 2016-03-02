@@ -1,5 +1,6 @@
 package logbook.internal.gui;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,13 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import logbook.bean.Basic;
 import logbook.bean.DeckPort;
@@ -26,7 +31,7 @@ import logbook.proxy.ProxyServer;
  * UIコントローラー
  *
  */
-public class MainController {
+public class MainController extends WindowController {
 
     private String itemFormat;
 
@@ -76,7 +81,22 @@ public class MainController {
      */
     @FXML
     void items(ActionEvent e) {
-        // TODO 未実装
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/item.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("所有装備一覧");
+            stage.show();
+        } catch (IOException e1) {
+            // TODO 自動生成された catch ブロック
+            e1.printStackTrace();
+        }
     }
 
     /**
