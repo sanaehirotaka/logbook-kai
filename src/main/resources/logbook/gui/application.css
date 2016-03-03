@@ -4,60 +4,71 @@
     -fx-font-family: "Meiryo UI";
     -fx-font-weight: normal;
 }
-
 .table-cell {
-    -fx-alignment: CENTER-LEFT;
+    -fx-alignment: center-left;
 }
 
-.ndock .name {
-    -fx-font-size: 10pt;
+/* メインウインドウ */
+.mainWindow .buttons {
+    -fx-padding: 2px;
 }
-.ndock .time {
-    -fx-font-size: 14pt;
-    -fx-font-weight: bold;
+.mainWindow .itemButton {
+    -fx-padding: 5px;
 }
-.ndock.stage1 {
-    -fx-background-color: #FFF7CB;
+.mainWindow .shipButton {
+    -fx-padding: 5px;
 }
-.ndock.stage2 {
-    -fx-background-color: #FFEF99;
-}
-.ndock.stage3 {
-    -fx-background-color: #FFD700;
-}
-.mission .progress {
+.mainWindow .mission .progress {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
 }
-.mission .progress .track{
+.mainWindow .mission .progress .track{
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
-.mission .progress .bar {
+.mainWindow .mission .progress .bar {
     -fx-background-color: #fff3b3;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }
-.mission.stage1 .progress .bar {
+.mainWindow .mission.stage1 .progress .bar {
     -fx-background-color: #fff4b9;
 }
-.mission.stage2 .progress .bar {
+.mainWindow .mission.stage2 .progress .bar {
     -fx-background-color: #FFEF99;
 }
-.mission.stage3 .progress .bar {
+.mainWindow .mission.stage3 .progress .bar {
     -fx-background-color: #FFD700;
 }
-.mission .fleet {
+.mainWindow .mission .fleet {
     -fx-font-size: 9pt;
 }
-.mission .name {
+.mainWindow .mission .name {
     -fx-font-size: 14pt;
 }
-.mission .time {
+.mainWindow .mission .time {
     -fx-font-size: 14pt;
     -fx-font-weight: bold;
 }
+.mainWindow .ndock .name {
+    -fx-font-size: 10pt;
+}
+.mainWindow .ndock .time {
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+}
+.mainWindow .ndock.stage1 {
+    -fx-background-color: #FFF7CB;
+}
+.mainWindow .ndock.stage2 {
+    -fx-background-color: #FFEF99;
+}
+.mainWindow .ndock.stage3 {
+    -fx-background-color: #FFD700;
+}
+
+/* 所有装備一覧 */
 .itemWindow .detailName {
     -fx-font-size: 16pt;
 }
