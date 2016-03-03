@@ -10,8 +10,8 @@ import javafx.beans.property.StringProperty;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipDescription;
-import logbook.bean.ShipDescriptionCollection;
 import logbook.bean.SlotItem;
+import logbook.internal.Ships;
 
 /**
  * 所有装備一覧の詳細
@@ -154,12 +154,14 @@ public class DetailItem {
             // 艦娘
             Ship ship = op.get();
             // 艦船
-            ShipDescription desc = ShipDescriptionCollection.get()
-                    .getShipMap()
-                    .get(ship.getShipId());
+            Optional<ShipDescription> desc = Ships.shipDescription(ship);
 
             detail.setShip(ship.getId());
-            detail.setName(desc.getName() + "(Lv" + ship.getLv() + ")");
+            if (desc.isPresent()) {
+                detail.setName(desc.get().getName() + "(Lv" + ship.getLv() + ")");
+            } else {
+                detail.setName("");
+            }
         } else {
             detail.setName("未装備");
         }

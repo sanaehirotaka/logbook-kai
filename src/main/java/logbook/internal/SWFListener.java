@@ -18,7 +18,6 @@ import com.jpexs.decompiler.flash.tags.base.ImageTag;
 
 import logbook.bean.ShipDescription;
 import logbook.bean.ShipDescriptionCollection;
-import logbook.bean.SlotitemDescription;
 import logbook.proxy.ContentListenerSpi;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
@@ -180,7 +179,7 @@ public class SWFListener implements ContentListenerSpi {
     void icons(RequestMetaData request, ResponseMetaData response) throws IOException, InterruptedException {
         if (response.getResponseBody().isPresent()) {
             InputStream in = response.getResponseBody().get();
-            Path dir = SlotitemDescription.getResourcePathDir();
+            Path dir = Ships.getItemResourcePathDir();
             this.storeItemImages(dir, in);
         }
     }

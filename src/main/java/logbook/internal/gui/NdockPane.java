@@ -2,6 +2,7 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -16,7 +17,6 @@ import logbook.bean.Ndock;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipDescription;
-import logbook.bean.ShipDescriptionCollection;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Ships;
@@ -77,9 +77,7 @@ public class NdockPane extends HBox {
                     .getShipMap()
                     .get(this.ndock.getShipId());
             // 艦船
-            ShipDescription desc = ShipDescriptionCollection.get()
-                    .getShipMap()
-                    .get(ship.getShipId());
+            Optional<ShipDescription> desc = Ships.shipDescription(ship);
 
             // 艦娘画像
             this.ship.setImage(Ships.shipImage(ship));
@@ -93,7 +91,9 @@ public class NdockPane extends HBox {
                 this.addItemIcon(ship.getSlotEx());
             }
             // 名前
-            this.name.setText(desc.getName() + " (Lv" + ship.getLv() + ")");
+            if (desc.isPresent()) {
+                this.name.setText(desc.get().getName() + " (Lv" + ship.getLv() + ")");
+            }
             this.update();
 
         } catch (Exception e) {

@@ -110,16 +110,6 @@ public class SlotItem implements Serializable {
     }
 
     /**
-     * 装備定義を取得します。
-     * @return 装備定義
-     */
-    public SlotitemDescription slotitemDescription() {
-        return SlotitemDescriptionCollection.get()
-                .getSlotitemMap()
-                .get(this.getSlotitemId());
-    }
-
-    /**
      * JsonObjectから{@link SlotItem}を構築します
      *
      * @param json JsonObject

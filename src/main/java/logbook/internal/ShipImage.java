@@ -5,15 +5,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipDescription;
-import logbook.bean.ShipDescriptionCollection;
 
 class ShipImage {
 
@@ -112,8 +114,10 @@ class ShipImage {
             }
             applyLayers(gc, layers);
         }
+        SnapshotParameters sp = new SnapshotParameters();
+        sp.setFill(Color.TRANSPARENT);
 
-        return canvas.snapshot(null, null);
+        return canvas.snapshot(sp, null);
     }
 
     /**
@@ -140,14 +144,15 @@ class ShipImage {
      * @return 艦娘のベースとなる画像
      */
     private static Path getBaseImagePath(Ship ship) {
-        Path dir = ShipDescription.getResourcePathDir(ShipDescriptionCollection.get()
-                .getShipMap()
-                .get(ship.getShipId()));
-        String[] names = (Ships.isHalfDamage(ship) || Ships.isBadlyDamage(ship)) ? DAMAGED : NORMAL;
-        for (String name : names) {
-            Path p = dir.resolve(name);
-            if (Files.isReadable(p)) {
-                return p;
+        Optional<ShipDescription> desc =  Ships.shipDescription(ship);
+        if (desc.isPresent()) {
+            Path dir = ShipDescription.getResourcePathDir(desc.get());
+            String[] names = (Ships.isHalfDamage(ship) || Ships.isBadlyDamage(ship)) ? DAMAGED : NORMAL;
+            for (String name : names) {
+                Path p = dir.resolve(name);
+                if (Files.isReadable(p)) {
+                    return p;
+                }
             }
         }
         return null;
