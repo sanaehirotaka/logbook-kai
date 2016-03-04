@@ -270,6 +270,7 @@ public class ShipDescription implements Serializable {
 
     /**
      * 艦娘リソースファイルのディレクトリを取得します。
+     * @param desc 艦船
      * @return 艦娘リソースファイルのディレクトリ
      */
     public static Path getResourcePathDir(ShipDescription desc) {

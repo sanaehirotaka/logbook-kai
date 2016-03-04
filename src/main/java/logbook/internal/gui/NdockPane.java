@@ -129,7 +129,6 @@ public class NdockPane extends HBox {
      * 装備アイコンを追加します
      *
      * @param itemId 装備ID
-     * @throws IOException
      */
     private void addItemIcon(Integer itemId) {
         SlotItem item = SlotItemCollection.get()

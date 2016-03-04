@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,6 +17,7 @@ import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.base.CharacterTag;
 import com.jpexs.decompiler.flash.tags.base.ImageTag;
 
+import logbook.bean.AppConfig;
 import logbook.bean.ShipDescription;
 import logbook.bean.ShipDescriptionCollection;
 import logbook.proxy.ContentListenerSpi;
@@ -195,7 +197,7 @@ public class SWFListener implements ContentListenerSpi {
     void common(RequestMetaData request, ResponseMetaData response) throws IOException, InterruptedException {
         if (response.getResponseBody().isPresent()) {
             InputStream in = response.getResponseBody().get();
-            Path dir = ShipImage.getResourcePathDir();
+            Path dir = Paths.get(AppConfig.get().getResourcesDir(), "common");
             this.storeImages(dir, in);
         }
     }

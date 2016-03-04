@@ -19,6 +19,9 @@ public class Item {
     /** 装備定義 */
     private Integer id;
 
+    /** ソート用 種別 */
+    private Integer type3;
+
     /** 名称 */
     private StringProperty name;
 
@@ -94,6 +97,22 @@ public class Item {
     }
 
     /**
+     * ソート用 種別を取得します。
+     * @return ソート用 種別
+     */
+    public Integer getType3() {
+        return this.type3;
+    }
+
+    /**
+     * ソート用 種別を設定します。
+     * @param type3 ソート用 種別
+     */
+    public void setType3(Integer type3) {
+        this.type3 = type3;
+    }
+
+    /**
      * 名称を取得します。
      * @return 名称
      */
@@ -115,14 +134,6 @@ public class Item {
      */
     public StringProperty typeProperty() {
         return this.type;
-    }
-
-    /**
-     * 種別を取得します。
-     * @return 種別
-     */
-    public String getType() {
-        return this.type.get();
     }
 
     /**
@@ -352,6 +363,7 @@ public class Item {
                 .count();
         Item item = new Item();
         item.setId(slotitem.getId());
+        item.setType3(slotitem.getType().get(3));
         item.setName(slotitem.getName());
         item.setType(type);
         item.setCount(count);

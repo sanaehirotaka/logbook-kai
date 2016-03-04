@@ -1,6 +1,5 @@
 package logbook.internal;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Files;
@@ -238,7 +237,18 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipImage(Ship ship) throws IllegalStateException {
-        return ShipImage.get(ship);
+        return ShipImage.get(ship, false);
+    }
+
+    /**
+     * 艦娘の画像を取得します
+     *
+     * @param ship 艦娘
+     * @return 艦娘の画像
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image shipWithItemImage(Ship ship) throws IllegalStateException {
+        return ShipImage.get(ship, true);
     }
 
     /**
@@ -248,7 +258,7 @@ public class Ships {
      * @return 装備の画像(36x36)
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image borderedItemImage(SlotItem item) {
+    public static Image borderedItemImage(SlotItem item) throws IllegalStateException {
         return borderedItemImage(slotitemDescription(item).orElse(null));
     }
 
@@ -259,7 +269,7 @@ public class Ships {
      * @return 装備の画像(36x36)
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image borderedItemImage(SlotitemDescription item) {
+    public static Image borderedItemImage(SlotitemDescription item) throws IllegalStateException {
         Path path = null;
         if (item != null) {
             path = getBorderedItemImagePath(item);
@@ -272,10 +282,9 @@ public class Ships {
      *
      * @param item 装備
      * @return 装備の画像(36x36)
-     * @throws IOException 装備アイコンの調節に失敗した場合
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image itemImage(SlotItem item) {
+    public static Image itemImage(SlotItem item) throws IllegalStateException {
         return itemImage(slotitemDescription(item).orElse(null));
     }
 
@@ -284,10 +293,9 @@ public class Ships {
      *
      * @param item 装備定義
      * @return 装備の画像(36x36)
-     * @throws IOException 装備アイコンの調節に失敗した場合
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image itemImage(SlotitemDescription item) {
+    public static Image itemImage(SlotitemDescription item) throws IllegalStateException {
         Path path = null;
         if (item != null) {
             path = getItemImagePath(item);
@@ -315,9 +323,12 @@ public class Ships {
      * @return 装備定義
      */
     public static Optional<SlotitemDescription> slotitemDescription(SlotItem item) {
-        SlotitemDescription desc = SlotitemDescriptionCollection.get()
-                .getSlotitemMap()
-                .get(item.getSlotitemId());
+        SlotitemDescription desc = null;
+        if (item != null) {
+            desc = SlotitemDescriptionCollection.get()
+                    .getSlotitemMap()
+                    .get(item.getSlotitemId());
+        }
         return Optional.ofNullable(desc);
     }
 

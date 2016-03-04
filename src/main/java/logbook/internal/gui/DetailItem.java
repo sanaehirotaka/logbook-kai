@@ -32,7 +32,7 @@ public class DetailItem {
     private StringProperty name;
 
     /** 所持艦娘ID */
-    private Integer ship = 0;
+    private Integer ship;
 
     /**
      * 自身を取得します。

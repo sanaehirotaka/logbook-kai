@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemDescription;
 import logbook.bean.SlotitemDescriptionCollection;
@@ -148,7 +149,7 @@ public class ItemController extends WindowController {
                 .map(Item::toItem)
                 .filter(e -> e.getCount() > 0)
                 .sorted(Comparator.comparing(Item::getName))
-                .sorted(Comparator.comparing(Item::getType))
+                .sorted(Comparator.comparing(Item::getType3))
                 .collect(Collectors.toList());
         this.typeList.addAll(items);
         this.typeTable.setItems(this.typeList);
@@ -179,9 +180,12 @@ public class ItemController extends WindowController {
                     .values()
                     .stream()
                     .filter(e -> e.getSlotitemId().equals(value.getId()))
+                    .sorted(Comparator.comparing(SlotItem::getAlv, Comparator.nullsFirst(Comparator.naturalOrder()))
+                            .reversed())
+                    .sorted(Comparator.comparing(SlotItem::getLevel, Comparator.nullsFirst(Comparator.naturalOrder()))
+                            .reversed())
                     .map(DetailItem::toDetailItem)
-                    .sorted(Comparator.comparing(DetailItem::getId))
-                    .sorted(Comparator.comparing(DetailItem::getShip))
+                    .sorted(Comparator.comparing(DetailItem::getShip, Comparator.nullsFirst(Comparator.naturalOrder())))
                     .collect(Collectors.toList());
             this.detailList.addAll(items);
         } else {
@@ -239,7 +243,7 @@ public class ItemController extends WindowController {
                             .getShipMap()
                             .get(item.getShip());
 
-                    this.setGraphic(new ImageView(Ships.shipImage(ship)));
+                    this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
                     this.setText(this.property.apply(item).get());
                 }
             } else {

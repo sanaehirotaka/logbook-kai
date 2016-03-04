@@ -48,7 +48,7 @@ public class MissionPane extends AnchorPane {
     /**
      * 艦隊ペインのコンストラクタ
      *
-     * @param ndock 艦隊
+     * @param port 艦隊
      */
     public MissionPane(DeckPort port) {
         this.port = port;
