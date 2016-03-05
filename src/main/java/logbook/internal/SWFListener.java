@@ -181,7 +181,7 @@ public class SWFListener implements ContentListenerSpi {
     void icons(RequestMetaData request, ResponseMetaData response) throws IOException, InterruptedException {
         if (response.getResponseBody().isPresent()) {
             InputStream in = response.getResponseBody().get();
-            Path dir = Ships.getItemResourcePathDir();
+            Path dir = Items.getItemResourcePathDir();
             this.storeItemImages(dir, in);
         }
     }

@@ -23,6 +23,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemDescription;
 import logbook.bean.SlotitemDescriptionCollection;
+import logbook.internal.Items;
 import logbook.internal.Ships;
 
 /**
@@ -216,7 +217,7 @@ public class ItemController extends WindowController {
                         .get(itemId);
 
                 if (desc != null) {
-                    this.setGraphic(new ImageView(Ships.itemImage(desc)));
+                    this.setGraphic(new ImageView(Items.itemImage(desc)));
                     this.setText(desc.getName());
                 }
             } else {

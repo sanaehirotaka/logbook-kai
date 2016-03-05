@@ -19,6 +19,7 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipDescription;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
+import logbook.internal.Items;
 import logbook.internal.Ships;
 
 /**
@@ -136,7 +137,7 @@ public class NdockPane extends HBox {
                 .get(itemId);
 
         if (item != null) {
-            Image image = Ships.borderedItemImage(item);
+            Image image = Items.borderedItemImage(item);
 
             if (image != null) {
                 ImageView iv = new ImageView(image);

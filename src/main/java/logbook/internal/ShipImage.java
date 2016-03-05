@@ -195,7 +195,7 @@ class ShipImage {
         SlotItem item = SlotItemCollection.get()
                 .getSlotitemMap()
                 .get(itemId);
-        return Ships.borderedItemImage(item);
+        return Items.borderedItemImage(item);
     }
 
     /**
