@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.SlotitemDescription;
+import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemEquiptypeCollection;
 
 /**
@@ -339,7 +339,7 @@ public class Item implements Comparable<Item> {
      * @param slotitem 装備定義
      * @return 所有装備
      */
-    public static Item toItem(SlotitemDescription slotitem) {
+    public static Item toItem(SlotitemMst slotitem) {
         String type = SlotitemEquiptypeCollection.get()
                 .getEquiptypeMap()
                 .get(slotitem.getType().get(2))

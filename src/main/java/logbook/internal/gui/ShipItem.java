@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.Ship;
-import logbook.bean.ShipDescription;
+import logbook.bean.ShipMst;
 import logbook.bean.StypeCollection;
 import logbook.internal.Ships;
 
@@ -330,12 +330,12 @@ public class ShipItem {
      * @return 所有艦娘
      */
     public static ShipItem toShipItem(Ship ship) {
-        Optional<ShipDescription> desc = Ships.shipDescription(ship);
+        Optional<ShipMst> mst = Ships.shipMst(ship);
         String type;
-        if (desc.isPresent()) {
+        if (mst.isPresent()) {
             type = StypeCollection.get()
                     .getStypeMap()
-                    .get(desc.get()
+                    .get(mst.get()
                             .getStype())
                     .getName();
         } else {

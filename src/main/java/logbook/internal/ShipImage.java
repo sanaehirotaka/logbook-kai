@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
-import logbook.bean.ShipDescription;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 
@@ -171,9 +171,9 @@ class ShipImage {
      * @return 艦娘のベースとなる画像
      */
     private static Path getBaseImagePath(Ship ship) {
-        Optional<ShipDescription> desc = Ships.shipDescription(ship);
-        if (desc.isPresent()) {
-            Path dir = ShipDescription.getResourcePathDir(desc.get());
+        Optional<ShipMst> mst = Ships.shipMst(ship);
+        if (mst.isPresent()) {
+            Path dir = ShipMst.getResourcePathDir(mst.get());
             String[] names = (Ships.isHalfDamage(ship) || Ships.isBadlyDamage(ship)) ? DAMAGED : NORMAL;
             for (String name : names) {
                 Path p = dir.resolve(name);

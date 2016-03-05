@@ -16,7 +16,7 @@ import javafx.scene.layout.HBox;
 import logbook.bean.Ndock;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
-import logbook.bean.ShipDescription;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Items;
@@ -78,7 +78,7 @@ public class NdockPane extends HBox {
                     .getShipMap()
                     .get(this.ndock.getShipId());
             // 艦船
-            Optional<ShipDescription> desc = Ships.shipDescription(ship);
+            Optional<ShipMst> mst = Ships.shipMst(ship);
 
             // 艦娘画像
             this.ship.setImage(Ships.shipImage(ship));
@@ -92,8 +92,8 @@ public class NdockPane extends HBox {
                 this.addItemIcon(ship.getSlotEx());
             }
             // 名前
-            if (desc.isPresent()) {
-                this.name.setText(desc.get().getName() + " (Lv" + ship.getLv() + ")");
+            if (mst.isPresent()) {
+                this.name.setText(mst.get().getName() + " (Lv" + ship.getLv() + ")");
             }
             this.update();
 

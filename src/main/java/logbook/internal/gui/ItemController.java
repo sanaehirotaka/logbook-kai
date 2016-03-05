@@ -18,11 +18,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import logbook.bean.Ship;
-import logbook.bean.ShipDescription;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.SlotitemDescription;
-import logbook.bean.SlotitemDescriptionCollection;
+import logbook.bean.SlotitemMst;
+import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
 import logbook.internal.Ships;
 
@@ -144,7 +144,7 @@ public class ItemController extends WindowController {
             this.ship.setCellFactory(p -> new ShipImageCell());
 
             // 行を作る
-            List<Item> items = SlotitemDescriptionCollection.get()
+            List<Item> items = SlotitemMstCollection.get()
                     .getSlotitemMap()
                     .values()
                     .stream()
@@ -212,13 +212,13 @@ public class ItemController extends WindowController {
         protected void updateItem(Integer itemId, boolean empty) {
             super.updateItem(itemId, empty);
             if (!empty) {
-                SlotitemDescription desc = SlotitemDescriptionCollection.get()
+                SlotitemMst mst = SlotitemMstCollection.get()
                         .getSlotitemMap()
                         .get(itemId);
 
-                if (desc != null) {
-                    this.setGraphic(new ImageView(Items.itemImage(desc)));
-                    this.setText(desc.getName());
+                if (mst != null) {
+                    this.setGraphic(new ImageView(Items.itemImage(mst)));
+                    this.setText(mst.getName());
                 }
             } else {
                 this.setGraphic(null);
@@ -237,7 +237,7 @@ public class ItemController extends WindowController {
             if (!empty) {
                 this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
                 if (ship != null) {
-                    Optional<ShipDescription> desc = Ships.shipDescription(ship);
+                    Optional<ShipMst> desc = Ships.shipMst(ship);
                     if (desc.isPresent()) {
                         this.setText(desc.get().getName() + "(Lv" + ship.getLv() + ")");
                     }

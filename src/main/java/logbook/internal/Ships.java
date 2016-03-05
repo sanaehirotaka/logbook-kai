@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import javafx.scene.image.Image;
 import logbook.bean.Ship;
-import logbook.bean.ShipDescription;
-import logbook.bean.ShipDescriptionCollection;
+import logbook.bean.ShipMst;
+import logbook.bean.ShipMstCollection;
 
 /**
  * 艦娘に関するメソッドを集めたクラス
@@ -161,11 +161,11 @@ public class Ships {
      * @param ship 艦娘
      * @return 艦船
      */
-    public static Optional<ShipDescription> shipDescription(Ship ship) {
-        ShipDescription desc = ShipDescriptionCollection.get()
+    public static Optional<ShipMst> shipMst(Ship ship) {
+        ShipMst mst = ShipMstCollection.get()
                 .getShipMap()
                 .get(ship.getShipId());
-        return Optional.ofNullable(desc);
+        return Optional.ofNullable(mst);
     }
 
     /**

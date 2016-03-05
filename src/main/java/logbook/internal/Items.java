@@ -14,8 +14,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
 import logbook.bean.SlotItem;
-import logbook.bean.SlotitemDescription;
-import logbook.bean.SlotitemDescriptionCollection;
+import logbook.bean.SlotitemMst;
+import logbook.bean.SlotitemMstCollection;
 
 /**
  * 装備に関するメソッドを集めたクラス
@@ -117,7 +117,7 @@ public class Items {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image borderedItemImage(SlotItem item) throws IllegalStateException {
-        return borderedItemImage(slotitemDescription(item).orElse(null));
+        return borderedItemImage(slotitemMst(item).orElse(null));
     }
 
     /**
@@ -127,7 +127,7 @@ public class Items {
      * @return 装備の画像(36x36)
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image borderedItemImage(SlotitemDescription item) throws IllegalStateException {
+    public static Image borderedItemImage(SlotitemMst item) throws IllegalStateException {
         Path path = null;
         if (item != null) {
             path = getBorderedItemImagePath(item);
@@ -143,7 +143,7 @@ public class Items {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image itemImage(SlotItem item) throws IllegalStateException {
-        return itemImage(slotitemDescription(item).orElse(null));
+        return itemImage(slotitemMst(item).orElse(null));
     }
 
     /**
@@ -153,7 +153,7 @@ public class Items {
      * @return 装備の画像(36x36)
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image itemImage(SlotitemDescription item) throws IllegalStateException {
+    public static Image itemImage(SlotitemMst item) throws IllegalStateException {
         Path path = null;
         if (item != null) {
             path = getItemImagePath(item);
@@ -167,14 +167,14 @@ public class Items {
      * @param item 装備
      * @return 装備定義
      */
-    public static Optional<SlotitemDescription> slotitemDescription(SlotItem item) {
-        SlotitemDescription desc = null;
+    public static Optional<SlotitemMst> slotitemMst(SlotItem item) {
+        SlotitemMst mst = null;
         if (item != null) {
-            desc = SlotitemDescriptionCollection.get()
+            mst = SlotitemMstCollection.get()
                     .getSlotitemMap()
                     .get(item.getSlotitemId());
         }
-        return Optional.ofNullable(desc);
+        return Optional.ofNullable(mst);
     }
 
     /**
@@ -190,7 +190,7 @@ public class Items {
      * @param item 装備
      * @return 装備アイコン(背景無し)
      */
-    private static Path getItemImagePath(SlotitemDescription item) {
+    private static Path getItemImagePath(SlotitemMst item) {
         String name = getItemImageName(item);
         if (name != null) {
             return getItemResourcePathDir().resolve(name);
@@ -204,7 +204,7 @@ public class Items {
      * @param item 装備
      * @return 装備アイコン(背景有り)
      */
-    private static Path getBorderedItemImagePath(SlotitemDescription item) {
+    private static Path getBorderedItemImagePath(SlotitemMst item) {
         String name = getBorderedItemImageName(item);
         if (name != null) {
             return getItemResourcePathDir().resolve(name);
@@ -213,12 +213,12 @@ public class Items {
         }
     }
 
-    private static String getItemImageName(SlotitemDescription item) {
+    private static String getItemImageName(SlotitemMst item) {
         int key = item.getType().get(3);
         return ITEM_MAP.get(key);
     }
 
-    private static String getBorderedItemImageName(SlotitemDescription item) {
+    private static String getBorderedItemImageName(SlotitemMst item) {
         int key = item.getType().get(3);
         return BORDERED_ITEM_MAP.get(key);
     }

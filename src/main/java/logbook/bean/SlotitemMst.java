@@ -11,7 +11,7 @@ import logbook.internal.JsonHelper;
  * 装備定義
  *
  */
-public class SlotitemDescription implements Serializable {
+public class SlotitemMst implements Serializable {
 
     private static final long serialVersionUID = 383813721548687786L;
 
@@ -458,13 +458,13 @@ public class SlotitemDescription implements Serializable {
     }
 
     /**
-     * JsonObjectから{@link SlotitemDescription}を構築します
+     * JsonObjectから{@link SlotitemMst}を構築します
      *
      * @param json JsonObject
-     * @return {@link SlotitemDescription}
+     * @return {@link SlotitemMst}
      */
-    public static SlotitemDescription toSlotitem(JsonObject json) {
-        SlotitemDescription bean = new SlotitemDescription();
+    public static SlotitemMst toSlotitem(JsonObject json) {
+        SlotitemMst bean = new SlotitemMst();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_sortno", bean::setSortno)

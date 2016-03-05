@@ -8,10 +8,10 @@ import javax.json.JsonValue;
 
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
-import logbook.bean.ShipDescription;
-import logbook.bean.ShipDescriptionCollection;
-import logbook.bean.SlotitemDescription;
-import logbook.bean.SlotitemDescriptionCollection;
+import logbook.bean.ShipMst;
+import logbook.bean.ShipMstCollection;
+import logbook.bean.SlotitemMst;
+import logbook.bean.SlotitemMstCollection;
 import logbook.bean.SlotitemEquiptype;
 import logbook.bean.SlotitemEquiptypeCollection;
 import logbook.bean.Stype;
@@ -51,10 +51,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_ship
      */
     private void apiMstShip(JsonArray array) {
-        Map<Integer, ShipDescription> map = ShipDescriptionCollection.get()
+        Map<Integer, ShipMst> map = ShipMstCollection.get()
                 .getShipMap();
         map.clear();
-        map.putAll(JsonHelper.toMap(array, ShipDescription::getId, ShipDescription::toShip));
+        map.putAll(JsonHelper.toMap(array, ShipMst::getId, ShipMst::toShip));
     }
 
     /**
@@ -63,12 +63,12 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_shipgraph
      */
     private void apiMstShipgraph(JsonArray array) {
-        Map<Integer, ShipDescription> map = ShipDescriptionCollection.get()
+        Map<Integer, ShipMst> map = ShipMstCollection.get()
                 .getShipMap();
         for (JsonValue val : array) {
             JsonObject json = (JsonObject) val;
             Integer key = json.getInt("api_id");
-            ShipDescription bean = map.get(key);
+            ShipMst bean = map.get(key);
             if (bean != null) {
                 bean.setGraph(json.getString("api_filename"));
                 bean.setVersion(json.getString("api_version"));
@@ -106,10 +106,10 @@ public class ApiStart2 implements APIListenerSpi {
      * @param array api_mst_slotitem
      */
     private void apiMstSlotitem(JsonArray array) {
-        Map<Integer, SlotitemDescription> map = SlotitemDescriptionCollection.get()
+        Map<Integer, SlotitemMst> map = SlotitemMstCollection.get()
                 .getSlotitemMap();
         map.clear();
-        map.putAll(JsonHelper.toMap(array, SlotitemDescription::getId, SlotitemDescription::toSlotitem));
+        map.putAll(JsonHelper.toMap(array, SlotitemMst::getId, SlotitemMst::toSlotitem));
     }
 
     /**

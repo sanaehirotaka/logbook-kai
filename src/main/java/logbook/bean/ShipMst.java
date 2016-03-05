@@ -12,7 +12,7 @@ import logbook.internal.JsonHelper;
  * 艦娘の名前と種別を表します
  *
  */
-public class ShipDescription implements Serializable {
+public class ShipMst implements Serializable {
 
     private static final long serialVersionUID = 4329488719132098164L;
 
@@ -273,19 +273,19 @@ public class ShipDescription implements Serializable {
      * @param desc 艦船
      * @return 艦娘リソースファイルのディレクトリ
      */
-    public static Path getResourcePathDir(ShipDescription desc) {
-        String shipDir = desc.getId() + "_" + desc.getName();
+    public static Path getResourcePathDir(ShipMst mst) {
+        String shipDir = mst.getId() + "_" + mst.getName();
         return Paths.get(AppConfig.get().getResourcesDir(), "ships", shipDir);
     }
 
     /**
-     * JsonObjectから{@link ShipDescription}を構築します
+     * JsonObjectから{@link ShipMst}を構築します
      *
      * @param json JsonObject
-     * @return {@link ShipDescription}
+     * @return {@link ShipMst}
      */
-    public static ShipDescription toShip(JsonObject json) {
-        ShipDescription bean = new ShipDescription();
+    public static ShipMst toShip(JsonObject json) {
+        ShipMst bean = new ShipMst();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_sortno", bean::setSortno)

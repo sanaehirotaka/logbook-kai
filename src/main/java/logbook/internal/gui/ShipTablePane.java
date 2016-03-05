@@ -23,7 +23,7 @@ import javafx.scene.layout.VBox;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.SlotitemDescription;
+import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
 import logbook.internal.Ships;
 
@@ -176,7 +176,7 @@ public class ShipTablePane extends VBox {
 
             if (!empty) {
                 this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
-                Ships.shipDescription(ship)
+                Ships.shipMst(ship)
                         .ifPresent(e -> this.setText(e.getName()));
             }
         }
@@ -195,10 +195,10 @@ public class ShipTablePane extends VBox {
                 SlotItem item = SlotItemCollection.get()
                         .getSlotitemMap()
                         .get(itemId);
-                Optional<SlotitemDescription> desc = Items.slotitemDescription(item);
+                Optional<SlotitemMst> mst = Items.slotitemMst(item);
 
-                if (desc.isPresent()) {
-                    StringBuilder text = new StringBuilder(desc.get().getName());
+                if (mst.isPresent()) {
+                    StringBuilder text = new StringBuilder(mst.get().getName());
 
                     if (item.getAlv() != null && item.getAlv() > 0) {
                         text.append("☆+" + item.getAlv());
@@ -206,7 +206,7 @@ public class ShipTablePane extends VBox {
                     if (item.getLevel() > 0) {
                         text.append("★+" + item.getLevel());
                     }
-                    this.setGraphic(new ImageView(Items.itemImage(desc.get())));
+                    this.setGraphic(new ImageView(Items.itemImage(mst.get())));
                     this.setText(text.toString());
                 }
             }
