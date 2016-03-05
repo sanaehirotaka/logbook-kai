@@ -6,11 +6,10 @@ import javafx.stage.Stage;
  * ウインドウを持つコントローラー
  *
  */
-public class WindowController {
+public abstract class WindowController {
 
     /** このコントローラーに紐づくウインドウ */
     private Stage window;
-
 
     /**
      * このコントローラーに紐づくウインドウを取得します。

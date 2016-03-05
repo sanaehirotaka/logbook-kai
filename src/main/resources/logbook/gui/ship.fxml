@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox prefHeight="600.0" prefWidth="800.0" styleClass="shipWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ShipController">
+   <children>
+      <TabPane fx:id="tab" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>
