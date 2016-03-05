@@ -3,15 +3,13 @@ package logbook.internal.gui;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import javafx.beans.property.Property;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
-import logbook.bean.ShipDescription;
 import logbook.bean.SlotItem;
-import logbook.internal.Ships;
 
 /**
  * 所有装備一覧の詳細
@@ -28,19 +26,11 @@ public class DetailItem {
     /** 熟練度 */
     private StringProperty alv;
 
-    /** 所持艦娘名 */
-    private StringProperty name;
+    /** 所持艦娘 */
+    private ObjectProperty<Ship> ship;
 
     /** 所持艦娘ID */
-    private Integer ship;
-
-    /**
-     * 自身を取得します。
-     * @return 自身
-     */
-    public Property<DetailItem> thisProperty() {
-        return new SimpleObjectProperty<>(this);
-    }
+    private Integer shipId;
 
     /**
      * 装備IDを取得します。
@@ -91,35 +81,35 @@ public class DetailItem {
     }
 
     /**
-     * 所持艦娘名を取得します。
-     * @return 所持艦娘名
+     * 所持艦娘を取得します。
+     * @return 所持艦娘
      */
-    public StringProperty nameProperty() {
-        return this.name;
+    public ObjectProperty<Ship> shipProperty() {
+        return this.ship;
     }
 
     /**
-     * 所持艦娘名を設定します。
-     * @param name 所持艦娘名
+     * 所持艦娘を設定します。
+     * @param ship 所持艦娘
      */
-    public void setName(String name) {
-        this.name = new SimpleStringProperty(name);
+    public void setShip(Ship ship) {
+        this.ship = new SimpleObjectProperty<>(ship);
     }
 
     /**
      * 所持艦娘IDを取得します。
      * @return 所持艦娘ID
      */
-    public Integer getShip() {
-        return this.ship;
+    public Integer getShipId() {
+        return this.shipId;
     }
 
     /**
      * 所持艦娘IDを設定します。
-     * @param ship 所持艦娘ID
+     * @param shipId 所持艦娘ID
      */
-    public void setShip(Integer ship) {
-        this.ship = ship;
+    public void setShipId(Integer shipId) {
+        this.shipId = shipId;
     }
 
     /**
@@ -151,19 +141,11 @@ public class DetailItem {
                 .filter(filter)
                 .findAny();
         if (op.isPresent()) {
-            // 艦娘
             Ship ship = op.get();
-            // 艦船
-            Optional<ShipDescription> desc = Ships.shipDescription(ship);
-
-            detail.setShip(ship.getId());
-            if (desc.isPresent()) {
-                detail.setName(desc.get().getName() + "(Lv" + ship.getLv() + ")");
-            } else {
-                detail.setName("");
-            }
-        } else {
-            detail.setName("未装備");
+            // 艦娘
+            detail.setShip(ship);
+            // 艦娘ID
+            detail.setShipId(ship.getId());
         }
         return detail;
     }

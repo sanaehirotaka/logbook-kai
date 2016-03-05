@@ -1,9 +1,9 @@
 package logbook.internal.gui;
 
+import java.util.Comparator;
+
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.SlotItemCollection;
@@ -14,16 +14,16 @@ import logbook.bean.SlotitemEquiptypeCollection;
  * 所有装備
  *
  */
-public class Item {
+public class Item implements Comparable<Item> {
 
     /** 装備定義 */
-    private Integer id;
+    private IntegerProperty id;
 
     /** ソート用 種別 */
     private Integer type3;
 
     /** 名称 */
-    private StringProperty name;
+    private String name;
 
     /** 種別 */
     private StringProperty type;
@@ -65,18 +65,10 @@ public class Item {
     private IntegerProperty souk;
 
     /**
-     * 自身を取得します。
-     * @return 自身
-     */
-    public Property<Item> thisProperty() {
-        return new SimpleObjectProperty<>(this);
-    }
-
-    /**
      * 装備定義を取得します。
      * @return 装備定義
      */
-    public Integer getId() {
+    public IntegerProperty idProperty() {
         return this.id;
     }
 
@@ -85,15 +77,7 @@ public class Item {
      * @param id 装備定義
      */
     public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * 名称を取得します。
-     * @return 名称
-     */
-    public StringProperty nameProperty() {
-        return this.name;
+        this.id = new SimpleIntegerProperty(id);
     }
 
     /**
@@ -117,7 +101,7 @@ public class Item {
      * @return 名称
      */
     public String getName() {
-        return this.name.get();
+        return this.name;
     }
 
     /**
@@ -125,7 +109,7 @@ public class Item {
      * @param name 名称
      */
     public void setName(String name) {
-        this.name = new SimpleStringProperty(name);
+        this.name = name;
     }
 
     /**
@@ -342,6 +326,11 @@ public class Item {
      */
     public void setSouk(Integer souk) {
         this.souk = new SimpleIntegerProperty(souk);
+    }
+
+    @Override
+    public int compareTo(Item o) {
+        return Comparator.comparing(Item::getName).compare(this, o);
     }
 
     /**

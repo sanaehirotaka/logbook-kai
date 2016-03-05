@@ -106,7 +106,22 @@ public class MainController extends WindowController {
      */
     @FXML
     void ships(ActionEvent e) {
-        // TODO 未実装
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/ship.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("所有艦娘一覧");
+            stage.show();
+        } catch (IOException e1) {
+            // TODO 自動生成された catch ブロック
+            e1.printStackTrace();
+        }
     }
 
     /**

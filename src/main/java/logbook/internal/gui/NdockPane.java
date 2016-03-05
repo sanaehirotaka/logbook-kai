@@ -52,7 +52,7 @@ public class NdockPane extends HBox {
     private Label time;
 
     /**
-     * 入渠ドックペインのコンストラクタ
+     * 入渠ドックのコンストラクタ
      *
      * @param ndock 入渠ドック
      */
