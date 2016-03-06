@@ -1,5 +1,6 @@
 package logbook.internal;
 
+import logbook.bean.ShipMst;
 import logbook.bean.Stype;
 
 /**
@@ -44,6 +45,26 @@ public enum ShipType {
      * @return 艦種がこの定数と同じ場合はtrue
      */
     public boolean equals(Stype stype) {
-        return this.stype == stype.getId();
+        return stype != null && this.stype == stype.getId();
+    }
+
+    /**
+     * この定数がstypeと等しい場合trueを返します
+     *
+     * @param shipMst 艦種
+     * @return 艦種がこの定数と同じ場合はtrue
+     */
+    public boolean equals(Integer stype) {
+        return stype != null && this.stype == stype;
+    }
+
+    /**
+     * この定数がshipMstと等しい場合trueを返します
+     *
+     * @param shipMst 艦船
+     * @return 艦船がこの定数と同じ場合はtrue
+     */
+    public boolean equals(ShipMst shipMst) {
+        return shipMst != null && this.stype == shipMst.getStype();
     }
 }

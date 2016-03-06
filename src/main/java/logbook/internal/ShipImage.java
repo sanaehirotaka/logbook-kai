@@ -29,28 +29,31 @@ class ShipImage {
     private static final String[] DAMAGED = { "3.jpg", "3.png" };
 
     /** 小破バッチ */
-    private static final Layer LAYER_1 = new Layer(0, 0, Paths.get("common", "388.png"));
+    private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "388.png"));
 
     /** 中破バッチ */
-    private static final Layer LAYER_2 = new Layer(0, 0, Paths.get("common", "390.png"));
+    private static final Layer HALF_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "390.png"));
 
     /** 大破バッチ */
-    private static final Layer LAYER_3 = new Layer(0, 0, Paths.get("common", "392.png"));
+    private static final Layer BADLY_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "392.png"));
 
     /** 撃沈バッチ */
-    private static final Layer LAYER_4 = new Layer(0, 0, Paths.get("common", "394.png"));
+    private static final Layer LOST_BADGE = new Layer(0, 0, Paths.get("common", "394.png"));
+
+    /** 遠征バッチ */
+    private static final Layer MISSION_BADGE = new Layer(0, 0, Paths.get("common", "395.png"));
 
     /** 修復バッチ */
-    private static final Layer LAYER_5 = new Layer(0, 0, Paths.get("common", "396.png"));
+    private static final Layer NDOCK_BADGE = new Layer(0, 0, Paths.get("common", "396.png"));
 
     /** 小破汚れ */
-    private static final Layer LAYER_6 = new Layer(0, 0, Paths.get("common", "411.png"));
+    private static final Layer SLIGHT_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "411.png"));
 
     /** 中破汚れ */
-    private static final Layer LAYER_7 = new Layer(0, 0, Paths.get("common", "413.png"));
+    private static final Layer HALF_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "413.png"));
 
     /** 大破汚れ */
-    private static final Layer LAYER_8 = new Layer(0, 0, Paths.get("common", "415.png"));
+    private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "415.png"));
 
     /** 疲労オレンジ背景 */
     private static final Layer LAYER_9 = new Layer(100, 0, Paths.get("common", "522.png"));
@@ -92,18 +95,18 @@ class ShipImage {
                     .contains(ship.getId());
             // バッチ
             if (isOnNdock) {
-                layers.add(LAYER_5);
+                layers.add(NDOCK_BADGE);
             } else if (Ships.isSlightDamage(ship)) {
-                layers.add(LAYER_1);
-                layers.add(LAYER_6);
+                layers.add(SLIGHT_DAMAGE_BADGE);
+                layers.add(SLIGHT_DAMAGE_BACKGROUND);
             } else if (Ships.isHalfDamage(ship)) {
-                layers.add(LAYER_2);
-                layers.add(LAYER_7);
+                layers.add(HALF_DAMAGE_BADGE);
+                layers.add(HALF_DAMAGE_BACKGROUND);
             } else if (Ships.isBadlyDamage(ship)) {
-                layers.add(LAYER_3);
-                layers.add(LAYER_8);
+                layers.add(BADLY_DAMAGE_BADGE);
+                layers.add(BADLY_DAMAGE_BACKGROUND);
             } else if (Ships.isLost(ship)) {
-                layers.add(LAYER_4);
+                layers.add(LOST_BADGE);
             }
             // 疲労
             if (Ships.isOrange(ship)) {

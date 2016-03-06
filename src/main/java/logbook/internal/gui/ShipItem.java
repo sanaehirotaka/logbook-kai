@@ -76,7 +76,7 @@ public class ShipItem {
      * IDを取得します。
      * @return ID
      */
-    public Integer getId() {
+    public int getId() {
         return this.id.get();
     }
 
@@ -84,7 +84,7 @@ public class ShipItem {
      * IDを設定します。
      * @param lv ID
      */
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = new SimpleIntegerProperty(id);
     }
 
@@ -148,7 +148,7 @@ public class ShipItem {
      * Lvを取得します。
      * @return Lv
      */
-    public Integer getLv() {
+    public int getLv() {
         return this.lv.get();
     }
 
@@ -156,7 +156,7 @@ public class ShipItem {
      * Lvを設定します。
      * @param lv Lv
      */
-    public void setLv(Integer lv) {
+    public void setLv(int lv) {
         this.lv = new SimpleIntegerProperty(lv);
     }
 
@@ -172,7 +172,7 @@ public class ShipItem {
      * condを取得します。
      * @return cond
      */
-    public Integer getCond() {
+    public int getCond() {
         return this.cond.get();
     }
 
@@ -180,7 +180,7 @@ public class ShipItem {
      * condを設定します。
      * @param cond cond
      */
-    public void setCond(Integer cond) {
+    public void setCond(int cond) {
         this.cond = new SimpleIntegerProperty(cond);
     }
 
@@ -220,7 +220,7 @@ public class ShipItem {
      * 制空を取得します。
      * @return 制空
      */
-    public Integer getSeiku() {
+    public int getSeiku() {
         return this.seiku.get();
     }
 
@@ -228,7 +228,7 @@ public class ShipItem {
      * 制空を設定します。
      * @param seiku 制空
      */
-    public void setSeiku(Integer seiku) {
+    public void setSeiku(int seiku) {
         this.seiku = new SimpleIntegerProperty(seiku);
     }
 
@@ -244,7 +244,7 @@ public class ShipItem {
      * 砲戦火力を取得します。
      * @return 砲戦火力
      */
-    public Integer gethPower() {
+    public int gethPower() {
         return this.hPower.get();
     }
 
@@ -252,7 +252,7 @@ public class ShipItem {
      * 砲戦火力を設定します。
      * @param hPower 砲戦火力
      */
-    public void sethPower(Integer hPower) {
+    public void sethPower(int hPower) {
         this.hPower = new SimpleIntegerProperty(hPower);
     }
 
@@ -268,7 +268,7 @@ public class ShipItem {
      * 雷戦火力を取得します。
      * @return 雷戦火力
      */
-    public Integer getrPower() {
+    public int getrPower() {
         return this.rPower.get();
     }
 
@@ -276,7 +276,7 @@ public class ShipItem {
      * 雷戦火力を設定します。
      * @param rPower 雷戦火力
      */
-    public void setrPower(Integer rPower) {
+    public void setrPower(int rPower) {
         this.rPower = new SimpleIntegerProperty(rPower);
     }
 
@@ -292,7 +292,7 @@ public class ShipItem {
      * 夜戦火力を取得します。
      * @return 夜戦火力
      */
-    public Integer getyPower() {
+    public int getyPower() {
         return this.yPower.get();
     }
 
@@ -300,7 +300,7 @@ public class ShipItem {
      * 夜戦火力を設定します。
      * @param yPower 夜戦火力
      */
-    public void setyPower(Integer yPower) {
+    public void setyPower(int yPower) {
         this.yPower = new SimpleIntegerProperty(yPower);
     }
 
@@ -316,7 +316,7 @@ public class ShipItem {
      * 対潜火力を取得します。
      * @return 対潜火力
      */
-    public Integer gettPower() {
+    public int gettPower() {
         return this.tPower.get();
     }
 
@@ -324,7 +324,7 @@ public class ShipItem {
      * 対潜火力を設定します。
      * @param tPower 対潜火力
      */
-    public void settPower(Integer tPower) {
+    public void settPower(int tPower) {
         this.tPower = new SimpleIntegerProperty(tPower);
     }
 
@@ -340,7 +340,7 @@ public class ShipItem {
      * 装備1を取得します。
      * @return 装備1
      */
-    public Integer getSlot1() {
+    public int getSlot1() {
         return this.slot1.get();
     }
 
@@ -348,7 +348,7 @@ public class ShipItem {
      * 装備1を設定します。
      * @param slot1 装備1
      */
-    public void setSlot1(Integer slot1) {
+    public void setSlot1(int slot1) {
         this.slot1 = new SimpleIntegerProperty(slot1);
     }
 
@@ -364,7 +364,7 @@ public class ShipItem {
      * 装備2を取得します。
      * @return 装備2
      */
-    public Integer getSlot2() {
+    public int getSlot2() {
         return this.slot2.get();
     }
 
@@ -372,7 +372,7 @@ public class ShipItem {
      * 装備2を設定します。
      * @param slot2 装備2
      */
-    public void setSlot2(Integer slot2) {
+    public void setSlot2(int slot2) {
         this.slot2 = new SimpleIntegerProperty(slot2);
     }
 
@@ -388,7 +388,7 @@ public class ShipItem {
      * 装備3を取得します。
      * @return 装備3
      */
-    public Integer getSlot3() {
+    public int getSlot3() {
         return this.slot3.get();
     }
 
@@ -396,7 +396,7 @@ public class ShipItem {
      * 装備3を設定します。
      * @param slot3 装備3
      */
-    public void setSlot3(Integer slot3) {
+    public void setSlot3(int slot3) {
         this.slot3 = new SimpleIntegerProperty(slot3);
     }
 
@@ -412,7 +412,7 @@ public class ShipItem {
      * 装備4を取得します。
      * @return 装備4
      */
-    public Integer getSlot4() {
+    public int getSlot4() {
         return this.slot4.get();
     }
 
@@ -420,7 +420,7 @@ public class ShipItem {
      * 装備4を設定します。
      * @param slot4 装備4
      */
-    public void setSlot4(Integer slot4) {
+    public void setSlot4(int slot4) {
         this.slot4 = new SimpleIntegerProperty(slot4);
     }
 
@@ -436,7 +436,7 @@ public class ShipItem {
      * 補強を取得します。
      * @return 補強
      */
-    public Integer getSlotEx() {
+    public int getSlotEx() {
         return this.slotEx.get();
     }
 
@@ -444,7 +444,7 @@ public class ShipItem {
      * 補強を設定します。
      * @param slotEx 補強
      */
-    public void setSlotEx(Integer slotEx) {
+    public void setSlotEx(int slotEx) {
         this.slotEx = new SimpleIntegerProperty(slotEx);
     }
 
@@ -465,11 +465,11 @@ public class ShipItem {
         shipItem.setLv(ship.getLv());
         shipItem.setCond(ship.getCond());
         shipItem.setArea(""); // TODO: 海域
-        shipItem.setSeiku(0); // TODO: 制空値計算
-        shipItem.sethPower(0); // TODO: 火力計算
-        shipItem.setrPower(0);
-        shipItem.setyPower(0);
-        shipItem.settPower(0);
+        shipItem.setSeiku(Ships.airSuperiority(ship));
+        shipItem.sethPower(Ships.hPower(ship));
+        shipItem.setrPower(Ships.rPower(ship));
+        shipItem.setyPower(Ships.yPower(ship));
+        shipItem.settPower(Ships.tPower(ship));
         shipItem.setSlot1(ship.getSlot().get(0));
         shipItem.setSlot2(ship.getSlot().get(1));
         shipItem.setSlot3(ship.getSlot().get(2));

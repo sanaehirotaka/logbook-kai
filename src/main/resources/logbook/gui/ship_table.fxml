@@ -4,9 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <fx:root type="VBox" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <VBox>
+         <children>
+            <Label fx:id="message" styleClass="message" />
+         </children>
+      </VBox>
       <TableView fx:id="table" prefHeight="600.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
@@ -20,11 +24,11 @@
           <TableColumn fx:id="rPower" prefWidth="60.0" text="雷戦火力" />
           <TableColumn fx:id="yPower" prefWidth="60.0" text="夜戦火力" />
           <TableColumn fx:id="tPower" prefWidth="60.0" text="対潜火力" />
-          <TableColumn fx:id="slot1" prefWidth="170.0" text="装備1" />
-          <TableColumn fx:id="slot2" prefWidth="170.0" text="装備2" />
-          <TableColumn fx:id="slot3" prefWidth="170.0" text="装備3" />
-          <TableColumn fx:id="slot4" prefWidth="170.0" text="装備4" />
-          <TableColumn fx:id="slotEx" prefWidth="170.0" text="補強" />
+          <TableColumn fx:id="slot1" prefWidth="200.0" text="装備1" />
+          <TableColumn fx:id="slot2" prefWidth="200.0" text="装備2" />
+          <TableColumn fx:id="slot3" prefWidth="200.0" text="装備3" />
+          <TableColumn fx:id="slot4" prefWidth="200.0" text="装備4" />
+          <TableColumn fx:id="slotEx" prefWidth="200.0" text="補強" />
         </columns>
       </TableView>
    </children>

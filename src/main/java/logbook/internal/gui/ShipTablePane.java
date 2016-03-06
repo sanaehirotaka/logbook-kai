@@ -1,9 +1,6 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,6 +31,10 @@ import logbook.internal.Ships;
  *
  */
 public class ShipTablePane extends VBox {
+
+    /** メッセージ */
+    @FXML
+    private Label message;
 
     /** テーブル */
     @FXML
@@ -113,8 +115,8 @@ public class ShipTablePane extends VBox {
      *
      * @param ships 艦娘達
      */
-    public ShipTablePane(Collection<Ship> ships) {
-        this.ships = new ArrayList<>(ships);
+    public ShipTablePane(List<Ship> ships) {
+        this.ships = ships;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/ship_table.fxml");
             loader.setRoot(this);
@@ -155,14 +157,17 @@ public class ShipTablePane extends VBox {
 
             this.shipItems.addAll(this.ships.stream()
                     .map(ShipItem::toShipItem)
-                    .sorted(Comparator.comparing(ShipItem::getType))
-                    .sorted(Comparator.comparing(ShipItem::getLv).reversed())
                     .collect(Collectors.toList()));
 
             this.table.setItems(this.shipItems);
 
+            this.message.setText("制空値計: " + this.ships.stream()
+                    .mapToInt(Ships::airSuperiority)
+                    .sum()
+                    + " 索敵値(2-5式秋): " + Ships.viewRange(this.ships));
+
         } catch (Exception e) {
-            LogManager.getLogger(NdockPane.class)
+            LogManager.getLogger(ShipTablePane.class)
                     .error("FXMLの初期化に失敗しました", e);
         }
     }
@@ -214,6 +219,9 @@ public class ShipTablePane extends VBox {
                     }
                     this.setGraphic(new ImageView(Items.itemImage(mst.get())));
                     this.setText(text.toString());
+                } else {
+                    this.setGraphic(null);
+                    this.setText(null);
                 }
             } else {
                 this.setGraphic(null);

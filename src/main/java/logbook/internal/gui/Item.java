@@ -7,8 +7,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemEquiptypeCollection;
+import logbook.bean.SlotitemMst;
 
 /**
  * 所有装備
@@ -326,6 +326,16 @@ public class Item implements Comparable<Item> {
      */
     public void setSouk(Integer souk) {
         this.souk = new SimpleIntegerProperty(souk);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.get();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Item) && this.id.get() == ((Item) obj).id.get();
     }
 
     @Override

@@ -7,8 +7,14 @@
 .table-cell {
     -fx-alignment: center-left;
 }
+.increment-button ,.decrement-button {
+    -fx-padding: 6px;
+}
 
 /* メインウインドウ */
+.mainWindow .titled-pane .content VBox {
+    -fx-padding: 0px;
+}
 .mainWindow .buttons {
     -fx-padding: 2px;
 }
@@ -71,4 +77,13 @@
 /* 所有装備一覧 */
 .itemWindow .detailName {
     -fx-font-size: 16pt;
+}
+
+/* 所有艦娘一覧 */
+.shipWindow .tab-pane .tab-label {
+    -fx-tab-min-width: 60px;
+    -fx-font-size: 1.2em;
+}
+.shipWindow .message {
+    -fx-font-size: 12pt;
 }
