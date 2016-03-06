@@ -21,6 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import logbook.bean.Ship;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
@@ -153,8 +154,9 @@ public class ShipTablePane extends VBox {
             this.slotEx.setCellFactory(p -> new ItemImageCell());
 
             this.shipItems.addAll(this.ships.stream()
-                    .sorted(Comparator.comparing(Ship::getLv).reversed())
                     .map(ShipItem::toShipItem)
+                    .sorted(Comparator.comparing(ShipItem::getType))
+                    .sorted(Comparator.comparing(ShipItem::getLv).reversed())
                     .collect(Collectors.toList()));
 
             this.table.setItems(this.shipItems);
@@ -176,8 +178,12 @@ public class ShipTablePane extends VBox {
 
             if (!empty) {
                 this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
-                Ships.shipMst(ship)
-                        .ifPresent(e -> this.setText(e.getName()));
+                this.setText(Ships.shipMst(ship)
+                        .map(ShipMst::getName)
+                        .orElse(""));
+            } else {
+                this.setGraphic(null);
+                this.setText(null);
             }
         }
     }
@@ -209,6 +215,9 @@ public class ShipTablePane extends VBox {
                     this.setGraphic(new ImageView(Items.itemImage(mst.get())));
                     this.setText(text.toString());
                 }
+            } else {
+                this.setGraphic(null);
+                this.setText(null);
             }
         }
     }

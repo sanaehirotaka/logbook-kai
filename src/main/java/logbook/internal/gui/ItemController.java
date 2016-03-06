@@ -2,7 +2,6 @@ package logbook.internal.gui;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -237,10 +236,10 @@ public class ItemController extends WindowController {
             if (!empty) {
                 this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
                 if (ship != null) {
-                    Optional<ShipMst> desc = Ships.shipMst(ship);
-                    if (desc.isPresent()) {
-                        this.setText(desc.get().getName() + "(Lv" + ship.getLv() + ")");
-                    }
+                    String name = Ships.shipMst(ship)
+                            .map(ShipMst::getName)
+                            .orElse("");
+                    this.setText(name + "(Lv" + ship.getLv() + ")");
                 } else {
                     this.setText("未装備");
                 }

@@ -1,7 +1,5 @@
 package logbook.internal.gui;
 
-import java.util.Optional;
-
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -9,8 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.Ship;
-import logbook.bean.ShipMst;
-import logbook.bean.StypeCollection;
+import logbook.bean.Stype;
 import logbook.internal.Ships;
 
 /**
@@ -76,6 +73,14 @@ public class ShipItem {
     }
 
     /**
+     * IDを取得します。
+     * @return ID
+     */
+    public Integer getId() {
+        return this.id.get();
+    }
+
+    /**
      * IDを設定します。
      * @param lv ID
      */
@@ -89,6 +94,14 @@ public class ShipItem {
      */
     public ObjectProperty<Ship> shipProperty() {
         return this.ship;
+    }
+
+    /**
+     * 艦娘を取得します。
+     * @return 艦娘
+     */
+    public Ship getShip() {
+        return this.ship.get();
     }
 
     /**
@@ -108,6 +121,14 @@ public class ShipItem {
     }
 
     /**
+     * 艦種を取得します。
+     * @return 艦種
+     */
+    public String getType() {
+        return this.type.get();
+    }
+
+    /**
      * 艦種を設定します。
      * @param type 艦種
      */
@@ -121,6 +142,14 @@ public class ShipItem {
      */
     public IntegerProperty lvProperty() {
         return this.lv;
+    }
+
+    /**
+     * Lvを取得します。
+     * @return Lv
+     */
+    public Integer getLv() {
+        return this.lv.get();
     }
 
     /**
@@ -140,6 +169,14 @@ public class ShipItem {
     }
 
     /**
+     * condを取得します。
+     * @return cond
+     */
+    public Integer getCond() {
+        return this.cond.get();
+    }
+
+    /**
      * condを設定します。
      * @param cond cond
      */
@@ -153,6 +190,14 @@ public class ShipItem {
      */
     public StringProperty areaProperty() {
         return this.area;
+    }
+
+    /**
+     * 海域を取得します。
+     * @return 海域
+     */
+    public String getArea() {
+        return this.area.get();
     }
 
     /**
@@ -172,6 +217,14 @@ public class ShipItem {
     }
 
     /**
+     * 制空を取得します。
+     * @return 制空
+     */
+    public Integer getSeiku() {
+        return this.seiku.get();
+    }
+
+    /**
      * 制空を設定します。
      * @param seiku 制空
      */
@@ -185,6 +238,14 @@ public class ShipItem {
      */
     public IntegerProperty hPowerProperty() {
         return this.hPower;
+    }
+
+    /**
+     * 砲戦火力を取得します。
+     * @return 砲戦火力
+     */
+    public Integer gethPower() {
+        return this.hPower.get();
     }
 
     /**
@@ -204,6 +265,14 @@ public class ShipItem {
     }
 
     /**
+     * 雷戦火力を取得します。
+     * @return 雷戦火力
+     */
+    public Integer getrPower() {
+        return this.rPower.get();
+    }
+
+    /**
      * 雷戦火力を設定します。
      * @param rPower 雷戦火力
      */
@@ -217,6 +286,14 @@ public class ShipItem {
      */
     public IntegerProperty yPowerProperty() {
         return this.yPower;
+    }
+
+    /**
+     * 夜戦火力を取得します。
+     * @return 夜戦火力
+     */
+    public Integer getyPower() {
+        return this.yPower.get();
     }
 
     /**
@@ -236,6 +313,14 @@ public class ShipItem {
     }
 
     /**
+     * 対潜火力を取得します。
+     * @return 対潜火力
+     */
+    public Integer gettPower() {
+        return this.tPower.get();
+    }
+
+    /**
      * 対潜火力を設定します。
      * @param tPower 対潜火力
      */
@@ -249,6 +334,14 @@ public class ShipItem {
      */
     public IntegerProperty slot1Property() {
         return this.slot1;
+    }
+
+    /**
+     * 装備1を取得します。
+     * @return 装備1
+     */
+    public Integer getSlot1() {
+        return this.slot1.get();
     }
 
     /**
@@ -268,6 +361,14 @@ public class ShipItem {
     }
 
     /**
+     * 装備2を取得します。
+     * @return 装備2
+     */
+    public Integer getSlot2() {
+        return this.slot2.get();
+    }
+
+    /**
      * 装備2を設定します。
      * @param slot2 装備2
      */
@@ -281,6 +382,14 @@ public class ShipItem {
      */
     public IntegerProperty slot3Property() {
         return this.slot3;
+    }
+
+    /**
+     * 装備3を取得します。
+     * @return 装備3
+     */
+    public Integer getSlot3() {
+        return this.slot3.get();
     }
 
     /**
@@ -300,6 +409,14 @@ public class ShipItem {
     }
 
     /**
+     * 装備4を取得します。
+     * @return 装備4
+     */
+    public Integer getSlot4() {
+        return this.slot4.get();
+    }
+
+    /**
      * 装備4を設定します。
      * @param slot4 装備4
      */
@@ -313,6 +430,14 @@ public class ShipItem {
      */
     public IntegerProperty slotExProperty() {
         return this.slotEx;
+    }
+
+    /**
+     * 補強を取得します。
+     * @return 補強
+     */
+    public Integer getSlotEx() {
+        return this.slotEx.get();
     }
 
     /**
@@ -330,17 +455,9 @@ public class ShipItem {
      * @return 所有艦娘
      */
     public static ShipItem toShipItem(Ship ship) {
-        Optional<ShipMst> mst = Ships.shipMst(ship);
-        String type;
-        if (mst.isPresent()) {
-            type = StypeCollection.get()
-                    .getStypeMap()
-                    .get(mst.get()
-                            .getStype())
-                    .getName();
-        } else {
-            type = "";
-        }
+        String type = Ships.stype(ship)
+                .map(Stype::getName)
+                .orElse("");
         ShipItem shipItem = new ShipItem();
         shipItem.setId(ship.getId());
         shipItem.setShip(ship);
