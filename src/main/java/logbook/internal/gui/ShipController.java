@@ -1,8 +1,6 @@
 package logbook.internal.gui;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -12,6 +10,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -30,8 +29,6 @@ public class ShipController extends WindowController {
     @FXML
     private TabPane tab;
 
-    private List<ShipTablePane> tablePanes = new ArrayList<>();
-
     private Timeline timeline;
 
     @FXML
@@ -46,7 +43,6 @@ public class ShipController extends WindowController {
                         .collect(Collectors.toList());
             });
 
-            this.tablePanes.add(allPane);
             this.tab.getTabs().add(new Tab("全員", allPane));
 
             for (DeckPort deck : DeckPortCollection.get().getDeckPortMap().values()) {
@@ -79,8 +75,13 @@ public class ShipController extends WindowController {
      * @param e ActionEvent
      */
     void update(ActionEvent e) {
-        for (ShipTablePane pane : this.tablePanes) {
-            pane.update();
+        Tab selectedTab = this.tab.getSelectionModel()
+                .getSelectedItem();
+        if (selectedTab != null) {
+            Node content = selectedTab.getContent();
+            if (content instanceof ShipTablePane) {
+                ((ShipTablePane) content).update();
+            }
         }
     }
 }
