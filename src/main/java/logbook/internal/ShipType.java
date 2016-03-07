@@ -51,7 +51,7 @@ public enum ShipType {
     /**
      * この定数がstypeと等しい場合trueを返します
      *
-     * @param shipMst 艦種
+     * @param stype 艦種
      * @return 艦種がこの定数と同じ場合はtrue
      */
     public boolean equals(Integer stype) {

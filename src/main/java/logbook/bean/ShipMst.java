@@ -270,7 +270,7 @@ public class ShipMst implements Serializable {
 
     /**
      * 艦娘リソースファイルのディレクトリを取得します。
-     * @param desc 艦船
+     * @param mst 艦船
      * @return 艦娘リソースファイルのディレクトリ
      */
     public static Path getResourcePathDir(ShipMst mst) {

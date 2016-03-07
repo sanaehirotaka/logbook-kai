@@ -65,8 +65,8 @@ public enum SlotItemType {
     /**
      * この定数がitemと等しい場合trueを返します
      *
-     * @param stype 艦種
-     * @return 艦種がこの定数と同じ場合はtrue
+     * @param item 装備
+     * @return 装備がこの定数と同じ場合はtrue
      */
     public boolean equals(SlotitemMst item) {
         return item != null && this.item == item.getType().get(2);
@@ -75,8 +75,8 @@ public enum SlotItemType {
     /**
      * この定数がitemと等しい場合trueを返します
      *
-     * @param stype 艦種(api_type[2])
-     * @return 艦種がこの定数と同じ場合はtrue
+     * @param item 装備(api_type[2])
+     * @return 装備がこの定数と同じ場合はtrue
      */
     public boolean equals(Integer item) {
         return item != null && this.item == item;

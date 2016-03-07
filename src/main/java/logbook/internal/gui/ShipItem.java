@@ -82,7 +82,7 @@ public class ShipItem {
 
     /**
      * IDを設定します。
-     * @param lv ID
+     * @param id ID
      */
     public void setId(int id) {
         this.id = new SimpleIntegerProperty(id);
@@ -106,7 +106,7 @@ public class ShipItem {
 
     /**
      * 艦娘を設定します。
-     * @param id 艦娘
+     * @param ship 艦娘
      */
     public void setShip(Ship ship) {
         this.ship = new SimpleObjectProperty<>(ship);
