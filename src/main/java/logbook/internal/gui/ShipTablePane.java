@@ -1,8 +1,12 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +22,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import logbook.bean.DeckPort;
+import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
@@ -105,18 +112,43 @@ public class ShipTablePane extends VBox {
     private TableColumn<ShipItem, Integer> slotEx;
 
     /** 艦娘達 */
-    private final List<Ship> ships;
+    private final Supplier<List<Ship>> shipSupplier;
 
     /** 艦娘達 */
     private final ObservableList<ShipItem> shipItems = FXCollections.observableArrayList();
 
+    /** 艦娘一覧のハッシュ・コード */
+    private int shipsHashCode;
+
     /**
      * 所有艦娘一覧のテーブルのコンストラクタ
      *
-     * @param ships 艦娘達
+     * @param port 艦隊
      */
-    public ShipTablePane(List<Ship> ships) {
-        this.ships = ships;
+    public ShipTablePane(DeckPort port) {
+        this(() -> {
+            Map<Integer, Ship> shipMap = ShipCollection.get()
+                    .getShipMap();
+            DeckPort newPort = DeckPortCollection.get()
+                    .getDeckPortMap()
+                    .get(port.getId());
+            if (newPort != null) {
+                return newPort.getShip().stream()
+                        .map(shipMap::get)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            }
+            return Collections.emptyList();
+        });
+    }
+
+    /**
+     * 所有艦娘一覧のテーブルのコンストラクタ
+     *
+     * @param shipSupplier 艦娘達
+     */
+    public ShipTablePane(Supplier<List<Ship>> shipSupplier) {
+        this.shipSupplier = shipSupplier;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/ship_table.fxml");
             loader.setRoot(this);
@@ -155,20 +187,39 @@ public class ShipTablePane extends VBox {
             this.slotEx.setCellValueFactory(new PropertyValueFactory<>("slotEx"));
             this.slotEx.setCellFactory(p -> new ItemImageCell());
 
-            this.shipItems.addAll(this.ships.stream()
-                    .map(ShipItem::toShipItem)
-                    .collect(Collectors.toList()));
-
             this.table.setItems(this.shipItems);
-
-            this.message.setText("制空値計: " + this.ships.stream()
-                    .mapToInt(Ships::airSuperiority)
-                    .sum()
-                    + " 索敵値(2-5式秋): " + Ships.viewRange(this.ships));
+            this.update();
 
         } catch (Exception e) {
             LogManager.getLogger(ShipTablePane.class)
                     .error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
+     * 画面を更新する
+     *
+     */
+    public void update() {
+        try {
+            List<Ship> ships = this.shipSupplier.get();
+
+            if (this.shipsHashCode != ships.hashCode()) {
+                // ハッシュ・コードが変わっている場合画面の更新
+                this.shipsHashCode = ships.hashCode();
+
+                this.shipItems.clear();
+                this.shipItems.addAll(ships.stream()
+                        .map(ShipItem::toShipItem)
+                        .collect(Collectors.toList()));
+                this.message.setText("制空値計: " + ships.stream()
+                        .mapToInt(Ships::airSuperiority)
+                        .sum()
+                        + " 索敵値(2-5式秋): " + Ships.viewRange(ships));
+            }
+        } catch (Exception e) {
+            LogManager.getLogger(ShipTablePane.class)
+                    .error("画面の更新に失敗しました", e);
         }
     }
 

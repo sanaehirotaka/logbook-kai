@@ -1,6 +1,5 @@
 package logbook.api;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -86,10 +85,10 @@ public class ApiPortPort implements APIListenerSpi {
      * @param array api_deck_port
      */
     private void apiDeckPort(JsonArray array) {
-        List<DeckPort> list = DeckPortCollection.get()
-                .getDeckPorts();
-        list.clear();
-        list.addAll(JsonHelper.toList(array, DeckPort::toDeckPort));
+        Map<Integer, DeckPort> map = DeckPortCollection.get()
+                .getDeckPortMap();
+        map.clear();
+        map.putAll(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
     }
 
     /**

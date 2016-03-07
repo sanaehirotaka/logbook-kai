@@ -1,8 +1,8 @@
 package logbook.bean;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import logbook.internal.Config;
 
@@ -12,25 +12,25 @@ import logbook.internal.Config;
  */
 public class DeckPortCollection implements Serializable {
 
-    private static final long serialVersionUID = 2868235673692933578L;
+    private static final long serialVersionUID = -7413838279692739373L;
 
     /** 艦隊 */
-    private List<DeckPort> deckPorts = new ArrayList<>();
+    private Map<Integer, DeckPort> deckPortMap = new LinkedHashMap<>();
 
     /**
      * 艦隊を取得します。
      * @return 艦隊
      */
-    public List<DeckPort> getDeckPorts() {
-        return this.deckPorts;
+    public Map<Integer, DeckPort> getDeckPortMap() {
+        return this.deckPortMap;
     }
 
     /**
      * 艦隊を設定します。
-     * @param deckPorts 艦隊
+     * @param deckPortMap 艦隊
      */
-    public void setDeckPorts(List<DeckPort> deckPorts) {
-        this.deckPorts = deckPorts;
+    public void setDeckPortMap(Map<Integer, DeckPort> deckPortMap) {
+        this.deckPortMap = deckPortMap;
     }
 
     /**

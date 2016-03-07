@@ -1,14 +1,21 @@
 package logbook.internal.gui;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -23,28 +30,57 @@ public class ShipController extends WindowController {
     @FXML
     private TabPane tab;
 
+    private List<ShipTablePane> tablePanes = new ArrayList<>();
+
+    private Timeline timeline;
+
     @FXML
     void initialize() {
+        try {
+            ShipTablePane allPane = new ShipTablePane(() -> {
+                Map<Integer, Ship> shipMap = ShipCollection.get()
+                        .getShipMap();
+                return shipMap.values().stream()
+                        .sorted(Comparator.comparing(Ship::getShipId))
+                        .sorted(Comparator.comparing(Ship::getLv).reversed())
+                        .collect(Collectors.toList());
+            });
 
-        Map<Integer, Ship> shipMap = ShipCollection.get()
-                .getShipMap();
+            this.tablePanes.add(allPane);
+            this.tab.getTabs().add(new Tab("全員", allPane));
 
-        this.tab.getTabs()
-                .add(new Tab("全員",
-                        new ShipTablePane(shipMap.values().stream()
-                                .sorted(Comparator.comparing(Ship::getShipId))
-                                .sorted(Comparator.comparing(Ship::getLv).reversed())
-                                .collect(Collectors.toList()))));
+            for (DeckPort deck : DeckPortCollection.get().getDeckPortMap().values()) {
+                ShipTablePane deckPane = new ShipTablePane(deck);
+                this.tab.getTabs().add(new Tab(deck.getName(), deckPane));
+            }
 
-        for (DeckPort deck : DeckPortCollection.get().getDeckPorts()) {
-            List<Ship> ships = deck.getShip()
-                    .stream()
-                    .map(shipMap::get)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
-            this.tab.getTabs()
-                    .add(new Tab(deck.getName(), new ShipTablePane(ships)));
+            this.timeline = new Timeline();
+            this.timeline.setCycleCount(Timeline.INDEFINITE);
+            this.timeline.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(1),
+                    this::update));
+            this.timeline.play();
+
+        } catch (Exception e) {
+            LogManager.getLogger(ShipController.class)
+                    .error("FXMLの初期化に失敗しました", e);
         }
+    }
 
+    @Override
+    public void setWindow(Stage window) {
+        super.setWindow(window);
+        window.setOnCloseRequest(e -> this.timeline.stop());
+    }
+
+    /**
+     * 画面の更新
+     *
+     * @param e ActionEvent
+     */
+    void update(ActionEvent e) {
+        for (ShipTablePane pane : this.tablePanes) {
+            pane.update();
+        }
     }
 }

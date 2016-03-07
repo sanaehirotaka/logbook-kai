@@ -1,9 +1,9 @@
 package logbook.internal.gui;
 
-import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -60,18 +60,23 @@ public class MainController extends WindowController {
 
     @FXML
     void initialize() {
-        // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
-        ProxyServer.getInstance().start();
+        try {
+            // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
+            ProxyServer.getInstance().start();
 
-        this.itemFormat = this.item.getText();
-        this.shipFormat = this.ship.getText();
+            this.itemFormat = this.item.getText();
+            this.shipFormat = this.ship.getText();
 
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(
-                Duration.seconds(1),
-                this::update));
-        timeline.play();
+            Timeline timeline = new Timeline();
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.getKeyFrames().add(new KeyFrame(
+                    Duration.seconds(1),
+                    this::update));
+            timeline.play();
+        } catch (Exception e) {
+            LogManager.getLogger(MainController.class)
+                    .error("FXMLの初期化に失敗しました", e);
+        }
     }
 
     /**
@@ -93,9 +98,9 @@ public class MainController extends WindowController {
             stage.initOwner(this.getWindow());
             stage.setTitle("所有装備一覧");
             stage.show();
-        } catch (IOException e1) {
-            // TODO 自動生成された catch ブロック
-            e1.printStackTrace();
+        } catch (Exception e1) {
+            LogManager.getLogger(MainController.class)
+                    .error("所有装備一覧の初期化に失敗しました", e);
         }
     }
 
@@ -118,9 +123,9 @@ public class MainController extends WindowController {
             stage.initOwner(this.getWindow());
             stage.setTitle("所有艦娘一覧");
             stage.show();
-        } catch (IOException e1) {
-            // TODO 自動生成された catch ブロック
-            e1.printStackTrace();
+        } catch (Exception e1) {
+            LogManager.getLogger(MainController.class)
+                    .error("所有艦娘一覧の初期化に失敗しました", e);
         }
     }
 
@@ -163,13 +168,13 @@ public class MainController extends WindowController {
      * 遠征の更新
      */
     private void mission() {
-        List<DeckPort> ports = DeckPortCollection.get()
-                .getDeckPorts();
+        Map<Integer, DeckPort> ports = DeckPortCollection.get()
+                .getDeckPortMap();
         ObservableList<Node> mission = this.missionbox.getChildren();
         if (this.portHashCode != ports.hashCode()) {
             // ハッシュ・コードが変わっている場合遠征の更新
             mission.clear();
-            ports.stream()
+            ports.values().stream()
                     .skip(1)
                     .map(MissionPane::new)
                     .forEach(mission::add);
