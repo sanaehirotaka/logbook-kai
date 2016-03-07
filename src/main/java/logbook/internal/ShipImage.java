@@ -29,43 +29,46 @@ class ShipImage {
     private static final String[] DAMAGED = { "3.jpg", "3.png" };
 
     /** 小破バッチ */
-    private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "388.png"));
+    private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "385.png"));
 
     /** 中破バッチ */
-    private static final Layer HALF_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "390.png"));
+    private static final Layer HALF_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "387.png"));
 
     /** 大破バッチ */
-    private static final Layer BADLY_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "392.png"));
+    private static final Layer BADLY_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "389.png"));
 
     /** 撃沈バッチ */
-    private static final Layer LOST_BADGE = new Layer(0, 0, Paths.get("common", "394.png"));
+    private static final Layer LOST_BADGE = new Layer(0, 0, Paths.get("common", "391.png"));
+
+    /** 修復バッチ */
+    private static final Layer NDOCK_BADGE = new Layer(0, 0, Paths.get("common", "393.png"));
 
     /** 遠征バッチ */
     private static final Layer MISSION_BADGE = new Layer(0, 0, Paths.get("common", "395.png"));
 
-    /** 修復バッチ */
-    private static final Layer NDOCK_BADGE = new Layer(0, 0, Paths.get("common", "396.png"));
+    /** 退避バッチ */
+    private static final Layer ESCAPE_BADGE = new Layer(0, 0, Paths.get("common", "405.png"));
 
     /** 小破汚れ */
-    private static final Layer SLIGHT_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "411.png"));
+    private static final Layer SLIGHT_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "408.png"));
 
     /** 中破汚れ */
-    private static final Layer HALF_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "413.png"));
+    private static final Layer HALF_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "410.png"));
 
     /** 大破汚れ */
-    private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "415.png"));
+    private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "412.png"));
 
     /** 疲労オレンジ背景 */
-    private static final Layer LAYER_9 = new Layer(100, 0, Paths.get("common", "522.png"));
+    private static final Layer ORANGE_BACKGROUND = new Layer(100, 0, Paths.get("common", "517.png"));
 
     /** 疲労オレンジ顔 */
-    private static final Layer LAYER_10 = new Layer(143, 12, Paths.get("common", "523.png"));
+    private static final Layer ORANGE_FACE = new Layer(143, 12, Paths.get("common", "518.png"));
 
     /** 疲労赤背景 */
-    private static final Layer LAYER_11 = new Layer(100, 0, Paths.get("common", "525.png"));
+    private static final Layer RED_BACKGROUND = new Layer(100, 0, Paths.get("common", "519.png"));
 
     /** 疲労赤顔 */
-    private static final Layer LAYER_12 = new Layer(143, 12, Paths.get("common", "526.png"));
+    private static final Layer RED_FACE = new Layer(143, 12, Paths.get("common", "520.png"));
 
     /** 装備アイコンのサイズ */
     private static final int ITEM_ICON_SIZE = 24;
@@ -110,11 +113,11 @@ class ShipImage {
             }
             // 疲労
             if (Ships.isOrange(ship)) {
-                layers.add(LAYER_9);
-                layers.add(LAYER_10);
+                layers.add(ORANGE_BACKGROUND);
+                layers.add(ORANGE_FACE);
             } else if (Ships.isRed(ship)) {
-                layers.add(LAYER_11);
-                layers.add(LAYER_12);
+                layers.add(RED_BACKGROUND);
+                layers.add(RED_FACE);
             }
             // 装備画像
             if (addItem) {
