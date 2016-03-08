@@ -50,15 +50,14 @@ public final class Config {
 
         T instance;
         synchronized (this.map) {
-            instance = (T) this.map.get(clazz);
-            if (instance == null) {
-                ConfigReader<T> reader = new ConfigReader<>(this.getPath(clazz));
-                instance = reader.read(clazz);
-            }
-            if (instance == null) {
-                instance = def.get();
-            }
-            this.map.put(clazz, instance);
+            instance = (T) this.map.computeIfAbsent(clazz, key -> {
+                ConfigReader<T> reader = new ConfigReader<>(this.getPath(key));
+                T v = reader.read((Class<T>) key);
+                if (v == null) {
+                    v = def.get();
+                }
+                return v;
+            });
         }
         return instance;
     }
@@ -69,8 +68,8 @@ public final class Config {
     public void store() {
         synchronized (this.map) {
             this.map.entrySet()
-                .parallelStream()
-                .forEach(this::store);
+                    .parallelStream()
+                    .forEach(this::store);
         }
     }
 
