@@ -28,47 +28,89 @@ class ShipImage {
     /** 艦娘画像ファイル名(中破・大破) */
     private static final String[] DAMAGED = { "3.jpg", "3.png" };
 
-    /** 小破バッチ */
-    private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "385.png"));
+    /** 小破バナーアイコン */
+    private static final String MC_BANNER_ICON0 = "res.common.MCBannerIcon_0.png";
 
-    /** 中破バッチ */
-    private static final Layer HALF_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "387.png"));
+    /** 中破バナーアイコン */
+    private static final String MC_BANNER_ICON1 = "res.common.MCBannerIcon_1.png";
 
-    /** 大破バッチ */
-    private static final Layer BADLY_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", "389.png"));
+    /** 大破バナーアイコン */
+    private static final String MC_BANNER_ICON2 = "res.common.MCBannerIcon_2.png";
 
-    /** 撃沈バッチ */
-    private static final Layer LOST_BADGE = new Layer(0, 0, Paths.get("common", "391.png"));
+    /** 撃沈バナーアイコン */
+    private static final String MC_BANNER_ICON3 = "res.common.MCBannerIcon_3.png";
 
-    /** 修復バッチ */
-    private static final Layer NDOCK_BADGE = new Layer(0, 0, Paths.get("common", "393.png"));
+    /** 修復バナーアイコン */
+    private static final String MC_BANNER_ICON4 = "res.common.MCBannerIcon_4.png";
 
-    /** 遠征バッチ */
-    private static final Layer MISSION_BADGE = new Layer(0, 0, Paths.get("common", "395.png"));
+    /** 遠征バナーアイコン */
+    private static final String MC_BANNER_ICON5 = "res.common.MCBannerIcon_5.png";
 
-    /** 退避バッチ */
-    private static final Layer ESCAPE_BADGE = new Layer(0, 0, Paths.get("common", "405.png"));
+    /** 遠征バナーアイコン */
+    private static final String MC_BANNER_ICON10 = "res.common.MCBannerIcon_10.png";
 
     /** 小破汚れ */
-    private static final Layer SLIGHT_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "408.png"));
+    private static final String MC_BANNER_SMOKE_IMG0 ="res.common.MCBannerSmokeImg_0.png";
 
     /** 中破汚れ */
-    private static final Layer HALF_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "410.png"));
+    private static final String MC_BANNER_SMOKE_IMG1 ="res.common.MCBannerSmokeImg_1.png";
 
     /** 大破汚れ */
-    private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", "412.png"));
+    private static final String MC_BANNER_SMOKE_IMG2 ="res.common.MCBannerSmokeImg_2.png";
 
     /** 疲労オレンジ背景 */
-    private static final Layer ORANGE_BACKGROUND = new Layer(100, 0, Paths.get("common", "517.png"));
+    private static final String MC_BANNER_VITAL_MASK0 = "res.common.MCBannerVitalMask_0.png";
 
     /** 疲労オレンジ顔 */
-    private static final Layer ORANGE_FACE = new Layer(143, 12, Paths.get("common", "518.png"));
+    private static final String MC_BANNER_VITAL_MASK1 = "res.common.MCBannerVitalMask_1.png";
 
     /** 疲労赤背景 */
-    private static final Layer RED_BACKGROUND = new Layer(100, 0, Paths.get("common", "519.png"));
+    private static final String MC_BANNER_VITAL_MASK2 = "res.common.MCBannerVitalMask_2.png";
 
     /** 疲労赤顔 */
-    private static final Layer RED_FACE = new Layer(143, 12, Paths.get("common", "520.png"));
+    private static final String MC_BANNER_VITAL_MASK3 = "res.common.MCBannerVitalMask_3.png";
+
+    /** 小破バッチ */
+    private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON0));
+
+    /** 中破バッチ */
+    private static final Layer HALF_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON1));
+
+    /** 大破バッチ */
+    private static final Layer BADLY_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON2));
+
+    /** 撃沈バッチ */
+    private static final Layer LOST_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON3));
+
+    /** 修復バッチ */
+    private static final Layer NDOCK_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON4));
+
+    /** 遠征バッチ */
+    private static final Layer MISSION_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON5));
+
+    /** 退避バッチ */
+    private static final Layer ESCAPE_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON10));
+
+    /** 小破汚れ */
+    private static final Layer SLIGHT_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", MC_BANNER_SMOKE_IMG0));
+
+    /** 中破汚れ */
+    private static final Layer HALF_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", MC_BANNER_SMOKE_IMG1));
+
+    /** 大破汚れ */
+    private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", MC_BANNER_SMOKE_IMG2));
+
+    /** 疲労オレンジ背景 */
+    private static final Layer ORANGE_BACKGROUND = new Layer(100, 0, Paths.get("common", MC_BANNER_VITAL_MASK0));
+
+    /** 疲労オレンジ顔 */
+    private static final Layer ORANGE_FACE = new Layer(143, 12, Paths.get("common", MC_BANNER_VITAL_MASK1));
+
+    /** 疲労赤背景 */
+    private static final Layer RED_BACKGROUND = new Layer(100, 0, Paths.get("common", MC_BANNER_VITAL_MASK2));
+
+    /** 疲労赤顔 */
+    private static final Layer RED_FACE = new Layer(143, 12, Paths.get("common", MC_BANNER_VITAL_MASK3));
 
     /** 装備アイコンのサイズ */
     private static final int ITEM_ICON_SIZE = 24;
