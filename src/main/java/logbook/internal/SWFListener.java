@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.DefineSpriteTag;
-import com.jpexs.decompiler.flash.tags.Tag;
 import com.jpexs.decompiler.flash.tags.base.CharacterTag;
 import com.jpexs.decompiler.flash.tags.base.ImageTag;
 
@@ -275,7 +274,7 @@ public class SWFListener implements ContentListenerSpi {
                 .values()
                 .stream()
                 .filter(tag -> tag instanceof DefineSpriteTag || tag instanceof ImageTag)
-                .sorted(Comparator.comparing(Tag::getId))
+                .sorted(Comparator.comparing(CharacterTag::getCharacterId))
                 .collect(Collectors.toList());
         // ImageTag,ImageTag...,SpriteTag のような順番の繰り返しで並んでいる(そうなっていないのもある)ので見やすいように逆順にする
         // DefineBitsJPEG3 (408)  <--  res.common.MCBannerSmokeImgの子ImageTag 1
