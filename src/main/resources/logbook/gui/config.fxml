@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="configWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+   <children>
+      <TabPane VBox.vgrow="ALWAYS">
+         <tabs>
+            <Tab closable="false" text="一般">
+               <content>
+                  <VBox styleClass="configInner">
+                     <children>
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="useNotification" mnemonicParsing="false" text="遠征・入渠完了時に通知をする" GridPane.columnSpan="2147483647" />
+                              <CheckBox fx:id="useSound" mnemonicParsing="false" text="通知でサウンドを鳴らす" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="useToast" mnemonicParsing="false" text="通知でトーストを表示" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="useRemind" mnemonicParsing="false" text="遠征完了時のリマインド" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <Label text="音量(%)" GridPane.rowIndex="4" />
+                              <TextField fx:id="soundLevel" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="資材ログ保存間隔(秒)" GridPane.rowIndex="5" />
+                              <TextField fx:id="materialLogInterval" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="onTop" mnemonicParsing="false" text="最前面に表示する" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                              <CheckBox fx:id="checkDoit" mnemonicParsing="false" text="終了時に確認する" GridPane.rowIndex="7" />
+                              <CheckBox fx:id="checkUpdate" mnemonicParsing="false" text="起動時にアップデートチェック*" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab closable="false" text="通信">
+               <content>
+                  <VBox styleClass="configInner">
+                     <children>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="connectionClose" mnemonicParsing="false" text="通信エラーの抑止(Connection: closeヘッダを追加)*" GridPane.columnSpan="2147483647" />
+                              <Label text="ポート番号*" GridPane.rowIndex="1" />
+                              <TextField fx:id="listenPort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="allowOnlyFromLocalhost" mnemonicParsing="false" text="ローカルループバックアドレスからの接続のみ受け入れる*" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="useProxy" mnemonicParsing="false" text="接続にプロキシを使用する(他ツール連携)*" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <Label text="プロキシポート番号*" GridPane.rowIndex="4" />
+                              <TextField fx:id="proxyPort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="プロキシホスト*" GridPane.rowIndex="5" />
+                              <TextField fx:id="proxyHost" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab closable="false" text="プラグイン">
+               <content>
+                  <VBox styleClass="configInner">
+                     <children>
+                        <CheckBox fx:id="usePlugin" mnemonicParsing="false" text="プラグインを有効にする*" />
+                        <Label text="読み込まれたプラグイン" />
+                        <TableView fx:id="pluginTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                          <columns>
+                            <TableColumn fx:id="pluginName" prefWidth="75.0" text="名称" />
+                            <TableColumn fx:id="pluginVendor" prefWidth="75.0" text="作者" />
+                              <TableColumn fx:id="pluginVersion" prefWidth="75.0" text="バージョン" />
+                              <TableColumn fx:id="pluginLicense" prefWidth="75.0" text="ライセンス" />
+                              <TableColumn fx:id="pluginLocation" prefWidth="75.0" text="場所" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <Separator />
+      <HBox alignment="TOP_RIGHT" prefWidth="500.0" styleClass="footer">
+         <children>
+            <Label text="*再起動後に有効になります" />
+            <Button mnemonicParsing="false" onAction="#ok" text="OK" />
+            <Button mnemonicParsing="false" onAction="#cancel" text="キャンセル" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
