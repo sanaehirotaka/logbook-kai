@@ -10,7 +10,37 @@ import logbook.internal.Config;
  */
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = 5901322418446624897L;
+    private static final long serialVersionUID = -4486581543470075058L;
+
+    /** 遠征・入渠完了時に通知をする */
+    private boolean useNotification = true;
+
+    /** 通知でサウンドを鳴らす */
+    private boolean useSound = true;
+
+    /** 通知でトーストを表示 */
+    private boolean useToast = true;
+
+    /** 遠征完了時のリマインド */
+    private boolean useRemind = true;
+
+    /** 音量 */
+    private int soundLevel = 85;
+
+    /** 資材ログ保存間隔 */
+    private int materialLogInterval = 300;
+
+    /** 最前面に表示する */
+    private boolean onTop = true;
+
+    /** 終了時に確認する */
+    private boolean checkDoit = true;
+
+    /** 起動時にアップデートチェック */
+    private boolean checkUpdate = true;
+
+    /** 通信エラーの抑止 */
+    private boolean connectionClose = true;
 
     /** ポート番号 */
     private int listenPort = 8888;
@@ -27,11 +57,174 @@ public final class AppConfig implements Serializable {
     /** プロキシポート */
     private int proxyPort = 8080;
 
+    /** プラグインを有効にする */
+    private boolean usePlugin = true;
+
     /** プラグインディレクトリ */
     private String pluginsDir = "./plugins/"; //$NON-NLS-1$
 
     /** リソースディレクトリ */
     private String resourcesDir = "./resources/"; //$NON-NLS-1$
+
+    /**
+     * 遠征・入渠完了時に通知をするを取得します。
+     * @return 遠征・入渠完了時に通知をする
+     */
+    public boolean isUseNotification() {
+        return this.useNotification;
+    }
+
+    /**
+     * 遠征・入渠完了時に通知をするを設定します。
+     * @param useNotification 遠征・入渠完了時に通知をする
+     */
+    public void setUseNotification(boolean useNotification) {
+        this.useNotification = useNotification;
+    }
+
+    /**
+     * 通知でサウンドを鳴らすを取得します。
+     * @return 通知でサウンドを鳴らす
+     */
+    public boolean isUseSound() {
+        return this.useSound;
+    }
+
+    /**
+     * 通知でサウンドを鳴らすを設定します。
+     * @param useSound 通知でサウンドを鳴らす
+     */
+    public void setUseSound(boolean useSound) {
+        this.useSound = useSound;
+    }
+
+    /**
+     * 通知でトーストを表示を取得します。
+     * @return 通知でトーストを表示
+     */
+    public boolean isUseToast() {
+        return this.useToast;
+    }
+
+    /**
+     * 通知でトーストを表示を設定します。
+     * @param useToast 通知でトーストを表示
+     */
+    public void setUseToast(boolean useToast) {
+        this.useToast = useToast;
+    }
+
+    /**
+     * 遠征完了時のリマインドを取得します。
+     * @return 遠征完了時のリマインド
+     */
+    public boolean isUseRemind() {
+        return this.useRemind;
+    }
+
+    /**
+     * 遠征完了時のリマインドを設定します。
+     * @param useRemind 遠征完了時のリマインド
+     */
+    public void setUseRemind(boolean useRemind) {
+        this.useRemind = useRemind;
+    }
+
+    /**
+     * 音量を取得します。
+     * @return 音量
+     */
+    public int getSoundLevel() {
+        return this.soundLevel;
+    }
+
+    /**
+     * 音量を設定します。
+     * @param soundLevel 音量
+     */
+    public void setSoundLevel(int soundLevel) {
+        this.soundLevel = soundLevel;
+    }
+
+    /**
+     * 資材ログ保存間隔を取得します。
+     * @return 資材ログ保存間隔
+     */
+    public int getMaterialLogInterval() {
+        return this.materialLogInterval;
+    }
+
+    /**
+     * 資材ログ保存間隔を設定します。
+     * @param materialLogInterval 資材ログ保存間隔
+     */
+    public void setMaterialLogInterval(int materialLogInterval) {
+        this.materialLogInterval = materialLogInterval;
+    }
+
+    /**
+     * 最前面に表示するを取得します。
+     * @return 最前面に表示する
+     */
+    public boolean isOnTop() {
+        return this.onTop;
+    }
+
+    /**
+     * 最前面に表示するを設定します。
+     * @param onTop 最前面に表示する
+     */
+    public void setOnTop(boolean onTop) {
+        this.onTop = onTop;
+    }
+
+    /**
+     * 終了時に確認するを取得します。
+     * @return 終了時に確認する
+     */
+    public boolean isCheckDoit() {
+        return this.checkDoit;
+    }
+
+    /**
+     * 終了時に確認するを設定します。
+     * @param checkDoit 終了時に確認する
+     */
+    public void setCheckDoit(boolean checkDoit) {
+        this.checkDoit = checkDoit;
+    }
+
+    /**
+     * 起動時にアップデートチェックを取得します。
+     * @return 起動時にアップデートチェック
+     */
+    public boolean isCheckUpdate() {
+        return this.checkUpdate;
+    }
+
+    /**
+     * 起動時にアップデートチェックを設定します。
+     * @param checkUpdate 起動時にアップデートチェック
+     */
+    public void setCheckUpdate(boolean checkUpdate) {
+        this.checkUpdate = checkUpdate;
+    }
+
+    /**
+     * 通信エラーの抑止を取得します。
+     * @return 通信エラーの抑止
+     */
+    public boolean isConnectionClose() {
+        return this.connectionClose;
+    }
+
+    /**
+     * 通信エラーの抑止を設定します。
+     * @param connectionClose 通信エラーの抑止
+     */
+    public void setConnectionClose(boolean connectionClose) {
+        this.connectionClose = connectionClose;
+    }
 
     /**
      * ポート番号を取得します。
@@ -111,6 +304,22 @@ public final class AppConfig implements Serializable {
      */
     public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
+    }
+
+    /**
+     * プラグインを有効にするを取得します。
+     * @return プラグインを有効にする
+     */
+    public boolean isUsePlugin() {
+        return this.usePlugin;
+    }
+
+    /**
+     * プラグインを有効にするを設定します。
+     * @param usePlugin プラグインを有効にする
+     */
+    public void setUsePlugin(boolean usePlugin) {
+        this.usePlugin = usePlugin;
     }
 
     /**

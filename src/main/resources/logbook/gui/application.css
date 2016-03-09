@@ -87,3 +87,8 @@
 .shipWindow .message {
     -fx-font-size: 12pt;
 }
+
+/* ê›íË */
+.configWindow .configInner,.configWindow .footer {
+    -fx-padding: 10px;
+}

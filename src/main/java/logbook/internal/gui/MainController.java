@@ -130,6 +130,31 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 設定
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void config(ActionEvent e) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/config.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("設定");
+            stage.show();
+        } catch (Exception e1) {
+            LogManager.getLogger(MainController.class)
+                    .error("設定の初期化に失敗しました", e);
+        }
+    }
+
+    /**
      * 画面の更新
      *
      * @param e

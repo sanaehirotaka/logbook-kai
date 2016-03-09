@@ -87,11 +87,11 @@
                         <Label text="読み込まれたプラグイン" />
                         <TableView fx:id="pluginTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                           <columns>
-                            <TableColumn fx:id="pluginName" prefWidth="75.0" text="名称" />
-                            <TableColumn fx:id="pluginVendor" prefWidth="75.0" text="作者" />
-                              <TableColumn fx:id="pluginVersion" prefWidth="75.0" text="バージョン" />
-                              <TableColumn fx:id="pluginLicense" prefWidth="75.0" text="ライセンス" />
-                              <TableColumn fx:id="pluginLocation" prefWidth="75.0" text="場所" />
+                            <TableColumn fx:id="pluginName" prefWidth="150.0" text="名称" />
+                            <TableColumn fx:id="pluginVendor" prefWidth="100.0" text="作者" />
+                              <TableColumn fx:id="pluginVersion" prefWidth="70.0" text="バージョン" />
+                              <TableColumn fx:id="pluginLicense" prefWidth="120.0" text="ライセンス" />
+                              <TableColumn fx:id="pluginLocation" prefWidth="150.0" text="場所" />
                           </columns>
                         </TableView>
                      </children>
