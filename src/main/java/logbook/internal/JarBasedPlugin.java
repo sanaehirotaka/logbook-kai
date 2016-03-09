@@ -2,20 +2,11 @@ package logbook.internal;
 
 import java.beans.ExceptionListener;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Jarファイルベースのプラグインです
@@ -27,8 +18,6 @@ public class JarBasedPlugin {
 
     private final Manifest manifest;
 
-    private final List<String> services;
-
     /**
      * 指定したpathからプラグインを作成します
      * @param path Jarファイルのパス
@@ -38,22 +27,11 @@ public class JarBasedPlugin {
         this.url = path.toUri().toURL();
 
         try (JarFile file = new JarFile(path.toFile())) {
-            this.manifest = (Manifest) file.getManifest().clone();
-        }
-        URI jaruri = URI.create("jar:" + path.toUri()); //$NON-NLS-1$
-        try (FileSystem fs = FileSystems.newFileSystem(jaruri, new HashMap<>())) {
-            // collect ~.jar!META-INF/services/* files
-            Path sv = fs.getPath("META-INF", "services"); //$NON-NLS-1$ //$NON-NLS-2$
-            if (Files.exists(sv)) {
-                try (Stream<Path> stream = Files.list(sv)) {
-                    this.services = stream
-                            .filter(Files::isRegularFile)
-                            .map(Path::getFileName)
-                            .map(String::valueOf)
-                            .collect(Collectors.toList());
-                }
+            Manifest manifest = file.getManifest();
+            if (manifest != null) {
+                this.manifest = (Manifest) manifest.clone();
             } else {
-                this.services = Collections.emptyList();
+                this.manifest = new Manifest();
             }
         }
     }
@@ -64,14 +42,6 @@ public class JarBasedPlugin {
      */
     public URL getURL() {
         return this.url;
-    }
-
-    /**
-     * このプラグインが実装するサービスの抽象クラス(インターフェイス)名のリストを返します
-     * @return 抽象クラス(インターフェイス)名のリスト
-     */
-    public List<String> getServices() {
-        return Collections.unmodifiableList(this.services);
     }
 
     /**

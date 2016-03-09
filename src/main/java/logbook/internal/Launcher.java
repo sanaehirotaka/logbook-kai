@@ -72,7 +72,7 @@ public final class Launcher {
             try {
                 plugins = Files.list(dir)
                         .map(p -> JarBasedPlugin.toJarBasedPlugin(p, listener))
-                        .filter(Objects::isNull)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList());
 
             } catch (IOException e) {

@@ -6,10 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -44,29 +40,6 @@ public class JarBasedPluginTest {
         URL expected = p.toUri().toURL();
         URL actual = new JarBasedPlugin(p).getURL();
         assertEquals(expected, actual);
-    }
-
-    /**
-     * {@link logbook.internal.JarBasedPlugin#getServices()} のためのテスト・メソッド。
-     * @throws IOException
-     */
-    @Test
-    public void testGetServices() throws IOException {
-        {
-            Path p = Paths.get("./src/test/resources/logbook/internal/plugin-test-case1.jar.bin");
-            JarBasedPlugin plugin = new JarBasedPlugin(p);
-            List<String> expected = Arrays.asList("logbook.test.TestSpi1", "logbook.test.TestSpi2");
-            List<String> actual = new ArrayList<>(plugin.getServices());
-            Collections.sort(actual);
-            assertEquals(expected, actual);
-        }
-        {
-            Path p = Paths.get("./src/test/resources/logbook/internal/plugin-test-case2.jar.bin");
-            JarBasedPlugin plugin = new JarBasedPlugin(p);
-            List<String> expected = Collections.emptyList();
-            List<String> actual = plugin.getServices();
-            assertEquals(expected, actual);
-        }
     }
 
     /**
