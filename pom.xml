@@ -94,6 +94,11 @@
 			<version>2.5</version>
 		</dependency>
 		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>8.40.10</version>
+		</dependency>
+		<dependency>
 			<groupId>ffdec</groupId>
 			<artifactId>ffdec</artifactId>
 			<version>0</version>

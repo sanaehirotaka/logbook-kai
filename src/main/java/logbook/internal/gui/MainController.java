@@ -1,9 +1,12 @@
 package logbook.internal.gui;
 
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
+import org.controlsfx.control.Notifications;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -11,13 +14,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import logbook.bean.AppConfig;
 import logbook.bean.Basic;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
@@ -33,6 +37,9 @@ import logbook.proxy.ProxyServer;
  */
 public class MainController extends WindowController {
 
+    /** 通知のインターバル */
+    private static final Duration INTERVAL = Duration.ofMinutes(1);
+
     private String itemFormat;
 
     private String shipFormat;
@@ -42,6 +49,12 @@ public class MainController extends WindowController {
 
     /** 入渠ドックコレクションのハッシュ・コード */
     private int ndockHashCode;
+
+    /** 遠征通知のタイムスタンプ */
+    private Map<Integer, Long> timeStampMission = new HashMap<>();
+
+    /** 入渠通知のタイムスタンプ */
+    private Map<Integer, Long> timeStampNdock = new HashMap<>();
 
     @FXML
     private Button item;
@@ -70,7 +83,7 @@ public class MainController extends WindowController {
             Timeline timeline = new Timeline();
             timeline.setCycleCount(Timeline.INDEFINITE);
             timeline.getKeyFrames().add(new KeyFrame(
-                    Duration.seconds(1),
+                    javafx.util.Duration.seconds(1),
                     this::update));
             timeline.play();
         } catch (Exception e) {
@@ -166,6 +179,11 @@ public class MainController extends WindowController {
         this.mission();
         // 入渠ドック
         this.ndock();
+
+        // 遠征の通知
+        this.checkNotifyMission();
+        // 入渠ドックの通知
+        this.checkNotifyNdock();
     }
 
     /**
@@ -240,5 +258,92 @@ public class MainController extends WindowController {
                 }
             }
         }
+    }
+
+    /**
+     * 遠征の通知
+     */
+    private void checkNotifyMission() {
+        Map<Integer, DeckPort> ports = DeckPortCollection.get()
+                .getDeckPortMap();
+        for (DeckPort port : ports.values()) {
+            // 0=未出撃, 1=遠征中, 2=遠征帰還, 3=遠征中止
+            int state = port.getMission().get(0).intValue();
+            // 帰還時間
+            long time = port.getMission().get(2);
+
+            if (0 == state) {
+                this.timeStampMission.put(port.getId(), 0L);
+            } else {
+                // 残り時間を計算
+                Duration now = Duration.ofMillis(time - System.currentTimeMillis());
+                // 前回の通知の時間
+                long timeStamp = this.timeStampMission.getOrDefault(port.getId(), 0L);
+                if (this.requireNotify(now, timeStamp, AppConfig.get().isUseRemind())) {
+                    // TODO: 通知の表示
+                    this.showNotify(port.getName() + "が間もなく帰投します。");
+                    this.timeStampMission.put(port.getId(), System.currentTimeMillis());
+                }
+            }
+        }
+    }
+
+    /**
+     * 入渠ドックの通知
+     */
+    private void checkNotifyNdock() {
+        Map<Integer, Ndock> ndockMap = NdockCollection.get()
+                .getNdockMap();
+
+        for (Ndock ndock : ndockMap.values()) {
+            // 完了時間
+            long time = ndock.getCompleteTime();
+
+            if (1 > time) {
+                this.timeStampNdock.put(ndock.getId(), 0L);
+            } else {
+                // 残り時間を計算
+                Duration now = Duration.ofMillis(time - System.currentTimeMillis());
+                // 前回の通知の時間
+                long timeStamp = this.timeStampMission.getOrDefault(ndock.getId(), 0L);
+
+                if (this.requireNotify(now, timeStamp, false)) {
+                    // TODO: 通知の表示
+                    this.timeStampMission.put(ndock.getId(), System.currentTimeMillis());
+                }
+            }
+        }
+    }
+
+    /**
+     * 通知するか判断します
+     *
+     * @param now 残り時間
+     * @param timeStamp 前回の通知の時間
+     * @param remind リマインド
+     */
+    private boolean requireNotify(Duration now, long timeStamp, boolean remind) {
+        if (now.compareTo(INTERVAL) <= 0) {
+            // 前回の通知からの経過時間
+            Duration course = Duration.ofMillis(System.currentTimeMillis() - timeStamp);
+            if (course.compareTo(INTERVAL) >= 0) {
+                if (timeStamp == 0L || remind) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 通知を表示する
+     *
+     * @param message メッセージ
+     */
+    private void showNotify(String message) {
+        Notifications.create()
+                .text(message)
+                .position(Pos.BOTTOM_RIGHT)
+                .showInformation();
     }
 }
