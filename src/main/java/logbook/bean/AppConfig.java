@@ -10,7 +10,7 @@ import logbook.internal.Config;
  */
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = -4486581543470075058L;
+    private static final long serialVersionUID = 3257637491798243289L;
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
@@ -59,6 +59,12 @@ public final class AppConfig implements Serializable {
 
     /** プラグインを有効にする */
     private boolean usePlugin = true;
+
+    /** 通知サウンドディレクトリ */
+    private String nofitySoundDir = "./sounds/nofity/"; //$NON-NLS-1$
+
+    /** 警告サウンドディレクトリ */
+    private String alertSoundDir = "./sounds/alert/"; //$NON-NLS-1$
 
     /** プラグインディレクトリ */
     private String pluginsDir = "./plugins/"; //$NON-NLS-1$
@@ -320,6 +326,38 @@ public final class AppConfig implements Serializable {
      */
     public void setUsePlugin(boolean usePlugin) {
         this.usePlugin = usePlugin;
+    }
+
+    /**
+     * 通知サウンドディレクトリを取得します。
+     * @return 通知サウンドディレクトリ
+     */
+    public String getNofitySoundDir() {
+        return this.nofitySoundDir;
+    }
+
+    /**
+     * 通知サウンドディレクトリを設定します。
+     * @param nofitySoundDir 通知サウンドディレクトリ
+     */
+    public void setNofitySoundDir(String nofitySoundDir) {
+        this.nofitySoundDir = nofitySoundDir;
+    }
+
+    /**
+     * 警告サウンドディレクトリを取得します。
+     * @return 警告サウンドディレクトリ
+     */
+    public String getAlertSoundDir() {
+        return this.alertSoundDir;
+    }
+
+    /**
+     * 警告サウンドディレクトリを設定します。
+     * @param alertSoundDir 警告サウンドディレクトリ
+     */
+    public void setAlertSoundDir(String alertSoundDir) {
+        this.alertSoundDir = alertSoundDir;
     }
 
     /**
