@@ -62,7 +62,7 @@ public final class Launcher {
      */
     void initPlugin(String[] args) {
         ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
-                .warn(Messages.getString("Launcher.1"), e); //$NON-NLS-1$
+                .warn("プラグインの初期化中に例外が発生", e); //$NON-NLS-1$
 
         Path dir = Paths.get(AppConfig.get().getPluginsDir());
         PluginContainer container = PluginContainer.getInstance();
@@ -71,6 +71,7 @@ public final class Launcher {
         if (Files.isDirectory(dir)) {
             try {
                 plugins = Files.list(dir)
+                        .filter(Files::isRegularFile)
                         .map(p -> JarBasedPlugin.toJarBasedPlugin(p, listener))
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
@@ -97,7 +98,7 @@ public final class Launcher {
      */
     void exitPlugin() {
         ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
-                .warn(Messages.getString("Launcher.2"), e); //$NON-NLS-1$
+                .warn("プラグインのクローズ中に例外が発生", e); //$NON-NLS-1$
         try {
             PluginContainer container = PluginContainer.getInstance();
             container.close();
