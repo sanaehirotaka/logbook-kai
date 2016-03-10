@@ -29,11 +29,11 @@ import logbook.bean.StypeCollection;
 public class Ships {
 
     /** 小破(75%) */
-    private static final BigDecimal SLIGHT_DAMAGE = BigDecimal.valueOf(0.75D);
+    private static final double SLIGHT_DAMAGE = 0.75D;
     /** 中破(50%) */
-    private static final BigDecimal HALF_DAMAGE = BigDecimal.valueOf(0.5D);
+    private static final double HALF_DAMAGE = 0.5D;
     /** 大破(25%) */
-    private static final BigDecimal BADLY_DAMAGE = BigDecimal.valueOf(0.25D);
+    private static final double BADLY_DAMAGE = 0.25D;
     /** 疲労赤色 */
     private static final int RED = 19;
     /** 疲労オレンジ色 */
@@ -53,7 +53,7 @@ public class Ships {
      * @return 小破未満の場合true
      */
     public static boolean isLessThanSlightDamage(Ship ship) {
-        return hpPer(ship).compareTo(SLIGHT_DAMAGE) > 0;
+        return Double.compare(hpPer(ship), SLIGHT_DAMAGE) > 0;
     }
 
     /**
@@ -63,8 +63,8 @@ public class Ships {
      * @return 小破状態の場合true
      */
     public static boolean isSlightDamage(Ship ship) {
-        BigDecimal per = hpPer(ship);
-        return per.compareTo(SLIGHT_DAMAGE) <= 0 && per.compareTo(HALF_DAMAGE) > 0;
+        double per = hpPer(ship);
+        return Double.compare(per, SLIGHT_DAMAGE) <= 0 && Double.compare(per, HALF_DAMAGE) > 0;
     }
 
     /**
@@ -74,8 +74,8 @@ public class Ships {
      * @return 中破状態の場合true
      */
     public static boolean isHalfDamage(Ship ship) {
-        BigDecimal per = hpPer(ship);
-        return per.compareTo(HALF_DAMAGE) <= 0 && per.compareTo(BADLY_DAMAGE) > 0;
+        double per = hpPer(ship);
+        return Double.compare(per, HALF_DAMAGE) <= 0 && Double.compare(per, BADLY_DAMAGE) > 0;
     }
 
     /**
@@ -85,7 +85,7 @@ public class Ships {
      * @return 大破状態の場合true
      */
     public static boolean isBadlyDamage(Ship ship) {
-        return hpPer(ship).compareTo(BADLY_DAMAGE) <= 0;
+        return Double.compare(hpPer(ship), BADLY_DAMAGE) <= 0;
     }
 
     /**
@@ -460,8 +460,7 @@ public class Ships {
      * @param ship 艦娘
      * @return HP割合
      */
-    private static BigDecimal hpPer(Ship ship) {
-        return BigDecimal.valueOf(ship.getNowhp())
-                .divide(BigDecimal.valueOf(ship.getMaxhp()), 3, RoundingMode.HALF_EVEN);
+    private static double hpPer(Ship ship) {
+        return (double) ship.getNowhp() / (double) ship.getMaxhp();
     }
 }
