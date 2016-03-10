@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import logbook.bean.AppConfig;
 
 /**
  * JavaFx エントリ・ポイント クラス
@@ -20,6 +21,9 @@ public class Main extends Application {
 
         WindowController controller = loader.getController();
         controller.setWindow(stage);
+
+        // 最前面に表示する
+        stage.setAlwaysOnTop(AppConfig.get().isOnTop());
 
         stage.setTitle("航海日誌");
         stage.show();
