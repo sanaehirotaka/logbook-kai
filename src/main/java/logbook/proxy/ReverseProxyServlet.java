@@ -8,12 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpProxy;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.api.Response;
 import org.eclipse.jetty.proxy.ProxyServlet;
 import org.eclipse.jetty.util.Callback;
 
 import logbook.Messages;
+import logbook.bean.AppConfig;
 import logbook.internal.ThreadManager;
 
 /**
@@ -126,5 +129,23 @@ final class ReverseProxyServlet extends ProxyServlet {
                     .warn(Messages.getString("ReverseProxyServlet.5"), e); //$NON-NLS-1$
         }
         super.onProxyResponseSuccess(request, response, proxyResponse);
+    }
+
+    /*
+     * HttpClientを作成する
+     */
+    @Override
+    protected HttpClient newHttpClient() {
+        HttpClient client = super.newHttpClient();
+        // プロキシを設定する
+        if (AppConfig.get().isUseProxy()) {
+            // ポート
+            int port = AppConfig.get().getProxyPort();
+            // ホスト
+            String host = AppConfig.get().getProxyHost();
+            // 設定する
+            client.getProxyConfiguration().getProxies().add(new HttpProxy(host, port));
+        }
+        return client;
     }
 }
