@@ -1,11 +1,18 @@
 package logbook.internal.gui;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.Duration;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
 
 import javafx.animation.KeyFrame;
@@ -19,7 +26,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import logbook.bean.AppConfig;
 import logbook.bean.Basic;
@@ -27,8 +36,11 @@ import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
+import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
+import logbook.internal.Ships;
 import logbook.proxy.ProxyServer;
 
 /**
@@ -71,6 +83,8 @@ public class MainController extends WindowController {
     @FXML
     private VBox ndockbox;
 
+    private AudioClip clip;
+
     @FXML
     void initialize() {
         try {
@@ -87,8 +101,7 @@ public class MainController extends WindowController {
                     this::update));
             timeline.play();
         } catch (Exception e) {
-            LogManager.getLogger(MainController.class)
-                    .error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -112,8 +125,7 @@ public class MainController extends WindowController {
             stage.setTitle("所有装備一覧");
             stage.show();
         } catch (Exception e1) {
-            LogManager.getLogger(MainController.class)
-                    .error("所有装備一覧の初期化に失敗しました", e);
+            LoggerHolder.LOG.error("所有装備一覧の初期化に失敗しました", e);
         }
     }
 
@@ -137,8 +149,7 @@ public class MainController extends WindowController {
             stage.setTitle("所有艦娘一覧");
             stage.show();
         } catch (Exception e1) {
-            LogManager.getLogger(MainController.class)
-                    .error("所有艦娘一覧の初期化に失敗しました", e);
+            LoggerHolder.LOG.error("所有艦娘一覧の初期化に失敗しました", e);
         }
     }
 
@@ -162,8 +173,7 @@ public class MainController extends WindowController {
             stage.setTitle("設定");
             stage.show();
         } catch (Exception e1) {
-            LogManager.getLogger(MainController.class)
-                    .error("設定の初期化に失敗しました", e);
+            LoggerHolder.LOG.error("設定の初期化に失敗しました", e);
         }
     }
 
@@ -180,10 +190,13 @@ public class MainController extends WindowController {
         // 入渠ドック
         this.ndock();
 
-        // 遠征の通知
-        this.checkNotifyMission();
-        // 入渠ドックの通知
-        this.checkNotifyNdock();
+        // 遠征・入渠完了時に通知をする
+        if (AppConfig.get().isUseNotification()) {
+            // 遠征の通知
+            this.checkNotifyMission();
+            // 入渠ドックの通知
+            this.checkNotifyNdock();
+        }
     }
 
     /**
@@ -261,7 +274,7 @@ public class MainController extends WindowController {
     }
 
     /**
-     * 遠征の通知
+     * 遠征の通知をチェックします
      */
     private void checkNotifyMission() {
         Map<Integer, DeckPort> ports = DeckPortCollection.get()
@@ -280,16 +293,29 @@ public class MainController extends WindowController {
                 // 前回の通知の時間
                 long timeStamp = this.timeStampMission.getOrDefault(port.getId(), 0L);
                 if (this.requireNotify(now, timeStamp, AppConfig.get().isUseRemind())) {
-                    // TODO: 通知の表示
-                    this.showNotify(port.getName() + "が間もなく帰投します。");
                     this.timeStampMission.put(port.getId(), System.currentTimeMillis());
+                    this.pushNotifyMission(port);
                 }
             }
         }
     }
 
     /**
-     * 入渠ドックの通知
+     * 遠征通知
+     *
+     * @param port 艦隊
+     */
+    private void pushNotifyMission(DeckPort port) {
+        if (AppConfig.get().isUseToast()) {
+            this.showNotify(null, "遠征完了", port.getName() + "がまもなく帰投します。");
+        }
+        if (AppConfig.get().isUseSound()) {
+            this.soundNotify();
+        }
+    }
+
+    /**
+     * 入渠ドックの通知をチェックします
      */
     private void checkNotifyNdock() {
         Map<Integer, Ndock> ndockMap = NdockCollection.get()
@@ -305,13 +331,38 @@ public class MainController extends WindowController {
                 // 残り時間を計算
                 Duration now = Duration.ofMillis(time - System.currentTimeMillis());
                 // 前回の通知の時間
-                long timeStamp = this.timeStampMission.getOrDefault(ndock.getId(), 0L);
+                long timeStamp = this.timeStampNdock.getOrDefault(ndock.getId(), 0L);
 
                 if (this.requireNotify(now, timeStamp, false)) {
-                    // TODO: 通知の表示
-                    this.timeStampMission.put(ndock.getId(), System.currentTimeMillis());
+                    this.timeStampNdock.put(ndock.getId(), System.currentTimeMillis());
+                    this.pushNotifyNdock(ndock);
                 }
             }
+        }
+    }
+
+    /**
+     * 入渠ドックの通知
+     *
+     * @param ndock 入渠ドック
+     */
+    private void pushNotifyNdock(Ndock ndock) {
+        if (AppConfig.get().isUseToast()) {
+            Ship ship = ShipCollection.get()
+                    .getShipMap()
+                    .get(ndock.getShipId());
+            String message = "まもなく" +
+                    Ships.shipMst(ship)
+                            .map(ShipMst::getName)
+                            .orElse("")
+                    + " (Lv" + ship.getLv() + ")がお風呂からあがります";
+
+            ImageView img = new ImageView(Ships.shipWithItemImage(ship));
+
+            this.showNotify(img, "修復完了", message);
+        }
+        if (AppConfig.get().isUseSound()) {
+            this.soundNotify();
         }
     }
 
@@ -338,12 +389,51 @@ public class MainController extends WindowController {
     /**
      * 通知を表示する
      *
+     * @param node グラフィック
+     * @param title タイトル
      * @param message メッセージ
      */
-    private void showNotify(String message) {
-        Notifications.create()
+    private void showNotify(Node node, String title, String message) {
+        Notifications notifications = Notifications.create()
+                .graphic(node)
+                .title(title)
                 .text(message)
-                .position(Pos.BOTTOM_RIGHT)
-                .showInformation();
+                .position(Pos.BOTTOM_RIGHT);
+        if (node == null) {
+            notifications.showInformation();
+        } else {
+            notifications.show();
+        }
+    }
+
+    /**
+     * サウンド通知
+     */
+    private void soundNotify() {
+        if (this.clip == null || !this.clip.isPlaying()) {
+            try {
+                Path dir = Paths.get(AppConfig.get().getNotifySoundDir());
+                if (Files.isDirectory(dir)) {
+                    List<Path> list = Files.list(dir)
+                            .filter(Files::isRegularFile)
+                            .collect(Collectors.toList());
+                    if (list.size() > 0) {
+                        Collections.shuffle(list);
+                        Path file = list.get(0);
+
+                        this.clip = new AudioClip(file.toUri().toString());
+                        this.clip.setVolume(AppConfig.get().getSoundLevel() / 100D);
+                        this.clip.play();
+                    }
+                }
+            } catch (Exception e) {
+                LoggerHolder.LOG.warn("サウンド通知に失敗しました", e);
+            }
+        }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(MainController.class);
     }
 }

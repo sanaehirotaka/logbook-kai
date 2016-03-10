@@ -61,7 +61,7 @@ public final class AppConfig implements Serializable {
     private boolean usePlugin = true;
 
     /** 通知サウンドディレクトリ */
-    private String nofitySoundDir = "./sounds/nofity/"; //$NON-NLS-1$
+    private String notifySoundDir = "./sounds/nofity/"; //$NON-NLS-1$
 
     /** 警告サウンドディレクトリ */
     private String alertSoundDir = "./sounds/alert/"; //$NON-NLS-1$
@@ -332,16 +332,16 @@ public final class AppConfig implements Serializable {
      * 通知サウンドディレクトリを取得します。
      * @return 通知サウンドディレクトリ
      */
-    public String getNofitySoundDir() {
-        return this.nofitySoundDir;
+    public String getNotifySoundDir() {
+        return this.notifySoundDir;
     }
 
     /**
      * 通知サウンドディレクトリを設定します。
      * @param nofitySoundDir 通知サウンドディレクトリ
      */
-    public void setNofitySoundDir(String nofitySoundDir) {
-        this.nofitySoundDir = nofitySoundDir;
+    public void setNotifySoundDir(String nofitySoundDir) {
+        this.notifySoundDir = nofitySoundDir;
     }
 
     /**
