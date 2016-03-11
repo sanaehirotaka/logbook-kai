@@ -10,17 +10,17 @@
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="コマンド">
+          <Menu mnemonicParsing="false" text="コマンド" fx:id="command">
             <items>
               <MenuItem mnemonicParsing="false" text="所有装備一覧" onAction="#items" />
               <MenuItem mnemonicParsing="false" text="所有艦娘一覧" onAction="#ships" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="計算機">
+          <Menu mnemonicParsing="false" text="計算機" fx:id="calc">
             <items>
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="その他">
+          <Menu mnemonicParsing="false" text="その他" fx:id="ext">
             <items>
               <MenuItem mnemonicParsing="false" text="設定" onAction="#config" />
             </items>

@@ -26,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
@@ -41,6 +42,10 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Ships;
+import logbook.plugin.gui.MainCalcMenu;
+import logbook.plugin.gui.MainCommandMenu;
+import logbook.plugin.gui.MainExtMenu;
+import logbook.plugin.gui.Plugin;
 import logbook.proxy.ProxyServer;
 
 /**
@@ -68,6 +73,18 @@ public class MainController extends WindowController {
     /** 入渠通知のタイムスタンプ */
     private Map<Integer, Long> timeStampNdock = new HashMap<>();
 
+    /** コマンドメニュー */
+    @FXML
+    private Menu command;
+
+    /** 計算機 */
+    @FXML
+    private Menu calc;
+
+    /** その他 */
+    @FXML
+    private Menu ext;
+
     @FXML
     private Button item;
 
@@ -93,6 +110,14 @@ public class MainController extends WindowController {
 
             this.itemFormat = this.item.getText();
             this.shipFormat = this.ship.getText();
+
+            // プラグインによるメニューの追加
+            Plugin.getContent(MainCommandMenu.class)
+                    .forEach(this.command.getItems()::add);
+            Plugin.getContent(MainCalcMenu.class)
+                    .forEach(this.calc.getItems()::add);
+            Plugin.getContent(MainExtMenu.class)
+                    .forEach(this.ext.getItems()::add);
 
             Timeline timeline = new Timeline();
             timeline.setCycleCount(Timeline.INDEFINITE);
