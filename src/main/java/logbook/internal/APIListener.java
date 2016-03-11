@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import logbook.Messages;
 import logbook.api.API;
 import logbook.api.APIListenerSpi;
+import logbook.plugin.PluginContainer;
 import logbook.proxy.ContentListenerSpi;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;

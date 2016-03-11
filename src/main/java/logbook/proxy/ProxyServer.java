@@ -22,7 +22,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import logbook.Messages;
 import logbook.bean.AppConfig;
-import logbook.internal.PluginContainer;
+import logbook.plugin.PluginContainer;
 
 /**
  * リバースプロキシ

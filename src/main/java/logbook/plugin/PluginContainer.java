@@ -1,4 +1,4 @@
-package logbook.internal;
+package logbook.plugin;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,7 +39,7 @@ public class PluginContainer {
         }
     }
 
-    void close() throws IOException {
+    public void close() throws IOException {
         this.classLoader.close();
     }
 

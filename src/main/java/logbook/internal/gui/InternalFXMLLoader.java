@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
-import logbook.internal.PluginContainer;
+import logbook.plugin.PluginContainer;
 
 final class InternalFXMLLoader {
 

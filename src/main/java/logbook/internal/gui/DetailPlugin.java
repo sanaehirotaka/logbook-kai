@@ -2,7 +2,7 @@ package logbook.internal.gui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import logbook.internal.JarBasedPlugin;
+import logbook.plugin.JarBasedPlugin;
 
 /**
  * プラグイン詳細

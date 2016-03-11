@@ -1,4 +1,4 @@
-package logbook.internal;
+package logbook.plugin;
 
 import java.beans.ExceptionListener;
 import java.io.IOException;
@@ -111,7 +111,7 @@ public class JarBasedPlugin {
         return ""; //$NON-NLS-1$
     }
 
-    static JarBasedPlugin toJarBasedPlugin(Path p, ExceptionListener listener) {
+    public static JarBasedPlugin toJarBasedPlugin(Path p, ExceptionListener listener) {
         try {
             return new JarBasedPlugin(p);
         } catch (IOException e) {

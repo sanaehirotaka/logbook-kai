@@ -11,8 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import logbook.bean.AppConfig;
 import logbook.internal.Config;
-import logbook.internal.PluginContainer;
 import logbook.internal.ThreadManager;
+import logbook.plugin.PluginContainer;
 
 /**
  * 設定コントローラー

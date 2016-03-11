@@ -16,6 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.internal.gui.Main;
+import logbook.plugin.JarBasedPlugin;
+import logbook.plugin.PluginContainer;
 import logbook.proxy.ProxyServer;
 
 /**
