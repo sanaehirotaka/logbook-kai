@@ -7,8 +7,8 @@ import java.util.function.Predicate;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
+import logbook.bean.AppCondition;
 import logbook.bean.Basic;
-import logbook.bean.CombinedFlag;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Material;
@@ -41,6 +41,10 @@ public class ApiPortPort implements APIListenerSpi {
             this.apiNdock(data.getJsonArray("api_ndock"));
             this.apiMaterial(data.getJsonArray("api_material"));
             this.apiCombinedFlag(data);
+
+            // 出撃中ではない
+            AppCondition.get()
+                    .setMapStart(Boolean.FALSE);
         }
         Config.getDefault().store();
     }
@@ -137,7 +141,7 @@ public class ApiPortPort implements APIListenerSpi {
         } else {
             combinedFlag = Boolean.FALSE;
         }
-        CombinedFlag.get()
+        AppCondition.get()
                 .setCombinedFlag(combinedFlag);
     }
 

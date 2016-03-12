@@ -92,8 +92,6 @@ public class FleetTabPane extends ScrollPane {
     }
 
     private void updateShips() {
-        System.out.println("updateShips::" + this.port.getName());
-
         this.message.setText("制空値計: " + this.shipList.stream()
                 .mapToInt(Ships::airSuperiority)
                 .sum()
