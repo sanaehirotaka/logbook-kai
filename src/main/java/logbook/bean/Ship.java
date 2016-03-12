@@ -11,7 +11,7 @@ import logbook.internal.JsonHelper;
  * 艦娘
  *
  */
-public class Ship implements Serializable {
+public class Ship implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 3598977177423429679L;
 
@@ -602,6 +602,15 @@ public class Ship implements Serializable {
      */
     public void setSallyArea(Integer sallyArea) {
         this.sallyArea = sallyArea;
+    }
+
+    @Override
+    public Ship clone() {
+        try {
+            return (Ship) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
