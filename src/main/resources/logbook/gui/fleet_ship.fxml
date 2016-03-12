@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root prefWidth="260.0" styleClass="ndock" type="HBox" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="40.0" prefWidth="160.0">
+         <children>
+            <ImageView fx:id="img" fitHeight="40.0" fitWidth="160.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="40.0" prefWidth="100.0">
+         <children>
+            <HBox AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label fx:id="name" styleClass="name" />
+                  <Label fx:id="level" text="Label" />
+               </children>
+            </HBox>
+            <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+               <children>
+                  <ProgressBar fx:id="fuel" progress="0.0" styleClass="fuel" />
+                  <ProgressBar fx:id="bull" progress="0.0" styleClass="bull" />
+                  <Label fx:id="cond" styleClass="cond" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</fx:root>

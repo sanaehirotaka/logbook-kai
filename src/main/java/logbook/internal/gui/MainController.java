@@ -7,6 +7,7 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +28,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
@@ -92,7 +95,7 @@ public class MainController extends WindowController {
     private Button ship;
 
     @FXML
-    private VBox infobox;
+    private TabPane fleetTab;
 
     @FXML
     private VBox missionbox;
@@ -210,8 +213,8 @@ public class MainController extends WindowController {
     void update(ActionEvent e) {
         // 所有装備/所有艦娘
         this.button();
-        // 遠征
-        this.mission();
+        // 艦隊タブ・遠征
+        this.checkPort();
         // 入渠ドック
         this.ndock();
 
@@ -246,23 +249,75 @@ public class MainController extends WindowController {
     }
 
     /**
-     * 遠征の更新
+     * 艦隊の確認
      */
-    private void mission() {
+    private void checkPort() {
         Map<Integer, DeckPort> ports = DeckPortCollection.get()
                 .getDeckPortMap();
+        boolean change = this.portHashCode != ports.hashCode();
+        this.portHashCode = ports.hashCode();
+
+        this.fleetTab(change);
+        this.mission(change);
+    }
+
+    /**
+     * 艦隊タブの更新
+     *
+     * @param change 艦隊の変更フラグ
+     */
+    private void fleetTab(boolean change) {
+        Map<Integer, DeckPort> ports = DeckPortCollection.get()
+                .getDeckPortMap();
+        ObservableList<Tab> tabs = this.fleetTab.getTabs();
+        if (change) {
+            if (ports.size() != tabs.size() - 1) {
+                for (int i = tabs.size() - 1; i > 0; i--) {
+                    tabs.remove(i);
+                }
+                for (DeckPort port : ports.values()) {
+                    FleetTabPane pane = new FleetTabPane(port);
+                    Tab tab = new Tab(port.getName(), pane);
+                    tab.setClosable(false);
+                    tabs.add(tab);
+                }
+            } else {
+                Iterator<DeckPort> ite = ports.values().iterator();
+                for (int i = 0; ite.hasNext(); i++) {
+                    DeckPort port = ite.next();
+                    Tab tab = tabs.get(i + 1);
+                    Node node = tab.getContent();
+                    if (node instanceof FleetTabPane) {
+                        ((FleetTabPane) node).update(port);
+                    }
+                }
+            }
+        } else {
+            for (Tab tab : tabs) {
+                Node node = tab.getContent();
+                if (node instanceof FleetTabPane) {
+                    ((FleetTabPane) node).update();
+                }
+            }
+        }
+    }
+
+    /**
+     * 遠征の更新
+     *
+     * @param change 艦隊の変更フラグ
+     */
+    private void mission(boolean change) {
         ObservableList<Node> mission = this.missionbox.getChildren();
-        if (this.portHashCode != ports.hashCode()) {
-            // ハッシュ・コードが変わっている場合遠征の更新
+        if (change) {
+            Map<Integer, DeckPort> ports = DeckPortCollection.get()
+                    .getDeckPortMap();
             mission.clear();
             ports.values().stream()
                     .skip(1)
                     .map(MissionPane::new)
                     .forEach(mission::add);
-            // ハッシュ・コードの更新
-            this.portHashCode = ports.hashCode();
         } else {
-            // ハッシュ・コードが変わっていない場合updateメソッドを呼ぶ
             for (Node node : mission) {
                 if (node instanceof MissionPane) {
                     ((MissionPane) node).update();

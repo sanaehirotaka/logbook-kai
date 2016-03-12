@@ -5,51 +5,58 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox prefHeight="420.0" prefWidth="280.0" styleClass="mainWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox prefHeight="420.0" prefWidth="280.0" styleClass="mainWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
-          <Menu mnemonicParsing="false" text="コマンド" fx:id="command">
+          <Menu fx:id="command" mnemonicParsing="false" text="コマンド">
             <items>
-              <MenuItem mnemonicParsing="false" text="所有装備一覧" onAction="#items" />
-              <MenuItem mnemonicParsing="false" text="所有艦娘一覧" onAction="#ships" />
+              <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧" />
+              <MenuItem mnemonicParsing="false" onAction="#ships" text="所有艦娘一覧" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="計算機" fx:id="calc">
+          <Menu fx:id="calc" mnemonicParsing="false" text="計算機">
             <items>
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="その他" fx:id="ext">
+          <Menu fx:id="ext" mnemonicParsing="false" text="その他">
             <items>
-              <MenuItem mnemonicParsing="false" text="設定" onAction="#config" />
+              <MenuItem mnemonicParsing="false" onAction="#config" text="設定" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
       <HBox styleClass="buttons">
          <children>
-            <Button styleClass="itemButton" fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" text="所有装備({0}/{1})" HBox.hgrow="ALWAYS" />
-            <Button styleClass="shipButton" fx:id="ship" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ships" text="所有艦娘({0}/{1})" HBox.hgrow="ALWAYS" />
+            <Button fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" styleClass="itemButton" text="所有装備({0}/{1})" HBox.hgrow="ALWAYS" />
+            <Button fx:id="ship" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ships" styleClass="shipButton" text="所有艦娘({0}/{1})" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-         <content>
-            <VBox fx:id="infobox">
-               <children>
-                  <TitledPane animated="false" text="遠征">
+      <TabPane fx:id="fleetTab" VBox.vgrow="ALWAYS">
+         <tabs>
+            <Tab closable="false" text="母港">
+               <content>
+                  <ScrollPane fitToWidth="true">
                      <content>
-                        <VBox fx:id="missionbox" />
+                        <VBox fx:id="infobox">
+                           <children>
+                              <TitledPane animated="false" text="遠征">
+                                 <content>
+                                    <VBox fx:id="missionbox" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane animated="false" text="入渠">
+                                 <content>
+                                    <VBox fx:id="ndockbox" />
+                                 </content>
+                              </TitledPane>
+                           </children>
+                        </VBox>
                      </content>
-                  </TitledPane>
-                  <TitledPane animated="false" text="入渠">
-                     <content>
-                        <VBox fx:id="ndockbox" />
-                     </content>
-                  </TitledPane>
-               </children>
-            </VBox>
-         </content>
-      </ScrollPane>
+                  </ScrollPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
    </children>
 </VBox>

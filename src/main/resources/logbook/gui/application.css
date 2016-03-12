@@ -24,6 +24,46 @@
 .mainWindow .shipButton {
     -fx-padding: 5px;
 }
+.mainWindow TabPane {
+    -fx-tab-max-width: 4em;
+}
+.mainWindow TabPane .message {
+    -fx-font-size: 10pt;
+}
+.mainWindow TabPane .fuel {
+    -fx-pref-width: 24px;
+    -fx-pref-height: 16px;
+}
+.mainWindow TabPane .fuel .progress {
+}
+.mainWindow TabPane .fuel .track{
+}
+.mainWindow TabPane .fuel .bar {
+    -fx-background-color: #008000;
+}
+.mainWindow TabPane .bull {
+    -fx-pref-width: 24px;
+    -fx-pref-height: 16px;
+}
+.mainWindow TabPane .bull .progress {
+}
+.mainWindow TabPane .bull .track{
+}
+.mainWindow TabPane .bull .bar {
+    -fx-background-color: #663300;
+}
+.mainWindow TabPane .deepgreen {
+    -fx-text-fill: rgb(0, 60, 0);
+}
+.mainWindow TabPane .green {
+    -fx-text-fill: rgb(0, 128, 0);
+}
+.mainWindow TabPane .orange {
+    -fx-text-fill: rgb(255, 140, 0);
+}
+.mainWindow TabPane .red {
+    -fx-text-fill: rgb(255, 16, 0);
+}
 .mainWindow .mission .progress {
     -fx-background-color: transparent;
     -fx-background-radius: 0;
