@@ -18,17 +18,19 @@ public class ApiReqNyukyoStart implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
+        Map<Integer, Ship> map = ShipCollection.get()
+                .getShipMap();
+        Integer shipId = Integer.valueOf(req.getParameterMap()
+                .get("api_ship_id")
+                .get(0));
+        Ship ship = map.get(shipId)
+                .clone();
+
         if ("1".equals(req.getParameterMap().get("api_highspeed").get(0))) {
-            Map<Integer, Ship> map = ShipCollection.get()
-                    .getShipMap();
-            Integer shipId = Integer.valueOf(req.getParameterMap()
-                    .get("api_ship_id")
-                    .get(0));
-            Ship ship = map.get(shipId)
-                    .clone();
             ship.setNowhp(ship.getMaxhp());
             ship.setNdockTime(0);
-            map.put(shipId, ship);
         }
+        // 高速修復剤未使用時でも入れ替える(艦隊タブを更新するため)
+        map.put(shipId, ship);
     }
 }
