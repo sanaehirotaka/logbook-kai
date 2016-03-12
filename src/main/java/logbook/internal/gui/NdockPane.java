@@ -4,21 +4,18 @@ import java.io.IOException;
 import java.time.Duration;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.bean.Ndock;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
-import logbook.bean.SlotItem;
-import logbook.bean.SlotItemCollection;
-import logbook.internal.Items;
 import logbook.internal.Ships;
 
 /**
@@ -43,9 +40,6 @@ public class NdockPane extends HBox {
     private ImageView ship;
 
     @FXML
-    private HBox items;
-
-    @FXML
     private Label name;
 
     @FXML
@@ -64,8 +58,7 @@ public class NdockPane extends HBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LogManager.getLogger(NdockPane.class)
-                    .error("FXMLのロードに失敗しました", e);
+            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -77,16 +70,7 @@ public class NdockPane extends HBox {
                     .getShipMap()
                     .get(this.ndock.getShipId());
             // 艦娘画像
-            this.ship.setImage(Ships.shipImage(ship));
-
-            for (Integer itemId : ship.getSlot()) {
-                // 装備アイコン
-                this.addItemIcon(itemId);
-            }
-            if (ship.getSlotEx() != 0) {
-                // 補強増設は0(未開放)以外の場合
-                this.addItemIcon(ship.getSlotEx());
-            }
+            this.ship.setImage(Ships.shipWithItemImage(ship));
             // 名前
             String name = Ships.shipMst(ship)
                     .map(ShipMst::getName)
@@ -95,8 +79,7 @@ public class NdockPane extends HBox {
             this.update();
 
         } catch (Exception e) {
-            LogManager.getLogger(NdockPane.class)
-                    .error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -120,29 +103,6 @@ public class NdockPane extends HBox {
             styleClass.add("stage2");
         } else if (d.compareTo(this.stage1) < 0) {
             styleClass.add("stage1");
-        }
-    }
-
-    /**
-     * 装備アイコンを追加します
-     *
-     * @param itemId 装備ID
-     */
-    private void addItemIcon(Integer itemId) {
-        SlotItem item = SlotItemCollection.get()
-                .getSlotitemMap()
-                .get(itemId);
-
-        if (item != null) {
-            Image image = Items.borderedItemImage(item);
-
-            if (image != null) {
-                ImageView iv = new ImageView(image);
-                iv.setFitHeight(24);
-                iv.setFitWidth(24);
-                this.items.getChildren()
-                        .add(iv);
-            }
         }
     }
 
@@ -175,5 +135,10 @@ public class NdockPane extends HBox {
             sb.append("修復完了");
         }
         return sb.toString();
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(NdockPane.class);
     }
 }

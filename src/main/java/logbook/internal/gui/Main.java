@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logbook.bean.AppConfig;
+import logbook.internal.Version;
 
 /**
  * JavaFx エントリ・ポイント クラス
@@ -25,7 +26,7 @@ public class Main extends Application {
         // 最前面に表示する
         stage.setAlwaysOnTop(AppConfig.get().isOnTop());
 
-        stage.setTitle("航海日誌");
+        stage.setTitle("航海日誌 " + Version.getCurrent());
         stage.show();
     }
 

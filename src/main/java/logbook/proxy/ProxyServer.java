@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
@@ -66,8 +67,7 @@ public final class ProxyServer extends Thread {
                         // escape join
                     }
                 } catch (Exception e) {
-                    LogManager.getLogger(ProxyServer.class)
-                            .warn(Messages.getString("ProxyServer.5"), e); //$NON-NLS-1$
+                    LoggerHolder.LOG.warn(Messages.getString("ProxyServer.5"), e); //$NON-NLS-1$
 
                     this.displayAlert(e);
                 }
@@ -75,8 +75,7 @@ public final class ProxyServer extends Thread {
                 server.stop();
             }
         } catch (Exception e) {
-            LogManager.getLogger(ProxyServer.class)
-                    .warn(Messages.getString("ProxyServer.6"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(Messages.getString("ProxyServer.6"), e); //$NON-NLS-1$
         }
     }
 
@@ -126,5 +125,10 @@ public final class ProxyServer extends Thread {
      */
     public static ProxyServer getInstance() {
         return SERVER;
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ProxyServer.class);
     }
 }

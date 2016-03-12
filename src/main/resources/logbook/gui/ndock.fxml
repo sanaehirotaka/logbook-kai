@@ -12,7 +12,6 @@
          <children>
             <ImageView fx:id="ship" fitHeight="40.0" fitWidth="160.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
       </ImageView>
-            <HBox fx:id="items" prefHeight="24.0" prefWidth="120.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="40.0" prefWidth="100.0">

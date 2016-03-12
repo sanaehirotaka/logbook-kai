@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import logbook.Messages;
 
@@ -46,8 +47,12 @@ final class ConfigReader<T> {
         return instance;
     }
 
-    ExceptionListener getListener() {
-        return e -> LogManager.getLogger(ConfigReader.class)
-                .warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
+    private ExceptionListener getListener() {
+        return e -> LoggerHolder.LOG.warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ConfigReader.class);
     }
 }

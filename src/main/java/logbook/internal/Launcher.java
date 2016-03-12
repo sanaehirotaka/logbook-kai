@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import logbook.Messages;
 import logbook.bean.AppConfig;
@@ -37,8 +38,7 @@ public final class Launcher {
             launcher.initPlugin(args);
             launcher.initLocal(args);
         } catch (Exception | Error e) {
-            LogManager.getLogger(ProxyServer.class)
-                    .warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
         } finally {
             try {
                 launcher.exitLocal();
@@ -63,8 +63,7 @@ public final class Launcher {
      * @param args アプリケーション引数
      */
     void initPlugin(String[] args) {
-        ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
-                .warn("プラグインの初期化中に例外が発生", e); //$NON-NLS-1$
+        ExceptionListener listener = e -> LoggerHolder.LOG.warn("プラグインの初期化中に例外が発生", e); //$NON-NLS-1$
 
         Path dir = Paths.get(AppConfig.get().getPluginsDir());
         PluginContainer container = PluginContainer.getInstance();
@@ -99,13 +98,17 @@ public final class Launcher {
      * プラグインの初期化処理
      */
     void exitPlugin() {
-        ExceptionListener listener = e -> LogManager.getLogger(Launcher.class)
-                .warn("プラグインのクローズ中に例外が発生", e); //$NON-NLS-1$
+        ExceptionListener listener = e -> LoggerHolder.LOG.warn("プラグインのクローズ中に例外が発生", e); //$NON-NLS-1$
         try {
             PluginContainer container = PluginContainer.getInstance();
             container.close();
         } catch (IOException e) {
             listener.exceptionThrown(e);
         }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(Launcher.class);
     }
 }

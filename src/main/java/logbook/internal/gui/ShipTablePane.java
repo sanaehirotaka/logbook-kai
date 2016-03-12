@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -155,8 +156,7 @@ public class ShipTablePane extends VBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LogManager.getLogger(ShipTablePane.class)
-                    .error("FXMLのロードに失敗しました", e);
+            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -191,8 +191,7 @@ public class ShipTablePane extends VBox {
             this.update();
 
         } catch (Exception e) {
-            LogManager.getLogger(ShipTablePane.class)
-                    .error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -218,8 +217,7 @@ public class ShipTablePane extends VBox {
                         + " 索敵値(2-5式秋): " + Ships.viewRange(ships));
             }
         } catch (Exception e) {
-            LogManager.getLogger(ShipTablePane.class)
-                    .error("画面の更新に失敗しました", e);
+            LoggerHolder.LOG.error("画面の更新に失敗しました", e);
         }
     }
 
@@ -279,5 +277,10 @@ public class ShipTablePane extends VBox {
                 this.setText(null);
             }
         }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ShipTablePane.class);
     }
 }

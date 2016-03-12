@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import logbook.Messages;
 
@@ -54,8 +55,12 @@ final class ConfigWriter {
         }
     }
 
-    ExceptionListener getListener() {
-        return e -> LogManager.getLogger(ConfigWriter.class)
-                .warn(Messages.getString("ConfigWriter.1"), e); //$NON-NLS-1$
+    private ExceptionListener getListener() {
+        return e -> LoggerHolder.LOG.warn(Messages.getString("ConfigWriter.1"), e); //$NON-NLS-1$
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ConfigWriter.class);
     }
 }

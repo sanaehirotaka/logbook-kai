@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpProxy;
 import org.eclipse.jetty.client.api.Request;
@@ -53,8 +54,7 @@ final class ReverseProxyServlet extends ProxyServlet {
                 });
             }
         } catch (Exception e) {
-            LogManager.getLogger(ReverseProxyServlet.class)
-                    .warn(Messages.getString("ReverseProxyServlet.2"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(Messages.getString("ReverseProxyServlet.2"), e); //$NON-NLS-1$
         }
         super.sendProxyRequest(clientRequest, proxyResponse, proxyRequest);
     }
@@ -86,8 +86,7 @@ final class ReverseProxyServlet extends ProxyServlet {
                 stream.write(buffer, offset, length);
             }
         } catch (Exception e) {
-            LogManager.getLogger(ReverseProxyServlet.class)
-                    .warn(Messages.getString("ReverseProxyServlet.3"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(Messages.getString("ReverseProxyServlet.3"), e); //$NON-NLS-1$
         }
 
         super.onResponseContent(request, response, proxyResponse, buffer, offset, length, callback);
@@ -117,16 +116,14 @@ final class ReverseProxyServlet extends ProxyServlet {
                                 listener.accept(requestMetaData, responseMetaData);
                             }
                         } catch (Exception e) {
-                            LogManager.getLogger(ReverseProxyServlet.class)
-                                    .warn(Messages.getString("ReverseProxyServlet.4"), e); //$NON-NLS-1$
+                            LoggerHolder.LOG.warn(Messages.getString("ReverseProxyServlet.4"), e); //$NON-NLS-1$
                         }
                     };
                     ThreadManager.getExecutorService().submit(task);
                 }
             }
         } catch (Exception e) {
-            LogManager.getLogger(ReverseProxyServlet.class)
-                    .warn(Messages.getString("ReverseProxyServlet.5"), e); //$NON-NLS-1$
+            LoggerHolder.LOG.warn(Messages.getString("ReverseProxyServlet.5"), e); //$NON-NLS-1$
         }
         super.onProxyResponseSuccess(request, response, proxyResponse);
     }
@@ -147,5 +144,10 @@ final class ReverseProxyServlet extends ProxyServlet {
             client.getProxyConfiguration().getProxies().add(new HttpProxy(host, port));
         }
         return client;
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ReverseProxyServlet.class);
     }
 }

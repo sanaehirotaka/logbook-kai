@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -163,8 +164,7 @@ public class ItemController extends WindowController {
                     .addListener(this::detail);
 
         } catch (Exception e) {
-            LogManager.getLogger(NdockPane.class)
-                    .error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -248,5 +248,10 @@ public class ItemController extends WindowController {
                 this.setText(null);
             }
         }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ItemController.class);
     }
 }

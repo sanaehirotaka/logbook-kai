@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -58,8 +59,7 @@ public class MissionPane extends AnchorPane {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LogManager.getLogger(MissionPane.class)
-                    .error("FXMLのロードに失敗しました", e);
+            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -68,8 +68,7 @@ public class MissionPane extends AnchorPane {
         try {
             this.update();
         } catch (Exception e) {
-            LogManager.getLogger(MissionPane.class)
-                    .error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -160,5 +159,10 @@ public class MissionPane extends AnchorPane {
             sb.append("まもなく帰還します");
         }
         return sb.toString();
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(MissionPane.class);
     }
 }
