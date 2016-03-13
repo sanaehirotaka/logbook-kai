@@ -135,14 +135,16 @@ public class ApiPortPort implements APIListenerSpi {
      * @param object api_data
      */
     private void apiCombinedFlag(JsonObject object) {
+        Integer combinedType;
         Boolean combinedFlag;
         if (object.containsKey("api_combined_flag")) {
-            combinedFlag = JsonHelper.toBoolean(object.getJsonNumber("api_combined_flag"));
+            combinedType = JsonHelper.toInteger(object.getJsonNumber("api_combined_flag"));
         } else {
-            combinedFlag = Boolean.FALSE;
+            combinedType = 0;
         }
-        AppCondition.get()
-                .setCombinedFlag(combinedFlag);
+        combinedFlag = combinedType > 0;
+        AppCondition.get().setCombinedType(combinedType);
+        AppCondition.get().setCombinedFlag(combinedFlag);
     }
 
     /**

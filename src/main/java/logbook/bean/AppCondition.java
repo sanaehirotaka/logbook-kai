@@ -10,10 +10,13 @@ import logbook.internal.Config;
  */
 public class AppCondition implements Serializable {
 
-    private static final long serialVersionUID = 5501928210713593353L;
+    private static final long serialVersionUID = 6218938657590214575L;
 
     /** 連合艦隊 */
     private Boolean combinedFlag = Boolean.FALSE;
+
+    /** 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊)) */
+    private Integer combinedType = 0;
 
     /** 出撃中 */
     private Boolean mapStart = Boolean.FALSE;
@@ -32,6 +35,22 @@ public class AppCondition implements Serializable {
      */
     public void setCombinedFlag(Boolean combinedFlag) {
         this.combinedFlag = combinedFlag;
+    }
+
+    /**
+     * 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))を取得します。
+     * @return 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))
+     */
+    public Integer getCombinedType() {
+        return this.combinedType;
+    }
+
+    /**
+     * 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))を設定します。
+     * @param combinedType 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))
+     */
+    public void setCombinedType(Integer combinedType) {
+        this.combinedType = combinedType;
     }
 
     /**
