@@ -31,13 +31,13 @@
     -fx-font-size: 1.1em;
 }
 .mainWindow TabPane .tab.alert {
-    -fx-background-color: red;
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, red, transparent);
 }
 .mainWindow TabPane .tab.alert .tab-label {
     -fx-text-fill: white;
 }
 .mainWindow TabPane .tab.warn {
-    -fx-background-color: #FFD700;
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #FFD700, transparent);;
 }
 .mainWindow TabPane .tab.warn .tab-label {
 }
@@ -100,6 +100,9 @@
 }
 .mainWindow .mission.stage3 .progress .bar {
     -fx-background-color: #FFD700;
+}
+.mainWindow .mission.empty {
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #87CEFA, transparent);
 }
 .mainWindow .mission .fleet {
     -fx-font-size: 9pt;

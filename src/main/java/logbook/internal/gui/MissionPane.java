@@ -84,7 +84,7 @@ public class MissionPane extends AnchorPane {
         long time = this.port.getMission().get(2);
 
         ObservableList<String> styleClass = this.getStyleClass();
-        styleClass.removeAll("stage1", "stage2", "stage3");
+        styleClass.removeAll("stage1", "stage2", "stage3", "empty");
 
         if (state == 0) {
             // 未出撃
@@ -97,6 +97,8 @@ public class MissionPane extends AnchorPane {
             this.name.setText("<未出撃>");
             // 残り時間
             this.time.setText("");
+
+            styleClass.add("empty");
         } else {
             // 出撃(遠征中・遠征帰還・遠征中止)
             Mission mission = MissionCollection.get()
