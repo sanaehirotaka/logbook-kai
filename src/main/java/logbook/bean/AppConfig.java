@@ -1,6 +1,8 @@
 package logbook.bean;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import logbook.internal.Config;
 
@@ -10,7 +12,7 @@ import logbook.internal.Config;
  */
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = 3257637491798243289L;
+    private static final long serialVersionUID = -773577834397914252L;
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
@@ -71,6 +73,9 @@ public final class AppConfig implements Serializable {
 
     /** リソースディレクトリ */
     private String resourcesDir = "./resources/"; //$NON-NLS-1$
+
+    /** ウインドウ位置 */
+    private Map<String, WindowLocation> windowLocationMap = new HashMap<>();
 
     /**
      * 遠征・入渠完了時に通知をするを取得します。
@@ -390,6 +395,22 @@ public final class AppConfig implements Serializable {
      */
     public void setResourcesDir(String resourcesDir) {
         this.resourcesDir = resourcesDir;
+    }
+
+    /**
+     * ウインドウ位置を取得します。
+     * @return ウインドウ位置
+     */
+    public Map<String, WindowLocation> getWindowLocationMap() {
+        return this.windowLocationMap;
+    }
+
+    /**
+     * ウインドウ位置を設定します。
+     * @param windowLocationMap ウインドウ位置
+     */
+    public void setWindowLocationMap(Map<String, WindowLocation> windowLocationMap) {
+        this.windowLocationMap = windowLocationMap;
     }
 
     /**

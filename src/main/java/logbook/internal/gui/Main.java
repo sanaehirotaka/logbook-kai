@@ -1,9 +1,14 @@
 package logbook.internal.gui;
 
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import logbook.bean.AppConfig;
 import logbook.internal.Version;
@@ -27,6 +32,28 @@ public class Main extends Application {
         stage.setAlwaysOnTop(AppConfig.get().isOnTop());
 
         stage.setTitle("航海日誌 " + Version.getCurrent());
+
+        Optional.ofNullable(AppConfig.get()
+                .getWindowLocationMap()
+                .get(controller.getClass().getCanonicalName()))
+                .ifPresent(controller::setWindowLocation);
+        stage.setOnCloseRequest(e -> {
+            if (AppConfig.get().isCheckDoit()) {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.initOwner(stage);
+                alert.setTitle("終了の確認");
+                alert.setHeaderText("終了の確認");
+                alert.setContentText("航海日誌を終了しますか？");
+                alert.getButtonTypes().clear();
+                alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                if (alert.showAndWait().filter(ButtonType.YES::equals).isPresent()) {
+                    AppConfig.get()
+                            .getWindowLocationMap()
+                            .put(controller.getClass().getCanonicalName(), controller.getWindowLocation());
+                }
+            }
+        });
+
         stage.show();
     }
 
