@@ -11,7 +11,7 @@ import logbook.internal.JsonHelper;
  * api_deck_port
  *
  */
-public class DeckPort implements Serializable {
+public class DeckPort implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -7415061750561409381L;
 
@@ -108,6 +108,15 @@ public class DeckPort implements Serializable {
      */
     public void setShip(List<Integer> ship) {
         this.ship = ship;
+    }
+
+    @Override
+    public DeckPort clone() {
+        try {
+            return (DeckPort) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
