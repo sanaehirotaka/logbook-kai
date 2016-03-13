@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import logbook.bean.DeckPort;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.ShipMst;
 import logbook.internal.Ships;
 
 /**
@@ -26,6 +27,12 @@ import logbook.internal.Ships;
  *
  */
 public class FleetTabPane extends ScrollPane {
+
+    /** 警告CSSクラス名 */
+    private static final String ALERT = "alert";
+
+    /** 注意CSSクラス名 */
+    private static final String WARN = "warn";
 
     /** 艦隊 */
     private DeckPort port;
@@ -38,6 +45,9 @@ public class FleetTabPane extends ScrollPane {
 
     /** 艦娘達のハッシュ・コード */
     private int shipsHashCode;
+
+    /** Tabのクラス名(タブ色を変えるのに使用) */
+    private String tabCssClass;
 
     /** メッセージ */
     @FXML
@@ -62,6 +72,11 @@ public class FleetTabPane extends ScrollPane {
         } catch (IOException e) {
             LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
         }
+    }
+
+    @FXML
+    void initialize() {
+        this.update();
     }
 
     /**
@@ -91,6 +106,13 @@ public class FleetTabPane extends ScrollPane {
         this.shipsHashCode = this.shipList.hashCode();
     }
 
+    /**
+     * タブに設定するCSSクラス名
+     */
+    public String tabCssClass() {
+        return this.tabCssClass;
+    }
+
     private void updateShips() {
         this.message.setText("制空値計: " + this.shipList.stream()
                 .mapToInt(Ships::airSuperiority)
@@ -102,6 +124,21 @@ public class FleetTabPane extends ScrollPane {
         this.shipList.stream()
                 .map(FleetTabShipPane::new)
                 .forEach(childs::add);
+
+        if (this.shipList.stream().anyMatch(Ships::isBadlyDamage)) {
+            // 大破時
+            this.tabCssClass = ALERT;
+        } else if (this.shipList.stream().anyMatch(Ships::isHalfDamage)) {
+            // 中破時
+            this.tabCssClass = WARN;
+        } else if (this.shipList.stream()
+                .anyMatch(ship -> !ship.getFuel().equals(Ships.shipMst(ship).map(ShipMst::getFuelMax).orElse(0)) ||
+                        !ship.getBull().equals(Ships.shipMst(ship).map(ShipMst::getBullMax).orElse(0)))) {
+            // 未補給時
+            this.tabCssClass = WARN;
+        } else {
+            this.tabCssClass = null;
+        }
     }
 
     private static class LoggerHolder {

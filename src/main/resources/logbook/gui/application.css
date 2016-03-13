@@ -27,6 +27,20 @@
 .mainWindow TabPane {
     -fx-tab-max-width: 4em;
 }
+.mainWindow TabPane .tab-label {
+    -fx-font-size: 1.1em;
+}
+.mainWindow TabPane .tab.alert {
+    -fx-background-color: red;
+}
+.mainWindow TabPane .tab.alert .tab-label {
+    -fx-text-fill: white;
+}
+.mainWindow TabPane .tab.warn {
+    -fx-background-color: #FFD700;
+}
+.mainWindow TabPane .tab.warn .tab-label {
+}
 .mainWindow TabPane .message {
     -fx-font-size: 10pt;
 }
@@ -121,7 +135,7 @@
 
 /* èäóLäÕñ∫àÍóó */
 .shipWindow .tab-pane .tab-label {
-    -fx-tab-min-width: 60px;
+    -fx-tab-min-width: 4em;
     -fx-font-size: 1.2em;
 }
 .shipWindow .message {

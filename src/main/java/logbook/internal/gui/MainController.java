@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -279,6 +280,9 @@ public class MainController extends WindowController {
                     FleetTabPane pane = new FleetTabPane(port);
                     Tab tab = new Tab(port.getName(), pane);
                     tab.setClosable(false);
+                    tab.getStyleClass().removeIf(s -> !s.equals("tab"));
+                    Optional.ofNullable(pane.tabCssClass())
+                            .ifPresent(tab.getStyleClass()::add);
                     tabs.add(tab);
                 }
             } else {
@@ -288,7 +292,11 @@ public class MainController extends WindowController {
                     Tab tab = tabs.get(i + 1);
                     Node node = tab.getContent();
                     if (node instanceof FleetTabPane) {
-                        ((FleetTabPane) node).update(port);
+                        FleetTabPane pane = (FleetTabPane) node;
+                        pane.update(port);
+                        tab.getStyleClass().removeIf(s -> !s.equals("tab"));
+                        Optional.ofNullable(pane.tabCssClass())
+                                .ifPresent(tab.getStyleClass()::add);
                     }
                 }
             }
@@ -296,7 +304,11 @@ public class MainController extends WindowController {
             for (Tab tab : tabs) {
                 Node node = tab.getContent();
                 if (node instanceof FleetTabPane) {
-                    ((FleetTabPane) node).update();
+                    FleetTabPane pane = (FleetTabPane) node;
+                    pane.update();
+                    tab.getStyleClass().removeIf(s -> !s.equals("tab"));
+                    Optional.ofNullable(pane.tabCssClass())
+                            .ifPresent(tab.getStyleClass()::add);
                 }
             }
         }
