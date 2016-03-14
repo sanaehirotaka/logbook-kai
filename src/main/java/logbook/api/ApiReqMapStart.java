@@ -15,8 +15,15 @@ public class ApiReqMapStart implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
+
+        Integer deckId = Integer.valueOf(req.getParameterMap()
+                .get("api_deck_id")
+                .get(0));
+
         AppCondition.get()
                 .setMapStart(Boolean.TRUE);
+        AppCondition.get()
+                .setDeckId(deckId);
     }
 
 }

@@ -42,10 +42,13 @@ public class ApiReqMapNext implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
+        // 大破した艦娘
         List<Ship> badlyShips = badlyShips(DeckPortCollection.get()
                 .getDeckPortMap()
-                .get(1));
+                .get(AppCondition.get()
+                        .getDeckId()));
 
+        // 連合艦隊時は第2艦隊も見る
         if (AppCondition.get().getCombinedFlag()) {
             badlyShips.addAll(badlyShips(DeckPortCollection.get()
                     .getDeckPortMap()

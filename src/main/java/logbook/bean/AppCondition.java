@@ -21,6 +21,9 @@ public class AppCondition implements Serializable {
     /** 出撃中 */
     private Boolean mapStart = Boolean.FALSE;
 
+    /** 出撃艦隊 */
+    private Integer deckId = 0;
+
     /**
      * 連合艦隊を取得します。
      * @return 連合艦隊
@@ -67,6 +70,22 @@ public class AppCondition implements Serializable {
      */
     public void setMapStart(Boolean mapStart) {
         this.mapStart = mapStart;
+    }
+
+    /**
+     * 出撃艦隊を取得します。
+     * @return 出撃艦隊
+     */
+    public Integer getDeckId() {
+        return this.deckId;
+    }
+
+    /**
+     * 出撃艦隊を設定します。
+     * @param deckId 出撃艦隊
+     */
+    public void setDeckId(Integer DeckId) {
+        this.deckId = DeckId;
     }
 
     /**
