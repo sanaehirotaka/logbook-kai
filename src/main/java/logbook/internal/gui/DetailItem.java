@@ -1,15 +1,19 @@
 package logbook.internal.gui;
 
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.function.Predicate;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import logbook.Messages;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
+import logbook.internal.Ships;
 
 /**
  * 所有装備一覧の詳細
@@ -112,6 +116,19 @@ public class DetailItem {
         this.shipId = shipId;
     }
 
+    @Override
+    public String toString() {
+        return new StringJoiner("\t")
+                .add(this.alv.get())
+                .add(this.level.get())
+                .add(Optional.ofNullable(this.ship.get())
+                        .map(s -> Messages.getString("ship.name", Ships.shipMst(s) //$NON-NLS-1$
+                                .map(ShipMst::getName)
+                                .orElse(""), s.getLv()))
+                        .orElse(""))
+                .toString();
+    }
+
     /**
      * 装備から装備詳細を生成します
      *
@@ -122,16 +139,16 @@ public class DetailItem {
         Integer id = item.getId();
         DetailItem detail = new DetailItem();
         detail.setId(id);
-        if (item.getLevel() > 0) {
-            detail.setLevel("★+" + item.getLevel());
-        } else {
-            detail.setLevel("");
-        }
-        if (item.getAlv() != null) {
-            detail.setAlv("☆+" + item.getAlv());
-        } else {
-            detail.setAlv("");
-        }
+
+        // 改修
+        detail.setLevel(Optional.ofNullable(item.getLevel())
+                .filter(lv -> lv > 0)
+                .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
+                .orElse(""));
+        // 熟練
+        detail.setAlv(Optional.ofNullable(item.getAlv())
+                .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
+                .orElse(""));
         // 装備している艦娘を探す
         Predicate<Ship> filter = e -> e.getSlot().contains(id) || id.equals(e.getSlotEx());
         Optional<Ship> op = ShipCollection.get()

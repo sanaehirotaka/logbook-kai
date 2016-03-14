@@ -12,11 +12,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import logbook.Messages;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
@@ -143,6 +145,10 @@ public class ItemController extends WindowController {
             this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
             this.ship.setCellFactory(p -> new ShipImageCell());
 
+            this.typeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            this.typeTable.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
+            this.detailTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            this.detailTable.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             // 行を作る
             List<Item> items = SlotitemMstCollection.get()
                     .getSlotitemMap()
@@ -239,7 +245,7 @@ public class ItemController extends WindowController {
                     String name = Ships.shipMst(ship)
                             .map(ShipMst::getName)
                             .orElse("");
-                    this.setText(name + "(Lv" + ship.getLv() + ")");
+                    this.setText(Messages.getString("ship.name", name, ship.getLv())); //$NON-NLS-1$
                 } else {
                     this.setText("未装備");
                 }

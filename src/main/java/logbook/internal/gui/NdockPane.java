@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import logbook.Messages;
 import logbook.bean.Ndock;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
@@ -75,7 +76,7 @@ public class NdockPane extends HBox {
             String name = Ships.shipMst(ship)
                     .map(ShipMst::getName)
                     .orElse("");
-            this.name.setText(name + " (Lv" + ship.getLv() + ")");
+            this.name.setText(Messages.getString("ship.name", name, ship.getLv())); //$NON-NLS-1$
             this.update();
 
         } catch (Exception e) {

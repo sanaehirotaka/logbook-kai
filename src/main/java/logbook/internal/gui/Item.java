@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.util.Comparator;
+import java.util.StringJoiner;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -336,6 +337,26 @@ public class Item implements Comparable<Item> {
     @Override
     public boolean equals(Object obj) {
         return (obj instanceof Item) && this.id.get() == ((Item) obj).id.get();
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner("\t")
+                .add(this.name)
+                .add(this.type.get())
+                .add(Integer.toString(this.count.get()))
+                .add(Integer.toString(this.houg.get()))
+                .add(Integer.toString(this.houm.get()))
+                .add(Integer.toString(this.leng.get()))
+                .add(Integer.toString(this.luck.get()))
+                .add(Integer.toString(this.houk.get()))
+                .add(Integer.toString(this.baku.get()))
+                .add(Integer.toString(this.raig.get()))
+                .add(Integer.toString(this.saku.get()))
+                .add(Integer.toString(this.tais.get()))
+                .add(Integer.toString(this.tyku.get()))
+                .add(Integer.toString(this.souk.get()))
+                .toString();
     }
 
     @Override

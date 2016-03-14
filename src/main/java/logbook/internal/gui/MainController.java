@@ -35,6 +35,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
+import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.bean.Basic;
 import logbook.bean.DeckPort;
@@ -399,7 +400,8 @@ public class MainController extends WindowController {
      */
     private void pushNotifyMission(DeckPort port) {
         if (AppConfig.get().isUseToast()) {
-            this.showNotify(null, "遠征完了", port.getName() + "がまもなく帰投します。");
+            String message = Messages.getString("mission.complete", port.getName()); //$NON-NLS-1$
+            this.showNotify(null, "遠征完了", message);
         }
         if (AppConfig.get().isUseSound()) {
             this.soundNotify();
@@ -443,11 +445,10 @@ public class MainController extends WindowController {
             Ship ship = ShipCollection.get()
                     .getShipMap()
                     .get(ndock.getShipId());
-            String message = "まもなく" +
-                    Ships.shipMst(ship)
-                            .map(ShipMst::getName)
-                            .orElse("")
-                    + " (Lv" + ship.getLv() + ")がお風呂からあがります";
+            String name = Ships.shipMst(ship)
+                    .map(ShipMst::getName)
+                    .orElse("");
+            String message = Messages.getString("ship.ndock", name, ship.getLv()); //$NON-NLS-1$
 
             ImageView img = new ImageView(Ships.shipWithItemImage(ship));
 

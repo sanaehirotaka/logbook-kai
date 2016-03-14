@@ -17,12 +17,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import logbook.Messages;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -187,7 +189,9 @@ public class ShipTablePane extends VBox {
             this.slotEx.setCellValueFactory(new PropertyValueFactory<>("slotEx"));
             this.slotEx.setCellFactory(p -> new ItemImageCell());
 
+            this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.table.setItems(this.shipItems);
+            this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             this.update();
 
         } catch (Exception e) {
@@ -260,12 +264,13 @@ public class ShipTablePane extends VBox {
                 if (mst.isPresent()) {
                     StringBuilder text = new StringBuilder(mst.get().getName());
 
-                    if (item.getAlv() != null && item.getAlv() > 0) {
-                        text.append("☆+" + item.getAlv());
-                    }
-                    if (item.getLevel() > 0) {
-                        text.append("★+" + item.getLevel());
-                    }
+                    text.append(Optional.ofNullable(item.getAlv())
+                            .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
+                            .orElse(""));
+                    text.append(Optional.ofNullable(item.getLevel())
+                            .filter(lv -> lv > 0)
+                            .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
+                            .orElse(""));
                     this.setGraphic(new ImageView(Items.itemImage(mst.get())));
                     this.setText(text.toString());
                 } else {

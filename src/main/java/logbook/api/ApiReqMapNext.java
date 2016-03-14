@@ -21,6 +21,7 @@ import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
+import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.DeckPort;
@@ -83,10 +84,9 @@ public class ApiReqMapNext implements APIListenerSpi {
         for (Ship ship : badlyShips) {
             ImageView node = new ImageView(Ships.shipWithItemImage(ship));
 
-            String message = Ships.shipMst(ship)
+            String message = Messages.getString("ship.badly", Ships.shipMst(ship) //$NON-NLS-1$
                     .map(ShipMst::getName)
-                    .orElse("")
-                    + " (Lv" + ship.getLv() + ")が大破しました";
+                    .orElse(""), ship.getLv());
 
             showNotify(node, "大破警告", message);
         }

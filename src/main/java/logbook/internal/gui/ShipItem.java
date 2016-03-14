@@ -1,13 +1,23 @@
 package logbook.internal.gui;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.StringJoiner;
+import java.util.function.Function;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import logbook.Messages;
 import logbook.bean.Ship;
+import logbook.bean.ShipMst;
+import logbook.bean.SlotItem;
+import logbook.bean.SlotItemCollection;
 import logbook.bean.Stype;
+import logbook.internal.Items;
 import logbook.internal.Ships;
 
 /**
@@ -446,6 +456,52 @@ public class ShipItem {
      */
     public void setSlotEx(int slotEx) {
         this.slotEx = new SimpleIntegerProperty(slotEx);
+    }
+
+    @Override
+    public String toString() {
+        Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+
+        // 装備の名前
+        Function<Integer, String> slotItemName = itemId -> {
+            SlotItem item = itemMap.get(itemId);
+            return Items.slotitemMst(item)
+                    .map(mst -> {
+
+                StringBuilder text = new StringBuilder(mst.getName());
+
+                text.append(Optional.ofNullable(item.getAlv())
+                        .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
+                        .orElse(""));
+                text.append(Optional.ofNullable(item.getLevel())
+                        .filter(lv -> lv > 0)
+                        .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
+                        .orElse(""));
+                return text.toString();
+            }).orElse("");
+        };
+
+        return new StringJoiner("\t")
+                .add(Integer.toString(this.id.get()))
+                .add(Optional.ofNullable(this.ship.get())
+                        .map(s -> Ships.shipMst(s).map(ShipMst::getName).orElse(""))
+                        .orElse(""))
+                .add(this.type.get())
+                .add(Integer.toString(this.lv.get()))
+                .add(Integer.toString(this.cond.get()))
+                .add(this.area.get())
+                .add(Integer.toString(this.seiku.get()))
+                .add(Integer.toString(this.hPower.get()))
+                .add(Integer.toString(this.rPower.get()))
+                .add(Integer.toString(this.yPower.get()))
+                .add(Integer.toString(this.tPower.get()))
+                .add(slotItemName.apply(this.slot1.get()))
+                .add(slotItemName.apply(this.slot2.get()))
+                .add(slotItemName.apply(this.slot3.get()))
+                .add(slotItemName.apply(this.slot4.get()))
+                .add(slotItemName.apply(this.slotEx.get()))
+                .toString();
     }
 
     /**
