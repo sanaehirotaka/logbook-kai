@@ -46,11 +46,14 @@ public class Main extends Application {
                 alert.setContentText("航海日誌を終了しますか？");
                 alert.getButtonTypes().clear();
                 alert.getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-                if (alert.showAndWait().filter(ButtonType.YES::equals).isPresent()) {
-                    AppConfig.get()
-                            .getWindowLocationMap()
-                            .put(controller.getClass().getCanonicalName(), controller.getWindowLocation());
-                }
+                alert.showAndWait()
+                        .filter(ButtonType.NO::equals)
+                        .ifPresent(t -> e.consume());
+            }
+            if (!e.isConsumed()) {
+                AppConfig.get()
+                        .getWindowLocationMap()
+                        .put(controller.getClass().getCanonicalName(), controller.getWindowLocation());
             }
         });
 
