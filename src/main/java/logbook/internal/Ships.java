@@ -86,7 +86,8 @@ public class Ships {
      * @return 大破状態の場合true
      */
     public static boolean isBadlyDamage(Ship ship) {
-        return Double.compare(hpPer(ship), BADLY_DAMAGE) <= 0;
+        double per = hpPer(ship);
+        return Double.compare(per, BADLY_DAMAGE) <= 0 && per > 0;
     }
 
     /**

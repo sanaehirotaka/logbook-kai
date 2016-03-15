@@ -11,6 +11,7 @@ import java.util.Optional;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
@@ -50,13 +51,13 @@ class ShipImage {
     private static final String MC_BANNER_ICON10 = "res.common.MCBannerIcon_10.png";
 
     /** 小破汚れ */
-    private static final String MC_BANNER_SMOKE_IMG0 ="res.common.MCBannerSmokeImg_0.png";
+    private static final String MC_BANNER_SMOKE_IMG0 = "res.common.MCBannerSmokeImg_0.png";
 
     /** 中破汚れ */
-    private static final String MC_BANNER_SMOKE_IMG1 ="res.common.MCBannerSmokeImg_1.png";
+    private static final String MC_BANNER_SMOKE_IMG1 = "res.common.MCBannerSmokeImg_1.png";
 
     /** 大破汚れ */
-    private static final String MC_BANNER_SMOKE_IMG2 ="res.common.MCBannerSmokeImg_2.png";
+    private static final String MC_BANNER_SMOKE_IMG2 = "res.common.MCBannerSmokeImg_2.png";
 
     /** 疲労オレンジ背景 */
     private static final String MC_BANNER_VITAL_MASK0 = "res.common.MCBannerVitalMask_0.png";
@@ -143,6 +144,7 @@ class ShipImage {
                 layers.add(NDOCK_BADGE);
             } else if (Ships.isEscape(ship)) {
                 layers.add(ESCAPE_BADGE);
+                gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
             } else if (Ships.isSlightDamage(ship)) {
                 layers.add(SLIGHT_DAMAGE_BADGE);
                 layers.add(SLIGHT_DAMAGE_BACKGROUND);
@@ -154,6 +156,7 @@ class ShipImage {
                 layers.add(BADLY_DAMAGE_BACKGROUND);
             } else if (Ships.isLost(ship)) {
                 layers.add(LOST_BADGE);
+                gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
             }
             // 疲労
             if (Ships.isOrange(ship)) {
