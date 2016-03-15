@@ -9,9 +9,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import logbook.bean.AppConfig;
 import logbook.internal.Version;
+import logbook.plugin.PluginContainer;
 
 /**
  * JavaFx エントリ・ポイント クラス
@@ -27,6 +29,21 @@ public class Main extends Application {
 
         WindowController controller = loader.getController();
         controller.setWindow(stage);
+
+        // アイコン
+        stage.getIcons().addAll(
+                new Image(PluginContainer.getInstance()
+                        .getClassLoader()
+                        .getResource("logbook/gui/icon_256x256.png").toString()),
+                new Image(PluginContainer.getInstance()
+                        .getClassLoader()
+                        .getResource("logbook/gui/icon_128x128.png").toString()),
+                new Image(PluginContainer.getInstance()
+                        .getClassLoader()
+                        .getResource("logbook/gui/icon_64x64.png").toString()),
+                new Image(PluginContainer.getInstance()
+                        .getClassLoader()
+                        .getResource("logbook/gui/icon_32x32.png").toString()));
 
         // 最前面に表示する
         stage.setAlwaysOnTop(AppConfig.get().isOnTop());
