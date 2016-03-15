@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,9 @@ public final class AppConfig implements Serializable {
 
     /** 音量 */
     private int soundLevel = 85;
+
+    /** 報告書の保存先 */
+    private String reportPath = new File("").getAbsolutePath();
 
     /** 資材ログ保存間隔 */
     private int materialLogInterval = 300;
@@ -155,6 +159,22 @@ public final class AppConfig implements Serializable {
      */
     public void setSoundLevel(int soundLevel) {
         this.soundLevel = soundLevel;
+    }
+
+    /**
+     * 報告書の保存先を取得します。
+     * @return 報告書の保存先
+     */
+    public String getReportPath() {
+        return reportPath;
+    }
+
+    /**
+     * 報告書の保存先を設定します。
+     * @param reportPath 報告書の保存先
+     */
+    public void setReportPath(String reportPath) {
+        this.reportPath = reportPath;
     }
 
     /**
