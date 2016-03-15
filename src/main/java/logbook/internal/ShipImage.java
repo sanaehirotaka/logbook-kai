@@ -141,6 +141,8 @@ class ShipImage {
             // バッチ
             if (isOnNdock) {
                 layers.add(NDOCK_BADGE);
+            } else if (Ships.isEscape(ship)) {
+                layers.add(ESCAPE_BADGE);
             } else if (Ships.isSlightDamage(ship)) {
                 layers.add(SLIGHT_DAMAGE_BADGE);
                 layers.add(SLIGHT_DAMAGE_BACKGROUND);

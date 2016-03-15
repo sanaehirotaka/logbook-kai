@@ -11,6 +11,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import javafx.scene.image.Image;
+import logbook.bean.AppCondition;
 import logbook.bean.Basic;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -96,6 +97,17 @@ public class Ships {
      */
     public static boolean isLost(Ship ship) {
         return ship.getNowhp() == 0;
+    }
+
+    /**
+     * 艦娘が退避状態か判定します
+     *
+     * @param ship 退避
+     * @return 退避状態の場合true
+     */
+    public static boolean isEscape(Ship ship) {
+        return AppCondition.get()
+                .getEscape().contains(ship.getId());
     }
 
     /**

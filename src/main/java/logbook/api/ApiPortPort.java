@@ -41,10 +41,7 @@ public class ApiPortPort implements APIListenerSpi {
             this.apiNdock(data.getJsonArray("api_ndock"));
             this.apiMaterial(data.getJsonArray("api_material"));
             this.apiCombinedFlag(data);
-
-            // 出撃中ではない
-            AppCondition.get()
-                    .setMapStart(Boolean.FALSE);
+            this.condition();
         }
         Config.getDefault().store();
     }
@@ -161,5 +158,16 @@ public class ApiPortPort implements APIListenerSpi {
         }
         // 補強増設
         itemMap.remove(ship.getSlotEx());
+    }
+
+    /**
+     * 出撃などの状態を更新する
+     */
+    private void condition() {
+        AppCondition condition = AppCondition.get();
+        // 出撃中ではない
+        condition.setMapStart(Boolean.FALSE);
+        // 退避を削除
+        condition.getEscape().clear();
     }
 }

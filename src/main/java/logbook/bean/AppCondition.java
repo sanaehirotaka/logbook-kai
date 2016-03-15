@@ -1,6 +1,8 @@
 package logbook.bean;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import logbook.internal.Config;
 
@@ -10,7 +12,7 @@ import logbook.internal.Config;
  */
 public class AppCondition implements Serializable {
 
-    private static final long serialVersionUID = 6218938657590214575L;
+    private static final long serialVersionUID = 4744529121773992869L;
 
     /** 連合艦隊 */
     private Boolean combinedFlag = Boolean.FALSE;
@@ -23,6 +25,12 @@ public class AppCondition implements Serializable {
 
     /** 出撃艦隊 */
     private Integer deckId = 0;
+
+    /** 最後の戦闘結果 */
+    private BattleResult battleResult;
+
+    /** 退避艦ID */
+    private Set<Integer> escape = new HashSet<>();
 
     /**
      * 連合艦隊を取得します。
@@ -84,8 +92,40 @@ public class AppCondition implements Serializable {
      * 出撃艦隊を設定します。
      * @param deckId 出撃艦隊
      */
-    public void setDeckId(Integer DeckId) {
-        this.deckId = DeckId;
+    public void setDeckId(Integer deckId) {
+        this.deckId = deckId;
+    }
+
+    /**
+     * 最後の戦闘結果を取得します。
+     * @return 最後の戦闘結果
+     */
+    public BattleResult getBattleResult() {
+        return this.battleResult;
+    }
+
+    /**
+     * 最後の戦闘結果を設定します。
+     * @param battleResult 最後の戦闘結果
+     */
+    public void setBattleResult(BattleResult battleResult) {
+        this.battleResult = battleResult;
+    }
+
+    /**
+     * 退避艦IDを取得します。
+     * @return 退避艦ID
+     */
+    public Set<Integer> getEscape() {
+        return this.escape;
+    }
+
+    /**
+     * 退避艦IDを設定します。
+     * @param escape 退避艦ID
+     */
+    public void setEscape(Set<Integer> escape) {
+        this.escape = escape;
     }
 
     /**
