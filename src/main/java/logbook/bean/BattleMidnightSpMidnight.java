@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
-import logbook.bean.BattleTypes.IBattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.internal.JsonHelper;
@@ -14,7 +13,7 @@ import logbook.internal.JsonHelper;
  * 夜戦
  *
  */
-public class BattleMidnightSpMidnight implements IBattle, IMidnightBattle, IFormation, Serializable {
+public class BattleMidnightSpMidnight implements IMidnightBattle, IFormation, Serializable {
 
     private static final long serialVersionUID = 1948191471496244360L;
 

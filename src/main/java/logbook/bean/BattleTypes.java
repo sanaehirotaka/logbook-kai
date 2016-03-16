@@ -19,7 +19,7 @@ public class BattleTypes {
     /**
      * 戦闘を表します
      */
-    public interface IBattle {
+    public interface IBattle extends Serializable {
 
         /**
          * api_dock_id/api_deck_idを取得します。
@@ -103,7 +103,7 @@ public class BattleTypes {
     /**
      * 昼戦を表します
      */
-    public interface ISortieBattle {
+    public interface ISortieBattle extends IBattle {
 
         /**
          * api_midnight_flagを取得します。
@@ -127,7 +127,7 @@ public class BattleTypes {
     /**
      * 夜戦を表します
      */
-    public interface IMidnightBattle {
+    public interface IMidnightBattle extends IBattle {
 
         /**
          * api_touch_planeを取得します。
@@ -151,7 +151,7 @@ public class BattleTypes {
     /**
      * 陣形を表します
      */
-    public interface IFormation {
+    public interface IFormation extends IBattle {
 
         /**
          * api_formationを取得します。
@@ -163,7 +163,7 @@ public class BattleTypes {
     /**
      * 航空戦フェイズ
      */
-    public interface IKouku {
+    public interface IKouku extends IBattle {
 
         /**
          * api_koukuを取得します。
@@ -187,7 +187,7 @@ public class BattleTypes {
     /**
      * 支援フェイズ
      */
-    public interface ISupport {
+    public interface ISupport extends IBattle {
 
         /**
          * api_support_flagを取得します。

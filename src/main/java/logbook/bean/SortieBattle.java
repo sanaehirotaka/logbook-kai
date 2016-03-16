@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
-import logbook.bean.BattleTypes.IBattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.ISortieBattle;
@@ -16,7 +15,7 @@ import logbook.internal.JsonHelper;
  * 昼戦
  *
  */
-public class SortieBattle implements IBattle, ISortieBattle, IFormation, IKouku, ISupport, Serializable {
+public class SortieBattle implements ISortieBattle, IFormation, IKouku, ISupport, Serializable {
 
     private static final long serialVersionUID = -6068428886000294930L;
 
