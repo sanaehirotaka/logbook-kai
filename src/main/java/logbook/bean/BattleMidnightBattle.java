@@ -5,15 +5,17 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import logbook.bean.BattleTypes.IBattle;
+import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.internal.JsonHelper;
 
 /**
  * 夜戦
  *
  */
-public class BattleMidnightBattle implements Serializable {
+public class BattleMidnightBattle implements IBattle, IMidnightBattle, Serializable {
 
-    private static final long serialVersionUID = 8179214543366567239L;
+    private static final long serialVersionUID = 1993839270894519690L;
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;
@@ -55,6 +57,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_dock_id/api_deck_idを取得します。
      * @return api_dock_id/api_deck_id
      */
+    @Override
     public Integer getDockId() {
         return this.dockId;
     }
@@ -71,6 +74,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_ship_keを取得します。
      * @return api_ship_ke
      */
+    @Override
     public List<Integer> getShipKe() {
         return this.shipKe;
     }
@@ -87,6 +91,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_ship_lvを取得します。
      * @return api_ship_lv
      */
+    @Override
     public List<Integer> getShipLv() {
         return this.shipLv;
     }
@@ -103,6 +108,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_nowhpsを取得します。
      * @return api_nowhps
      */
+    @Override
     public List<Integer> getNowhps() {
         return this.nowhps;
     }
@@ -119,6 +125,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_maxhpsを取得します。
      * @return api_maxhps
      */
+    @Override
     public List<Integer> getMaxhps() {
         return this.maxhps;
     }
@@ -135,6 +142,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_eSlotを取得します。
      * @return api_eSlot
      */
+    @Override
     public List<List<Integer>> getESlot() {
         return this.eSlot;
     }
@@ -151,6 +159,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_eKyoukaを取得します。
      * @return api_eKyouka
      */
+    @Override
     public List<List<Integer>> getEKyouka() {
         return this.eKyouka;
     }
@@ -167,6 +176,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_fParamを取得します。
      * @return api_fParam
      */
+    @Override
     public List<List<Integer>> getFParam() {
         return this.fParam;
     }
@@ -183,6 +193,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_eParamを取得します。
      * @return api_eParam
      */
+    @Override
     public List<List<Integer>> getEParam() {
         return this.eParam;
     }
@@ -199,6 +210,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_touch_planeを取得します。
      * @return api_touch_plane
      */
+    @Override
     public List<Integer> getTouchPlane() {
         return this.touchPlane;
     }
@@ -215,6 +227,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_flare_posを取得します。
      * @return api_flare_pos
      */
+    @Override
     public List<Integer> getFlarePos() {
         return this.flarePos;
     }
@@ -231,6 +244,7 @@ public class BattleMidnightBattle implements Serializable {
      * api_hougekiを取得します。
      * @return api_hougeki
      */
+    @Override
     public BattleTypes.MidnightHougeki getHougeki() {
         return this.hougeki;
     }

@@ -5,13 +5,18 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import logbook.bean.BattleTypes.IAirbattle;
+import logbook.bean.BattleTypes.ICombinedBattle;
+import logbook.bean.BattleTypes.IFormation;
+import logbook.bean.BattleTypes.ISortieBattle;
+import logbook.bean.BattleTypes.ISupport;
 import logbook.internal.JsonHelper;
 
 /**
  * 航空戦(連合艦隊)
  *
  */
-public class CombinedBattleAirbattle implements Serializable {
+public class CombinedBattleAirbattle implements ICombinedBattle, ISortieBattle, IFormation, IAirbattle, ISupport, Serializable {
 
     private static final long serialVersionUID = 4971402570408932441L;
 
@@ -82,6 +87,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_dock_id/api_deck_idを取得します。
      * @return api_dock_id/api_deck_id
      */
+    @Override
     public Integer getDockId() {
         return this.dockId;
     }
@@ -98,6 +104,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_ship_keを取得します。
      * @return api_ship_ke
      */
+    @Override
     public List<Integer> getShipKe() {
         return this.shipKe;
     }
@@ -114,6 +121,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_ship_lvを取得します。
      * @return api_ship_lv
      */
+    @Override
     public List<Integer> getShipLv() {
         return this.shipLv;
     }
@@ -130,6 +138,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_nowhpsを取得します。
      * @return api_nowhps
      */
+    @Override
     public List<Integer> getNowhps() {
         return this.nowhps;
     }
@@ -146,6 +155,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_maxhpsを取得します。
      * @return api_maxhps
      */
+    @Override
     public List<Integer> getMaxhps() {
         return this.maxhps;
     }
@@ -162,6 +172,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_nowhps_combinedを取得します。
      * @return api_nowhps_combined
      */
+    @Override
     public List<Integer> getNowhpsCombined() {
         return this.nowhpsCombined;
     }
@@ -178,6 +189,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_maxhps_combinedを取得します。
      * @return api_maxhps_combined
      */
+    @Override
     public List<Integer> getMaxhpsCombined() {
         return this.maxhpsCombined;
     }
@@ -194,6 +206,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_midnight_flagを取得します。
      * @return api_midnight_flag
      */
+    @Override
     public Boolean getMidnightFlag() {
         return this.midnightFlag;
     }
@@ -210,6 +223,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_eSlotを取得します。
      * @return api_eSlot
      */
+    @Override
     public List<List<Integer>> getESlot() {
         return this.eSlot;
     }
@@ -226,6 +240,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_eKyoukaを取得します。
      * @return api_eKyouka
      */
+    @Override
     public List<List<Integer>> getEKyouka() {
         return this.eKyouka;
     }
@@ -242,6 +257,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_fParamを取得します。
      * @return api_fParam
      */
+    @Override
     public List<List<Integer>> getFParam() {
         return this.fParam;
     }
@@ -258,6 +274,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_eParamを取得します。
      * @return api_eParam
      */
+    @Override
     public List<List<Integer>> getEParam() {
         return this.eParam;
     }
@@ -274,6 +291,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_fParam_combinedを取得します。
      * @return api_fParam_combined
      */
+    @Override
     public List<List<Integer>> getFParamCombined() {
         return this.fParamCombined;
     }
@@ -290,6 +308,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_searchを取得します。
      * @return api_search
      */
+    @Override
     public List<Integer> getSearch() {
         return this.search;
     }
@@ -306,6 +325,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_formationを取得します。
      * @return api_formation
      */
+    @Override
     public List<Integer> getFormation() {
         return this.formation;
     }
@@ -322,6 +342,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_stage_flagを取得します。
      * @return api_stage_flag
      */
+    @Override
     public List<Integer> getStageFlag() {
         return this.stageFlag;
     }
@@ -338,6 +359,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_koukuを取得します。
      * @return api_kouku
      */
+    @Override
     public BattleTypes.Kouku getKouku() {
         return this.kouku;
     }
@@ -354,6 +376,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_support_flagを取得します。
      * @return api_support_flag
      */
+    @Override
     public Boolean getSupportFlag() {
         return this.supportFlag;
     }
@@ -370,6 +393,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_support_infoを取得します。
      * @return api_support_info
      */
+    @Override
     public BattleTypes.SupportInfo getSupportInfo() {
         return this.supportInfo;
     }
@@ -402,6 +426,7 @@ public class CombinedBattleAirbattle implements Serializable {
      * api_kouku2を取得します。
      * @return api_kouku2
      */
+    @Override
     public BattleTypes.Kouku getKouku2() {
         return this.kouku2;
     }

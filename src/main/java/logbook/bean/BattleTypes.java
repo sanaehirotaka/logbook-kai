@@ -17,6 +17,192 @@ public class BattleTypes {
     }
 
     /**
+     * 戦闘を表します
+     */
+    public interface IBattle {
+
+        /**
+         * api_dock_id/api_deck_idを取得します。
+         * @return api_dock_id/api_deck_id
+         */
+        Integer getDockId();
+
+        /**
+         * api_ship_keを取得します。
+         * @return api_ship_ke
+         */
+        List<Integer> getShipKe();
+
+        /**
+         * api_ship_lvを取得します。
+         * @return api_ship_lv
+         */
+        List<Integer> getShipLv();
+
+        /**
+         * api_nowhpsを取得します。
+         * @return api_nowhps
+         */
+        List<Integer> getNowhps();
+
+        /**
+         * api_maxhpsを取得します。
+         * @return api_maxhps
+         */
+        List<Integer> getMaxhps();
+
+        /**
+         * api_eSlotを取得します。
+         * @return api_eSlot
+         */
+        List<List<Integer>> getESlot();
+
+        /**
+         * api_eKyoukaを取得します。
+         * @return api_eKyouka
+         */
+        List<List<Integer>> getEKyouka();
+
+        /**
+         * api_fParamを取得します。
+         * @return api_fParam
+         */
+        List<List<Integer>> getFParam();
+
+        /**
+         * api_eParamを取得します。
+         * @return api_eParam
+         */
+        List<List<Integer>> getEParam();
+    }
+
+    /**
+     * 連合艦隊での戦闘を表します
+     */
+    public interface ICombinedBattle extends IBattle {
+
+        /**
+         * api_nowhps_combinedを取得します。
+         * @return api_nowhps_combined
+         */
+        List<Integer> getNowhpsCombined();
+
+        /**
+         * api_maxhps_combinedを取得します。
+         * @return api_maxhps_combined
+         */
+        List<Integer> getMaxhpsCombined();
+
+        /**
+         * api_fParam_combinedを取得します。
+         * @return api_fParam_combined
+         */
+        List<List<Integer>> getFParamCombined();
+    }
+
+    /**
+     * 昼戦を表します
+     */
+    public interface ISortieBattle {
+
+        /**
+         * api_midnight_flagを取得します。
+         * @return api_midnight_flag
+         */
+        Boolean getMidnightFlag();
+
+        /**
+         * api_searchを取得します。
+         * @return api_search
+         */
+        List<Integer> getSearch();
+
+        /**
+         * api_stage_flagを取得します。
+         * @return api_stage_flag
+         */
+        List<Integer> getStageFlag();
+    }
+
+    /**
+     * 夜戦を表します
+     */
+    public interface IMidnightBattle {
+
+        /**
+         * api_touch_planeを取得します。
+         * @return api_touch_plane
+         */
+        List<Integer> getTouchPlane();
+
+        /**
+         * api_flare_posを取得します。
+         * @return api_flare_pos
+         */
+        List<Integer> getFlarePos();
+
+        /**
+         * api_hougekiを取得します。
+         * @return api_hougeki
+         */
+        BattleTypes.MidnightHougeki getHougeki();
+    }
+
+    /**
+     * 陣形を表します
+     */
+    public interface IFormation {
+
+        /**
+         * api_formationを取得します。
+         * @return api_formation
+         */
+        List<Integer> getFormation();
+    }
+
+    /**
+     * 航空戦フェイズ
+     */
+    public interface IKouku {
+
+        /**
+         * api_koukuを取得します。
+         * @return api_kouku
+         */
+        BattleTypes.Kouku getKouku();
+    }
+
+    /**
+     * 航空戦
+     */
+    public interface IAirbattle extends IKouku {
+
+        /**
+         * api_kouku2を取得します。
+         * @return api_kouku2
+         */
+        BattleTypes.Kouku getKouku2();
+    }
+
+    /**
+     * 支援フェイズ
+     */
+    public interface ISupport {
+
+        /**
+         * api_support_flagを取得します。
+         * @return api_support_flag
+         */
+        Boolean getSupportFlag();
+
+        /**
+         * api_support_infoを取得します。
+         * @return api_support_info
+         */
+        BattleTypes.SupportInfo getSupportInfo();
+    }
+
+    /**
      * 航空戦
      */
     public static class Kouku implements Serializable {
