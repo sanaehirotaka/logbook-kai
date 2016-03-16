@@ -1761,4 +1761,80 @@ public class BattleTypes {
             return bean;
         }
     }
+
+    /**
+     * 陣形
+     */
+    public enum Formation {
+        単縦陣,
+        複縦陣,
+        輪形陣,
+        梯形陣,
+        単横陣,
+        第一警戒航行序列,
+        第二警戒航行序列,
+        第三警戒航行序列,
+        第四警戒航行序列;
+
+        /**
+         * 陣形を取得します
+         * @param f api_formation[0],api_formation[1]
+         * @return 陣形
+         */
+        public static Formation toFormation(int f) {
+            switch (f) {
+            case 1:
+                return 単縦陣;
+            case 2:
+                return 複縦陣;
+            case 3:
+                return 輪形陣;
+            case 4:
+                return 梯形陣;
+            case 5:
+                return 単横陣;
+            case 11:
+                return 第一警戒航行序列;
+            case 12:
+                return 第二警戒航行序列;
+            case 13:
+                return 第三警戒航行序列;
+            case 14:
+                return 第四警戒航行序列;
+            default:
+                return 単縦陣;
+            }
+        }
+    }
+
+    /**
+     * 艦隊行動
+     */
+    public enum Intercept {
+        同航戦,
+        反航戦,
+        Ｔ字戦有利,
+        Ｔ字戦不利;
+
+        /**
+         * 艦隊行動を取得します
+         *
+         * @param i api_formation[2]
+         * @return 艦隊行動
+         */
+        public static Intercept toIntercept(int i) {
+            switch (i) {
+            case 1:
+                return 同航戦;
+            case 2:
+                return 反航戦;
+            case 3:
+                return Ｔ字戦有利;
+            case 4:
+                return Ｔ字戦不利;
+            default:
+                return 同航戦;
+            }
+        }
+    }
 }

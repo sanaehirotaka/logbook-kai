@@ -12,7 +12,7 @@ import logbook.internal.JsonHelper;
  */
 public class MapStartNext implements Serializable {
 
-    private static final long serialVersionUID = -3128114218760301060L;
+    private static final long serialVersionUID = -4272803839336790705L;
 
     /** api_rashin_flg */
     private Integer rashinFlg;
@@ -67,6 +67,9 @@ public class MapStartNext implements Serializable {
 
     /** api_select_route */
     private MapTypes.SelectRoute selectRoute;
+
+    /** api_from_no */
+    private Integer fromNo;
 
     /**
      * api_rashin_flgを取得します。
@@ -357,6 +360,22 @@ public class MapStartNext implements Serializable {
     }
 
     /**
+     * api_from_noを取得します。
+     * @return api_from_no
+     */
+    public Integer getFromNo() {
+        return this.fromNo;
+    }
+
+    /**
+     * api_from_noを設定します。
+     * @param fromNo api_from_no
+     */
+    public void setFromNo(Integer fromNo) {
+        this.fromNo = fromNo;
+    }
+
+    /**
      * JsonObjectから{@link MapStartNext}を構築します
      *
      * @param json JsonObject
@@ -382,7 +401,8 @@ public class MapStartNext implements Serializable {
                 .set("api_enemy", bean::setEnemy, MapTypes.Enemy::toEnemy)
                 .set("api_happening", bean::setHappening, MapTypes.Happening::toHappening)
                 .set("api_itemget", bean::setItemget, MapTypes.Itemget::toItemget)
-                .set("api_select_route", bean::setSelectRoute, MapTypes.SelectRoute::toSelectRoute);
+                .set("api_select_route", bean::setSelectRoute, MapTypes.SelectRoute::toSelectRoute)
+                .setInteger("api_from_no", bean::setFromNo);
         return bean;
     }
 }

@@ -11,6 +11,7 @@ import logbook.bean.BattleResult;
 import logbook.bean.BattleResult.Escape;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.internal.log.BattleLog;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -23,24 +24,26 @@ public class ApiReqCombinedBattleGobackPort implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        // 戦闘結果
-        BattleResult result = AppCondition.get()
-                .getBattleResult();
-        Escape escape = result.getEscape();
 
-        Set<Integer> escapeSet = AppCondition.get()
-                .getEscape();
+        BattleLog log = AppCondition.get().getBattleResult();
+        if (log != null) {
+            BattleResult result = log.getResult();
+            Escape escape = result.getEscape();
 
-        // 退避
-        Optional.of(escape.getEscapeIdx())
-                .map(e -> e.get(0))
-                .map(this::getShipId)
-                .ifPresent(escapeSet::add);
-        // 護衛
-        Optional.of(escape.getTowIdx())
-                .map(e -> e.get(0))
-                .map(this::getShipId)
-                .ifPresent(escapeSet::add);
+            Set<Integer> escapeSet = AppCondition.get()
+                    .getEscape();
+
+            // 退避
+            Optional.of(escape.getEscapeIdx())
+                    .map(e -> e.get(0))
+                    .map(this::getShipId)
+                    .ifPresent(escapeSet::add);
+            // 護衛
+            Optional.of(escape.getTowIdx())
+                    .map(e -> e.get(0))
+                    .map(this::getShipId)
+                    .ifPresent(escapeSet::add);
+        }
     }
 
     /**

@@ -3,6 +3,8 @@ package logbook.api;
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
+import logbook.bean.MapStartNext;
+import logbook.internal.log.BattleLog;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -16,14 +18,22 @@ public class ApiReqMapStart implements APIListenerSpi {
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
 
-        Integer deckId = Integer.valueOf(req.getParameterMap()
-                .get("api_deck_id")
-                .get(0));
+        JsonObject data = json.getJsonObject("api_data");
+        if (data != null) {
+            BattleLog log = new BattleLog();
+            log.setNext(MapStartNext.toMapStartNext(data));
+            AppCondition.get()
+                    .setBattleResult(log);
 
-        AppCondition.get()
-                .setMapStart(Boolean.TRUE);
-        AppCondition.get()
-                .setDeckId(deckId);
+            Integer deckId = Integer.valueOf(req.getParameterMap()
+                    .get("api_deck_id")
+                    .get(0));
+
+            AppCondition.get()
+                    .setMapStart(Boolean.TRUE);
+            AppCondition.get()
+                    .setDeckId(deckId);
+        }
     }
 
 }

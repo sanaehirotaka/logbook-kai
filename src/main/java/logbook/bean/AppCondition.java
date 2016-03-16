@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import logbook.internal.Config;
+import logbook.internal.log.BattleLog;
 
 /**
  * 出撃などの状態
@@ -27,7 +28,7 @@ public class AppCondition implements Serializable {
     private Integer deckId = 0;
 
     /** 最後の戦闘結果 */
-    private BattleResult battleResult;
+    private BattleLog battleResult;
 
     /** 退避艦ID */
     private Set<Integer> escape = new HashSet<>();
@@ -100,7 +101,7 @@ public class AppCondition implements Serializable {
      * 最後の戦闘結果を取得します。
      * @return 最後の戦闘結果
      */
-    public BattleResult getBattleResult() {
+    public BattleLog getBattleResult() {
         return this.battleResult;
     }
 
@@ -108,7 +109,7 @@ public class AppCondition implements Serializable {
      * 最後の戦闘結果を設定します。
      * @param battleResult 最後の戦闘結果
      */
-    public void setBattleResult(BattleResult battleResult) {
+    public void setBattleResult(BattleLog battleResult) {
         this.battleResult = battleResult;
     }
 

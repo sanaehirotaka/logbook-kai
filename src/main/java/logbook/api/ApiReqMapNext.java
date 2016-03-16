@@ -26,10 +26,12 @@ import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Ships;
+import logbook.internal.log.BattleLog;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -42,21 +44,30 @@ public class ApiReqMapNext implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        // 大破した艦娘
-        List<Ship> badlyShips = badlyShips(DeckPortCollection.get()
-                .getDeckPortMap()
-                .get(AppCondition.get()
-                        .getDeckId()));
 
-        // 連合艦隊時は第2艦隊も見る
-        if (AppCondition.get().getCombinedFlag()) {
-            badlyShips.addAll(badlyShips(DeckPortCollection.get()
+        JsonObject data = json.getJsonObject("api_data");
+        if (data != null) {
+            BattleLog log = new BattleLog();
+            log.setNext(MapStartNext.toMapStartNext(data));
+            AppCondition.get()
+                    .setBattleResult(log);
+
+            // 大破した艦娘
+            List<Ship> badlyShips = badlyShips(DeckPortCollection.get()
                     .getDeckPortMap()
-                    .get(2)));
-        }
+                    .get(AppCondition.get()
+                            .getDeckId()));
 
-        if (!badlyShips.isEmpty()) {
-            Platform.runLater(() -> displayAlert(badlyShips));
+            // 連合艦隊時は第2艦隊も見る
+            if (AppCondition.get().getCombinedFlag()) {
+                badlyShips.addAll(badlyShips(DeckPortCollection.get()
+                        .getDeckPortMap()
+                        .get(2)));
+            }
+
+            if (!badlyShips.isEmpty()) {
+                Platform.runLater(() -> displayAlert(badlyShips));
+            }
         }
     }
 
