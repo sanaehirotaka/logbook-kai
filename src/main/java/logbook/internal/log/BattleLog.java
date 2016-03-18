@@ -1,13 +1,14 @@
 package logbook.internal.log;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import logbook.bean.BattleResult;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IMidnightBattle;
-import logbook.bean.DeckPort;
 import logbook.bean.MapStartNext;
+import logbook.bean.Ship;
 
 /**
  * 戦闘ログ
@@ -30,7 +31,7 @@ public class BattleLog implements Serializable {
     private BattleResult result;
 
     /** 艦隊スナップショット */
-    private Map<Integer, DeckPort> deckMap;
+    private Map<Integer, List<Ship>> deckMap;
 
     /**
      * 開始/進撃を取得します。
@@ -100,7 +101,7 @@ public class BattleLog implements Serializable {
      * 艦隊スナップショットを取得します。
      * @return 艦隊スナップショット
      */
-    public Map<Integer, DeckPort> getDeckMap() {
+    public Map<Integer, List<Ship>> getDeckMap() {
         return this.deckMap;
     }
 
@@ -108,7 +109,7 @@ public class BattleLog implements Serializable {
      * 艦隊スナップショットを設定します。
      * @param deckMap 艦隊スナップショット
      */
-    public void setDeckMap(Map<Integer, DeckPort> deckMap) {
+    public void setDeckMap(Map<Integer, List<Ship>> deckMap) {
         this.deckMap = deckMap;
     }
 
