@@ -976,6 +976,7 @@ public class BattleResult implements Serializable {
         BattleResult bean = new BattleResult();
         JsonHelper.bind(json)
                 .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
+                .setString("api_win_rank", bean::setWinRank)
                 .setInteger("api_get_exp", bean::setGetExp)
                 .setInteger("api_mvp", bean::setMvp)
                 .setInteger("api_member_lv", bean::setMemberLv)
