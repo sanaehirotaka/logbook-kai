@@ -85,21 +85,25 @@ public final class APIListener implements ContentListenerSpi {
             try (JsonReader jsonreader = Json.createReader(stream)) {
                 JsonObject json = jsonreader.readObject();
 
-                String uri = requestMetaData.getRequestURI();
-                List<Pair> pairs = this.services.getOrDefault(uri, Collections.emptyList());
-
-                for (Pair pair : pairs) {
-                    Runnable task = () -> this.createTask(pair, json, requestMetaData, responseMetaData);
-                    ThreadManager.getExecutorService().submit(task);
-                }
-
-                for (Pair pair : this.all) {
-                    Runnable task = () -> this.createTask(pair, json, requestMetaData, responseMetaData);
-                    ThreadManager.getExecutorService().submit(task);
-                }
+                this.send(requestMetaData, responseMetaData, json);
             }
         } catch (Exception e) {
             LoggerHolder.LOG.warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
+        }
+    }
+
+    void send(RequestMetaData req, ResponseMetaData res, JsonObject json) {
+        String uri = req.getRequestURI();
+        List<Pair> pairs = this.services.getOrDefault(uri, Collections.emptyList());
+
+        for (Pair pair : pairs) {
+            Runnable task = () -> this.createTask(pair, json, req, res);
+            ThreadManager.getExecutorService().submit(task);
+        }
+
+        for (Pair pair : this.all) {
+            Runnable task = () -> this.createTask(pair, json, req, res);
+            ThreadManager.getExecutorService().submit(task);
         }
     }
 
