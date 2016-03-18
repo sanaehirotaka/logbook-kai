@@ -47,10 +47,14 @@ public class ApiReqMapNext implements APIListenerSpi {
 
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
-            BattleLog log = new BattleLog();
-            log.setNext(MapStartNext.toMapStartNext(data));
-            AppCondition.get()
-                    .setBattleResult(log);
+            BattleLog log = AppCondition.get()
+                    .getBattleResult();
+            if (log == null) {
+                log = new BattleLog();
+                AppCondition.get()
+                        .setBattleResult(log);
+            }
+            log.getNext().add(MapStartNext.toMapStartNext(data));
 
             // 大破した艦娘
             List<Ship> badlyShips = badlyShips(DeckPortCollection.get()
