@@ -114,10 +114,7 @@ public final class APIListener implements ContentListenerSpi {
                 LoggerHolder.LOG.debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
                         className, req.getRequestURI());
             }
-            long start = System.currentTimeMillis();
             pair.getValue().accept(json, req, res);
-
-            System.out.println(req.getRequestURI() + "::" + (System.currentTimeMillis() - start));
         } catch (Exception e) {
             LoggerHolder.LOG.warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
             LoggerHolder.LOG.warn(json);
