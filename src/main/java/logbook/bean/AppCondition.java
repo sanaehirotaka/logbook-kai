@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import logbook.internal.Config;
-import logbook.internal.log.BattleLog;
 
 /**
  * 出撃などの状態
@@ -32,6 +31,9 @@ public class AppCondition implements Serializable {
 
     /** 退避艦ID */
     private Set<Integer> escape = new HashSet<>();
+
+    /** 最後に資材ログに書き込んだ時間 */
+    private Integer wroteMaterialLogLast = 0;
 
     /**
      * 連合艦隊を取得します。
@@ -127,6 +129,22 @@ public class AppCondition implements Serializable {
      */
     public void setEscape(Set<Integer> escape) {
         this.escape = escape;
+    }
+
+    /**
+     * 最後に資材ログに書き込んだ時間を取得します。
+     * @return 最後に資材ログに書き込んだ時間
+     */
+    public Integer getWroteMaterialLogLast() {
+        return this.wroteMaterialLogLast;
+    }
+
+    /**
+     * 最後に資材ログに書き込んだ時間を設定します。
+     * @param wroteMaterialLogLast 最後に資材ログに書き込んだ時間
+     */
+    public void setWroteMaterialLogLast(Integer wroteMaterialLogLast) {
+        this.wroteMaterialLogLast = wroteMaterialLogLast;
     }
 
     /**

@@ -7,11 +7,11 @@ import java.util.Set;
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
+import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
 import logbook.bean.BattleResult.Escape;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
-import logbook.internal.log.BattleLog;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 

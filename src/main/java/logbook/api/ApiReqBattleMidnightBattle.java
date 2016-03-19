@@ -3,8 +3,8 @@ package logbook.api;
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
+import logbook.bean.BattleLog;
 import logbook.bean.BattleMidnightBattle;
-import logbook.internal.log.BattleLog;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 

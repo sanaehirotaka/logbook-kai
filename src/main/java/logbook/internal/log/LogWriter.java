@@ -6,82 +6,156 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.function.Function;
+
+import logbook.bean.AppConfig;
 
 /**
  * ログ書き込みをサポートします
  *
- * @param <T> 書き込むオブジェクト
  */
-public abstract class LogWriter<T> {
+public class LogWriter {
 
     /** CR+LF */
-    protected static final String CRLF = "\r\n";
+    public static final String CRLF = "\r\n";
 
     /** LF */
-    protected static final String LF = "\n";
+    public static final String LF = "\n";
+
+    /** デフォルトの文字コード  */
+    private static final Charset DEFAULT_CHARSET = Charset.forName("MS932");
+
+    /** デフォルトのファイルを開く方法を指定するオプション */
+    private static final OpenOption[] DEFAULT_OPTION = new OpenOption[] { StandardOpenOption.CREATE,
+            StandardOpenOption.APPEND };
+
+    /** 文字コード */
+    private Charset charset = DEFAULT_CHARSET;
+
+    /** ファイルを開く方法を指定するオプション */
+    private OpenOption[] options = DEFAULT_OPTION;
+
+    /** 行の区切り文字 */
+    private String delimiter = CRLF;
+
+    /** ヘッダー */
+    private String header;
+
+    /** ファイルパス */
+    private Path filePath;
+
+    /** 代替ファイルパス */
+    private Path alterFilePath;
 
     /**
      * ファイルの新規作成時に先頭に書き込まれるヘッダー
      *
-     * @return ヘッダー
+     * @param header ヘッダー
+     * @return LogWriter
      */
-    abstract protected String header();
+    public LogWriter header(String header) {
+        this.header = header;
+        return this;
+    }
 
     /**
      * ログファイルへのパス
      *
-     * @return ファイルパス
+     * @param file ファイルパス
+     * @return LogWriter
      */
-    abstract protected Path filePath();
+    public LogWriter file(String file) {
+        this.filePath = Paths.get(AppConfig.get().getReportPath()).resolve(file);
+        return this;
+    }
+
+    /**
+     * ログファイルへのパス
+     *
+     * @param filePath ファイルパス
+     * @return LogWriter
+     */
+    public LogWriter filePath(Path filePath) {
+        this.filePath = filePath;
+        return this;
+    }
 
     /**
      * 代替ログファイルへのパス(ログファイルへ書き込めない場合に使用)
      *
-     * @return ファイルパス
+     * @param alterFile ファイルパス
+     * @return LogWriter
      */
-    abstract protected Path alterFilePath();
+    public LogWriter alterFile(String alterFile) {
+        this.alterFilePath = Paths.get(AppConfig.get().getReportPath()).resolve(alterFile);
+        return this;
+    }
+
+    /**
+     * 代替ログファイルへのパス(ログファイルへ書き込めない場合に使用)
+     *
+     * @param alterFilePath ファイルパス
+     * @return LogWriter
+     */
+    public LogWriter alterFilePath(Path alterFilePath) {
+        this.alterFilePath = alterFilePath;
+        return this;
+    }
 
     /**
      * ログファイルの文字コード
      *
-     * @return 文字コード
+     * @param charset 文字コード
+     * @return LogWriter
      */
-    protected Charset charset() {
-        return Charset.forName("MS932");
+    public LogWriter charset(Charset charset) {
+        this.charset = charset;
+        return this;
     }
 
     /**
      * ファイルを開く方法を指定するオプション
      *
-     * @return オプション
+     * @param options オプション
+     * @return LogWriter
      */
-    protected OpenOption[] openOption() {
-        return new OpenOption[] { StandardOpenOption.CREATE, StandardOpenOption.APPEND };
+    public LogWriter openOption(OpenOption[] options) {
+        this.options = options;
+        return this;
     }
 
     /**
      * 行の区切り文字
      *
-     * @return 区切り文字
+     * @param delimiter 区切り文字
+     * @return LogWriter
      */
-    protected String delimiter() {
-        return CRLF;
+    public LogWriter delimiter(String delimiter) {
+        this.delimiter = delimiter;
+        return this;
     }
 
     /**
-     * オブジェクトをログファイルに書き込みます
+     * オブジェクトをファイルに書き込みます
      *
+     * @param <T> 書き込むオブジェクトの型
      * @param obj 書き込むオブジェクト
+     * @param converter オブジェクトをStringへ変換するコンバーター
      * @throws IOException 入出力エラーが発生した場合
      */
-    protected void write(T obj) throws IOException {
-        String line = obj.toString();
+    public <T> void write(T obj, Function<T, String> converter) throws IOException {
+        String line = converter.apply(obj);
 
         try {
-            this.write(this.filePath(), line);
+            this.write(this.filePath, line);
         } catch (IOException e) {
-            this.write(this.alterFilePath(), line);
+            if (this.alterFilePath != null) {
+                this.write(this.alterFilePath, line);
+            } else {
+                throw e;
+            }
         }
     }
 
@@ -92,13 +166,13 @@ public abstract class LogWriter<T> {
                 Files.createDirectories(parent);
             }
         }
-        try (OutputStream writer = Files.newOutputStream(path, this.openOption())) {
+        try (OutputStream writer = Files.newOutputStream(path, this.options)) {
             if (!Files.exists(path) || (Files.size(path) <= 0)) {
-                writer.write(this.header().getBytes(this.charset()));
-                writer.write(this.delimiter().getBytes(this.charset()));
+                writer.write(this.header.getBytes(this.charset));
+                writer.write(this.delimiter.getBytes(this.charset));
             }
-            writer.write(line.getBytes(this.charset()));
-            writer.write(this.delimiter().getBytes(this.charset()));
+            writer.write(line.getBytes(this.charset));
+            writer.write(this.delimiter.getBytes(this.charset));
         }
     }
 }

@@ -24,6 +24,7 @@ import javafx.util.Duration;
 import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
+import logbook.bean.BattleLog;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.MapStartNext;
@@ -31,7 +32,6 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Ships;
-import logbook.internal.log.BattleLog;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 

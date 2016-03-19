@@ -1837,4 +1837,38 @@ public class BattleTypes {
             }
         }
     }
+
+    /**
+     * 制空権表示
+     */
+    public enum DispSeiku {
+        制空均衡,
+        制空権確保,
+        航空優勢,
+        航空劣勢,
+        制空権喪失;
+
+        /**
+         * 制空権表示を取得します
+         *
+         * @param i api_disp_seiku
+         * @return 制空権表示
+         */
+        public static DispSeiku toDispSeiku(int i) {
+            switch (i) {
+            case 0:
+                return 制空均衡;
+            case 1:
+                return 制空権確保;
+            case 2:
+                return 航空優勢;
+            case 3:
+                return 航空劣勢;
+            case 4:
+                return 制空権喪失;
+            default:
+                return 制空均衡;
+            }
+        }
+    }
 }
