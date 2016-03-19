@@ -19,6 +19,7 @@ import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.MapStartNext;
+import logbook.bean.Material;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
@@ -65,23 +66,24 @@ public final class Logs {
     /** 海戦・ドロップ報告書_alternativefile.csv */
     public static final String BATTLE_RESULT_ALT = "海戦・ドロップ報告書_alternativefile.csv";
 
-    /**
-     * タイムゾーンをJSTとして現在の日付/時間を取得します
-     *
-     * @return 現在の日付/時間
-     */
-    public static ZonedDateTime now() {
-        return ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
-    }
+    /** 資材ログヘッダー */
+    public static final String MATERIAL_HEADER = new StringJoiner(",")
+            .add("日付")
+            .add("燃料")
+            .add("弾薬")
+            .add("鋼材")
+            .add("ボーキ")
+            .add("高速修復材")
+            .add("高速建造材")
+            .add("開発資材")
+            .add("改修資材")
+            .toString();
 
-    /**
-     * タイムゾーンをJSTとして現在の日付/時間を"yyyy-MM-dd HH:mm:ss"形式の文字列として取得します
-     *
-     * @return 現在の日付/時間
-     */
-    public static String nowString() {
-        return DATE_FORMAT.format(now());
-    }
+    /** 資材ログ.csv */
+    public static final String MATERIAL = "資材ログ.csv";
+
+    /** 資材ログ_alternativefile.csv */
+    public static final String MATERIAL_ALT = "資材ログ_alternativefile.csv";
 
     /**
      * 戦闘ログを文字列にします
@@ -116,7 +118,7 @@ public final class Logs {
 
         StringJoiner joiner = new StringJoiner(",");
         // 日付
-        joiner.add(Logs.nowString());
+        joiner.add(log.getTime());
         // 海域
         joiner.add(result.getQuestName());
         // マス
@@ -210,5 +212,53 @@ public final class Logs {
             }
         }
         return joiner.toString();
+    }
+
+    /**
+     * 資材ログを文字列にします
+     *
+     * @param material 資材ログ
+     * @return 資材ログの文字列
+     */
+    public static String formatMaterial(Map<Integer, Material> material) {
+        StringJoiner joiner = new StringJoiner(",");
+        // 日付
+        joiner.add(nowString());
+        // 燃料
+        joiner.add(String.valueOf(material.get(1).getValue()));
+        // 弾薬
+        joiner.add(String.valueOf(material.get(2).getValue()));
+        // 鋼材
+        joiner.add(String.valueOf(material.get(3).getValue()));
+        // ボーキ
+        joiner.add(String.valueOf(material.get(4).getValue()));
+        // 高速修復材
+        joiner.add(String.valueOf(material.get(5).getValue()));
+        // 高速建造材
+        joiner.add(String.valueOf(material.get(6).getValue()));
+        // 開発資材
+        joiner.add(String.valueOf(material.get(7).getValue()));
+        // 改修資材
+        joiner.add(String.valueOf(material.get(8).getValue()));
+
+        return joiner.toString();
+    }
+
+    /**
+     * タイムゾーンをJSTとして現在の日付/時間を取得します
+     *
+     * @return 現在の日付/時間
+     */
+    public static ZonedDateTime now() {
+        return ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
+    }
+
+    /**
+     * タイムゾーンをJSTとして現在の日付/時間を"yyyy-MM-dd HH:mm:ss"形式の文字列として取得します
+     *
+     * @return 現在の日付/時間
+     */
+    public static String nowString() {
+        return DATE_FORMAT.format(now());
     }
 }

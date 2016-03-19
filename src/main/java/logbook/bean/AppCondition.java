@@ -12,19 +12,19 @@ import logbook.internal.Config;
  */
 public class AppCondition implements Serializable {
 
-    private static final long serialVersionUID = 4744529121773992869L;
+    private static final long serialVersionUID = -7213537629508340991L;
 
     /** 連合艦隊 */
-    private Boolean combinedFlag = Boolean.FALSE;
+    private boolean combinedFlag;
 
     /** 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊)) */
-    private Integer combinedType = 0;
+    private int combinedType = 0;
 
     /** 出撃中 */
-    private Boolean mapStart = Boolean.FALSE;
+    private boolean mapStart;
 
     /** 出撃艦隊 */
-    private Integer deckId = 0;
+    private int deckId = 0;
 
     /** 最後の戦闘結果 */
     private BattleLog battleResult;
@@ -33,13 +33,13 @@ public class AppCondition implements Serializable {
     private Set<Integer> escape = new HashSet<>();
 
     /** 最後に資材ログに書き込んだ時間 */
-    private Integer wroteMaterialLogLast = 0;
+    private long wroteMaterialLogLast = 0;
 
     /**
      * 連合艦隊を取得します。
      * @return 連合艦隊
      */
-    public Boolean getCombinedFlag() {
+    public boolean isCombinedFlag() {
         return this.combinedFlag;
     }
 
@@ -47,7 +47,7 @@ public class AppCondition implements Serializable {
      * 連合艦隊を設定します。
      * @param combinedFlag 連合艦隊
      */
-    public void setCombinedFlag(Boolean combinedFlag) {
+    public void setCombinedFlag(boolean combinedFlag) {
         this.combinedFlag = combinedFlag;
     }
 
@@ -55,7 +55,7 @@ public class AppCondition implements Serializable {
      * 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))を取得します。
      * @return 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))
      */
-    public Integer getCombinedType() {
+    public int getCombinedType() {
         return this.combinedType;
     }
 
@@ -63,7 +63,7 @@ public class AppCondition implements Serializable {
      * 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))を設定します。
      * @param combinedType 連合艦隊 (0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, -x=解隊(-1=機動部隊, -2=水上部隊))
      */
-    public void setCombinedType(Integer combinedType) {
+    public void setCombinedType(int combinedType) {
         this.combinedType = combinedType;
     }
 
@@ -71,7 +71,7 @@ public class AppCondition implements Serializable {
      * 出撃中を取得します。
      * @return 出撃中
      */
-    public Boolean getMapStart() {
+    public boolean isMapStart() {
         return this.mapStart;
     }
 
@@ -79,7 +79,7 @@ public class AppCondition implements Serializable {
      * 出撃中を設定します。
      * @param mapStart 出撃中
      */
-    public void setMapStart(Boolean mapStart) {
+    public void setMapStart(boolean mapStart) {
         this.mapStart = mapStart;
     }
 
@@ -87,7 +87,7 @@ public class AppCondition implements Serializable {
      * 出撃艦隊を取得します。
      * @return 出撃艦隊
      */
-    public Integer getDeckId() {
+    public int getDeckId() {
         return this.deckId;
     }
 
@@ -95,7 +95,7 @@ public class AppCondition implements Serializable {
      * 出撃艦隊を設定します。
      * @param deckId 出撃艦隊
      */
-    public void setDeckId(Integer deckId) {
+    public void setDeckId(int deckId) {
         this.deckId = deckId;
     }
 
@@ -135,7 +135,7 @@ public class AppCondition implements Serializable {
      * 最後に資材ログに書き込んだ時間を取得します。
      * @return 最後に資材ログに書き込んだ時間
      */
-    public Integer getWroteMaterialLogLast() {
+    public long getWroteMaterialLogLast() {
         return this.wroteMaterialLogLast;
     }
 
@@ -143,7 +143,7 @@ public class AppCondition implements Serializable {
      * 最後に資材ログに書き込んだ時間を設定します。
      * @param wroteMaterialLogLast 最後に資材ログに書き込んだ時間
      */
-    public void setWroteMaterialLogLast(Integer wroteMaterialLogLast) {
+    public void setWroteMaterialLogLast(long wroteMaterialLogLast) {
         this.wroteMaterialLogLast = wroteMaterialLogLast;
     }
 

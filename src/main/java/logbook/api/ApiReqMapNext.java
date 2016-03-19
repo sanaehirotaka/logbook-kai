@@ -63,7 +63,7 @@ public class ApiReqMapNext implements APIListenerSpi {
                             .getDeckId()));
 
             // 連合艦隊時は第2艦隊も見る
-            if (AppCondition.get().getCombinedFlag()) {
+            if (AppCondition.get().isCombinedFlag()) {
                 badlyShips.addAll(badlyShips(DeckPortCollection.get()
                         .getDeckPortMap()
                         .get(2)));
