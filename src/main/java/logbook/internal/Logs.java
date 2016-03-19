@@ -1,4 +1,4 @@
-package logbook.internal.log;
+package logbook.internal;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -25,7 +25,6 @@ import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
-import logbook.internal.Ships;
 
 /**
  * ログの表示、書き込みで使用する

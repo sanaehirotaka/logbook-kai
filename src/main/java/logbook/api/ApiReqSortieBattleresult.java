@@ -1,15 +1,11 @@
 package logbook.api;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
@@ -18,8 +14,8 @@ import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
-import logbook.internal.log.LogWriter;
-import logbook.internal.log.Logs;
+import logbook.internal.LogWriter;
+import logbook.internal.Logs;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -56,21 +52,12 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                 log.setTime(Logs.nowString());
                 log.setDeckMap(deckMap);
 
-                try {
-                    new LogWriter()
-                            .header(Logs.BATTLE_RESULT_HEADER)
-                            .file(Logs.BATTLE_RESULT)
-                            .alterFile(Logs.BATTLE_RESULT_ALT)
-                            .write(log, Logs::formatBattleLog);
-                } catch (IOException e) {
-                    LoggerHolder.LOG.warn(Logs.BATTLE_RESULT + "に書き込めませんでした", e);
-                }
+                new LogWriter()
+                        .header(Logs.BATTLE_RESULT_HEADER)
+                        .file(Logs.BATTLE_RESULT)
+                        .alterFile(Logs.BATTLE_RESULT_ALT)
+                        .write(log, Logs::formatBattleLog);
             }
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ApiReqSortieBattleresult.class);
     }
 }

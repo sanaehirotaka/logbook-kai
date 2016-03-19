@@ -1,4 +1,4 @@
-package logbook.internal.log;
+package logbook.internal;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +9,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Function;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import logbook.bean.AppConfig;
 
@@ -143,19 +146,22 @@ public class LogWriter {
      * @param <T> 書き込むオブジェクトの型
      * @param obj 書き込むオブジェクト
      * @param converter オブジェクトをStringへ変換するコンバーター
-     * @throws IOException 入出力エラーが発生した場合
      */
-    public <T> void write(T obj, Function<T, String> converter) throws IOException {
-        String line = converter.apply(obj);
-
+    public <T> void write(T obj, Function<T, String> converter) {
         try {
-            this.write(this.filePath, line);
-        } catch (IOException e) {
-            if (this.alterFilePath != null) {
-                this.write(this.alterFilePath, line);
-            } else {
-                throw e;
+            String line = converter.apply(obj);
+
+            try {
+                this.write(this.filePath, line);
+            } catch (IOException e) {
+                if (this.alterFilePath != null) {
+                    this.write(this.alterFilePath, line);
+                } else {
+                    throw e;
+                }
             }
+        } catch (IOException e) {
+            LoggerHolder.LOG.warn(String.valueOf(this.filePath) + "に書き込めません", e);
         }
     }
 
@@ -174,5 +180,10 @@ public class LogWriter {
             writer.write(line.getBytes(this.charset));
             writer.write(this.delimiter.getBytes(this.charset));
         }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(LogWriter.class);
     }
 }

@@ -1,6 +1,5 @@
 package logbook.api;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
@@ -8,9 +7,6 @@ import java.util.function.Predicate;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
@@ -26,9 +22,9 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Config;
 import logbook.internal.JsonHelper;
+import logbook.internal.LogWriter;
+import logbook.internal.Logs;
 import logbook.internal.ThreadManager;
-import logbook.internal.log.LogWriter;
-import logbook.internal.log.Logs;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -133,15 +129,11 @@ public class ApiPortPort implements APIListenerSpi {
                 .getWroteMaterialLogLast());
         if (duration.compareTo(Duration.ofSeconds(AppConfig.get().getMaterialLogInterval())) >= 0) {
             Map<Integer, Material> material = JsonHelper.toMap(array, Material::getId, Material::toMaterial);
-            try {
-                new LogWriter()
-                        .header(Logs.MATERIAL_HEADER)
-                        .file(Logs.MATERIAL)
-                        .alterFile(Logs.MATERIAL_ALT)
-                        .write(material, Logs::formatMaterial);
-            } catch (IOException e) {
-                LoggerHolder.LOG.warn(Logs.MATERIAL + "に書き込めませんでした", e);
-            }
+            new LogWriter()
+                    .header(Logs.MATERIAL_HEADER)
+                    .file(Logs.MATERIAL)
+                    .alterFile(Logs.MATERIAL_ALT)
+                    .write(material, Logs::formatMaterial);
             AppCondition.get()
                     .setWroteMaterialLogLast(System.currentTimeMillis());
         }
@@ -190,10 +182,5 @@ public class ApiPortPort implements APIListenerSpi {
         condition.setMapStart(Boolean.FALSE);
         // 退避を削除
         condition.getEscape().clear();
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ApiPortPort.class);
     }
 }
