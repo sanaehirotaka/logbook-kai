@@ -154,8 +154,8 @@ public class MainController extends WindowController {
             stage.initOwner(this.getWindow());
             stage.setTitle("所有装備一覧");
             stage.show();
-        } catch (Exception e1) {
-            LoggerHolder.LOG.error("所有装備一覧の初期化に失敗しました", e);
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("所有装備一覧の初期化に失敗しました", ex);
         }
     }
 
@@ -178,8 +178,32 @@ public class MainController extends WindowController {
             stage.initOwner(this.getWindow());
             stage.setTitle("所有艦娘一覧");
             stage.show();
-        } catch (Exception e1) {
-            LoggerHolder.LOG.error("所有艦娘一覧の初期化に失敗しました", e);
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("所有艦娘一覧の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
+     * お風呂に入りたい艦娘
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void ndock(ActionEvent e) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/require_ndock.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("お風呂に入りたい艦娘");
+            stage.show();
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("お風呂に入りたい艦娘の初期化に失敗しました", ex);
         }
     }
 
@@ -202,8 +226,8 @@ public class MainController extends WindowController {
             stage.initOwner(this.getWindow());
             stage.setTitle("設定");
             stage.show();
-        } catch (Exception e1) {
-            LoggerHolder.LOG.error("設定の初期化に失敗しました", e);
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
         }
     }
 

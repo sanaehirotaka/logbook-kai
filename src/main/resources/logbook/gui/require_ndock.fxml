@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="ndockWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.RequireNdockController">
+   <children>
+      <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
+          <TableColumn fx:id="ship" prefWidth="260.0" text="艦娘" />
+          <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
+          <TableColumn fx:id="time" prefWidth="100.0" text="時間" />
+          <TableColumn fx:id="end" prefWidth="100.0" text="今から" />
+          <TableColumn fx:id="fuel" prefWidth="50.0" text="燃料" />
+          <TableColumn fx:id="metal" prefWidth="50.0" text="鋼材" />
+        </columns>
+      </TableView>
+   </children>
+</VBox>
