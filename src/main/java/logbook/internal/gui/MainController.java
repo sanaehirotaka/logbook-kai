@@ -237,19 +237,23 @@ public class MainController extends WindowController {
      * @param e
      */
     void update(ActionEvent e) {
-        // 所有装備/所有艦娘
-        this.button();
-        // 艦隊タブ・遠征
-        this.checkPort();
-        // 入渠ドック
-        this.ndock();
+        try {
+            // 所有装備/所有艦娘
+            this.button();
+            // 艦隊タブ・遠征
+            this.checkPort();
+            // 入渠ドック
+            this.ndock();
 
-        // 遠征・入渠完了時に通知をする
-        if (AppConfig.get().isUseNotification()) {
-            // 遠征の通知
-            this.checkNotifyMission();
-            // 入渠ドックの通知
-            this.checkNotifyNdock();
+            // 遠征・入渠完了時に通知をする
+            if (AppConfig.get().isUseNotification()) {
+                // 遠征の通知
+                this.checkNotifyMission();
+                // 入渠ドックの通知
+                this.checkNotifyNdock();
+            }
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
         }
     }
 
