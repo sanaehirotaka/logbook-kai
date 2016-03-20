@@ -8,7 +8,9 @@ import java.util.stream.Collectors;
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
+import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
+import logbook.bean.BattleLogCollection;
 import logbook.bean.BattleResult;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
@@ -51,7 +53,14 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                 }
                 log.setTime(Logs.nowString());
                 log.setDeckMap(deckMap);
-
+                // 戦闘ログの保存
+                List<BattleLog> logs = BattleLogCollection.get()
+                        .getLogs();
+                logs.add(log);
+                // あふれたログを削除する
+                while (logs.size() > AppConfig.get().getLogSize()) {
+                    logs.remove(0);
+                }
                 new LogWriter()
                         .header(Logs.BATTLE_RESULT_HEADER)
                         .file(Logs.BATTLE_RESULT)

@@ -35,6 +35,9 @@ public final class AppConfig implements Serializable {
 
     /** 資材ログ保存間隔 */
     private int materialLogInterval = 300;
+    
+    /** ログの保存数 */
+    private int logSize = 100;
 
     /** 最前面に表示する */
     private boolean onTop = true;
@@ -191,6 +194,22 @@ public final class AppConfig implements Serializable {
      */
     public void setMaterialLogInterval(int materialLogInterval) {
         this.materialLogInterval = materialLogInterval;
+    }
+
+    /**
+     * ログの保存数を取得します。
+     * @return ログの保存数
+     */
+    public int getLogSize() {
+        return logSize;
+    }
+
+    /**
+     * ログの保存数を設定します。
+     * @param logSize ログの保存数
+     */
+    public void setLogSize(int logSize) {
+        this.logSize = logSize;
     }
 
     /**
