@@ -2,10 +2,10 @@ package logbook.internal;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
@@ -24,7 +24,7 @@ public final class Config {
 
     private final Path dir;
 
-    private final Map<Class<?>, Object> map = new IdentityHashMap<>();
+    private final Map<Class<?>, Object> map = new ConcurrentHashMap<>();
 
     /**
      * アプリケーション設定の読み書きを指定のディレクトリで行います
@@ -48,17 +48,14 @@ public final class Config {
         Objects.requireNonNull(clazz);
         Objects.requireNonNull(def);
 
-        T instance;
-        synchronized (this.map) {
-            instance = (T) this.map.computeIfAbsent(clazz, key -> {
-                ConfigReader<T> reader = new ConfigReader<>(this.getPath(key));
-                T v = reader.read((Class<T>) key);
-                if (v == null) {
-                    v = def.get();
-                }
-                return v;
-            });
-        }
+        T instance = (T) this.map.computeIfAbsent(clazz, key -> {
+            ConfigReader<T> reader = new ConfigReader<>(this.getPath(key));
+            T v = reader.read((Class<T>) key);
+            if (v == null) {
+                v = def.get();
+            }
+            return v;
+        });
         return instance;
     }
 
@@ -66,11 +63,9 @@ public final class Config {
      * 読み込まれたすべてのBeanインスタンスをXMLEncoderテキスト表現でファイルに書き込みます
      */
     public void store() {
-        synchronized (this.map) {
-            this.map.entrySet()
-                    .parallelStream()
-                    .forEach(this::store);
-        }
+        this.map.entrySet()
+                .parallelStream()
+                .forEach(this::store);
     }
 
     /**
