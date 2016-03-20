@@ -1,5 +1,10 @@
 package logbook.api;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
@@ -20,8 +25,16 @@ public class ApiGetMemberDeck implements APIListenerSpi {
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
         JsonArray array = json.getJsonArray("api_data");
         if (array != null) {
+            Map<Integer, DeckPort> deckMap = JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort);
             DeckPortCollection.get()
-                    .setDeckPortMap(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
+                    .setDeckPortMap(deckMap);
+            DeckPortCollection.get()
+                    .setMissionShips(deckMap.values()
+                            .stream()
+                            .filter(d -> d.getMission().get(0) != 0)
+                            .map(DeckPort::getShip)
+                            .flatMap(List::stream)
+                            .collect(Collectors.toCollection(LinkedHashSet::new)));
         }
     }
 

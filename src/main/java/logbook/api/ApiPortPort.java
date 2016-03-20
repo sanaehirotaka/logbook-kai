@@ -2,6 +2,7 @@ package logbook.api;
 
 import java.time.Duration;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -93,8 +94,16 @@ public class ApiPortPort implements APIListenerSpi {
      * @param array api_deck_port
      */
     private void apiDeckPort(JsonArray array) {
+        Map<Integer, DeckPort> deckMap = JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort);
         DeckPortCollection.get()
-                .setDeckPortMap(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
+                .setDeckPortMap(deckMap);
+        DeckPortCollection.get()
+                .setMissionShips(deckMap.values()
+                        .stream()
+                        .filter(d -> d.getMission().get(0) != 0)
+                        .map(DeckPort::getShip)
+                        .flatMap(List::stream)
+                        .collect(Collectors.toCollection(LinkedHashSet::new)));
     }
 
     /**

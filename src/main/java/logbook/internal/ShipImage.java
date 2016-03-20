@@ -15,6 +15,7 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
+import logbook.bean.DeckPortCollection;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -139,9 +140,15 @@ class ShipImage {
             boolean isOnNdock = NdockCollection.get()
                     .getNdockSet()
                     .contains(ship.getId());
+            // 遠征中
+            boolean isMission = DeckPortCollection.get()
+                    .getMissionShips()
+                    .contains(ship.getId());
             // バッチ
             if (isOnNdock) {
                 layers.add(NDOCK_BADGE);
+            } else if (isMission) {
+                layers.add(MISSION_BADGE);
             } else if (Ships.isEscape(ship)) {
                 layers.add(ESCAPE_BADGE);
                 gc.applyEffect(new ColorAdjust(0, -1, 0, 0));

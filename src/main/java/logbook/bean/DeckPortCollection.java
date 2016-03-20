@@ -2,7 +2,9 @@ package logbook.bean;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import logbook.internal.Config;
 
@@ -12,10 +14,13 @@ import logbook.internal.Config;
  */
 public class DeckPortCollection implements Serializable {
 
-    private static final long serialVersionUID = -7413838279692739373L;
+    private static final long serialVersionUID = -1465703933249298173L;
 
     /** 艦隊 */
     private Map<Integer, DeckPort> deckPortMap = new LinkedHashMap<>();
+
+    /** 遠征中の艦娘 */
+    private Set<Integer> missionShips = new LinkedHashSet<>();
 
     /**
      * 艦隊を取得します。
@@ -31,6 +36,22 @@ public class DeckPortCollection implements Serializable {
      */
     public void setDeckPortMap(Map<Integer, DeckPort> deckPortMap) {
         this.deckPortMap = deckPortMap;
+    }
+
+    /**
+     * 遠征中の艦娘を取得します。
+     * @return 遠征中の艦娘
+     */
+    public Set<Integer> getMissionShips() {
+        return this.missionShips;
+    }
+
+    /**
+     * 遠征中の艦娘を設定します。
+     * @param missionShips 遠征中の艦娘
+     */
+    public void setMissionShips(Set<Integer> missionShips) {
+        this.missionShips = missionShips;
     }
 
     /**
