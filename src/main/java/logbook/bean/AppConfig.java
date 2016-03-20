@@ -35,7 +35,7 @@ public final class AppConfig implements Serializable {
 
     /** 資材ログ保存間隔 */
     private int materialLogInterval = 300;
-    
+
     /** ログの保存数 */
     private int logSize = 100;
 
@@ -69,8 +69,11 @@ public final class AppConfig implements Serializable {
     /** プラグインを有効にする */
     private boolean usePlugin = true;
 
-    /** 通知サウンドディレクトリ */
-    private String notifySoundDir = "./sounds/nofity/"; //$NON-NLS-1$
+    /** 遠征通知サウンドディレクトリ */
+    private String missionSoundDir = "./sounds/mission/"; //$NON-NLS-1$
+
+    /** 入渠通知サウンドディレクトリ */
+    private String ndockSoundDir = "./sounds/ndock/"; //$NON-NLS-1$
 
     /** 警告サウンドディレクトリ */
     private String alertSoundDir = "./sounds/alert/"; //$NON-NLS-1$
@@ -169,7 +172,7 @@ public final class AppConfig implements Serializable {
      * @return 報告書の保存先
      */
     public String getReportPath() {
-        return reportPath;
+        return this.reportPath;
     }
 
     /**
@@ -201,7 +204,7 @@ public final class AppConfig implements Serializable {
      * @return ログの保存数
      */
     public int getLogSize() {
-        return logSize;
+        return this.logSize;
     }
 
     /**
@@ -373,19 +376,35 @@ public final class AppConfig implements Serializable {
     }
 
     /**
-     * 通知サウンドディレクトリを取得します。
-     * @return 通知サウンドディレクトリ
+     * 遠征通知サウンドディレクトリを取得します。
+     * @return 遠征通知サウンドディレクトリ
      */
-    public String getNotifySoundDir() {
-        return this.notifySoundDir;
+    public String getMissionSoundDir() {
+        return missionSoundDir;
     }
 
     /**
-     * 通知サウンドディレクトリを設定します。
-     * @param nofitySoundDir 通知サウンドディレクトリ
+     * 遠征通知サウンドディレクトリを設定します。
+     * @param missionSoundDir 遠征通知サウンドディレクトリ
      */
-    public void setNotifySoundDir(String nofitySoundDir) {
-        this.notifySoundDir = nofitySoundDir;
+    public void setMissionSoundDir(String missionSoundDir) {
+        this.missionSoundDir = missionSoundDir;
+    }
+
+    /**
+     * 入渠通知サウンドディレクトリを取得します。
+     * @return 入渠通知サウンドディレクトリ
+     */
+    public String getNdockSoundDir() {
+        return ndockSoundDir;
+    }
+
+    /**
+     * 入渠通知サウンドディレクトリを設定します。
+     * @param ndockSoundDir 入渠通知サウンドディレクトリ
+     */
+    public void setNdockSoundDir(String ndockSoundDir) {
+        this.ndockSoundDir = ndockSoundDir;
     }
 
     /**

@@ -1,9 +1,7 @@
 package logbook.api;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,6 +29,7 @@ import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
+import logbook.internal.Audios;
 import logbook.internal.Ships;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
@@ -83,18 +82,11 @@ public class ApiReqMapNext implements APIListenerSpi {
     private static void displayAlert(List<Ship> badlyShips) {
         try {
             Path dir = Paths.get(AppConfig.get().getAlertSoundDir());
-            if (Files.isDirectory(dir)) {
-                List<Path> list = Files.list(dir)
-                        .filter(Files::isRegularFile)
-                        .collect(Collectors.toList());
-                if (list.size() > 0) {
-                    Collections.shuffle(list);
-                    Path file = list.get(0);
-
-                    AudioClip clip = new AudioClip(file.toUri().toString());
-                    clip.setVolume(AppConfig.get().getSoundLevel() / 100D);
-                    clip.play();
-                }
+            Path p = Audios.randomAudioFile(dir);
+            if (p != null) {
+                AudioClip clip = new AudioClip(p.toUri().toString());
+                clip.setVolume(AppConfig.get().getSoundLevel() / 100D);
+                clip.play();
             }
         } catch (Exception e) {
             LoggerHolder.LOG.warn("サウンド通知に失敗しました", e);

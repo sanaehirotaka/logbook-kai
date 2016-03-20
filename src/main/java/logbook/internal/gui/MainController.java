@@ -1,17 +1,13 @@
 package logbook.internal.gui;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,6 +42,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
+import logbook.internal.Audios;
 import logbook.internal.Ships;
 import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
@@ -432,7 +429,7 @@ public class MainController extends WindowController {
             this.showNotify(null, "遠征完了", message);
         }
         if (AppConfig.get().isUseSound()) {
-            this.soundNotify();
+            this.soundNotify(Paths.get(AppConfig.get().getMissionSoundDir()));
         }
     }
 
@@ -483,7 +480,7 @@ public class MainController extends WindowController {
             this.showNotify(img, "修復完了", message);
         }
         if (AppConfig.get().isUseSound()) {
-            this.soundNotify();
+            this.soundNotify(Paths.get(AppConfig.get().getNdockSoundDir()));
         }
     }
 
@@ -530,22 +527,14 @@ public class MainController extends WindowController {
     /**
      * サウンド通知
      */
-    private void soundNotify() {
+    private void soundNotify(Path dir) {
         if (this.clip == null || !this.clip.isPlaying()) {
             try {
-                Path dir = Paths.get(AppConfig.get().getNotifySoundDir());
-                if (Files.isDirectory(dir)) {
-                    List<Path> list = Files.list(dir)
-                            .filter(Files::isRegularFile)
-                            .collect(Collectors.toList());
-                    if (list.size() > 0) {
-                        Collections.shuffle(list);
-                        Path file = list.get(0);
-
-                        this.clip = new AudioClip(file.toUri().toString());
-                        this.clip.setVolume(AppConfig.get().getSoundLevel() / 100D);
-                        this.clip.play();
-                    }
+                Path p = Audios.randomAudioFile(dir);
+                if (p != null) {
+                    this.clip = new AudioClip(p.toUri().toString());
+                    this.clip.setVolume(AppConfig.get().getSoundLevel() / 100D);
+                    this.clip.play();
                 }
             } catch (Exception e) {
                 LoggerHolder.LOG.warn("サウンド通知に失敗しました", e);
