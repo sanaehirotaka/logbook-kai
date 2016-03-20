@@ -3,7 +3,7 @@ package logbook.internal;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -177,7 +177,7 @@ public final class JsonHelper {
      */
     public static List<Integer> checkedToIntegerList(JsonValue val) {
         if (val instanceof JsonArray) {
-            return toList((JsonArray)val, JsonHelper::toInteger);
+            return toList((JsonArray) val, JsonHelper::toInteger);
         }
         return Collections.emptyList();
     }
@@ -203,7 +203,7 @@ public final class JsonHelper {
      */
     public static List<Double> checkedToDoubleList(JsonValue val) {
         if (val instanceof JsonArray) {
-            return toList((JsonArray)val, JsonHelper::toDouble);
+            return toList((JsonArray) val, JsonHelper::toDouble);
         }
         return Collections.emptyList();
     }
@@ -229,7 +229,7 @@ public final class JsonHelper {
      */
     public static List<BigDecimal> checkedToBigDecimalList(JsonValue val) {
         if (val instanceof JsonArray) {
-            return toList((JsonArray)val, JsonHelper::toBigDecimal);
+            return toList((JsonArray) val, JsonHelper::toBigDecimal);
         }
         return Collections.emptyList();
     }
@@ -253,7 +253,7 @@ public final class JsonHelper {
      */
     public static List<String> checkedToStringList(JsonValue val) {
         if (val instanceof JsonArray) {
-            return toList((JsonArray)val, JsonHelper::toString);
+            return toList((JsonArray) val, JsonHelper::toString);
         }
         return Collections.emptyList();
     }
@@ -302,7 +302,7 @@ public final class JsonHelper {
     @SuppressWarnings("unchecked")
     public static <T extends JsonValue, K, R> Map<K, R> toMap(JsonArray array, Function<R, K> keyMapper,
             Function<T, R> valueMapper) {
-        Map<K, R> map = new HashMap<>();
+        Map<K, R> map = new LinkedHashMap<>();
         for (JsonValue val : array) {
             R r = valueMapper.apply((T) val);
             map.put(keyMapper.apply(r), r);
@@ -324,7 +324,7 @@ public final class JsonHelper {
     @SuppressWarnings("unchecked")
     public static <T extends JsonValue, K, R> Map<K, R> toMap(JsonObject obj, Function<String, K> keyMapper,
             Function<T, R> valueMapper) {
-        Map<K, R> map = new HashMap<>();
+        Map<K, R> map = new LinkedHashMap<>();
         obj.forEach((k, v) -> {
             R r = valueMapper.apply((T) v);
             map.put(keyMapper.apply(k), r);

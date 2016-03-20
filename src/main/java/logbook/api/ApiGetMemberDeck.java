@@ -1,7 +1,5 @@
 package logbook.api;
 
-import java.util.Map;
-
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
@@ -22,10 +20,8 @@ public class ApiGetMemberDeck implements APIListenerSpi {
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
         JsonArray array = json.getJsonArray("api_data");
         if (array != null) {
-            Map<Integer, DeckPort> map = DeckPortCollection.get()
-                    .getDeckPortMap();
-            map.clear();
-            map.putAll(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
+            DeckPortCollection.get()
+                    .setDeckPortMap(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
         }
     }
 

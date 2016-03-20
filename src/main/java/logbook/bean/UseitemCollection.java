@@ -1,7 +1,7 @@
 package logbook.bean;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
@@ -15,7 +15,7 @@ public class UseitemCollection implements Serializable {
     private static final long serialVersionUID = -3813660780247992556L;
 
     /** アイテム */
-    private Map<Integer, Useitem> useitemMap = new HashMap<>();
+    private Map<Integer, Useitem> useitemMap = new LinkedHashMap<>();
 
     /**
      * アイテムを取得します。

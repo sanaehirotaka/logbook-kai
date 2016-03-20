@@ -1,7 +1,7 @@
 package logbook.bean;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
@@ -15,7 +15,7 @@ public class ShipMstCollection implements Serializable {
     private static final long serialVersionUID = 3473178293202796312L;
 
     /** 艦娘 */
-    private Map<Integer, ShipMst> shipMap = new HashMap<>();
+    private Map<Integer, ShipMst> shipMap = new LinkedHashMap<>();
 
     /**
      * 艦娘を取得します。

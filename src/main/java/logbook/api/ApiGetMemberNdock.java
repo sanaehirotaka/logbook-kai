@@ -1,7 +1,8 @@
 package logbook.api;
 
+import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -24,19 +25,16 @@ public class ApiGetMemberNdock implements APIListenerSpi {
         JsonArray array = json.getJsonArray("api_data");
         if (array != null) {
             // 入渠
-            Map<Integer, Ndock> map = NdockCollection.get()
-                    .getNdockMap();
-            map.clear();
-            map.putAll(JsonHelper.toMap(array, Ndock::getId, Ndock::toNdock));
+            Map<Integer, Ndock> map = JsonHelper.toMap(array, Ndock::getId, Ndock::toNdock);
+            NdockCollection.get()
+                    .setNdockMap(map);
             // 入渠中の艦娘
-            Set<Integer> set = NdockCollection.get()
-                    .getNdockSet();
-            set.clear();
-            map.entrySet()
-                    .stream()
-                    .map(Map.Entry::getValue)
-                    .map(Ndock::getShipId)
-                    .forEach(set::add);
+            NdockCollection.get()
+                    .setNdockSet(map.entrySet()
+                            .stream()
+                            .map(Map.Entry::getValue)
+                            .map(Ndock::getShipId)
+                            .collect(Collectors.toCollection(LinkedHashSet::new)));
         }
     }
 

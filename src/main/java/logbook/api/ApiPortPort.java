@@ -1,9 +1,11 @@
 package logbook.api;
 
 import java.time.Duration;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -81,8 +83,8 @@ public class ApiPortPort implements APIListenerSpi {
                 .map(map::get)
                 .forEach(this::destryItem);
 
-        map.clear();
-        map.putAll(afterShipMap);
+        ShipCollection.get()
+                .setShipMap(afterShipMap);
     }
 
     /**
@@ -91,10 +93,8 @@ public class ApiPortPort implements APIListenerSpi {
      * @param array api_deck_port
      */
     private void apiDeckPort(JsonArray array) {
-        Map<Integer, DeckPort> map = DeckPortCollection.get()
-                .getDeckPortMap();
-        map.clear();
-        map.putAll(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
+        DeckPortCollection.get()
+                .setDeckPortMap(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
     }
 
     /**
@@ -104,19 +104,16 @@ public class ApiPortPort implements APIListenerSpi {
      */
     private void apiNdock(JsonArray array) {
         // 入渠
-        Map<Integer, Ndock> map = NdockCollection.get()
-                .getNdockMap();
-        map.clear();
-        map.putAll(JsonHelper.toMap(array, Ndock::getId, Ndock::toNdock));
+        Map<Integer, Ndock> map = JsonHelper.toMap(array, Ndock::getId, Ndock::toNdock);
+        NdockCollection.get()
+                .setNdockMap(map);
         // 入渠中の艦娘
-        Set<Integer> set = NdockCollection.get()
-                .getNdockSet();
-        set.clear();
-        map.entrySet()
-                .stream()
-                .map(Map.Entry::getValue)
-                .map(Ndock::getShipId)
-                .forEach(set::add);
+        NdockCollection.get()
+                .setNdockSet(map.entrySet()
+                        .stream()
+                        .map(Map.Entry::getValue)
+                        .map(Ndock::getShipId)
+                        .collect(Collectors.toCollection(LinkedHashSet::new)));
     }
 
     /**

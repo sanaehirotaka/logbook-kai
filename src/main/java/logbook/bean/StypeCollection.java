@@ -1,7 +1,7 @@
 package logbook.bean;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
@@ -15,7 +15,7 @@ public class StypeCollection implements Serializable {
     private static final long serialVersionUID = -7530294903513038451L;
 
     /** 艦種 */
-    private Map<Integer, Stype> stypeMap = new HashMap<>();
+    private Map<Integer, Stype> stypeMap = new LinkedHashMap<>();
 
     /**
      * 艦種を取得します。

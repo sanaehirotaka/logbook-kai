@@ -49,9 +49,7 @@ public class ApiGetMemberShip2 implements APIListenerSpi {
      * @param array api_deck_data
      */
     private void apiDeckData(JsonArray array) {
-        Map<Integer, DeckPort> map = DeckPortCollection.get()
-                .getDeckPortMap();
-        map.clear();
-        map.putAll(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
+        DeckPortCollection.get()
+                .setDeckPortMap(JsonHelper.toMap(array, DeckPort::getId, DeckPort::toDeckPort));
     }
 }

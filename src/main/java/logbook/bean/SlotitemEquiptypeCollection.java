@@ -1,7 +1,7 @@
 package logbook.bean;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
@@ -15,7 +15,7 @@ public class SlotitemEquiptypeCollection implements Serializable {
     private static final long serialVersionUID = 1623208831316913362L;
 
     /** アイテム種類 */
-    private Map<Integer, SlotitemEquiptype> equiptypeMap = new HashMap<>();
+    private Map<Integer, SlotitemEquiptype> equiptypeMap = new LinkedHashMap<>();
 
     /**
      * アイテム種類を取得します。
