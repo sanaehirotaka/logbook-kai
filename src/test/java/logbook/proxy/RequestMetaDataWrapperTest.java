@@ -345,7 +345,7 @@ public class RequestMetaDataWrapperTest {
             if (expected == actual) {
                 fail("インスタンスが等しい(コピーされていない)");
             }
-            if (expected.getName().equals(actual.getName())) {
+            if (!expected.getName().equals(actual.getName())) {
                 fail();
             }
         }
