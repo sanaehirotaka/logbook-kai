@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
@@ -37,8 +36,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.eclipse.jetty.http.MimeTypes;
 import org.junit.Test;
 
@@ -140,7 +137,7 @@ public class RequestMetaDataWrapperTest {
     @Test
     public void testGetRemotePort() {
         RequestMetaDataWrapper w = new RequestMetaDataWrapper();
-        int expected = new Random().nextInt();
+        int expected = 123456;
         w.setRemotePort(expected);
         assertEquals(expected, w.getRemotePort());
     }
@@ -195,7 +192,7 @@ public class RequestMetaDataWrapperTest {
     @Test
     public void testGetServerPort() {
         RequestMetaDataWrapper w = new RequestMetaDataWrapper();
-        int expected = new Random().nextInt();
+        int expected = 1234567;
         w.setServerPort(expected);
         assertEquals(expected, w.getServerPort());
     }
@@ -239,7 +236,7 @@ public class RequestMetaDataWrapperTest {
 
         String remoteAddr = "getRemoteAddr";
 
-        int remotePort = new Random().nextInt();
+        int remotePort = 124128;
 
         String requestURI = "getRequestURI";
 
@@ -249,7 +246,7 @@ public class RequestMetaDataWrapperTest {
 
         String serverName = "getServerName";
 
-        int serverPort = new Random().nextInt();
+        int serverPort = 7557;
 
         byte[] requestBody = "parametertest1=parameterMapvalue1&parametertest2=parameterMapvalue2".getBytes();
 
@@ -348,7 +345,7 @@ public class RequestMetaDataWrapperTest {
             if (expected == actual) {
                 fail("インスタンスが等しい(コピーされていない)");
             }
-            if (!EqualsBuilder.reflectionEquals(expected, actual)) {
+            if (expected.getName().equals(actual.getName())) {
                 fail();
             }
         }
@@ -387,7 +384,13 @@ public class RequestMetaDataWrapperTest {
         // getServerPort
         assertEquals(serverPort, data.getServerPort());
         // getRequestBody
-        assertEquals(new String(requestBody), IOUtils.toString(data.getRequestBody().get()));
+        assertEquals(new String(requestBody), toString(data.getRequestBody().get()));
+    }
+
+    private static String toString(InputStream in) throws IOException {
+        byte[] b = new byte[1024];
+        int l = in.read(b, 0, b.length);
+        return new String(b, 0, l);
     }
 
     /**

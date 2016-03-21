@@ -16,13 +16,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Random;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 public class ResponseMetaDataWrapperTest {
@@ -33,7 +31,7 @@ public class ResponseMetaDataWrapperTest {
     @Test
     public void testGetStatus() {
         ResponseMetaDataWrapper w = new ResponseMetaDataWrapper();
-        int expected = new Random().nextInt();
+        int expected = 99412;
         w.setStatus(expected);
         assertEquals(expected, w.getStatus());
     }
@@ -90,7 +88,7 @@ public class ResponseMetaDataWrapperTest {
         parameterMap.put("parametertest1", Arrays.asList("parameterMapvalue1"));
         parameterMap.put("parametertest2", Arrays.asList("parameterMapvalue2"));
 
-        int status = new Random().nextInt();
+        int status = 4011;
 
         byte[] responseBody = "getResponseBody".getBytes();
 
@@ -130,7 +128,13 @@ public class ResponseMetaDataWrapperTest {
         // getStatus
         assertEquals(status, data.getStatus());
         // getResponseBody
-        assertEquals(new String(responseBody), IOUtils.toString(data.getResponseBody().get()));
+        assertEquals(new String(responseBody), toString(data.getResponseBody().get()));
+    }
+
+    private static String toString(InputStream in) throws IOException {
+        byte[] b = new byte[1024];
+        int l = in.read(b, 0, b.length);
+        return new String(b, 0, l);
     }
 
     /**
