@@ -69,10 +69,10 @@
                               <TextField fx:id="listenPort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <CheckBox fx:id="allowOnlyFromLocalhost" mnemonicParsing="false" text="ローカルループバックアドレスからの接続のみ受け入れる*" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
                               <CheckBox fx:id="useProxy" mnemonicParsing="false" text="接続にプロキシを使用する(他ツール連携)*" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-                              <Label text="プロキシポート番号*" GridPane.rowIndex="4" />
-                              <TextField fx:id="proxyPort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Label text="プロキシホスト*" GridPane.rowIndex="5" />
-                              <TextField fx:id="proxyHost" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label text="プロキシホスト*" GridPane.rowIndex="4" />
+                              <TextField fx:id="proxyHost" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="プロキシポート番号*" GridPane.rowIndex="5" />
+                              <TextField fx:id="proxyPort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                      </children>
