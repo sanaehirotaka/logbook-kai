@@ -43,7 +43,9 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
+import logbook.internal.CheckUpdate;
 import logbook.internal.Ships;
+import logbook.internal.ThreadManager;
 import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
 import logbook.plugin.gui.MainExtMenu;
@@ -109,6 +111,10 @@ public class MainController extends WindowController {
         try {
             // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
             ProxyServer.getInstance().start();
+            // アップデートチェック
+            if (AppConfig.get().isCheckUpdate()) {
+                ThreadManager.getExecutorService().execute(new CheckUpdate());
+            }
 
             this.itemFormat = this.item.getText();
             this.shipFormat = this.ship.getText();
