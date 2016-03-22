@@ -2,13 +2,17 @@ package logbook.internal;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.scene.image.Image;
 import logbook.bean.AppCondition;
@@ -448,6 +452,53 @@ public class Ships {
     }
 
     /**
+     * 接触開始率
+     * 参考 http://wikiwiki.jp/kancolle/?%B9%D2%B6%F5%C0%EF
+     *
+     * @return 接触開始率
+     */
+    public static double touchPlaneStartProbability(List<Ship> ships) {
+        Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+        Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
+                .getSlotitemMap();
+        // 艦娘からスロット毎に装備を取り出す
+        Function<Ship, Stream<Pair<SlotitemMst, Integer>>> onSlotItem = ship -> {
+            List<Integer> slot = ship.getSlot();
+            List<Integer> onslot = ship.getOnslot();
+            List<Pair<SlotitemMst, Integer>> pair = new ArrayList<>();
+
+            for (int i = 0, l = slot.size(); i < l; i++) {
+                SlotItem item = itemMap.get(slot.get(i));
+                if (item != null) {
+                    SlotitemMst mst = itemMstMap.get(item.getSlotitemId());
+                    if (mst != null) {
+                        pair.add(new Pair<>(mst, onslot.get(i)));
+                    }
+                }
+            }
+            return pair.stream();
+        };
+        // 対象となる艦載機は水上偵察機(水偵)・艦上偵察機(艦偵)・大型飛行艇(二式大艇)の3種
+        Predicate<Pair<SlotitemMst, Integer>> filter = pair -> {
+            SlotitemMst mst = pair.getKey();
+            return SlotItemType.艦上偵察機.equals(mst)
+                    || SlotItemType.艦上偵察機II.equals(mst)
+                    || SlotItemType.水上偵察機.equals(mst)
+                    || SlotItemType.大型飛行艇.equals(mst);
+        };
+        // 各スロットごとの{0.04 × 艦載機の索敵値 × √(搭載数)}を計算
+        ToDoubleFunction<Pair<SlotitemMst, Integer>> calc = pair -> 0.04D * pair.getKey().getSaku()
+                * Math.sqrt(pair.getValue());
+
+        return ships.stream()
+                .flatMap(onSlotItem)
+                .filter(filter)
+                .mapToDouble(calc)
+                .sum();
+    }
+
+    /**
      * 装備定義を取得します
      *
      * @param ship 艦娘
@@ -475,5 +526,31 @@ public class Ships {
      */
     private static double hpPer(Ship ship) {
         return (double) ship.getNowhp() / (double) ship.getMaxhp();
+    }
+
+    /**
+     * Key-Value Pair
+     *
+     * @param <K> Key Type
+     * @param <V> Value Type
+     */
+    private static final class Pair<K, V> {
+
+        private K key;
+
+        private V value;
+
+        private Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private K getKey() {
+            return this.key;
+        }
+
+        private V getValue() {
+            return this.value;
+        }
     }
 }

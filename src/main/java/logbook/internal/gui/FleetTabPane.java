@@ -57,6 +57,10 @@ public class FleetTabPane extends ScrollPane {
     @FXML
     private VBox ships;
 
+    /** 色々な情報 */
+    @FXML
+    private Label info;
+
     /**
      * 艦隊ペインのコンストラクタ
      *
@@ -114,10 +118,20 @@ public class FleetTabPane extends ScrollPane {
     }
 
     private void updateShips() {
-        this.message.setText("制空値計: " + this.shipList.stream()
-                .mapToInt(Ships::airSuperiority)
-                .sum()
-                + " 索敵値(2-5式秋): " + Ships.viewRange(this.shipList));
+        this.message.setText(this.port.getName());
+
+        String info = new StringBuilder()
+                .append("制空値計: " + this.shipList.stream()
+                        .mapToInt(Ships::airSuperiority)
+                        .sum())
+                .append("\n")
+                .append("索敵値(2-5式秋): " + Ships.viewRange(this.shipList))
+                .append("\n")
+                .append("接触開始率: " + (int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100))
+                .append("%")
+                .toString();
+
+        this.info.setText(info);
 
         ObservableList<Node> childs = this.ships.getChildren();
         childs.clear();

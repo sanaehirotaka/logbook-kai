@@ -10,6 +10,8 @@
          <children>
             <Label fx:id="message" styleClass="message" />
             <VBox fx:id="ships" styleClass="ships" />
+            <Separator />
+            <Label fx:id="info" wrapText="true" styleClass="info" />
          </children>
       </VBox>
    </content>
