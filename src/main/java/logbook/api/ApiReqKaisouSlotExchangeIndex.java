@@ -1,7 +1,12 @@
 package logbook.api;
 
+import java.util.Map;
+
 import javax.json.JsonObject;
 
+import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
+import logbook.internal.JsonHelper;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -14,8 +19,17 @@ public class ApiReqKaisouSlotExchangeIndex implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        // TODO 自動生成されたメソッド・スタブ
+        JsonObject data = json.getJsonObject("api_data");
+        if (data != null) {
+            Map<Integer, Ship> shipMap = ShipCollection.get()
+                    .getShipMap();
 
+            Integer shipId = Integer.valueOf(req.getParameterMap().get("api_id").get(0));
+            Ship ship = shipMap.get(shipId)
+                    .clone();
+            ship.setSlot(JsonHelper.toIntegerList(data.getJsonArray("api_slot")));
+            shipMap.put(shipId, ship);
+        }
     }
 
 }
