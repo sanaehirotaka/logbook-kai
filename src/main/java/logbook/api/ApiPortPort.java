@@ -23,11 +23,9 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
-import logbook.internal.Config;
 import logbook.internal.JsonHelper;
 import logbook.internal.LogWriter;
 import logbook.internal.Logs;
-import logbook.internal.ThreadManager;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -50,8 +48,6 @@ public class ApiPortPort implements APIListenerSpi {
             this.apiCombinedFlag(data);
             this.condition();
         }
-        ThreadManager.getExecutorService()
-                .execute(Config.getDefault()::store);
     }
 
     /**
