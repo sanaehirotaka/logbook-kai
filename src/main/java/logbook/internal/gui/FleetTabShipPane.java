@@ -44,9 +44,9 @@ public class FleetTabShipPane extends HBox {
     private Label cond;
 
     /**
-     * 入渠ドックのコンストラクタ
+     * 艦隊タブのコンストラクタ
      *
-     * @param ndock 入渠ドック
+     * @param ship 艦娘
      */
     public FleetTabShipPane(Ship ship) {
         this.ship = ship;
