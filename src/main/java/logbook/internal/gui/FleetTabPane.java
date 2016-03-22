@@ -127,7 +127,7 @@ public class FleetTabPane extends ScrollPane {
                 .append("\n")
                 .append("索敵値(2-5式秋): " + Ships.viewRange(this.shipList))
                 .append("\n")
-                .append("接触開始率: " + (int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100))
+                .append("触接開始率: " + (int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100))
                 .append("%")
                 .toString();
 

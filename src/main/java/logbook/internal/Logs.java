@@ -42,7 +42,7 @@ public final class Logs {
             .add("艦隊行動").add("味方陣形").add("敵陣形")
             .add("制空権")
             .add("味方触接")
-            .add("敵接触")
+            .add("敵触接")
             .add("敵艦隊")
             .add("ドロップ艦種").add("ドロップ艦娘")
             .add("味方艦1").add("味方艦1HP")
@@ -142,28 +142,28 @@ public final class Logs {
                         .getSlotitemMap();
                 // 制空権
                 joiner.add(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString());
-                // 味方接触
+                // 味方触接
                 joiner.add(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(0)))
                         .map(SlotitemMst::getName)
                         .orElse(""));
-                // 敵接触
+                // 敵触接
                 joiner.add(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(1)))
                         .map(SlotitemMst::getName)
                         .orElse(""));
             } else {
                 // 制空権
                 joiner.add("");
-                // 味方接触
+                // 味方触接
                 joiner.add("");
-                // 敵接触
+                // 敵触接
                 joiner.add("");
             }
         } else {
             // 制空権
             joiner.add("");
-            // 味方接触
+            // 味方触接
             joiner.add("");
-            // 敵接触
+            // 敵触接
             joiner.add("");
         }
 

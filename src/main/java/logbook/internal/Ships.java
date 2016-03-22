@@ -452,10 +452,10 @@ public class Ships {
     }
 
     /**
-     * 接触開始率
+     * 触接開始率
      * 参考 http://wikiwiki.jp/kancolle/?%B9%D2%B6%F5%C0%EF
      *
-     * @return 接触開始率
+     * @return 触接開始率
      */
     public static double touchPlaneStartProbability(List<Ship> ships) {
         Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
