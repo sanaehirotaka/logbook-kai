@@ -2,6 +2,8 @@ package logbook.internal.gui;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.StringJoiner;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -10,8 +12,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.bean.Ship;
+import logbook.bean.ShipMst;
 import logbook.internal.Logs;
+import logbook.internal.Ships;
 
+/**
+ * お風呂に入りたい艦娘
+ *
+ */
 public class RequireNdock {
 
     /** ID */
@@ -201,6 +209,21 @@ public class RequireNdock {
      */
     public void setMetal(int metal) {
         this.metal = new SimpleIntegerProperty(metal);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner("\t")
+                .add(Integer.toString(this.id.get()))
+                .add(Optional.ofNullable(this.ship.get())
+                        .map(s -> Ships.shipMst(s).map(ShipMst::getName).orElse(""))
+                        .orElse(""))
+                .add(Integer.toString(this.lv.get()))
+                .add(this.time.get())
+                .add(this.end.get())
+                .add(Integer.toString(this.fuel.get()))
+                .add(Integer.toString(this.metal.get()))
+                .toString();
     }
 
     /**
