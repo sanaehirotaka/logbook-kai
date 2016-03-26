@@ -56,19 +56,13 @@ public class TableTool {
     }
 
     /**
-     * キーボードイベントのハンドラー(Ctrl+AとCtrl+Cを実装)
+     * キーボードイベントのハンドラー(Ctrl+Cを実装)
      *
      * @param event キーボードイベント
      */
     public static void defaultOnKeyPressedHandler(KeyEvent event) {
         if (event.getSource() instanceof TableView<?>) {
             TableView<?> table = (TableView<?>) event.getSource();
-
-            // Selection All
-            if (event.isControlDown() && event.getCode() == KeyCode.A) {
-                table.getSelectionModel()
-                        .selectAll();
-            }
             // Copy
             if (event.isControlDown() && event.getCode() == KeyCode.C) {
                 ClipboardContent content = new ClipboardContent();
