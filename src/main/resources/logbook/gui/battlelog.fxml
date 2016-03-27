@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" styleClass="itemWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleLogController">
+   <children>
+      <SplitPane dividerPositions="0.35" VBox.vgrow="ALWAYS">
+         <items>
+            <VBox>
+               <children>
+                  <TreeTableView fx:id="collect" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TreeTableColumn fx:id="unit" prefWidth="130.0" text="集計" />
+                      <TreeTableColumn fx:id="start" prefWidth="40.0" text="出撃" />
+                        <TreeTableColumn fx:id="win" prefWidth="40.0" text="勝利" />
+                        <TreeTableColumn fx:id="s" prefWidth="40.0" text="S勝利" />
+                        <TreeTableColumn fx:id="a" prefWidth="40.0" text="A勝利" />
+                        <TreeTableColumn fx:id="b" prefWidth="40.0" text="B勝利" />
+                        <TreeTableColumn fx:id="c" prefWidth="40.0" text="C敗北" />
+                        <TreeTableColumn fx:id="d" prefWidth="40.0" text="D敗北" />
+                    </columns>
+                  </TreeTableView>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <TableView fx:id="detail" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="date" prefWidth="150.0" text="日付" />
+                      <TableColumn fx:id="area" prefWidth="130.0" text="海域" />
+                      <TableColumn fx:id="cell" prefWidth="40.0" text="マス" />
+                        <TableColumn fx:id="boss" prefWidth="75.0" text="ボス" />
+                        <TableColumn fx:id="rank" prefWidth="40.0" text="評価" />
+                        <TableColumn fx:id="intercept" prefWidth="75.0" text="艦隊行動" />
+                        <TableColumn fx:id="fformation" prefWidth="75.0" text="味方陣形" />
+                        <TableColumn fx:id="eformation" prefWidth="75.0" text="敵陣形" />
+                        <TableColumn fx:id="dispseiku" prefWidth="75.0" text="制空権" />
+                        <TableColumn fx:id="ftouch" prefWidth="100.0" text="味方触接" />
+                        <TableColumn fx:id="etouch" prefWidth="100.0" text="敵触接" />
+                        <TableColumn fx:id="efleet" prefWidth="100.0" text="敵艦隊" />
+                        <TableColumn fx:id="dropType" prefWidth="75.0" text="ドロップ艦種" />
+                        <TableColumn fx:id="dropShip" prefWidth="75.0" text="ドロップ艦娘" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</VBox>

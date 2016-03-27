@@ -8,14 +8,13 @@ import java.util.stream.Collectors;
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
-import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
-import logbook.bean.BattleLogCollection;
 import logbook.bean.BattleResult;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.internal.BattleLogs;
 import logbook.internal.LogWriter;
 import logbook.internal.Logs;
 import logbook.proxy.RequestMetaData;
@@ -54,13 +53,8 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 log.setTime(Logs.nowString());
                 log.setDeckMap(deckMap);
                 // 戦闘ログの保存
-                List<BattleLog> logs = BattleLogCollection.get()
-                        .getLogs();
-                logs.add(log);
-                // あふれたログを削除する
-                while (logs.size() > AppConfig.get().getLogSize()) {
-                    logs.remove(0);
-                }
+                BattleLogs.write(log);
+
                 new LogWriter()
                         .header(Logs.BATTLE_RESULT_HEADER)
                         .file(Logs.BATTLE_RESULT)

@@ -11,6 +11,8 @@
         <menus>
           <Menu fx:id="command" mnemonicParsing="false" text="コマンド">
             <items>
+              <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ" />
+              <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧" />
               <MenuItem mnemonicParsing="false" onAction="#ships" text="所有艦娘一覧" />
               <SeparatorMenuItem mnemonicParsing="false" />

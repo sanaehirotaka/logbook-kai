@@ -28,7 +28,7 @@ public class LogWriter {
     public static final String LF = "\n";
 
     /** デフォルトの文字コード  */
-    private static final Charset DEFAULT_CHARSET = Charset.forName("MS932");
+    public static final Charset DEFAULT_CHARSET = Charset.forName("MS932");
 
     /** デフォルトのファイルを開く方法を指定するオプション */
     private static final OpenOption[] DEFAULT_OPTION = new OpenOption[] { StandardOpenOption.CREATE,

@@ -139,6 +139,30 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 戦闘ログ
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void battlelog(ActionEvent e) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battlelog.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("戦闘ログ");
+            stage.show();
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("戦闘ログの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 所有装備
      *
      * @param e ActionEvent
