@@ -13,7 +13,7 @@ import logbook.internal.Config;
  */
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = -773577834397914252L;
+    private static final long serialVersionUID = 8043362931530718960L;
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
@@ -83,6 +83,12 @@ public final class AppConfig implements Serializable {
 
     /** リソースディレクトリ */
     private String resourcesDir = "./resources/"; //$NON-NLS-1$
+
+    /** 戦闘ログディレクトリ */
+    private String battleLogDir = "./battlelog/"; //$NON-NLS-1$
+
+    /** 戦闘ログの保存期限 */
+    private int battleLogExpires = 60;
 
     /** ウインドウ位置 */
     private Map<String, WindowLocation> windowLocationMap = new HashMap<>();
@@ -380,7 +386,7 @@ public final class AppConfig implements Serializable {
      * @return 遠征通知サウンドディレクトリ
      */
     public String getMissionSoundDir() {
-        return missionSoundDir;
+        return this.missionSoundDir;
     }
 
     /**
@@ -396,7 +402,7 @@ public final class AppConfig implements Serializable {
      * @return 入渠通知サウンドディレクトリ
      */
     public String getNdockSoundDir() {
-        return ndockSoundDir;
+        return this.ndockSoundDir;
     }
 
     /**
@@ -453,6 +459,38 @@ public final class AppConfig implements Serializable {
      */
     public void setResourcesDir(String resourcesDir) {
         this.resourcesDir = resourcesDir;
+    }
+
+    /**
+     * 戦闘ログディレクトリを取得します。
+     * @return 戦闘ログディレクトリ
+     */
+    public String getBattleLogDir() {
+        return this.battleLogDir;
+    }
+
+    /**
+     * 戦闘ログディレクトリを設定します。
+     * @param battleLogDir 戦闘ログディレクトリ
+     */
+    public void setBattleLogDir(String battleLogDir) {
+        this.battleLogDir = battleLogDir;
+    }
+
+    /**
+     * 戦闘ログの保存期限を取得します。
+     * @return 戦闘ログの保存期限
+     */
+    public int getBattleLogExpires() {
+        return this.battleLogExpires;
+    }
+
+    /**
+     * 戦闘ログの保存期限を設定します。
+     * @param battleLogExpires 戦闘ログの保存期限
+     */
+    public void setBattleLogExpires(int battleLogExpires) {
+        this.battleLogExpires = battleLogExpires;
     }
 
     /**
