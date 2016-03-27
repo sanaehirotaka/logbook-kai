@@ -5,6 +5,7 @@ import java.util.Comparator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -63,6 +64,8 @@ public class RequireNdockController extends WindowController {
         this.metal.setCellValueFactory(new PropertyValueFactory<>("metal"));
 
         this.table.setItems(this.ndocks);
+        this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
 
         ShipCollection.get()
                 .getShipMap()
