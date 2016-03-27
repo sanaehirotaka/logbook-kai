@@ -1,5 +1,6 @@
 package logbook.api;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import javax.json.JsonObject;
 import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
-import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
@@ -42,9 +42,10 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 Map<Integer, Ship> shipMap = ShipCollection.get()
                         .getShipMap();
                 Map<Integer, List<Ship>> deckMap = new HashMap<>();
-                for (Map.Entry<Integer, DeckPort> entry : DeckPortCollection.get()
-                        .getDeckPortMap().entrySet()) {
-                    deckMap.put(entry.getKey(), entry.getValue()
+                for (Integer dockId : Arrays.asList(1, 2)) {
+                    deckMap.put(dockId, DeckPortCollection.get()
+                            .getDeckPortMap()
+                            .get(dockId)
                             .getShip()
                             .stream()
                             .map(shipMap::get)

@@ -3,6 +3,7 @@ package logbook.api;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
@@ -10,7 +11,7 @@ import javax.json.JsonObject;
 import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
-import logbook.bean.DeckPort;
+import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
@@ -38,18 +39,23 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                 AppCondition.get().setBattleResult(null);
 
                 log.setResult(BattleResult.toBattleResult(data));
+
+                // 出撃艦隊
+                Integer dockId = Optional.ofNullable(log.getBattle())
+                        .map(IFormation::getDockId)
+                        .orElse(1);
+
                 // 艦隊スナップショットを作る
                 Map<Integer, Ship> shipMap = ShipCollection.get()
                         .getShipMap();
                 Map<Integer, List<Ship>> deckMap = new HashMap<>();
-                for (Map.Entry<Integer, DeckPort> entry : DeckPortCollection.get()
-                        .getDeckPortMap().entrySet()) {
-                    deckMap.put(entry.getKey(), entry.getValue()
-                            .getShip()
-                            .stream()
-                            .map(shipMap::get)
-                            .collect(Collectors.toList()));
-                }
+                deckMap.put(dockId, DeckPortCollection.get()
+                        .getDeckPortMap()
+                        .get(dockId)
+                        .getShip()
+                        .stream()
+                        .map(shipMap::get)
+                        .collect(Collectors.toList()));
                 log.setTime(Logs.nowString());
                 log.setDeckMap(deckMap);
                 // 戦闘ログの保存
