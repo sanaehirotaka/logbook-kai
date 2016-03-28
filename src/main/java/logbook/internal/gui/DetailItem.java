@@ -125,7 +125,7 @@ public class DetailItem {
                         .map(s -> Messages.getString("ship.name", Ships.shipMst(s) //$NON-NLS-1$
                                 .map(ShipMst::getName)
                                 .orElse(""), s.getLv()))
-                        .orElse(""))
+                        .orElse("未所持"))
                 .toString();
     }
 
@@ -163,6 +163,11 @@ public class DetailItem {
             detail.setShip(ship);
             // 艦娘ID
             detail.setShipId(ship.getId());
+        } else {
+            // 艦娘
+            detail.setShip(null);
+            // 艦娘ID
+            detail.setShipId(null);
         }
         return detail;
     }
