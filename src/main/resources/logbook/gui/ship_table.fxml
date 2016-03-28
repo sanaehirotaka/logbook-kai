@@ -30,6 +30,14 @@
           <TableColumn fx:id="slot4" prefWidth="200.0" text="装備4" />
           <TableColumn fx:id="slotEx" prefWidth="200.0" text="補強" />
         </columns>
+        <contextMenu>
+           <ContextMenu>
+             <items>
+               <MenuItem mnemonicParsing="false" onAction="#copy" text="クリップボードにコピー" />
+               <MenuItem mnemonicParsing="false" onAction="#selectAll" text="すべてを選択" />
+             </items>
+           </ContextMenu>
+        </contextMenu>
       </TableView>
    </children>
 </fx:root>

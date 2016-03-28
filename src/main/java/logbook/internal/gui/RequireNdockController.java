@@ -78,6 +78,22 @@ public class RequireNdockController extends WindowController {
     }
 
     /**
+     * クリップボードにコピー
+     */
+    @FXML
+    void copy() {
+        TableTool.selectionCopy(this.table);
+    }
+
+    /**
+     * すべてを選択
+     */
+    @FXML
+    void selectAll() {
+        TableTool.selectAll(this.table);
+    }
+
+    /**
      * 艦娘画像のセル
      *
      */

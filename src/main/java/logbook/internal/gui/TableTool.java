@@ -15,7 +15,7 @@ import javafx.scene.input.KeyEvent;
  * TableViewに関係するメソッドを集めたクラス
  *
  */
-public class TableTool {
+class TableTool {
 
     private static final String SEPARATOR = "\t"; //$NON-NLS-1$
 
@@ -24,12 +24,11 @@ public class TableTool {
     /**
      * 行をヘッダ付きで文字列にします
      *
-     * @param <T> -
      * @param table テーブル
      * @param rows 行
      * @return ヘッダ付きの文字列
      */
-    public static <T> String toString(TableView<T> table, List<T> rows) {
+    static <T> String toString(TableView<?> table, List<?> rows) {
         StringJoiner joiner = new StringJoiner(NL);
         String header = table.getColumns()
                 .stream()
@@ -46,13 +45,35 @@ public class TableTool {
     /**
      * 選択行をヘッダ付きで文字列にします
      *
-     * @param <T> -
      * @param table テーブル
      * @return ヘッダ付きの文字列
      */
-    public static <T> String selectionToString(TableView<T> table) {
+    static String selectionToString(TableView<?> table) {
         return toString(table, table.getSelectionModel()
                 .getSelectedItems());
+    }
+
+    /**
+     * 選択行をヘッダ付きでクリップボードにコピーします
+     *
+     * @param table テーブル
+     */
+    static void selectionCopy(TableView<?> table) {
+        ClipboardContent content = new ClipboardContent();
+        content.putString(selectionToString(table));
+        Clipboard.getSystemClipboard()
+                .setContent(content);
+    }
+
+    /**
+     * テーブルの行をすべて選択します
+     *
+     * @param table テーブル
+     */
+    static void selectAll(TableView<?> table) {
+        // Selection All
+        table.getSelectionModel()
+                .selectAll();
     }
 
     /**
@@ -60,15 +81,12 @@ public class TableTool {
      *
      * @param event キーボードイベント
      */
-    public static void defaultOnKeyPressedHandler(KeyEvent event) {
+    static void defaultOnKeyPressedHandler(KeyEvent event) {
         if (event.getSource() instanceof TableView<?>) {
             TableView<?> table = (TableView<?>) event.getSource();
             // Copy
             if (event.isControlDown() && event.getCode() == KeyCode.C) {
-                ClipboardContent content = new ClipboardContent();
-                content.putString(selectionToString(table));
-                Clipboard.getSystemClipboard()
-                        .setContent(content);
+                selectionCopy(table);
             }
         }
     }

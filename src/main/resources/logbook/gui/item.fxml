@@ -28,6 +28,14 @@
                       <TableColumn fx:id="tyku" prefWidth="35.0" text="対空" />
                       <TableColumn fx:id="souk" prefWidth="35.0" text="装甲" />
                     </columns>
+                    <contextMenu>
+                       <ContextMenu>
+                         <items>
+                           <MenuItem mnemonicParsing="false" onAction="#copyType" text="クリップボードにコピー" />
+                           <MenuItem mnemonicParsing="false" onAction="#selectAllType" text="すべてを選択" />
+                         </items>
+                       </ContextMenu>
+                    </contextMenu>
                   </TableView>
                </children>
             </AnchorPane>
@@ -40,6 +48,14 @@
                       <TableColumn fx:id="level" prefWidth="50.0" text="改修" />
                       <TableColumn fx:id="ship" prefWidth="300.0" text="所持" />
                     </columns>
+                    <contextMenu>
+                       <ContextMenu>
+                         <items>
+                           <MenuItem mnemonicParsing="false" onAction="#copyDetail" text="クリップボードにコピー" />
+                           <MenuItem mnemonicParsing="false" onAction="#selectAllDetail" text="すべてを選択" />
+                         </items>
+                       </ContextMenu>
+                    </contextMenu>
                   </TableView>
                </children>
             </VBox>

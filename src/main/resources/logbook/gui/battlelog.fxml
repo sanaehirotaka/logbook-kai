@@ -44,6 +44,14 @@
                         <TableColumn fx:id="dropType" prefWidth="75.0" text="ドロップ艦種" />
                         <TableColumn fx:id="dropShip" prefWidth="75.0" text="ドロップ艦娘" />
                     </columns>
+                    <contextMenu>
+                       <ContextMenu>
+                         <items>
+                           <MenuItem mnemonicParsing="false" onAction="#copyDetail" text="クリップボードにコピー" />
+                           <MenuItem mnemonicParsing="false" onAction="#selectAllDetail" text="すべてを選択" />
+                         </items>
+                       </ContextMenu>
+                    </contextMenu>
                   </TableView>
                </children>
             </VBox>

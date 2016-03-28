@@ -256,6 +256,38 @@ public class ItemController extends WindowController {
         }
     }
 
+    /**
+     * (装備一覧)クリップボードにコピー
+     */
+    @FXML
+    void copyType() {
+        TableTool.selectionCopy(this.typeTable);
+    }
+
+    /**
+     * (装備一覧)すべてを選択
+     */
+    @FXML
+    void selectAllType() {
+        TableTool.selectAll(this.typeTable);
+    }
+
+    /**
+     * (所持)クリップボードにコピー
+     */
+    @FXML
+    void copyDetail() {
+        TableTool.selectionCopy(this.detailTable);
+    }
+
+    /**
+     * (所持)すべてを選択
+     */
+    @FXML
+    void selectAllDetail() {
+        TableTool.selectAll(this.detailTable);
+    }
+
     private static class LoggerHolder {
         /** ロガー */
         private static final Logger LOG = LogManager.getLogger(ItemController.class);

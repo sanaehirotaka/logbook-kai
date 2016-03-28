@@ -239,6 +239,22 @@ public class BattleLogController extends WindowController {
     }
 
     /**
+     * クリップボードにコピー
+     */
+    @FXML
+    void copyDetail() {
+        TableTool.selectionCopy(this.detail);
+    }
+
+    /**
+     * すべてを選択
+     */
+    @FXML
+    void selectAllDetail() {
+        TableTool.selectAll(this.detail);
+    }
+
+    /**
      * 右ペインに詳細表示するリスナー
      *
      * @param observable 値が変更されたObservableValue
