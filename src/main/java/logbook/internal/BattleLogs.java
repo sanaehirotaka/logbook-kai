@@ -554,7 +554,7 @@ public class BattleLogs {
             }
         },
         /** マンスリー */
-        MONTHLY("今月") {
+        MONTHLY("マンスリー") {
             @Override
             public boolean accept(ZonedDateTime target, ZonedDateTime now) {
                 TemporalField field = ChronoField.MONTH_OF_YEAR;
