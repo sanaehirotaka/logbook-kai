@@ -144,6 +144,10 @@
 .shipWindow .message {
     -fx-font-size: 12pt;
 }
+/* ƒLƒƒƒvƒ`ƒƒ */
+.captureWindow .capture {
+    -fx-font-weight: bold;
+}
 
 /* İ’è */
 .configWindow .configInner,.configWindow .footer {

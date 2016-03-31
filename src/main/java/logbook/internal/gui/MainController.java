@@ -139,6 +139,30 @@ public class MainController extends WindowController {
     }
 
     /**
+     * キャプチャ
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void capture(ActionEvent e) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/capture.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("キャプチャ");
+            stage.show();
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("キャプチャの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 戦闘ログ
      *
      * @param e ActionEvent

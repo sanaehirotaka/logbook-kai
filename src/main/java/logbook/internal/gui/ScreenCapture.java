@@ -5,12 +5,16 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.imageio.IIOImage;
@@ -22,13 +26,72 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import logbook.internal.ThreadManager;
+
 /**
  * スクリーンショットに関係するメソッドを集めたクラス
  *
  */
-public class ScreenCapture {
+class ScreenCapture {
+
+    /** Jpeg品質 */
+    private static final float QUALITY = 0.9f;
 
     private static final int WHITE = Color.WHITE.getRGB();
+
+    private Robot robot;
+
+    private Rectangle rectangle;
+
+    private int size = 200;
+
+    private ObservableList<ImageData> list;
+
+    /**
+     * スクリーンショット
+     *
+     * @param robot Robot
+     * @param rectangle ゲーム画面の座標
+     */
+    ScreenCapture(Robot robot, Rectangle rectangle) {
+        this.robot = robot;
+        this.rectangle = rectangle;
+    }
+
+    void setItems(ObservableList<ImageData> list) {
+        this.list = list;
+    }
+
+    void setSize(int size) {
+        this.size = size;
+    }
+
+    void capture() throws IOException {
+        ThreadManager.getExecutorService()
+                .execute(this::execute);
+    }
+
+    private void execute() {
+        try {
+            ImageData data = new ImageData();
+            data.setDateTime(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")));
+            data.setImage(encodeJpeg(this.robot.createScreenCapture(this.rectangle)));
+
+            Platform.runLater(() -> {
+                this.list.add(data);
+                while (this.list.size() > this.size) {
+                    this.list.remove(0);
+                }
+            });
+        } catch (IOException e) {
+            LoggerHolder.LOG.warn("キャプチャ処理で例外", e);
+        }
+    }
 
     /**
      * 座標からスクリーンを取得します
@@ -125,7 +188,7 @@ public class ScreenCapture {
                 ImageWriteParam iwp = writer.getDefaultWriteParam();
                 if (iwp.canWriteCompressed()) {
                     iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                    iwp.setCompressionQuality(0.9F);
+                    iwp.setCompressionQuality(QUALITY);
                 }
                 writer.setOutput(ios);
                 writer.write(null, new IIOImage(image, null, null), iwp);
@@ -177,5 +240,63 @@ public class ScreenCapture {
                 writer.dispose();
             }
         }
+    }
+
+    /**
+     * 画像データ
+     *
+     */
+    static final class ImageData {
+
+        /** 日付書式 */
+        private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+
+        /** 日付 */
+        private ZonedDateTime dateTime;
+
+        /** 画像データ */
+        private byte[] image;
+
+        /**
+         * 日付を取得します。
+         * @return 日付
+         */
+        ZonedDateTime getDateTime() {
+            return this.dateTime;
+        }
+
+        /**
+         * 日付を設定します。
+         * @param dateTime 日付
+         */
+        void setDateTime(ZonedDateTime dateTime) {
+            this.dateTime = dateTime;
+        }
+
+        /**
+         * 画像データを取得します。
+         * @return 画像データ
+         */
+        byte[] getImage() {
+            return this.image;
+        }
+
+        /**
+         * 画像データを設定します。
+         * @param image 画像データ
+         */
+        void setImage(byte[] image) {
+            this.image = image;
+        }
+
+        @Override
+        public String toString() {
+            return DATE_FORMAT.format(this.dateTime);
+        }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ScreenCapture.class);
     }
 }

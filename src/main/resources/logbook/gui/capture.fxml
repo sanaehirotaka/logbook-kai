@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.controlsfx.control.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="310.0" styleClass="captureWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
+   <children>
+      <ToolBar>
+        <items>
+          <Button mnemonicParsing="false" onAction="#detect" text="座標取得" />
+            <CheckBox fx:id="interval" mnemonicParsing="false" onAction="#interval" text="連写" />
+            <Button fx:id="capture" disable="true" mnemonicParsing="false" onAction="#capture" styleClass="capture" text="キャプチャ" />
+            <Button fx:id="save" mnemonicParsing="false" onAction="#save" text="保存" />
+            <Label fx:id="message" text="座標未設定" />
+        </items>
+      </ToolBar>
+      <ScrollPane fx:id="imageParent" focusTraversable="false" hbarPolicy="NEVER" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+         <content>
+            <ImageView fx:id="image" fitHeight="120.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>
