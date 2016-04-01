@@ -24,9 +24,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -40,9 +42,17 @@ import logbook.internal.gui.ScreenCapture.ImageData;
  */
 public class CaptureController extends WindowController {
 
+    /** 設定 */
+    @FXML
+    private MenuButton config;
+
     /** 連写 */
     @FXML
-    private CheckBox interval;
+    private CheckMenuItem cyclic;
+
+    /** ラジオボタングループ */
+    @FXML
+    private ToggleGroup cut;
 
     /** キャプチャ */
     @FXML
@@ -79,6 +89,21 @@ public class CaptureController extends WindowController {
     }
 
     @FXML
+    void cutNone(ActionEvent event) {
+        this.sc.setCutRect(null);
+    }
+
+    @FXML
+    void cutUnit(ActionEvent event) {
+        this.sc.setCutRect(ScreenCapture.UNIT_RECT);
+    }
+
+    @FXML
+    void cutUnitWithoutShip(ActionEvent event) {
+        this.sc.setCutRect(ScreenCapture.UNIT_WITHOUT_SHIP_RECT);
+    }
+
+    @FXML
     void detect(ActionEvent event) {
         try {
             Window window = this.getWindow();
@@ -98,11 +123,13 @@ public class CaptureController extends WindowController {
                 String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
                 this.message.setText(text);
                 this.capture.setDisable(false);
+                this.config.setDisable(false);
                 this.sc = new ScreenCapture(robot, fixed);
                 this.sc.setItems(this.images);
             } else {
                 this.message.setText("座標未設定");
                 this.capture.setDisable(true);
+                this.config.setDisable(true);
                 this.sc = null;
             }
         } catch (Exception e) {
@@ -111,13 +138,13 @@ public class CaptureController extends WindowController {
     }
 
     @FXML
-    void interval(ActionEvent event) {
+    void cyclic(ActionEvent event) {
         if (this.timeline.getStatus() == Status.RUNNING) {
             // キャプチャ中であれば止める
             this.timeline.stop();
         }
 
-        if (this.interval.isSelected()) {
+        if (this.cyclic.isSelected()) {
             // キャプチャボタンテキストの変更
             this.capture.setText("開始");
         } else {
@@ -128,7 +155,7 @@ public class CaptureController extends WindowController {
 
     @FXML
     void capture(ActionEvent event) {
-        if (this.interval.isSelected()) {
+        if (this.cyclic.isSelected()) {
             // 周期キャプチャの場合
             if (this.timeline.getStatus() == Status.RUNNING) {
                 // キャプチャ中であれば止める

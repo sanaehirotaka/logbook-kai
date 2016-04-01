@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -55,6 +56,12 @@ public class CaptureSaveController extends WindowController {
     private TextField fps;
 
     @FXML
+    private CheckBox tile;
+
+    @FXML
+    private TextField tileCount;
+
+    @FXML
     private CheckListView<ImageData> list;
 
     @FXML
@@ -73,6 +80,15 @@ public class CaptureSaveController extends WindowController {
 
         this.image.fitWidthProperty().bind(this.imageParent.widthProperty());
         this.image.fitHeightProperty().bind(this.imageParent.heightProperty());
+    }
+
+    @FXML
+    void tile(ActionEvent event) {
+        if (this.tile.isSelected()) {
+            this.tileCount.setDisable(false);
+        } else {
+            this.tileCount.setDisable(true);
+        }
     }
 
     @FXML
@@ -166,10 +182,21 @@ public class CaptureSaveController extends WindowController {
      * @throws IOException 入出力例外
      */
     private void saveJpeg(List<ImageData> selections, Path dir) throws IOException {
-        for (ImageData image : selections) {
-            Path to = dir.resolve(DATE_FORMAT.format(image.getDateTime()) + ".jpg");
+        if (this.tile.isSelected()) {
+            // 並べる場合
+            int column = Math.max(Integer.parseInt(this.tileCount.getText()), 1);
+            Path to = dir.resolve(DATE_FORMAT.format(selections.get(0).getDateTime()) + ".jpg");
+            List<byte[]> bytes = selections.stream().map(ImageData::getImage).collect(Collectors.toList());
             try (OutputStream out = Files.newOutputStream(to)) {
-                out.write(image.getImage());
+                out.write(ScreenCapture.encodeJpeg(ScreenCapture.tileImage(bytes, column)));
+            }
+        } else {
+            // 並べない場合個別にファイル保存する
+            for (ImageData image : selections) {
+                Path to = dir.resolve(DATE_FORMAT.format(image.getDateTime()) + ".jpg");
+                try (OutputStream out = Files.newOutputStream(to)) {
+                    out.write(image.getImage());
+                }
             }
         }
     }

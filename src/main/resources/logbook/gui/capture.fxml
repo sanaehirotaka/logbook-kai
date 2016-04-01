@@ -6,12 +6,27 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="190.0" prefWidth="310.0" styleClass="captureWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="320.0" styleClass="captureWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
    <children>
       <ToolBar>
         <items>
           <Button mnemonicParsing="false" onAction="#detect" text="座標取得" />
-            <CheckBox fx:id="interval" mnemonicParsing="false" onAction="#interval" text="連写" />
+            <MenuButton fx:id="config" disable="true" mnemonicParsing="false" text="設定">
+              <items>
+                  <CheckMenuItem fx:id="cyclic" mnemonicParsing="false" onAction="#cyclic" text="連写" />
+                  <Menu mnemonicParsing="false" text="切り取り">
+                    <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#cutNone" selected="true" text="無し">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="cut" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#cutUnit" text="改装(艦娘付き)" toggleGroup="$cut" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#cutUnitWithoutShip" text="改装(艦娘除く)" toggleGroup="$cut" />
+                    </items>
+                  </Menu>
+              </items>
+            </MenuButton>
             <Button fx:id="capture" disable="true" mnemonicParsing="false" onAction="#capture" styleClass="capture" text="キャプチャ" />
             <Button fx:id="save" mnemonicParsing="false" onAction="#save" text="保存" />
             <Label fx:id="message" text="座標未設定" />

@@ -11,9 +11,15 @@
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
             <Label text="ファイル形式" />
-            <ChoiceBox fx:id="type" prefWidth="70.0" />
+            <ChoiceBox fx:id="type" prefWidth="60.0" />
+            <Separator orientation="VERTICAL" />
             <Label text="fps" />
-            <TextField fx:id="fps" prefWidth="50.0" text="10" />
+            <TextField fx:id="fps" prefWidth="40.0" text="10" />
+            <Separator orientation="VERTICAL" />
+            <CheckBox fx:id="tile" mnemonicParsing="false" onAction="#tile" text="並べる" />
+            <TextField fx:id="tileCount" disable="true" prefWidth="40.0" text="6" />
+            <Label text="列" />
+            <Separator orientation="VERTICAL" />
           <Button mnemonicParsing="false" onAction="#save" text="保存" />
         </items>
       </ToolBar>

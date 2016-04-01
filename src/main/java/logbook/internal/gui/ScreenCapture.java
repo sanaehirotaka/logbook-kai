@@ -46,12 +46,19 @@ class ScreenCapture {
 
     private static final int WHITE = Color.WHITE.getRGB();
 
+    /** 改装一覧の範囲(艦娘除く) */
+    static final Rectangle UNIT_WITHOUT_SHIP_RECT = new Rectangle(327, 103, 230, 365);
+
     /** 改装一覧の範囲 */
-    public static final Rectangle UNIT_RECT = new Rectangle(327, 103, 230, 365);
+    static final Rectangle UNIT_RECT = new Rectangle(327, 103, 460, 365);
 
     private Robot robot;
 
+    /** キャプチャ範囲 */
     private Rectangle rectangle;
+
+    /** 切り取り範囲 */
+    private Rectangle cutRect;
 
     private int size = 200;
 
@@ -72,6 +79,22 @@ class ScreenCapture {
         this.list = list;
     }
 
+    /**
+     * 切り取り範囲を取得します。
+     * @return 切り取り範囲
+     */
+    Rectangle getCutRect() {
+        return this.cutRect;
+    }
+
+    /**
+     * 切り取り範囲を設定します。
+     * @param cutRect 切り取り範囲
+     */
+    void setCutRect(Rectangle cutRect) {
+        this.cutRect = cutRect;
+    }
+
     void setSize(int size) {
         this.size = size;
     }
@@ -85,7 +108,14 @@ class ScreenCapture {
         try {
             ImageData data = new ImageData();
             data.setDateTime(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")));
-            data.setImage(encodeJpeg(this.robot.createScreenCapture(this.rectangle)));
+
+            byte[] image;
+            if (this.cutRect != null) {
+                image = encodeJpeg(this.robot.createScreenCapture(this.rectangle), this.cutRect);
+            } else {
+                image = encodeJpeg(this.robot.createScreenCapture(this.rectangle));
+            }
+            data.setImage(image);
 
             Platform.runLater(() -> {
                 this.list.add(data);
@@ -212,7 +242,7 @@ class ScreenCapture {
      * @return JPEG形式の画像
      * @throws IOException 入出力例外
      */
-    static byte[] encodeJpeg(BufferedImage image ,Rectangle rect) throws IOException {
+    static byte[] encodeJpeg(BufferedImage image, Rectangle rect) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
             ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
