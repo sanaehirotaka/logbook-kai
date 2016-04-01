@@ -5,6 +5,7 @@ logbook.api.ApiGetMemberMaterial
 logbook.api.ApiGetMemberNdock
 logbook.api.ApiGetMemberPresetDeck
 logbook.api.ApiGetMemberQuestlist
+logbook.api.ApiGetMemberRequireInfo
 logbook.api.ApiGetMemberShip2
 logbook.api.ApiGetMemberShip3
 logbook.api.ApiGetMemberShipDeck

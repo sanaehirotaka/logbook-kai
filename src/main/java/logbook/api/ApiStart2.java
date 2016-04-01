@@ -69,7 +69,6 @@ public class ApiStart2 implements APIListenerSpi {
             ShipMst bean = map.get(key);
             if (bean != null) {
                 bean.setGraph(json.getString("api_filename"));
-                bean.setVersion(json.getString("api_version"));
             }
         }
     }
