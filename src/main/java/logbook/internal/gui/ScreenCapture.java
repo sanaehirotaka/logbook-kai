@@ -1,11 +1,13 @@
 package logbook.internal.gui;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,6 +45,9 @@ class ScreenCapture {
     private static final float QUALITY = 0.9f;
 
     private static final int WHITE = Color.WHITE.getRGB();
+
+    /** 改装一覧の範囲 */
+    public static final Rectangle UNIT_RECT = new Rectangle(327, 103, 230, 365);
 
     private Robot robot;
 
@@ -200,6 +205,37 @@ class ScreenCapture {
     }
 
     /**
+     * BufferedImageをJPEG形式にエンコードします
+     *
+     * @param image BufferedImage
+     * @param rect 画像の範囲
+     * @return JPEG形式の画像
+     * @throws IOException 入出力例外
+     */
+    static byte[] encodeJpeg(BufferedImage image ,Rectangle rect) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
+            ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+            try {
+                ImageWriteParam iwp = writer.getDefaultWriteParam();
+                if (iwp.canWriteCompressed()) {
+                    iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                    iwp.setCompressionQuality(QUALITY);
+                }
+                writer.setOutput(ios);
+                int x = rect.x;
+                int y = rect.y;
+                int w = rect.width;
+                int h = rect.height;
+                writer.write(null, new IIOImage(image.getSubimage(x, y, w, h), null, null), iwp);
+            } finally {
+                writer.dispose();
+            }
+        }
+        return out.toByteArray();
+    }
+
+    /**
      * アニメーションGIFを作成します
      *
      * @param out 出力先
@@ -240,6 +276,41 @@ class ScreenCapture {
                 writer.dispose();
             }
         }
+    }
+
+    /**
+     * 複数の画像を横に並べた画像を返します
+     *
+     * @param bytes JPEG形式などにエンコード済みの画像ファイルのバイト配列
+     * @param column 列数
+     * @return 横に並べた画像
+     */
+    static BufferedImage tileImage(List<byte[]> bytes, int column) throws IOException {
+        if (bytes.isEmpty()) {
+            return null;
+        }
+        BufferedImage base = ImageIO.read(new ByteArrayInputStream(bytes.get(0)));
+
+        int baseWidth = base.getWidth();
+        int baseHeight = base.getHeight();
+
+        int width = baseWidth * Math.min(bytes.size(), column);
+        int height = (int) (baseHeight * Math.ceil((float) bytes.size() / column));
+
+        BufferedImage canvas = new BufferedImage(width, height, ColorSpace.TYPE_RGB);
+
+        Graphics gc = canvas.createGraphics();
+        gc.setColor(Color.WHITE);
+        gc.fillRect(0, 0, width, height);
+        for (int i = 0; i < bytes.size(); i++) {
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes.get(i)));
+            int c = i % column;
+            int r = (int) Math.ceil((float) (i + 1) / column) - 1;
+            int x = baseWidth * c;
+            int y = baseHeight * r;
+            gc.drawImage(image, x, y, null);
+        }
+        return canvas;
     }
 
     /**
