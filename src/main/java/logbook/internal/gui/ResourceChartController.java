@@ -300,7 +300,7 @@ public class ResourceChartController extends WindowController {
                 logs = lines.map(ResourceLog::new)
                         .filter(l -> l.getDate() != null)
                         .sorted(Comparator.comparing(ResourceLog::getDate))
-                        .collect(Collectors.toMap(mapping, d -> d, (d1, d2) -> d1, LinkedHashMap::new));
+                        .collect(Collectors.toMap(mapping, d -> d, (d1, d2) -> d2, LinkedHashMap::new));
             }
             ObservableList<ResourceTable> tableBody = FXCollections.observableArrayList();
             // 前日
