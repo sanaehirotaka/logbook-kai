@@ -1,0 +1,26 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+/* 経験値計算機 */
+.default-color0.chart-line-symbol {
+    -fx-background-color: gray, white;
+}
+.default-color0.chart-series-line {
+    -fx-stroke: gray;
+    -fx-stroke-width: 1px;
+    -fx-stroke-dash-array: 2px;
+}
+.default-color1.chart-line-symbol {
+    -fx-background-color: green, white;
+}
+.default-color1.chart-series-line {
+    -fx-stroke: green;
+    -fx-stroke-width: 3px;
+}
+.default-color2.chart-line-symbol {
+    -fx-background-color: blue, white;
+}
+.default-color2.chart-series-line {
+    -fx-stroke: blue;
+    -fx-stroke-width: 3px;
+}
+

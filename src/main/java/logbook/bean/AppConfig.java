@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
+import logbook.internal.Rank;
+import logbook.internal.SeaArea;
 
 /**
  * アプリケーションの設定
@@ -89,6 +91,12 @@ public final class AppConfig implements Serializable {
 
     /** 戦闘ログの保存期限 */
     private int battleLogExpires = 60;
+
+    /** レベリング海域 */
+    private SeaArea battleSeaArea = SeaArea.キス島沖;
+
+    /** レベリング評価 */
+    private Rank resultRank = Rank.S勝利;
 
     /** ウインドウ位置 */
     private Map<String, WindowLocation> windowLocationMap = new HashMap<>();
@@ -491,6 +499,38 @@ public final class AppConfig implements Serializable {
      */
     public void setBattleLogExpires(int battleLogExpires) {
         this.battleLogExpires = battleLogExpires;
+    }
+
+    /**
+     * レベリング海域を取得します。
+     * @return レベリング海域
+     */
+    public SeaArea getBattleSeaArea() {
+        return this.battleSeaArea;
+    }
+
+    /**
+     * レベリング海域を設定します。
+     * @param battleSeaArea レベリング海域
+     */
+    public void setBattleSeaArea(SeaArea battleSeaArea) {
+        this.battleSeaArea = battleSeaArea;
+    }
+
+    /**
+     * レベリング評価を取得します。
+     * @return レベリング評価
+     */
+    public Rank getResultRank() {
+        return this.resultRank;
+    }
+
+    /**
+     * レベリング評価を設定します。
+     * @param resultRank レベリング評価
+     */
+    public void setResultRank(Rank resultRank) {
+        this.resultRank = resultRank;
     }
 
     /**

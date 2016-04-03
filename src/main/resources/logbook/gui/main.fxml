@@ -22,8 +22,9 @@
             </items>
           </Menu>
           <Menu fx:id="calc" mnemonicParsing="false" text="計算機">
-            <items>
-            </items>
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#calcExp" text="経験値計算機" />
+               </items>
           </Menu>
           <Menu fx:id="ext" mnemonicParsing="false" text="その他">
             <items>

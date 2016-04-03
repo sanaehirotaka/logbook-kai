@@ -259,6 +259,30 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 経験値計算機
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void calcExp(ActionEvent event) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/calc_exp.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("経験値計算機");
+            stage.show();
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("経験値計算機の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 資材チャート
      *
      * @param e ActionEvent
