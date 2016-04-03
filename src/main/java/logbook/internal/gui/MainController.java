@@ -259,6 +259,30 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 資材チャート
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void resourceChart(ActionEvent event) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/resource_chart.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("資材チャート");
+            stage.show();
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("資材チャートの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 設定
      *
      * @param e ActionEvent

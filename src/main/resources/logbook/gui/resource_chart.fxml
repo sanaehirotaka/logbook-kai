@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="830.0" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ResourceChartController">
+   <children>
+      <SplitPane dividerPositions="0.8" orientation="VERTICAL">
+         <items>
+            <VBox>
+               <children>
+                  <FlowPane>
+                     <children>
+                        <Label text="期間" />
+                        <ChoiceBox fx:id="term" prefWidth="100.0" />
+                        <Label text="開始" />
+                        <DatePicker fx:id="from" onAction="#change" prefWidth="120.0" />
+                        <Label text="終了" />
+                        <DatePicker fx:id="to" onAction="#change" prefWidth="120.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                     </padding>
+                  </FlowPane>
+                  <FlowPane>
+                     <children>
+                        <CheckBox fx:id="fuel" mnemonicParsing="false" onAction="#change" selected="true" text="燃料" />
+                        <CheckBox fx:id="ammo" mnemonicParsing="false" onAction="#change" selected="true" text="弾薬" />
+                        <CheckBox fx:id="metal" mnemonicParsing="false" onAction="#change" selected="true" text="鋼材" />
+                        <CheckBox fx:id="bauxite" mnemonicParsing="false" onAction="#change" selected="true" text="ボーキ" />
+                        <CheckBox fx:id="bucket" mnemonicParsing="false" onAction="#change" text="高速修復剤" />
+                        <CheckBox fx:id="burner" mnemonicParsing="false" onAction="#change" text="高速建造材" />
+                        <CheckBox fx:id="research" mnemonicParsing="false" onAction="#change" text="開発資材" />
+                        <CheckBox fx:id="improve" mnemonicParsing="false" onAction="#change" text="改修資材" />
+                        <CheckBox fx:id="forceZero" mnemonicParsing="false" onAction="#change" text="ゼロを基準" />
+                     </children>
+                     <padding>
+                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                     </padding>
+                  </FlowPane>
+                  <LineChart fx:id="chart" animated="false" createSymbols="false" VBox.vgrow="ALWAYS">
+                    <xAxis>
+                      <NumberAxis side="BOTTOM" fx:id="xAxis" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="yAxis" side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+            <TableView fx:id="table">
+              <columns>
+                  <TableColumn fx:id="date" prefWidth="85.0" text="日付" />
+                  <TableColumn fx:id="fuelGap" prefWidth="110.0" text="燃料" />
+                  <TableColumn fx:id="ammoGap" prefWidth="110.0" text="弾薬" />
+                  <TableColumn fx:id="metalGap" prefWidth="110.0" text="鋼材" />
+                  <TableColumn fx:id="bauxiteGap" prefWidth="110.0" text="ボーキ" />
+                  <TableColumn fx:id="bucketGap" prefWidth="75.0" text="高速修復剤" />
+                  <TableColumn fx:id="burnerGap" prefWidth="75.0" text="高速建造材" />
+                  <TableColumn fx:id="researchGap" prefWidth="75.0" text="開発資材" />
+                  <TableColumn fx:id="improveGap" prefWidth="75.0" text="改修資材" />
+              </columns>
+            </TableView>
+         </items>
+      </SplitPane>
+   </children>
+   <stylesheets>
+      <URL value="@application.css" />
+   </stylesheets>
+</VBox>

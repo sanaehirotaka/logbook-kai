@@ -27,6 +27,8 @@
           </Menu>
           <Menu fx:id="ext" mnemonicParsing="false" text="その他">
             <items>
+                  <MenuItem mnemonicParsing="false" onAction="#resourceChart" text="資材チャート" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#config" text="設定" />
             </items>
           </Menu>
