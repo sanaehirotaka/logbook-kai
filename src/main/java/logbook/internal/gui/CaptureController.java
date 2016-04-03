@@ -105,36 +105,7 @@ public class CaptureController extends WindowController {
 
     @FXML
     void detect(ActionEvent event) {
-        try {
-            Window window = this.getWindow();
-            int x = (int) window.getX();
-            int y = (int) window.getY();
-            GraphicsConfiguration gc = ScreenCapture.detectScreenDevice(x, y);
-
-            Robot robot = new Robot(gc.getDevice());
-            BufferedImage image = robot.createScreenCapture(gc.getBounds());
-
-            Rectangle relative = ScreenCapture.detectGameScreen(image, 800, 480);
-
-            if (relative != null) {
-                Rectangle fixed = new Rectangle(relative.x + gc.getBounds().x, relative.y + gc.getBounds().y,
-                        relative.width, relative.height);
-
-                String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
-                this.message.setText(text);
-                this.capture.setDisable(false);
-                this.config.setDisable(false);
-                this.sc = new ScreenCapture(robot, fixed);
-                this.sc.setItems(this.images);
-            } else {
-                this.message.setText("座標未設定");
-                this.capture.setDisable(true);
-                this.config.setDisable(true);
-                this.sc = null;
-            }
-        } catch (Exception e) {
-            LoggerHolder.LOG.error("座標取得に失敗しました", e);
-        }
+        this.detectAction();
     }
 
     @FXML
@@ -197,6 +168,48 @@ public class CaptureController extends WindowController {
             stage.show();
         } catch (Exception ex) {
             LoggerHolder.LOG.error("キャプチャの保存に失敗しました", ex);
+        }
+    }
+
+    @Override
+    public void setWindow(Stage window) {
+        super.setWindow(window);
+        this.detectAction();
+    }
+
+    /**
+     * 座標取得アクション
+     */
+    private void detectAction() {
+        try {
+            Window window = this.getWindow();
+            int x = (int) window.getX();
+            int y = (int) window.getY();
+            GraphicsConfiguration gc = ScreenCapture.detectScreenDevice(x, y);
+
+            Robot robot = new Robot(gc.getDevice());
+            BufferedImage image = robot.createScreenCapture(gc.getBounds());
+
+            Rectangle relative = ScreenCapture.detectGameScreen(image, 800, 480);
+
+            if (relative != null) {
+                Rectangle fixed = new Rectangle(relative.x + gc.getBounds().x, relative.y + gc.getBounds().y,
+                        relative.width, relative.height);
+
+                String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
+                this.message.setText(text);
+                this.capture.setDisable(false);
+                this.config.setDisable(false);
+                this.sc = new ScreenCapture(robot, fixed);
+                this.sc.setItems(this.images);
+            } else {
+                this.message.setText("座標未設定");
+                this.capture.setDisable(true);
+                this.config.setDisable(true);
+                this.sc = null;
+            }
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("座標取得に失敗しました", e);
         }
     }
 
