@@ -70,5 +70,6 @@
    </children>
    <stylesheets>
       <URL value="@application.css" />
+      <URL value="@resource_chart.css" />
    </stylesheets>
 </VBox>
