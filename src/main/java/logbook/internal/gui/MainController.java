@@ -307,6 +307,30 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 自動プロキシ構成スクリプトファイル生成
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void createPacFile(ActionEvent e) {
+        try {
+            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/create_pac_file.fxml");
+            Stage stage = new Stage();
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+
+            WindowController controller = loader.getController();
+            controller.setWindow(stage);
+
+            stage.initOwner(this.getWindow());
+            stage.setTitle("自動プロキシ構成スクリプトファイル生成");
+            stage.show();
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("自動プロキシ構成スクリプトファイル生成の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 設定
      *
      * @param e ActionEvent

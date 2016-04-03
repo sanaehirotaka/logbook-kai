@@ -30,7 +30,8 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#resourceChart" text="資材チャート" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#config" text="設定" />
+              <MenuItem mnemonicParsing="false" onAction="#createPacFile" text="自動プロキシ構成スクリプト" />
+                  <MenuItem mnemonicParsing="false" onAction="#config" text="設定" />
             </items>
           </Menu>
         </menus>
