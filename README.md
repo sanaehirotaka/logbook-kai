@@ -26,7 +26,7 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 ### [ダウンロード](https://github.com/sanaehirotaka/logbook-kai/releases)
 
-### [ブラウザの設定](how-to-preference.md)
+### [ブラウザの設定(必須)](how-to-preference.md)
 
 ### 動作環境
 
