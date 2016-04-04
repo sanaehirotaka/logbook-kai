@@ -43,12 +43,27 @@ Java 8u40以降がインストールされた環境で動作します
 * メイン画面
 
 ![メイン画面](https://kancolle.sanaechan.net/logbook-kai/overview.png)
+
 * 所有装備一覧
 
 ![所有装備一覧](https://kancolle.sanaechan.net/logbook-kai/items.png)
+
 * 所有艦娘一覧
 
 ![所有艦娘一覧](https://kancolle.sanaechan.net/logbook-kai/ships.png)
+
+* 戦闘ログ
+
+![戦闘ログ](https://kancolle.sanaechan.net/logbook-kai/battle_log.png)
+
+* 経験値計算機
+
+![経験値計算機](https://kancolle.sanaechan.net/logbook-kai/calc_exp.png)
+
+* 資材チャート
+
+![資材チャート](https://kancolle.sanaechan.net/logbook-kai/resource_chart.png)
+
 * 通知機能
 
 ![通知機能](https://kancolle.sanaechan.net/logbook-kai/notify.png)
