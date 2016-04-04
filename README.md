@@ -26,6 +26,10 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 ### [ダウンロード](https://github.com/sanaehirotaka/logbook-kai/releases)
 
+**ご注意ください**
+
+**初期の状態では艦娘の画像が表示出来ません。必ず **[FAQ](faq.md)**をお読みください。**
+
 ### [ブラウザの設定(必須)](how-to-preference.md)
 
 ### 動作環境
