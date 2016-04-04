@@ -222,7 +222,8 @@ public class ResourceChartController extends WindowController {
             Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL);
             List<ResourceLog> log;
             try (Stream<String> lines = Files.lines(logFile, LogWriter.DEFAULT_CHARSET)) {
-                log = lines.map(ResourceLog::new)
+                log = lines.skip(1)
+                        .map(ResourceLog::new)
                         .filter(l -> l.getDate() != null)
                         .filter(l -> l.getDate().compareTo(fromDateTime) >= 0)
                         .filter(l -> l.getDate().compareTo(toDateTime) <= 0)
@@ -297,7 +298,9 @@ public class ResourceChartController extends WindowController {
 
                 Function<ResourceLog, LocalDate> mapping = r -> r.getDate().toLocalDate();
 
-                logs = lines.map(ResourceLog::new)
+                logs = lines
+                        .skip(1)
+                        .map(ResourceLog::new)
                         .filter(l -> l.getDate() != null)
                         .sorted(Comparator.comparing(ResourceLog::getDate))
                         .collect(Collectors.toMap(mapping, d -> d, (d1, d2) -> d2, LinkedHashMap::new));
