@@ -36,13 +36,10 @@ public final class AppConfig implements Serializable {
     private String reportPath = new File("").getAbsolutePath();
 
     /** 資材ログ保存間隔 */
-    private int materialLogInterval = 300;
-
-    /** ログの保存数 */
-    private int logSize = 100;
+    private int materialLogInterval = 600;
 
     /** 最前面に表示する */
-    private boolean onTop = true;
+    private boolean onTop = false;
 
     /** 終了時に確認する */
     private boolean checkDoit = true;
@@ -211,22 +208,6 @@ public final class AppConfig implements Serializable {
      */
     public void setMaterialLogInterval(int materialLogInterval) {
         this.materialLogInterval = materialLogInterval;
-    }
-
-    /**
-     * ログの保存数を取得します。
-     * @return ログの保存数
-     */
-    public int getLogSize() {
-        return this.logSize;
-    }
-
-    /**
-     * ログの保存数を設定します。
-     * @param logSize ログの保存数
-     */
-    public void setLogSize(int logSize) {
-        this.logSize = logSize;
     }
 
     /**
