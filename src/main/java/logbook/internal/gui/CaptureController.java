@@ -20,9 +20,6 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
@@ -153,22 +150,7 @@ public class CaptureController extends WindowController {
 
     @FXML
     void save(ActionEvent event) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/capturesave.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            CaptureSaveController controller = loader.getController();
-            controller.setWindow(stage);
-            controller.setItems(this.images);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("キャプチャの保存");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("キャプチャの保存に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/capturesave.fxml", "キャプチャの保存", this);
     }
 
     @Override

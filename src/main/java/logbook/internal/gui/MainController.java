@@ -18,11 +18,8 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
@@ -30,7 +27,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
-import javafx.stage.Stage;
 import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.bean.Basic;
@@ -145,21 +141,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void capture(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/capture.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("キャプチャ");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("キャプチャの初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/capture.fxml", "キャプチャ", this);
     }
 
     /**
@@ -169,21 +151,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void battlelog(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battlelog.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("戦闘ログ");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("戦闘ログの初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/battlelog.fxml", "戦闘ログ", this);
     }
 
     /**
@@ -193,21 +161,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void items(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/item.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("所有装備一覧");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("所有装備一覧の初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/item.fxml", "所有装備一覧", this);
     }
 
     /**
@@ -217,21 +171,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void ships(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/ship.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("所有艦娘一覧");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("所有艦娘一覧の初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/ship.fxml", "所有艦娘一覧", this);
     }
 
     /**
@@ -241,21 +181,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void ndock(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/require_ndock.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("お風呂に入りたい艦娘");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("お風呂に入りたい艦娘の初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/require_ndock.fxml", "お風呂に入りたい艦娘", this);
     }
 
     /**
@@ -265,21 +191,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void calcExp(ActionEvent event) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/calc_exp.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("経験値計算機");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("経験値計算機の初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/calc_exp.fxml", "経験値計算機", this);
     }
 
     /**
@@ -289,21 +201,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void resourceChart(ActionEvent event) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/resource_chart.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("資材チャート");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("資材チャートの初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/resource_chart.fxml", "資材チャート", this);
     }
 
     /**
@@ -313,21 +211,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void createPacFile(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/create_pac_file.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("自動プロキシ構成スクリプトファイル生成");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("自動プロキシ構成スクリプトファイル生成の初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/create_pac_file.fxml", "自動プロキシ構成スクリプトファイル生成", this);
     }
 
     /**
@@ -337,21 +221,7 @@ public class MainController extends WindowController {
      */
     @FXML
     void config(ActionEvent e) {
-        try {
-            FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/config.fxml");
-            Stage stage = new Stage();
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-
-            WindowController controller = loader.getController();
-            controller.setWindow(stage);
-
-            stage.initOwner(this.getWindow());
-            stage.setTitle("設定");
-            stage.show();
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
-        }
+        InternalFXMLLoader.show("logbook/gui/config.fxml", "設定", this);
     }
 
     /**
