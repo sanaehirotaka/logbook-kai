@@ -14,8 +14,8 @@
                      <children>
                         <GridPane>
                           <columnConstraints>
-                            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
-                            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                            <ColumnConstraints fillWidth="false" />
+                            <ColumnConstraints fillWidth="false" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -37,7 +37,7 @@
                               <TextField fx:id="soundLevel" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label text="資材ログ保存間隔(秒)" GridPane.rowIndex="5" />
                               <TextField fx:id="materialLogInterval" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <CheckBox fx:id="onTop" mnemonicParsing="false" text="最前面に表示する" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                              <CheckBox fx:id="onTop" mnemonicParsing="false" text="最前面に表示する*" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
                               <CheckBox fx:id="checkDoit" mnemonicParsing="false" text="終了時に確認する" GridPane.rowIndex="7" />
                               <CheckBox fx:id="checkUpdate" mnemonicParsing="false" text="起動時にアップデートチェック*" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
                            </children>
@@ -52,8 +52,8 @@
                      <children>
                         <GridPane>
                            <columnConstraints>
-                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
-                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
