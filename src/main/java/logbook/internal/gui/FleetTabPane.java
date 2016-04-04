@@ -85,6 +85,8 @@ public class FleetTabPane extends ScrollPane {
 
     /**
      * 画面を更新します
+     *
+     * @param port 艦隊
      */
     public void update(DeckPort port) {
         this.port = port;
@@ -112,6 +114,8 @@ public class FleetTabPane extends ScrollPane {
 
     /**
      * タブに設定するCSSクラス名
+     *
+     * @return CSSクラス名
      */
     public String tabCssClass() {
         return this.tabCssClass;

@@ -454,7 +454,7 @@ public class Ships {
     /**
      * 触接開始率
      * 参考 http://wikiwiki.jp/kancolle/?%B9%D2%B6%F5%C0%EF
-     *
+     * @param ships 艦娘達
      * @return 触接開始率
      */
     public static double touchPlaneStartProbability(List<Ship> ships) {

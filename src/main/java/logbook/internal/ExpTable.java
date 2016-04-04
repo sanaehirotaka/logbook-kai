@@ -176,7 +176,7 @@ public class ExpTable {
     /**
      * 経験値テーブルを取得します
      *
-     * @return
+     * @return 経験値テーブル
      */
     public static Map<Integer, Integer> get() {
         return EXP_TABLE;
