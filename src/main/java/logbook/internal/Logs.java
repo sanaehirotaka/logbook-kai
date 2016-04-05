@@ -231,10 +231,10 @@ public final class Logs {
         joiner.add(String.valueOf(material.get(3).getValue()));
         // ボーキ
         joiner.add(String.valueOf(material.get(4).getValue()));
-        // 高速修復材
-        joiner.add(String.valueOf(material.get(5).getValue()));
-        // 高速建造材
+        // 高速修復材=6
         joiner.add(String.valueOf(material.get(6).getValue()));
+        // 高速建造材=5
+        joiner.add(String.valueOf(material.get(5).getValue()));
         // 開発資材
         joiner.add(String.valueOf(material.get(7).getValue()));
         // 改修資材
