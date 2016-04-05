@@ -125,6 +125,55 @@ public class BattleTypes {
     }
 
     /**
+     * 昼戦砲撃を表します
+     */
+    public interface ISortieHougeki extends ISortieBattle {
+
+        /**
+         * api_opening_flagを取得します。
+         * @return api_opening_flag
+         */
+        Boolean getOpeningFlag();
+
+        /**
+         * api_opening_atackを取得します。
+         * @return api_opening_atack
+         */
+        BattleTypes.Raigeki getOpeningAtack();
+
+        /**
+         * api_hourai_flagを取得します。
+         * @return api_hourai_flag
+         */
+        List<Integer> getHouraiFlag();
+
+        /**
+         * api_hougeki1を取得します。
+         * @return api_hougeki1
+         */
+        BattleTypes.Hougeki getHougeki1();
+
+        /**
+         * api_hougeki2を取得します。
+         * @return api_hougeki2
+         */
+        BattleTypes.Hougeki getHougeki2();
+
+        /**
+         * api_hougeki3を取得します。
+         * @return api_hougeki3
+         */
+        BattleTypes.Hougeki getHougeki3();
+
+
+        /**
+         * api_raigekiを取得します。
+         * @return api_raigeki
+         */
+        BattleTypes.Raigeki getRaigeki();
+    }
+
+    /**
      * 夜戦を表します
      */
     public interface IMidnightBattle extends IBattle {

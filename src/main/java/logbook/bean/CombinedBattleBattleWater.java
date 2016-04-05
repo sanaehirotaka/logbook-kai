@@ -9,6 +9,7 @@ import logbook.bean.BattleTypes.ICombinedBattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.ISortieBattle;
+import logbook.bean.BattleTypes.ISortieHougeki;
 import logbook.bean.BattleTypes.ISupport;
 import logbook.internal.JsonHelper;
 
@@ -16,7 +17,7 @@ import logbook.internal.JsonHelper;
  * 機動部隊(水上部隊)
  *
  */
-public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle, IFormation, IKouku, ISupport, Serializable {
+public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle, ISortieHougeki, IFormation, IKouku, ISupport, Serializable {
 
     private static final long serialVersionUID = -7707485457662183362L;
 
@@ -425,6 +426,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_opening_flagを取得します。
      * @return api_opening_flag
      */
+    @Override
     public Boolean getOpeningFlag() {
         return this.openingFlag;
     }
@@ -441,6 +443,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_opening_atackを取得します。
      * @return api_opening_atack
      */
+    @Override
     public BattleTypes.Raigeki getOpeningAtack() {
         return this.openingAtack;
     }
@@ -457,6 +460,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_hourai_flagを取得します。
      * @return api_hourai_flag
      */
+    @Override
     public List<Integer> getHouraiFlag() {
         return this.houraiFlag;
     }
@@ -473,6 +477,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_hougeki1を取得します。
      * @return api_hougeki1
      */
+    @Override
     public BattleTypes.Hougeki getHougeki1() {
         return this.hougeki1;
     }
@@ -489,6 +494,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_hougeki2を取得します。
      * @return api_hougeki2
      */
+    @Override
     public BattleTypes.Hougeki getHougeki2() {
         return this.hougeki2;
     }
@@ -505,6 +511,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_hougeki3を取得します。
      * @return api_hougeki3
      */
+    @Override
     public BattleTypes.Hougeki getHougeki3() {
         return this.hougeki3;
     }
@@ -521,6 +528,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
      * api_raigekiを取得します。
      * @return api_raigeki
      */
+    @Override
     public BattleTypes.Raigeki getRaigeki() {
         return this.raigeki;
     }
