@@ -58,6 +58,9 @@ import logbook.proxy.ProxyServer;
  */
 public class MainController extends WindowController {
 
+    /** 装備|母港枠の警告cssクラス名 */
+    private static final String FULLY_CLASS = "fully";
+
     /** 通知のインターバル */
     private static final Duration INTERVAL = Duration.ofMinutes(1);
 
@@ -392,6 +395,15 @@ public class MainController extends WindowController {
                 .getMaxSlotitem();
         this.item.setText(MessageFormat.format(this.itemFormat, slotitem, maxSlotitem));
 
+        boolean itemFully = maxSlotitem - slotitem <= AppConfig.get().getItemFullyThreshold();
+        if (itemFully) {
+            if (!this.item.getStyleClass().contains(FULLY_CLASS)) {
+                this.item.getStyleClass().add(FULLY_CLASS);
+            }
+        } else {
+            this.item.getStyleClass().remove(FULLY_CLASS);
+        }
+
         // 艦娘
         Integer chara = ShipCollection.get()
                 .getShipMap()
@@ -399,6 +411,15 @@ public class MainController extends WindowController {
         Integer maxChara = Basic.get()
                 .getMaxChara();
         this.ship.setText(MessageFormat.format(this.shipFormat, chara, maxChara));
+
+        boolean shipFully = maxChara - chara <= AppConfig.get().getShipFullyThreshold();
+        if (shipFully) {
+            if (!this.ship.getStyleClass().contains(FULLY_CLASS)) {
+                this.ship.getStyleClass().add(FULLY_CLASS);
+            }
+        } else {
+            this.ship.getStyleClass().remove(FULLY_CLASS);
+        }
     }
 
     /**

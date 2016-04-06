@@ -29,6 +29,12 @@ public final class AppConfig implements Serializable {
     /** 遠征完了時のリマインド */
     private boolean useRemind = true;
 
+    /** 母港枠の空きがこれ以下でボタンを警告色に変える */
+    private int shipFullyThreshold = 4;
+
+    /** 装備枠の空きがこれ以下でボタンを警告色に変える */
+    private int itemFullyThreshold = 16;
+
     /** 音量 */
     private int soundLevel = 85;
 
@@ -160,6 +166,38 @@ public final class AppConfig implements Serializable {
      */
     public void setUseRemind(boolean useRemind) {
         this.useRemind = useRemind;
+    }
+
+    /**
+     * 母港枠の空きがこれ以下でボタンを警告色に変えるを取得します。
+     * @return 母港枠の空きがこれ以下でボタンを警告色に変える
+     */
+    public int getShipFullyThreshold() {
+        return this.shipFullyThreshold;
+    }
+
+    /**
+     * 母港枠の空きがこれ以下でボタンを警告色に変えるを設定します。
+     * @param shipFullyThreshold 母港枠の空きがこれ以下でボタンを警告色に変える
+     */
+    public void setShipFullyThreshold(int shipFullyThreshold) {
+        this.shipFullyThreshold = shipFullyThreshold;
+    }
+
+    /**
+     * 装備枠の空きがこれ以下でボタンを警告色に変えるを取得します。
+     * @return 装備枠の空きがこれ以下でボタンを警告色に変える
+     */
+    public int getItemFullyThreshold() {
+        return this.itemFullyThreshold;
+    }
+
+    /**
+     * 装備枠の空きがこれ以下でボタンを警告色に変えるを設定します。
+     * @param itemFullyThreshold 装備枠の空きがこれ以下でボタンを警告色に変える
+     */
+    public void setItemFullyThreshold(int itemFullyThreshold) {
+        this.itemFullyThreshold = itemFullyThreshold;
     }
 
     /**

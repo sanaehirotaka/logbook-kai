@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -69,4 +70,8 @@
          </tabs>
       </TabPane>
    </children>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@main.css" />
+   </stylesheets>
 </VBox>

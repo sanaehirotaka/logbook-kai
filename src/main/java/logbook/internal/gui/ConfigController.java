@@ -44,6 +44,14 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField materialLogInterval;
 
+    /** 母港枠 */
+    @FXML
+    private TextField shipFullyThreshold;
+
+    /** 装備枠 */
+    @FXML
+    private TextField itemFullyThreshold;
+
     /** 最前面に表示する */
     @FXML
     private CheckBox onTop;
@@ -119,6 +127,8 @@ public class ConfigController extends WindowController {
         this.useRemind.setSelected(conf.isUseRemind());
         this.soundLevel.setText(Integer.toString(conf.getSoundLevel()));
         this.materialLogInterval.setText(Integer.toString(conf.getMaterialLogInterval()));
+        this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
+        this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.onTop.setSelected(conf.isOnTop());
         this.checkDoit.setSelected(conf.isCheckDoit());
         this.checkUpdate.setSelected(conf.isCheckUpdate());
@@ -168,6 +178,8 @@ public class ConfigController extends WindowController {
         conf.setUseRemind(this.useRemind.isSelected());
         conf.setSoundLevel(Integer.parseInt(this.soundLevel.getText()));
         conf.setMaterialLogInterval(Integer.parseInt(this.materialLogInterval.getText()));
+        conf.setShipFullyThreshold(Integer.parseInt(this.shipFullyThreshold.getText()));
+        conf.setItemFullyThreshold(Integer.parseInt(this.itemFullyThreshold.getText()));
         conf.setOnTop(this.onTop.isSelected());
         conf.setCheckDoit(this.checkDoit.isSelected());
         conf.setCheckUpdate(this.checkUpdate.isSelected());
