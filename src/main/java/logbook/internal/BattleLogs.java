@@ -19,11 +19,14 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -35,6 +38,10 @@ import org.apache.logging.log4j.Logger;
 
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
+import logbook.bean.BattleTypes.IBattle;
+import logbook.bean.BattleTypes.ICombinedBattle;
+import logbook.bean.Enemy;
+import logbook.bean.Ship;
 import logbook.internal.gui.BattleLogCollect;
 
 /**
@@ -607,6 +614,149 @@ public class BattleLogs {
          */
         public boolean accept(ZonedDateTime target, ZonedDateTime now) {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * 戦闘フェイズにおける味方と敵のステータス
+     */
+    public static class PhaseState {
+
+        /** フェイズ前味方 */
+        private List<Ship> beforeFriend = new ArrayList<>();
+
+        /** フェイズ前敵 */
+        private List<Enemy> beforeEnemy = new ArrayList<>();
+
+        /** フェイズ後味方 */
+        private List<Ship> afterFriend = new ArrayList<>();
+
+        /** フェイズ後敵 */
+        private List<Enemy> afterEnemy = new ArrayList<>();
+
+        /**
+         * 戦闘から新規フェイズを作成します
+         *
+         * @param b 戦闘
+         * @param deckMap 艦隊スナップショット
+         */
+        public PhaseState(IBattle b, Map<Integer, List<Ship>> deckMap) {
+            // 味方
+            if (b instanceof ICombinedBattle) {
+                for (Integer id : Arrays.asList(1, 2)) {
+                    List<Ship> ships = deckMap.get(id);
+                    for (Ship ship : ships) {
+                        this.beforeFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
+                    }
+                }
+            } else {
+                List<Ship> ships = deckMap.get(b.getDockId());
+                for (Ship ship : ships) {
+                    this.beforeFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
+                }
+            }
+
+            // 敵
+            for (int i = 1, s = b.getShipKe().size(); i < s; i++) {
+                if (b.getShipKe().get(i) != -1) {
+                    Enemy e = new Enemy();
+                    e.setShipId(b.getShipKe().get(i));
+                    e.setLv(b.getShipLv().get(i));
+                    e.setSlot(b.getESlot().get(i - 1));
+                    e.setKyouka(b.getEKyouka().get(i - 1));
+
+                    this.beforeEnemy.add(e.clone());
+                }
+            }
+            this.setInitialHp(b);
+
+            for (Ship ship : this.beforeFriend) {
+                this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
+            }
+            for (Enemy enemy : this.beforeEnemy) {
+                this.afterEnemy.add(Optional.ofNullable(enemy).map(Enemy::clone).orElse(null));
+            }
+        }
+
+        /**
+         * フェイズから新規フェイズを作成します<br>
+         * 引数psのフェイズ後が新規フェイズのフェイズ前とフェイズ後にコピーされます
+         *
+         * @param ps フェイズ
+         */
+        public PhaseState (PhaseState ps) {
+            for (Ship ship : ps.afterFriend) {
+                this.beforeFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
+                this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
+            }
+            for (Enemy enemy : ps.afterEnemy) {
+                this.beforeEnemy.add(Optional.ofNullable(enemy).map(Enemy::clone).orElse(null));
+                this.afterEnemy.add(Optional.ofNullable(enemy).map(Enemy::clone).orElse(null));
+            }
+        }
+
+        /**
+         * HPをセットします
+         * @param b 戦闘
+         */
+        public void setInitialHp(IBattle b) {
+            for (int i = 1, s = b.getMaxhps().size(); i < s; i++) {
+                if (i <= 6) {
+                    int idx = i - 1;
+                    if (this.beforeFriend.get(idx) != null) {
+                        this.beforeFriend.get(idx).setMaxhp(b.getMaxhps().get(i));
+                        this.beforeFriend.get(idx).setNowhp(b.getNowhps().get(i));
+                    }
+                } else {
+                    int idx = i - 1 - 6;
+                    if (this.beforeEnemy.get(idx) != null) {
+                        this.beforeEnemy.get(idx).setMaxhp(b.getMaxhps().get(i));
+                        this.beforeEnemy.get(idx).setNowhp(b.getNowhps().get(i));
+                    }
+                }
+            }
+            if (b instanceof ICombinedBattle) {
+                ICombinedBattle cb = (ICombinedBattle) b;
+                for (int i = 1, s = cb.getMaxhpsCombined().size(); i < s; i++) {
+                    int idx = i - 1 + 6;
+                    if (this.beforeFriend.get(idx) != null) {
+                        this.beforeFriend.get(idx).setMaxhp(cb.getMaxhpsCombined().get(i));
+                        this.beforeFriend.get(idx).setNowhp(cb.getNowhpsCombined().get(i));
+                    }
+                }
+            }
+        }
+
+        /**
+         * フェイズ前味方を取得します。
+         * @return フェイズ前味方
+         */
+        public List<Ship> getBeforeFriend() {
+            return this.beforeFriend;
+        }
+
+        /**
+         * フェイズ前敵を取得します。
+         * @return フェイズ前敵
+         */
+        public List<Enemy> getBeforeEnemy() {
+            return this.beforeEnemy;
+        }
+
+        /**
+         * フェイズ後味方を取得します。
+         * @return フェイズ後味方
+         */
+        public List<Ship> getAfterFriend() {
+            return this.afterFriend;
+        }
+
+        /**
+         * フェイズ後敵を取得します。
+         * @return フェイズ後敵
+         */
+        public List<Enemy> getAfterEnemy() {
+            return this.afterEnemy;
         }
     }
 

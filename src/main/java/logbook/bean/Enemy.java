@@ -7,7 +7,7 @@ import java.util.List;
  * 敵艦
  *
  */
-public class Enemy implements Serializable {
+public class Enemy implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -4222845234889789870L;
 
@@ -123,5 +123,14 @@ public class Enemy implements Serializable {
      */
     public void setKyouka(List<Integer> kyouka) {
         this.kyouka = kyouka;
+    }
+
+    @Override
+    public Enemy clone() {
+        try {
+            return (Enemy) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
