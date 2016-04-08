@@ -4,6 +4,7 @@ import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.MapStartNext;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
@@ -21,6 +22,7 @@ public class ApiReqMapStart implements APIListenerSpi {
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
             BattleLog log = new BattleLog();
+            log.setCombinedType(CombinedType.toCombinedType(AppCondition.get().getCombinedType()));
             log.getNext().add(MapStartNext.toMapStartNext(data));
             AppCondition.get()
                     .setBattleResult(log);

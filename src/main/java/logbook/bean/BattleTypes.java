@@ -165,7 +165,6 @@ public class BattleTypes {
          */
         BattleTypes.Hougeki getHougeki3();
 
-
         /**
          * api_raigekiを取得します。
          * @return api_raigeki
@@ -1917,6 +1916,32 @@ public class BattleTypes {
                 return 制空権喪失;
             default:
                 return 制空均衡;
+            }
+        }
+    }
+
+    /**
+     * 連合艦隊
+     * 0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊
+     */
+    public enum CombinedType {
+        未結成,
+        機動部隊,
+        水上部隊,
+        輸送部隊;
+
+        public static CombinedType toCombinedType(int i) {
+            switch (i) {
+            case 0:
+                return 未結成;
+            case 1:
+                return 機動部隊;
+            case 2:
+                return 水上部隊;
+            case 3:
+                return 輸送部隊;
+            default:
+                return 未結成;
             }
         }
     }

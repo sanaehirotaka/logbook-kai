@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IMidnightBattle;
 
@@ -15,6 +16,9 @@ import logbook.bean.BattleTypes.IMidnightBattle;
 public class BattleLog implements Serializable {
 
     private static final long serialVersionUID = -6163406897520116392L;
+
+    /** 連合艦隊 */
+    private CombinedType combinedType = CombinedType.未結成;
 
     /** 開始/進撃(順番に複数存在する) */
     private List<MapStartNext> next = new ArrayList<>();
@@ -33,6 +37,22 @@ public class BattleLog implements Serializable {
 
     /** 日時(戦闘結果の取得日時) */
     private String time;
+
+    /**
+     * 連合艦隊を取得します。
+     * @return 連合艦隊
+     */
+    public CombinedType getCombinedType() {
+        return combinedType;
+    }
+
+    /**
+     * 連合艦隊を設定します。
+     * @param combinedType 連合艦隊
+     */
+    public void setCombinedType(CombinedType combinedType) {
+        this.combinedType = combinedType;
+    }
 
     /**
      * 開始/進撃(順番に複数存在する)を取得します。
