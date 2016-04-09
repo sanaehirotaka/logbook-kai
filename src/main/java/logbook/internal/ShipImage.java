@@ -20,12 +20,15 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
+import logbook.bean.Chara;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
+import logbook.bean.SlotitemMst;
+import logbook.bean.SlotitemMstCollection;
 
 class ShipImage {
 
@@ -126,58 +129,65 @@ class ShipImage {
     private static final int ITEM_ICON_SIZE = 24;
 
     /**
-     * 艦娘の画像を作成します
+     * キャラクターの画像を作成します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @param addItem 装備画像を追加します
+     * @param applyState 遠征や入渠、退避のバナーアイコンを追加する
      * @return 艦娘の画像
      */
-    static Image get(Ship ship, boolean addItem) {
+    static Image get(Chara chara, boolean addItem, boolean applyState) {
         Canvas canvas = new Canvas(160, 40);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        if (ship != null) {
-            Path base = getBaseImagePath(ship);
+        if (chara != null) {
+            Path base = getBaseImagePath(chara);
             if (base != null) {
                 Image img = CACHE.get(base.toUri().toString());
                 gc.drawImage(img, 0, 0);
             }
             List<Layer> layers = new ArrayList<>();
 
+            // 艦娘
+            boolean isShip = chara instanceof Ship;
+
             // 入渠中
-            boolean isOnNdock = NdockCollection.get()
+            boolean isOnNdock = applyState && isShip && NdockCollection.get()
                     .getNdockSet()
-                    .contains(ship.getId());
+                    .contains(((Ship) chara).getId());
             // 遠征中
-            boolean isMission = DeckPortCollection.get()
+            boolean isMission = applyState && isShip && DeckPortCollection.get()
                     .getMissionShips()
-                    .contains(ship.getId());
+                    .contains(((Ship) chara).getId());
+            // 退避
+            boolean isEscape = applyState && isShip && Ships.isEscape((Ship) chara);
+
             // バッチ
             if (isOnNdock) {
                 layers.add(NDOCK_BADGE);
             } else if (isMission) {
                 layers.add(MISSION_BADGE);
-            } else if (Ships.isEscape(ship)) {
+            } else if (isEscape) {
                 layers.add(ESCAPE_BADGE);
                 gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
-            } else if (Ships.isSlightDamage(ship)) {
+            } else if (Ships.isSlightDamage(chara)) {
                 layers.add(SLIGHT_DAMAGE_BADGE);
                 layers.add(SLIGHT_DAMAGE_BACKGROUND);
-            } else if (Ships.isHalfDamage(ship)) {
+            } else if (Ships.isHalfDamage(chara)) {
                 layers.add(HALF_DAMAGE_BADGE);
                 layers.add(HALF_DAMAGE_BACKGROUND);
-            } else if (Ships.isBadlyDamage(ship)) {
+            } else if (Ships.isBadlyDamage(chara)) {
                 layers.add(BADLY_DAMAGE_BADGE);
                 layers.add(BADLY_DAMAGE_BACKGROUND);
-            } else if (Ships.isLost(ship)) {
+            } else if (Ships.isLost(chara)) {
                 layers.add(LOST_BADGE);
                 gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
             }
             // 疲労
-            if (Ships.isOrange(ship)) {
+            if (isShip && Ships.isOrange((Ship) chara)) {
                 layers.add(ORANGE_BACKGROUND);
                 layers.add(ORANGE_FACE);
-            } else if (Ships.isRed(ship)) {
+            } else if (isShip && Ships.isRed((Ship) chara)) {
                 layers.add(RED_BACKGROUND);
                 layers.add(RED_FACE);
             }
@@ -185,14 +195,26 @@ class ShipImage {
             if (addItem) {
                 int x = 16;
                 int y = 16;
-                for (Integer itemId : ship.getSlot()) {
-                    // 装備アイコン
-                    layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId)));
-                    x += ITEM_ICON_SIZE;
-                }
-                if (ship.getSlotEx() != 0) {
-                    // 補強増設は0(未開放)以外の場合
-                    layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(ship.getSlotEx())));
+                if (isShip) {
+                    Ship ship = (Ship) chara;
+                    for (Integer itemId : ship.getSlot()) {
+                        // 装備アイコン
+                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId)));
+                        x += ITEM_ICON_SIZE;
+                    }
+                    if (((Ship) chara).getSlotEx() != 0) {
+                        // 補強増設は0(未開放)以外の場合
+                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(ship.getSlotEx())));
+                    }
+                } else {
+                    Map<Integer, SlotitemMst> map = SlotitemMstCollection.get()
+                            .getSlotitemMap();
+                    for (Integer itemId : chara.getSlot()) {
+                        Image icon = Items.borderedItemImage(map.get(itemId));
+                        // 装備アイコン
+                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, icon));
+                        x += ITEM_ICON_SIZE;
+                    }
                 }
             }
             applyLayers(gc, layers);
@@ -233,16 +255,22 @@ class ShipImage {
     }
 
     /**
-     * 艦娘のベースとなる画像を取得します。
+     * キャラクターのベースとなる画像を取得します。
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 艦娘のベースとなる画像
      */
-    private static Path getBaseImagePath(Ship ship) {
-        Optional<ShipMst> mst = Ships.shipMst(ship);
+    private static Path getBaseImagePath(Chara chara) {
+        Optional<ShipMst> mst = Ships.shipMst(chara);
         if (mst.isPresent()) {
             Path dir = ShipMst.getResourcePathDir(mst.get());
-            String[] names = (Ships.isHalfDamage(ship) || Ships.isBadlyDamage(ship)) ? DAMAGED : NORMAL;
+            String[] names;
+            if (chara instanceof Ship
+                    && (Ships.isHalfDamage(chara) || Ships.isBadlyDamage(chara) || Ships.isLost(chara))) {
+                names = DAMAGED;
+            } else {
+                names = NORMAL;
+            }
             for (String name : names) {
                 Path p = dir.resolve(name);
                 if (Files.isReadable(p)) {

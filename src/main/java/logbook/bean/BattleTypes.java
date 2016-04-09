@@ -251,6 +251,42 @@ public class BattleTypes {
     }
 
     /**
+     * 砲撃フェイズ
+     */
+    public interface IHougeki {
+
+        /**
+         * api_at_listを取得します。
+         * @return api_at_list
+         */
+        List<Integer> getAtList();
+
+        /**
+         * api_df_listを取得します。
+         * @return api_df_list
+         */
+        List<List<Integer>> getDfList();
+
+        /**
+         * api_si_listを取得します。
+         * @return api_si_list
+         */
+        List<List<Integer>> getSiList();
+
+        /**
+         * api_cl_listを取得します。
+         * @return api_cl_list
+         */
+        List<List<Integer>> getClList();
+
+        /**
+         * api_damageを取得します。
+         * @return api_damage
+         */
+        List<List<Double>> getDamage();
+    }
+
+    /**
      * 航空戦
      */
     public static class Kouku implements Serializable {
@@ -1533,7 +1569,7 @@ public class BattleTypes {
     /**
      * 砲撃
      */
-    public static class Hougeki implements Serializable {
+    public static class Hougeki implements IHougeki, Serializable {
 
         private static final long serialVersionUID = -5339612671179791906L;
 
@@ -1559,6 +1595,7 @@ public class BattleTypes {
          * api_at_listを取得します。
          * @return api_at_list
          */
+        @Override
         public List<Integer> getAtList() {
             return this.atList;
         }
@@ -1591,6 +1628,7 @@ public class BattleTypes {
          * api_df_listを取得します。
          * @return api_df_list
          */
+        @Override
         public List<List<Integer>> getDfList() {
             return this.dfList;
         }
@@ -1607,6 +1645,7 @@ public class BattleTypes {
          * api_si_listを取得します。
          * @return api_si_list
          */
+        @Override
         public List<List<Integer>> getSiList() {
             return this.siList;
         }
@@ -1623,6 +1662,7 @@ public class BattleTypes {
          * api_cl_listを取得します。
          * @return api_cl_list
          */
+        @Override
         public List<List<Integer>> getClList() {
             return this.clList;
         }
@@ -1639,6 +1679,7 @@ public class BattleTypes {
          * api_damageを取得します。
          * @return api_damage
          */
+        @Override
         public List<List<Double>> getDamage() {
             return this.damage;
         }
@@ -1673,7 +1714,7 @@ public class BattleTypes {
     /**
      * 砲撃
      */
-    public static class MidnightHougeki implements Serializable {
+    public static class MidnightHougeki implements IHougeki, Serializable {
 
         private static final long serialVersionUID = 8897484398602178656L;
 
@@ -1699,6 +1740,7 @@ public class BattleTypes {
          * api_at_listを取得します。
          * @return api_at_list
          */
+        @Override
         public List<Integer> getAtList() {
             return this.atList;
         }
@@ -1715,6 +1757,7 @@ public class BattleTypes {
          * api_df_listを取得します。
          * @return api_df_list
          */
+        @Override
         public List<List<Integer>> getDfList() {
             return this.dfList;
         }
@@ -1731,6 +1774,7 @@ public class BattleTypes {
          * api_si_listを取得します。
          * @return api_si_list
          */
+        @Override
         public List<List<Integer>> getSiList() {
             return this.siList;
         }
@@ -1747,6 +1791,7 @@ public class BattleTypes {
          * api_cl_listを取得します。
          * @return api_cl_list
          */
+        @Override
         public List<List<Integer>> getClList() {
             return this.clList;
         }
@@ -1779,6 +1824,7 @@ public class BattleTypes {
          * api_damageを取得します。
          * @return api_damage
          */
+        @Override
         public List<List<Double>> getDamage() {
             return this.damage;
         }

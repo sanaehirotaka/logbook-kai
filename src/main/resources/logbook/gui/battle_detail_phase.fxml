@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="TitledPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.72">
+   <content>
+      <GridPane>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" />
+         </rowConstraints>
+         <columnConstraints>
+            <ColumnConstraints minWidth="10.0" />
+            <ColumnConstraints minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <children>
+            <VBox fx:id="afterFriend" />
+            <VBox fx:id="afterFriendCombined" GridPane.columnIndex="1" />
+            <VBox fx:id="afterEnemy" GridPane.columnIndex="3" />
+         </children>
+      </GridPane>
+   </content>
+</fx:root>

@@ -1,9 +1,6 @@
 package logbook.api;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
@@ -11,12 +8,12 @@ import javax.json.JsonObject;
 import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
-import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.BattleLogs;
 import logbook.internal.LogWriter;
 import logbook.internal.Logs;
+import logbook.internal.PhaseState;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -38,21 +35,9 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 AppCondition.get().setBattleResult(null);
 
                 log.setResult(BattleResult.toBattleResult(data));
-                // 艦隊スナップショットを作る
-                Map<Integer, Ship> shipMap = ShipCollection.get()
-                        .getShipMap();
-                Map<Integer, List<Ship>> deckMap = new HashMap<>();
-                for (Integer dockId : Arrays.asList(1, 2)) {
-                    deckMap.put(dockId, DeckPortCollection.get()
-                            .getDeckPortMap()
-                            .get(dockId)
-                            .getShip()
-                            .stream()
-                            .map(shipMap::get)
-                            .collect(Collectors.toList()));
-                }
                 log.setTime(Logs.nowString());
-                log.setDeckMap(deckMap);
+                // 艦隊スナップショットを作る
+                log.setDeckMap(BattleLog.deckMap(1, 2));
                 // 戦闘ログの保存
                 BattleLogs.write(log);
 
@@ -61,6 +46,15 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                         .file(Logs.BATTLE_RESULT)
                         .alterFile(Logs.BATTLE_RESULT_ALT)
                         .write(log, Logs::formatBattleLog);
+                // 艦隊を更新
+                PhaseState p = new PhaseState(log);
+                p.apply(log.getBattle());
+                p.apply(log.getMidnight());
+                ShipCollection.get()
+                        .getShipMap()
+                        .putAll(p.getAfterFriend().stream()
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toMap(Ship::getId, v -> v)));
             }
         }
     }

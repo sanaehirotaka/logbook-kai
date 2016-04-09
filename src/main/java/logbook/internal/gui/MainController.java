@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +21,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
@@ -28,8 +31,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import logbook.Messages;
+import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.Basic;
+import logbook.bean.BattleLog;
+import logbook.bean.BattleTypes.CombinedType;
+import logbook.bean.BattleTypes.IFormation;
+import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ndock;
@@ -148,6 +156,40 @@ public class MainController extends WindowController {
             InternalFXMLLoader.showWindow("logbook/gui/capture.fxml", this.getWindow(), "キャプチャ");
         } catch (Exception ex) {
             LoggerHolder.LOG.error("キャプチャの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
+     * 直近の戦闘
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void battleStatus(ActionEvent event) {
+        try {
+            BattleLog log = AppCondition.get()
+                    .getBattleResult();
+
+            if (log != null && log.getBattle() != null) {
+                CombinedType combinedType = log.getCombinedType();
+                Map<Integer, List<Ship>> deckMap = log.getDeckMap();
+                IFormation battle = log.getBattle();
+                IMidnightBattle midnight = log.getMidnight();
+
+                InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
+                        "直近の戦闘", c -> {
+                            ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
+                        } , null);
+            } else {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.initOwner(this.getWindow());
+                alert.setTitle("直近の戦闘");
+                alert.setHeaderText("直近の戦闘");
+                alert.setContentText("戦闘中ではありません");
+                alert.show();
+            }
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);
         }
     }
 

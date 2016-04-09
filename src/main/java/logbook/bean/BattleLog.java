@@ -2,8 +2,10 @@ package logbook.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IFormation;
@@ -43,7 +45,7 @@ public class BattleLog implements Serializable {
      * @return 連合艦隊
      */
     public CombinedType getCombinedType() {
-        return combinedType;
+        return this.combinedType;
     }
 
     /**
@@ -148,5 +150,27 @@ public class BattleLog implements Serializable {
      */
     public void setTime(String time) {
         this.time = time;
+    }
+
+    /**
+     * 艦隊スナップショットを作成します
+     * @param dockIds 艦隊ID
+     * @return 艦隊スナップショット
+     */
+    public static Map<Integer, List<Ship>> deckMap(Integer... dockIds) {
+        Map<Integer, Ship> shipMap = ShipCollection.get()
+                .getShipMap();
+        Map<Integer, List<Ship>> deckMap = new HashMap<>();
+        for (Integer dockId : dockIds) {
+            deckMap.put(dockId, DeckPortCollection.get()
+                    .getDeckPortMap()
+                    .get(dockId)
+                    .getShip()
+                    .stream()
+                    .map(shipMap::get)
+                    .map(ship -> ship != null ? ship.clone() : null)
+                    .collect(Collectors.toList()));
+        }
+        return deckMap;
     }
 }

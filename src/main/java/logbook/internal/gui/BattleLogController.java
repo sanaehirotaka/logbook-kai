@@ -15,12 +15,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import logbook.bean.BattleLog;
+import logbook.bean.BattleTypes.CombinedType;
+import logbook.bean.BattleTypes.IFormation;
+import logbook.bean.BattleTypes.IMidnightBattle;
+import logbook.bean.Ship;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
@@ -155,6 +161,31 @@ public class BattleLogController extends WindowController {
                     .addListener(this::detail);
 
             // 詳細
+            this.detail.setRowFactory(tv -> {
+                TableRow<BattleLogDetail> r = new TableRow<>();
+                r.setOnMouseClicked(e -> {
+                    if (e.getClickCount() == 2 && (!r.isEmpty())) {
+                        BattleLogDetail d = r.getItem();
+                        BattleLog log = BattleLogs.read(d.getDate());
+                        if (log != null) {
+                            try {
+                                CombinedType combinedType = log.getCombinedType();
+                                Map<Integer, List<Ship>> deckMap = log.getDeckMap();
+                                IFormation battle = log.getBattle();
+                                IMidnightBattle midnight = log.getMidnight();
+
+                                InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
+                                        "戦闘ログ", c -> {
+                                    ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
+                                } , null);
+                            } catch (Exception ex) {
+                                LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);
+                            }
+                        }
+                    }
+                });
+                return r;
+            });
             this.detail.setItems(this.details);
             this.detail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.detail.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);

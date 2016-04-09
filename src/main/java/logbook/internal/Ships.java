@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import javafx.scene.image.Image;
 import logbook.bean.AppCondition;
 import logbook.bean.Basic;
+import logbook.bean.Chara;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
@@ -52,56 +53,56 @@ public class Ships {
     }
 
     /**
-     * 艦娘が小破未満か判定します
+     * キャラクターが小破未満か判定します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 小破未満の場合true
      */
-    public static boolean isLessThanSlightDamage(Ship ship) {
-        return Double.compare(hpPer(ship), SLIGHT_DAMAGE) > 0;
+    public static boolean isLessThanSlightDamage(Chara chara) {
+        return Double.compare(hpPer(chara), SLIGHT_DAMAGE) > 0;
     }
 
     /**
-     * 艦娘が小破状態か判定します
+     * キャラクターが小破状態か判定します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 小破状態の場合true
      */
-    public static boolean isSlightDamage(Ship ship) {
-        double per = hpPer(ship);
+    public static boolean isSlightDamage(Chara chara) {
+        double per = hpPer(chara);
         return Double.compare(per, SLIGHT_DAMAGE) <= 0 && Double.compare(per, HALF_DAMAGE) > 0;
     }
 
     /**
-     * 艦娘が中破状態か判定します
+     * キャラクターが中破状態か判定します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 中破状態の場合true
      */
-    public static boolean isHalfDamage(Ship ship) {
-        double per = hpPer(ship);
+    public static boolean isHalfDamage(Chara chara) {
+        double per = hpPer(chara);
         return Double.compare(per, HALF_DAMAGE) <= 0 && Double.compare(per, BADLY_DAMAGE) > 0;
     }
 
     /**
-     * 艦娘が大破状態か判定します
+     * キャラクターが大破状態か判定します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 大破状態の場合true
      */
-    public static boolean isBadlyDamage(Ship ship) {
-        double per = hpPer(ship);
+    public static boolean isBadlyDamage(Chara chara) {
+        double per = hpPer(chara);
         return Double.compare(per, BADLY_DAMAGE) <= 0 && per > 0;
     }
 
     /**
-     * 艦娘が撃沈状態か判定します
+     * キャラクターが撃沈状態か判定します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 撃沈状態の場合true
      */
-    public static boolean isLost(Ship ship) {
-        return ship.getNowhp() == 0;
+    public static boolean isLost(Chara chara) {
+        return chara.getNowhp() <= 0;
     }
 
     /**
@@ -158,49 +159,60 @@ public class Ships {
     }
 
     /**
-     * 艦娘の画像を取得します
+     * キャラクターの画像を取得します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 艦娘の画像
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image shipImage(Ship ship) throws IllegalStateException {
-        return ShipImage.get(ship, false);
+    public static Image shipImage(Chara chara) throws IllegalStateException {
+        return ShipImage.get(chara, false, true);
     }
 
     /**
-     * 艦娘の画像を取得します
+     * キャラクターの画像を取得します(装備画像付き)
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 艦娘の画像
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image shipWithItemImage(Ship ship) throws IllegalStateException {
-        return ShipImage.get(ship, true);
+    public static Image shipWithItemImage(Chara chara) throws IllegalStateException {
+        return ShipImage.get(chara, true, true);
     }
 
     /**
-     * 艦娘に対応する艦船を取得します
+     * キャラクターの画像を取得します(装備画像付き、状態バナー無し)
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
+     * @return 艦娘の画像
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image shipWithItemWithoutStateBannerImage(Chara chara) throws IllegalStateException {
+        return ShipImage.get(chara, true, false);
+    }
+
+    /**
+     * キャラクターに対応する艦船を取得します
+     *
+     * @param chara キャラクター
      * @return 艦船
      */
-    public static Optional<ShipMst> shipMst(Ship ship) {
+    public static Optional<ShipMst> shipMst(Chara chara) {
         ShipMst mst = ShipMstCollection.get()
                 .getShipMap()
-                .get(ship.getShipId());
+                .get(chara.getShipId());
         return Optional.ofNullable(mst);
     }
 
     /**
-     * 艦娘に対応する艦種を取得します
+     * キャラクターに対応する艦種を取得します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 艦種
      */
-    public static Optional<Stype> stype(Ship ship) {
+    public static Optional<Stype> stype(Chara chara) {
         Stype stype = null;
-        Optional<ShipMst> mst = shipMst(ship);
+        Optional<ShipMst> mst = shipMst(chara);
         if (mst.isPresent()) {
             stype = StypeCollection.get()
                     .getStypeMap()
@@ -501,15 +513,15 @@ public class Ships {
     /**
      * 装備定義を取得します
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      * @return 装備定義のリスト
      */
-    private static List<SlotitemMst> getSlotitemMst(Ship ship) {
+    private static List<SlotitemMst> getSlotitemMst(Chara chara) {
         Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
                 .getSlotitemMap();
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
                 .getSlotitemMap();
-        return ship.getSlot()
+        return chara.getSlot()
                 .stream()
                 .map(itemMap::get)
                 .filter(Objects::nonNull)
@@ -520,12 +532,12 @@ public class Ships {
     }
 
     /**
-     * 艦娘のHP割合
-     * @param ship 艦娘
+     * キャラクターのHP割合
+     * @param chara キャラクター
      * @return HP割合
      */
-    private static double hpPer(Ship ship) {
-        return (double) ship.getNowhp() / (double) ship.getMaxhp();
+    private static double hpPer(Chara chara) {
+        return (double) chara.getNowhp() / (double) chara.getMaxhp();
     }
 
     /**

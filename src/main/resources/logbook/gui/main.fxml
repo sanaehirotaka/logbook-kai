@@ -14,6 +14,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#capture" text="キャプチャ" />
               <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" onAction="#battleStatus" text="直近の戦闘" />
               <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ" />
               <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧" />

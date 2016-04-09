@@ -1,10 +1,16 @@
 package logbook.api;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
 import logbook.bean.CombinedBattleMidnightBattle;
+import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
+import logbook.internal.PhaseState;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -23,6 +29,15 @@ public class ApiReqCombinedBattleMidnightBattle implements APIListenerSpi {
             BattleLog log = AppCondition.get().getBattleResult();
             if (log != null) {
                 log.setMidnight(CombinedBattleMidnightBattle.toBattle(data));
+                // 艦隊を更新
+                PhaseState p = new PhaseState(log);
+                p.apply(log.getBattle());
+                p.apply(log.getMidnight());
+                ShipCollection.get()
+                        .getShipMap()
+                        .putAll(p.getAfterFriend().stream()
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toMap(Ship::getId, v -> v)));
             }
         }
     }
