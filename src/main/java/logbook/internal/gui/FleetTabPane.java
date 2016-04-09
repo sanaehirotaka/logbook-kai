@@ -133,6 +133,8 @@ public class FleetTabPane extends ScrollPane {
                 .append("\n")
                 .append("触接開始率: " + (int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100))
                 .append("%")
+                .append("\n")
+                .append("艦娘レベル合計: " + this.shipList.stream().mapToInt(Ship::getLv).sum())
                 .toString();
 
         this.info.setText(info);
