@@ -7,7 +7,7 @@ import java.util.List;
  * 敵艦
  *
  */
-public class Enemy implements Serializable, Cloneable {
+public class Enemy implements Chara, Serializable, Cloneable {
 
     private static final long serialVersionUID = -4222845234889789870L;
 
@@ -33,6 +33,7 @@ public class Enemy implements Serializable, Cloneable {
      * 艦船IDを取得します。
      * @return 艦船ID
      */
+    @Override
     public Integer getShipId() {
         return this.shipId;
     }
@@ -49,6 +50,7 @@ public class Enemy implements Serializable, Cloneable {
      * Lvを取得します。
      * @return Lv
      */
+    @Override
     public Integer getLv() {
         return this.lv;
     }
@@ -65,6 +67,7 @@ public class Enemy implements Serializable, Cloneable {
      * HPを取得します。
      * @return HP
      */
+    @Override
     public Integer getNowhp() {
         return this.nowhp;
     }
@@ -81,6 +84,7 @@ public class Enemy implements Serializable, Cloneable {
      * 最大HPを取得します。
      * @return 最大HP
      */
+    @Override
     public Integer getMaxhp() {
         return this.maxhp;
     }
@@ -97,6 +101,7 @@ public class Enemy implements Serializable, Cloneable {
      * 装備を取得します。
      * @return 装備
      */
+    @Override
     public List<Integer> getSlot() {
         return this.slot;
     }

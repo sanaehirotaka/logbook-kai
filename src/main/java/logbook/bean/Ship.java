@@ -11,7 +11,7 @@ import logbook.internal.JsonHelper;
  * 艦娘
  *
  */
-public class Ship implements Serializable, Cloneable {
+public class Ship implements Chara, Serializable, Cloneable {
 
     private static final long serialVersionUID = 3598977177423429679L;
 
@@ -144,6 +144,7 @@ public class Ship implements Serializable, Cloneable {
      * 艦船IDを取得します。
      * @return 艦船ID
      */
+    @Override
     public Integer getShipId() {
         return this.shipId;
     }
@@ -160,6 +161,7 @@ public class Ship implements Serializable, Cloneable {
      * Lvを取得します。
      * @return Lv
      */
+    @Override
     public Integer getLv() {
         return this.lv;
     }
@@ -192,6 +194,7 @@ public class Ship implements Serializable, Cloneable {
      * HPを取得します。
      * @return HP
      */
+    @Override
     public Integer getNowhp() {
         return this.nowhp;
     }
@@ -208,6 +211,7 @@ public class Ship implements Serializable, Cloneable {
      * 最大HPを取得します。
      * @return 最大HP
      */
+    @Override
     public Integer getMaxhp() {
         return this.maxhp;
     }
@@ -240,6 +244,7 @@ public class Ship implements Serializable, Cloneable {
      * 装備を取得します。
      * @return 装備
      */
+    @Override
     public List<Integer> getSlot() {
         return this.slot;
     }
