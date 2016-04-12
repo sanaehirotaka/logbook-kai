@@ -227,6 +227,8 @@ public class CaptureSaveController extends WindowController {
     void setItems(ObservableList<ImageData> images) {
         this.images = images;
         this.list.setItems(this.images);
+        this.list.getCheckModel()
+                .checkAll();
         this.list.getSelectionModel()
                 .selectedItemProperty()
                 .addListener(this::viewImage);
