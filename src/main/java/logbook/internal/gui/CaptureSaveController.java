@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckListView;
@@ -167,7 +168,10 @@ public class CaptureSaveController extends WindowController {
 
         String fname = DATE_FORMAT.format(selections.get(0).getDateTime()) + ".gif";
         Path to = dir.resolve(fname);
-        List<byte[]> bytes = selections.stream().map(ImageData::getImage).collect(Collectors.toList());
+        List<byte[]> bytes = selections.stream()
+                .map(ImageData::getImage)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(to))) {
             ScreenCapture.createAnimetedGIF(out, bytes, delay);
@@ -186,16 +190,22 @@ public class CaptureSaveController extends WindowController {
             // 並べる場合
             int column = Math.max(Integer.parseInt(this.tileCount.getText()), 1);
             Path to = dir.resolve(DATE_FORMAT.format(selections.get(0).getDateTime()) + ".jpg");
-            List<byte[]> bytes = selections.stream().map(ImageData::getImage).collect(Collectors.toList());
+            List<byte[]> bytes = selections.stream()
+                    .map(ImageData::getImage)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             try (OutputStream out = Files.newOutputStream(to)) {
                 out.write(ScreenCapture.encodeJpeg(ScreenCapture.tileImage(bytes, column)));
             }
         } else {
             // 並べない場合個別にファイル保存する
             for (ImageData image : selections) {
-                Path to = dir.resolve(DATE_FORMAT.format(image.getDateTime()) + ".jpg");
-                try (OutputStream out = Files.newOutputStream(to)) {
-                    out.write(image.getImage());
+                byte[] data = image.getImage();
+                if (data != null) {
+                    Path to = dir.resolve(DATE_FORMAT.format(image.getDateTime()) + ".jpg");
+                    try (OutputStream out = Files.newOutputStream(to)) {
+                        out.write(data);
+                    }
                 }
             }
         }
@@ -217,8 +227,13 @@ public class CaptureSaveController extends WindowController {
      */
     private void viewImage(ObservableValue<? extends ImageData> observable, ImageData oldValue, ImageData value) {
         if (value != null) {
-            Image img = new Image(new ByteArrayInputStream(value.getImage()));
-            this.image.setImage(img);
+            byte[] data = value.getImage();
+            if (data != null) {
+                Image img = new Image(new ByteArrayInputStream(data));
+                this.image.setImage(img);
+            } else {
+                this.image.setImage(null);
+            }
         }
     }
 

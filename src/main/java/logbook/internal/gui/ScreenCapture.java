@@ -13,6 +13,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -356,7 +358,7 @@ class ScreenCapture {
         private ZonedDateTime dateTime;
 
         /** 画像データ */
-        private byte[] image;
+        private Reference<byte[]> image;
 
         /**
          * 日付を取得します。
@@ -379,7 +381,7 @@ class ScreenCapture {
          * @return 画像データ
          */
         byte[] getImage() {
-            return this.image;
+            return this.image.get();
         }
 
         /**
@@ -387,7 +389,7 @@ class ScreenCapture {
          * @param image 画像データ
          */
         void setImage(byte[] image) {
-            this.image = image;
+            this.image = new SoftReference<byte[]>(image);
         }
 
         @Override
