@@ -17,7 +17,7 @@
             <TextField fx:id="fps" prefWidth="40.0" text="10" />
             <Separator orientation="VERTICAL" />
             <CheckBox fx:id="tile" mnemonicParsing="false" onAction="#tile" text="並べる" />
-            <TextField fx:id="tileCount" disable="true" prefWidth="40.0" text="6" />
+            <TextField fx:id="tileCount" disable="true" prefWidth="40.0" text="3" />
             <Label text="列" />
             <Separator orientation="VERTICAL" />
           <Button mnemonicParsing="false" onAction="#save" text="保存" />
