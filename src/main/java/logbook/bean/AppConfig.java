@@ -15,7 +15,7 @@ import logbook.internal.SeaArea;
  */
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = 8043362931530718960L;
+    private static final long serialVersionUID = 8523468261908058871L;
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
@@ -103,6 +103,9 @@ public final class AppConfig implements Serializable {
 
     /** ウインドウ位置 */
     private Map<String, WindowLocation> windowLocationMap = new HashMap<>();
+
+    /** キャプチャの保存先 */
+    private String captureDir;
 
     /**
      * 遠征・入渠完了時に通知をするを取得します。
@@ -566,6 +569,22 @@ public final class AppConfig implements Serializable {
      */
     public void setWindowLocationMap(Map<String, WindowLocation> windowLocationMap) {
         this.windowLocationMap = windowLocationMap;
+    }
+
+    /**
+     * キャプチャの保存先を取得します。
+     * @return キャプチャの保存先
+     */
+    public String getCaptureDir() {
+        return this.captureDir;
+    }
+
+    /**
+     * キャプチャの保存先を設定します。
+     * @param captureDir キャプチャの保存先
+     */
+    public void setCaptureDir(String captureDir) {
+        this.captureDir = captureDir;
     }
 
     /**

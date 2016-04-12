@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckListView;
@@ -34,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.WindowEvent;
+import logbook.bean.AppConfig;
 import logbook.internal.ThreadManager;
 import logbook.internal.gui.ScreenCapture.ImageData;
 
@@ -99,8 +101,19 @@ public class CaptureSaveController extends WindowController {
         if (!selections.isEmpty()) {
             DirectoryChooser dc = new DirectoryChooser();
             dc.setTitle("キャプチャの保存先");
+            // 覚えた保存先をセット
+            File initDir = Optional.ofNullable(AppConfig.get().getCaptureDir())
+                    .map(File::new)
+                    .filter(File::isDirectory)
+                    .orElse(null);
+            if (initDir != null) {
+                dc.setInitialDirectory(initDir);
+            }
             File file = dc.showDialog(this.getWindow());
             if (file != null) {
+                // 保存先を覚える
+                AppConfig.get().setCaptureDir(file.getAbsolutePath());
+
                 Path path = file.toPath();
 
                 Task<Void> task = new Task<Void>() {
