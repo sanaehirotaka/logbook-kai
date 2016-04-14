@@ -2,6 +2,7 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,7 +87,7 @@ public class MissionPane extends AnchorPane {
         ObservableList<String> styleClass = this.getStyleClass();
         styleClass.removeAll("stage1", "stage2", "stage3", "empty");
 
-        if (state == 0) {
+        if (state == 0 || target == 0 || time == 0) {
             // 未出撃
             // プログレスバー
             this.progress.setProgress(0);
@@ -101,23 +102,27 @@ public class MissionPane extends AnchorPane {
             styleClass.add("empty");
         } else {
             // 出撃(遠征中・遠征帰還・遠征中止)
-            Mission mission = MissionCollection.get()
+            Optional<Mission> mission = Optional.ofNullable(MissionCollection.get()
                     .getMissionMap()
-                    .get(target);
+                    .get(target));
 
             // 遠征の最大時間
-            Duration max = Duration.ofMinutes(mission.getTime());
+            Duration max = Duration.ofMinutes(mission.map(Mission::getTime).orElse(0));
             // 残り時間を計算
             Duration now = Duration.ofMillis(time - System.currentTimeMillis());
 
-            double p = (double) (max.toMillis() - now.toMillis()) / (double) max.toMillis();
-
-            this.progress.setProgress(p);
-            this.progress.setVisible(true);
+            if (!max.isZero()) {
+                double p = (double) (max.toMillis() - now.toMillis()) / (double) max.toMillis();
+                this.progress.setProgress(p);
+                this.progress.setVisible(true);
+            } else {
+                this.progress.setProgress(0);
+                this.progress.setVisible(false);
+            }
             // 艦隊名
             this.fleet.setText(this.port.getName());
             // 遠征先
-            this.name.setText(mission.getName());
+            this.name.setText(mission.map(Mission::getName).orElse(""));
             // 残り時間を更新
             this.time.setText(timeText(now));
 
