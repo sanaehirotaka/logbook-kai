@@ -120,12 +120,14 @@ public class BattleLogs {
 
     private static BattleLog read(Path path) {
         try {
-            try (InputStream in = new BufferedInputStream(Files.newInputStream(path))) {
-                try (XMLDecoder decoder = new XMLDecoder(in)) {
-                    Object obj = decoder.readObject();
+            if (Files.isReadable(path)) {
+                try (InputStream in = new BufferedInputStream(Files.newInputStream(path))) {
+                    try (XMLDecoder decoder = new XMLDecoder(in)) {
+                        Object obj = decoder.readObject();
 
-                    if (obj instanceof BattleLog) {
-                        return (BattleLog) obj;
+                        if (obj instanceof BattleLog) {
+                            return (BattleLog) obj;
+                        }
                     }
                 }
             }
