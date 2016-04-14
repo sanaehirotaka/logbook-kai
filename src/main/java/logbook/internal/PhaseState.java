@@ -82,7 +82,7 @@ public class PhaseState {
                 e.setSlot(b.getESlot().get(i - 1));
                 e.setKyouka(b.getEKyouka().get(i - 1));
 
-                this.afterEnemy.add(e.clone());
+                this.afterEnemy.add(e);
             }
         }
         this.setInitialHp(b);
@@ -363,9 +363,12 @@ public class PhaseState {
             ICombinedBattle cb = (ICombinedBattle) b;
             for (int i = 1, s = cb.getMaxhpsCombined().size(); i < s; i++) {
                 int idx = i - 1 + 6;
-                if (this.afterFriend.get(idx) != null) {
-                    this.afterFriend.get(idx).setMaxhp(cb.getMaxhpsCombined().get(i));
-                    this.afterFriend.get(idx).setNowhp(cb.getNowhpsCombined().get(i));
+                if (cb.getMaxhpsCombined().get(i) == -1) {
+                    continue;
+                }
+                if (this.afterFriendCombined.get(idx) != null) {
+                    this.afterFriendCombined.get(idx).setMaxhp(cb.getMaxhpsCombined().get(i));
+                    this.afterFriendCombined.get(idx).setNowhp(cb.getNowhpsCombined().get(i));
                 }
             }
         }
