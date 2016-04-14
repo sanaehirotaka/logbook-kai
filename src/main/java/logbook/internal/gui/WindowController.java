@@ -1,5 +1,6 @@
 package logbook.internal.gui;
 
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logbook.bean.WindowLocation;
 
@@ -33,10 +34,20 @@ public abstract class WindowController {
      * @param location ウインドウの位置とサイズ
      */
     public void setWindowLocation(WindowLocation location) {
-        this.window.setX(location.getX());
-        this.window.setY(location.getY());
-        this.window.setWidth(location.getWidth());
-        this.window.setHeight(location.getHeight());
+        if (location != null) {
+            boolean intersect = Screen.getScreens()
+                    .stream()
+                    .map(Screen::getVisualBounds)
+                    .anyMatch(r -> r.intersects(
+                            location.getX(), location.getY(), location.getWidth(), location.getHeight()));
+
+            if (intersect) {
+                this.window.setX(location.getX());
+                this.window.setY(location.getY());
+                this.window.setWidth(location.getWidth());
+                this.window.setHeight(location.getHeight());
+            }
+        }
     }
 
     /**

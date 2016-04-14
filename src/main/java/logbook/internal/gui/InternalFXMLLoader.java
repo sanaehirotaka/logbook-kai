@@ -5,11 +5,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.function.Consumer;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import logbook.bean.AppConfig;
+import logbook.bean.WindowLocation;
 import logbook.plugin.PluginContainer;
 
 final class InternalFXMLLoader {
@@ -60,6 +64,8 @@ final class InternalFXMLLoader {
         stage.initOwner(parent);
         stage.setTitle(title);
         setIcon(stage);
+        defaultCloseAction(controller);
+        defaultOpenAction(controller);
 
         if (controllerFunction != null) {
             controllerFunction.accept(controller);
@@ -87,5 +93,26 @@ final class InternalFXMLLoader {
                 stage.getIcons().add(new Image(is));
             }
         }
+    }
+
+    static void defaultCloseAction(WindowController controller) {
+        if (controller.getWindow() != null) {
+            EventHandler<WindowEvent> action = e -> {
+                String key = controller.getClass().getCanonicalName();
+                AppConfig.get()
+                        .getWindowLocationMap()
+                        .put(key, controller.getWindowLocation());
+            };
+            controller.getWindow()
+                    .setOnCloseRequest(action);
+        }
+    }
+
+    static void defaultOpenAction(WindowController controller) {
+        String key = controller.getClass().getCanonicalName();
+        WindowLocation location = AppConfig.get()
+                .getWindowLocationMap()
+                .get(key);
+        controller.setWindowLocation(location);
     }
 }

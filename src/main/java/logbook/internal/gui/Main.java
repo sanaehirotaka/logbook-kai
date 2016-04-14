@@ -1,7 +1,5 @@
 package logbook.internal.gui;
 
-import java.util.Optional;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,10 +32,6 @@ public class Main extends Application {
 
         stage.setTitle("航海日誌 " + Version.getCurrent());
 
-        Optional.ofNullable(AppConfig.get()
-                .getWindowLocationMap()
-                .get(controller.getClass().getCanonicalName()))
-                .ifPresent(controller::setWindowLocation);
         stage.setOnCloseRequest(e -> {
             if (AppConfig.get().isCheckDoit()) {
                 Alert alert = new Alert(AlertType.INFORMATION);
@@ -57,6 +51,7 @@ public class Main extends Application {
                         .put(controller.getClass().getCanonicalName(), controller.getWindowLocation());
             }
         });
+        InternalFXMLLoader.defaultOpenAction(controller);
 
         stage.show();
     }
