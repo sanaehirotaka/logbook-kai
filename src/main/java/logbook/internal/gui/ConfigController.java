@@ -44,6 +44,14 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField materialLogInterval;
 
+    /** 戦闘開始時に結果を反映 */
+    @FXML
+    private CheckBox applyBattle;
+
+    /** 戦闘開始時に結果を反映 */
+    @FXML
+    private CheckBox applyResult;
+
     /** 母港枠 */
     @FXML
     private TextField shipFullyThreshold;
@@ -127,6 +135,8 @@ public class ConfigController extends WindowController {
         this.useRemind.setSelected(conf.isUseRemind());
         this.soundLevel.setText(Integer.toString(conf.getSoundLevel()));
         this.materialLogInterval.setText(Integer.toString(conf.getMaterialLogInterval()));
+        this.applyBattle.setSelected(conf.isApplyBattle());
+        this.applyResult.setSelected(conf.isApplyResult());
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.onTop.setSelected(conf.isOnTop());
@@ -178,6 +188,8 @@ public class ConfigController extends WindowController {
         conf.setUseRemind(this.useRemind.isSelected());
         conf.setSoundLevel(Integer.parseInt(this.soundLevel.getText()));
         conf.setMaterialLogInterval(Integer.parseInt(this.materialLogInterval.getText()));
+        conf.setApplyBattle(this.applyBattle.isSelected());
+        conf.setApplyResult(this.applyResult.isSelected());
         conf.setShipFullyThreshold(Integer.parseInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(Integer.parseInt(this.itemFullyThreshold.getText()));
         conf.setOnTop(this.onTop.isSelected());

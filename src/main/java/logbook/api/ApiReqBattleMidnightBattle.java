@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.json.JsonObject;
 
 import logbook.bean.AppCondition;
+import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleMidnightBattle;
 import logbook.bean.Ship;
@@ -29,15 +30,17 @@ public class ApiReqBattleMidnightBattle implements APIListenerSpi {
             BattleLog log = AppCondition.get().getBattleResult();
             if (log != null) {
                 log.setMidnight(BattleMidnightBattle.toBattle(data));
-                // 艦隊を更新
-                PhaseState p = new PhaseState(log);
-                p.apply(log.getBattle());
-                p.apply(log.getMidnight());
-                ShipCollection.get()
-                        .getShipMap()
-                        .putAll(p.getAfterFriend().stream()
-                                .filter(Objects::nonNull)
-                                .collect(Collectors.toMap(Ship::getId, v -> v)));
+                if (AppConfig.get().isApplyBattle()) {
+                    // 艦隊を更新
+                    PhaseState p = new PhaseState(log);
+                    p.apply(log.getBattle());
+                    p.apply(log.getMidnight());
+                    ShipCollection.get()
+                            .getShipMap()
+                            .putAll(p.getAfterFriend().stream()
+                                    .filter(Objects::nonNull)
+                                    .collect(Collectors.toMap(Ship::getId, v -> v)));
+                }
             }
         }
     }

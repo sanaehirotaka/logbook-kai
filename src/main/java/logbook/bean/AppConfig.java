@@ -35,6 +35,12 @@ public final class AppConfig implements Serializable {
     /** 装備枠の空きがこれ以下でボタンを警告色に変える */
     private int itemFullyThreshold = 16;
 
+    /** 戦闘開始時に結果を反映 */
+    private boolean applyBattle;
+
+    /** 戦闘結果時に結果を反映 */
+    private boolean applyResult = true;
+
     /** 音量 */
     private int soundLevel = 85;
 
@@ -201,6 +207,38 @@ public final class AppConfig implements Serializable {
      */
     public void setItemFullyThreshold(int itemFullyThreshold) {
         this.itemFullyThreshold = itemFullyThreshold;
+    }
+
+    /**
+     * 戦闘開始時に結果を反映を取得します。
+     * @return 戦闘開始時に結果を反映
+     */
+    public boolean isApplyBattle() {
+        return applyBattle;
+    }
+
+    /**
+     * 戦闘開始時に結果を反映を設定します。
+     * @param applyBattle 戦闘開始時に結果を反映
+     */
+    public void setApplyBattle(boolean applyBattle) {
+        this.applyBattle = applyBattle;
+    }
+
+    /**
+     * 戦闘結果時に結果を反映を取得します。
+     * @return 戦闘結果時に結果を反映
+     */
+    public boolean isApplyResult() {
+        return applyResult;
+    }
+
+    /**
+     * 戦闘結果時に結果を反映を設定します。
+     * @param applyResult 戦闘結果時に結果を反映
+     */
+    public void setApplyResult(boolean applyResult) {
+        this.applyResult = applyResult;
     }
 
     /**
