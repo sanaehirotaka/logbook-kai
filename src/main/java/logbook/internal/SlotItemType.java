@@ -54,7 +54,9 @@ public enum SlotItemType {
     補給物資(44),
     水上戦闘機(45),
     大型電探II(93),
-    艦上偵察機II(94);
+    艦上偵察機II(94),
+
+    不明(-1);
 
     private final int item;
 
@@ -80,5 +82,21 @@ public enum SlotItemType {
      */
     public boolean equals(Integer item) {
         return item != null && this.item == item;
+    }
+
+    /**
+     * 装備種定数を返します
+     *
+     * @param item 装備
+     * @return 装備種定数
+     */
+    public static SlotItemType toSlotItemType(SlotitemMst item) {
+        int type = item.getType().get(2);
+        for (SlotItemType e : values()) {
+            if (e.item == type) {
+                return e;
+            }
+        }
+        return 不明;
     }
 }

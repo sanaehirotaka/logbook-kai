@@ -3,6 +3,7 @@ package logbook.internal;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,6 +49,59 @@ public class Ships {
     private static final int DARK_GREEN = 50;
     /** キラキラ2段階 */
     private static final int GREEN = 53;
+
+    /** 索敵係数 */
+    private static final Map<SlotItemType, Double> VIEW_COEFFICIENT = new EnumMap<>(SlotItemType.class);
+    /** 改修係数 */
+    private static final Map<SlotItemType, Double> LV_COEFFICIENT = new EnumMap<>(SlotItemType.class);
+
+    static {
+        // 索敵係数
+        // 艦上戦闘機：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.艦上戦闘機, 0.6D);
+        // 艦上爆撃機：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.艦上爆撃機, 0.6D);
+        // 艦上攻撃機：0.8
+        VIEW_COEFFICIENT.put(SlotItemType.艦上攻撃機, 0.8D);
+        // 艦上偵察機：1
+        VIEW_COEFFICIENT.put(SlotItemType.艦上偵察機, 1.0D);
+        // 水上偵察機：1.2
+        VIEW_COEFFICIENT.put(SlotItemType.水上偵察機, 1.2D);
+        // 水上爆撃機：1.1
+        VIEW_COEFFICIENT.put(SlotItemType.水上爆撃機, 1.1D);
+        // 小型電探：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.小型電探, 0.6D);
+        // 大型電探：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.大型電探, 0.6D);
+        // 対潜哨戒機：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.対潜哨戒機, 0.6D);
+        // 探照灯：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.探照灯, 0.6D);
+        // 司令部施設：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.司令部施設, 0.6D);
+        // 航空要員(熟練艦載機整備員)：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.航空要員, 0.6D);
+        // 水上艦要員(熟練見張員)：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.水上艦要員, 0.6D);
+        // 大型ソナー：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.大型ソナー, 0.6D);
+        // 大型飛行艇：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.大型飛行艇, 0.6D);
+        // 大型探照灯：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.大型探照灯, 0.6D);
+        // 水上戦闘機：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.水上戦闘機, 0.6D);
+        // 艦上偵察機(II)：1
+        VIEW_COEFFICIENT.put(SlotItemType.艦上偵察機II, 1.0D);
+
+        // 改修係数
+        // 小型電探：1.25
+        LV_COEFFICIENT.put(SlotItemType.小型電探, 1.25D);
+        // 大型電探：1.25
+        LV_COEFFICIENT.put(SlotItemType.大型電探, 1.25D);
+        // 水上偵察機：1.2
+        LV_COEFFICIENT.put(SlotItemType.水上偵察機, 1.2D);
+    }
 
     private Ships() {
     }
@@ -228,7 +282,7 @@ public class Ships {
      * @return 砲撃戦火力
      */
     public static int hPower(Ship ship) {
-        List<SlotitemMst> items = getSlotitemMst(ship);
+        List<SlotitemMst> items = getSlotitemMst(ship).collect(Collectors.toList());
         // 艦攻艦爆搭載艦
         boolean isPasedoCarrier = items.stream()
                 .filter(e -> SlotItemType.艦上攻撃機.equals(e)
@@ -276,10 +330,8 @@ public class Ships {
      * @return 対潜火力
      */
     public static int tPower(Ship ship) {
-        List<SlotitemMst> items = getSlotitemMst(ship);
-
         // [ 艦船の対潜 ÷ 5 ] + 装備の対潜 × 2 + 25
-        int tais = items.stream()
+        int tais = getSlotitemMst(ship)
                 .mapToInt(SlotitemMst::getTais)
                 .sum();
         return (int) Math.round(Math.floor((ship.getTaisen().get(0) - tais) / 5D) + (tais * 2) + 25);
@@ -409,7 +461,7 @@ public class Ships {
      * 索敵値(2-5式秋)
      *
      * @param ships 艦娘達
-     * @return 対潜火力
+     * @return 索敵値(2-5式秋)
      */
     public static double viewRange(List<Ship> ships) {
         // 索敵スコア
@@ -445,12 +497,12 @@ public class Ships {
         };
         // 装備索敵スコア
         double itemScore = ships.stream()
-                .flatMap(e -> getSlotitemMst(e).stream())
+                .flatMap(e -> getSlotitemMst(e))
                 .mapToDouble(mapper)
                 .sum();
         // 艦娘索敵スコア
         double shipScore = ships.stream()
-                .mapToDouble(e -> e.getSakuteki().get(0) - getSlotitemMst(e).stream()
+                .mapToDouble(e -> e.getSakuteki().get(0) - getSlotitemMst(e)
                         .mapToInt(SlotitemMst::getSaku)
                         .sum())
                 .map(Math::sqrt)
@@ -461,6 +513,61 @@ public class Ships {
         return BigDecimal.valueOf(itemScore + shipScore + levelScore)
                 .setScale(2, RoundingMode.HALF_UP)
                 .doubleValue();
+    }
+
+    /**
+     * 判定式(33)
+     *
+     * @param ships 艦娘達
+     * @return 判定式(33)
+     */
+    public static double decision33(List<Ship> ships) {
+        // 装備マスタ
+        Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
+                .getSlotitemMap();
+        // 装備
+        Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+        // 艦娘から装備を取り出すFunction
+        Function<Ship, Stream<SlotItem>> toSlotItem = ship -> {
+            return ship.getSlot()
+                    .stream()
+                    .map(itemMap::get)
+                    .filter(Objects::nonNull);
+        };
+
+        //  索敵スコア＝(装備倍率×装備索敵値)の和＋√(各艦娘の素索敵)の和－[0.4×司令部レベル(端数切り上げ)]＋2×(6－出撃艦数)
+
+        // 裝備係数(索敵)×(裝備索敵値+改修係数(索敵)×√★)の和
+        double itemView = ships.stream()
+                .flatMap(toSlotItem)
+                .mapToDouble(e -> {
+                    SlotitemMst mst = itemMstMap.get(e.getSlotitemId());
+                    if (mst != null) {
+                        SlotItemType type = SlotItemType.toSlotItemType(mst);
+                        // 装備係数
+                        double ic = VIEW_COEFFICIENT.getOrDefault(type, 0D);
+                        // (裝備索敵値+改修係数(索敵)×√★)
+                        double v = mst.getSaku() + LV_COEFFICIENT.getOrDefault(type, 0D) * Math.sqrt(e.getLevel());
+
+                        return ic * v;
+                    }
+                    return 0;
+                })
+                .sum();
+        // √(各艦娘の素索敵)の和
+        double shipView = ships.stream()
+                .mapToDouble(e -> e.getSakuteki().get(0) - getSlotitemMst(e)
+                        .mapToInt(SlotitemMst::getSaku)
+                        .sum())
+                .map(Math::sqrt)
+                .sum();
+        // [0.4×司令部レベル(端数切り上げ)]
+        double levelScore = Math.floor(Basic.get().getLevel() * 0.4D);
+        // 2×(6－出撃艦数)
+        double fleetScore = 2 * (6 - ships.size());
+
+        return itemView + shipView - levelScore + fleetScore;
     }
 
     /**
@@ -516,7 +623,7 @@ public class Ships {
      * @param chara キャラクター
      * @return 装備定義のリスト
      */
-    private static List<SlotitemMst> getSlotitemMst(Chara chara) {
+    private static Stream<SlotitemMst> getSlotitemMst(Chara chara) {
         Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
                 .getSlotitemMap();
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
@@ -527,8 +634,7 @@ public class Ships {
                 .filter(Objects::nonNull)
                 .map(SlotItem::getSlotitemId)
                 .map(itemMstMap::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull);
     }
 
     /**

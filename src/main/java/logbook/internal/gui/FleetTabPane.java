@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -129,7 +130,9 @@ public class FleetTabPane extends ScrollPane {
                         .mapToInt(Ships::airSuperiority)
                         .sum())
                 .append("\n")
-                .append("索敵値(2-5式秋): " + Ships.viewRange(this.shipList))
+                .append("索敵値(2-5式秋): " + MessageFormat.format("{0,number,#.##}", Ships.viewRange(this.shipList)))
+                .append("\n")
+                .append("判定式(33): " + MessageFormat.format("{0,number,#.##}", Ships.decision33(this.shipList)))
                 .append("\n")
                 .append("触接開始率: " + (int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100))
                 .append("%")
