@@ -217,6 +217,13 @@ class ShipImage {
                     }
                 }
             }
+
+            // HPゲージ
+            double hpPer = (double) chara.getNowhp() / (double) chara.getMaxhp();
+            gc.setFill(hpGaugeColor(hpPer));
+            gc.fillRect(canvas.getWidth() - 6, canvas.getHeight() - ((canvas.getHeight() - 2) * hpPer) - 1, 5,
+                    (canvas.getHeight() - 2) * hpPer);
+
             applyLayers(gc, layers);
         }
         SnapshotParameters sp = new SnapshotParameters();
@@ -292,6 +299,20 @@ class ShipImage {
                 .getSlotitemMap()
                 .get(itemId);
         return Items.borderedItemImage(item);
+    }
+
+    /**
+     * HPゲージの色を返します
+     *
+     * @param per HP割合
+     * @return HPゲージの色
+     */
+    private static Color hpGaugeColor(double per) {
+        if (per > 0.5) {
+            return Color.TRANSPARENT.interpolate(Color.ORANGE.interpolate(Color.LIME, (per - 0.5) * 2), 0.8);
+        } else {
+            return Color.TRANSPARENT.interpolate(Color.RED.interpolate(Color.ORANGE, per * 2), 0.8);
+        }
     }
 
     /**
