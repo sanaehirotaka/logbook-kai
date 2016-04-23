@@ -13,6 +13,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpProxy;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.api.Response;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.proxy.ProxyServlet;
 import org.eclipse.jetty.util.Callback;
 
@@ -126,6 +127,17 @@ final class ReverseProxyServlet extends ProxyServlet {
             LoggerHolder.LOG.warn(Messages.getString("ReverseProxyServlet.5"), e); //$NON-NLS-1$
         }
         super.onProxyResponseSuccess(request, response, proxyResponse);
+    }
+
+    /*
+     * プロキシヘッダの追加
+     */
+    @Override
+    protected void addProxyHeaders(HttpServletRequest clientRequest, Request proxyRequest) {
+        if (AppConfig.get().isConnectionClose()) {
+            // 通信エラーを抑止する Connection: closeヘッダを追加
+            proxyRequest.header(HttpHeader.CONNECTION, "close");
+        }
     }
 
     /*
