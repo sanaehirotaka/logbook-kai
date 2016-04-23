@@ -66,17 +66,17 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>9.3.8.v20160314</version>
+			<version>9.3.3.v20150827</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>9.3.8.v20160314</version>
+			<version>9.3.3.v20150827</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-proxy</artifactId>
-			<version>9.3.8.v20160314</version>
+			<version>9.3.3.v20150827</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
