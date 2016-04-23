@@ -193,7 +193,7 @@ class ShipImage {
             }
             // 装備画像
             if (addItem) {
-                int x = 16;
+                int x = 11;
                 int y = 16;
                 if (isShip) {
                     Ship ship = (Ship) chara;
@@ -218,18 +218,31 @@ class ShipImage {
                 }
             }
 
-            // HPゲージ
-            double hpPer = (double) chara.getNowhp() / (double) chara.getMaxhp();
-            gc.setFill(hpGaugeColor(hpPer));
-            gc.fillRect(canvas.getWidth() - 6, canvas.getHeight() - ((canvas.getHeight() - 2) * hpPer) - 1, 5,
-                    (canvas.getHeight() - 2) * hpPer);
-
             applyLayers(gc, layers);
+
+            writeHpGauge(chara, canvas, gc);
         }
         SnapshotParameters sp = new SnapshotParameters();
         sp.setFill(Color.TRANSPARENT);
 
         return canvas.snapshot(sp, null);
+    }
+
+    /**
+     * HPゲージ
+     * @param chara キャラクター
+     * @param canvas Canvas
+     * @param gc GraphicsContext
+     */
+    private static void writeHpGauge(Chara chara, Canvas canvas, GraphicsContext gc) {
+        double width = canvas.getWidth();
+        double height = canvas.getHeight();
+
+        double hpPer = (double) chara.getNowhp() / (double) chara.getMaxhp();
+        gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
+        gc.fillRect(width - 5, 0, 5, height - (height * hpPer));
+        gc.setFill(hpGaugeColor(hpPer));
+        gc.fillRect(width - 5, height - (height * hpPer), 5, height * hpPer);
     }
 
     /**
@@ -309,9 +322,9 @@ class ShipImage {
      */
     private static Color hpGaugeColor(double per) {
         if (per > 0.5) {
-            return Color.TRANSPARENT.interpolate(Color.ORANGE.interpolate(Color.LIME, (per - 0.5) * 2), 0.8);
+            return Color.TRANSPARENT.interpolate(Color.ORANGE.interpolate(Color.LIME, (per - 0.5) * 2), 0.9);
         } else {
-            return Color.TRANSPARENT.interpolate(Color.RED.interpolate(Color.ORANGE, per * 2), 0.8);
+            return Color.TRANSPARENT.interpolate(Color.RED.interpolate(Color.ORANGE, per * 2), 0.9);
         }
     }
 
