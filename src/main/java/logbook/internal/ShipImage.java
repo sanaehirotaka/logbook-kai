@@ -1,8 +1,6 @@
 package logbook.internal;
 
 import java.io.IOException;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -33,7 +29,7 @@ import logbook.bean.SlotitemMstCollection;
 class ShipImage {
 
     /** 画像キャッシュ */
-    private static final ImageCache CACHE = new ImageCache(WeakReference<Image>::new);
+    private static final ReferenceCache<String, Image> CACHE = new ReferenceCache<>(200);
 
     /** 艦娘画像ファイル名(健在・小破) */
     private static final String[] NORMAL = { "1.jpg", "1.png" };
@@ -143,7 +139,7 @@ class ShipImage {
         if (chara != null) {
             Path base = getBaseImagePath(chara);
             if (base != null) {
-                Image img = CACHE.get(base.toUri().toString());
+                Image img = CACHE.get(base.toUri().toString(), Image::new);
                 gc.drawImage(img, 0, 0);
             }
             List<Layer> layers = new ArrayList<>();
@@ -258,7 +254,7 @@ class ShipImage {
             if (layer.path != null) {
                 Path p = dir.resolve(layer.path);
                 if (Files.isReadable(p)) {
-                    img = CACHE.get(p.toUri().toString());
+                    img = CACHE.get(p.toUri().toString(), Image::new);
                 }
             }
             if (layer.img != null) {
@@ -368,33 +364,6 @@ class ShipImage {
             this.h = h;
             this.path = null;
             this.img = img;
-        }
-    }
-
-    static class ImageCache {
-
-        private final Map<String, Reference<Image>> refMap = new ConcurrentHashMap<>();
-
-        private final Function<Image, Reference<Image>> referenceType;
-
-        ImageCache(Function<Image, Reference<Image>> referenceType) {
-            this.referenceType = referenceType;
-        }
-
-        Image get(String url) {
-            Reference<Image> ref = this.refMap.get(url);
-            Image image;
-            if (ref != null) {
-                image = ref.get();
-                if (image == null) {
-                    image = new Image(url);
-                    this.refMap.put(url, this.referenceType.apply(image));
-                }
-            } else {
-                image = new Image(url);
-                this.refMap.put(url, this.referenceType.apply(image));
-            }
-            return image;
         }
     }
 }

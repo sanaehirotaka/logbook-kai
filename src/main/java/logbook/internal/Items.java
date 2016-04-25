@@ -1,6 +1,5 @@
 package logbook.internal;
 
-import java.lang.ref.SoftReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -27,7 +26,7 @@ import logbook.bean.SlotitemMstCollection;
 public class Items {
 
     /** 画像キャッシュ */
-    private static final ShipImage.ImageCache CACHE = new ShipImage.ImageCache(SoftReference<Image>::new);
+    private static final ReferenceCache<String, Image> CACHE = new ReferenceCache<>(100);
 
     /** 装備アイコンサイズ */
     private static final int ITEM_ICON_SIZE = 36;
@@ -175,7 +174,7 @@ public class Items {
     private static Image optimizeItemIcon(Path p) {
         if (p != null && Files.isReadable(p)) {
             try {
-                Image image = CACHE.get(p.toUri().toString());
+                Image image = CACHE.get(p.toUri().toString(), Image::new);
 
                 double width = image.getWidth();
                 double height = image.getHeight();
