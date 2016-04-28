@@ -48,6 +48,8 @@ Java 8u40以降がインストールされた環境で動作します
 
 ![メイン画面](https://kancolle.sanaechan.net/logbook-kai/overview.png)
 
+![艦隊タブ](https://kancolle.sanaechan.net/logbook-kai/fleet-tab1.jpg)
+
 * 所有装備一覧
 
 ![所有装備一覧](https://kancolle.sanaechan.net/logbook-kai/items.png)
@@ -59,6 +61,8 @@ Java 8u40以降がインストールされた環境で動作します
 * 戦闘ログ
 
 ![戦闘ログ](https://kancolle.sanaechan.net/logbook-kai/battle_log.png)
+
+![戦闘ログ詳細](https://kancolle.sanaechan.net/logbook-kai/battlelog-view1.jpg)
 
 * 経験値計算機
 
