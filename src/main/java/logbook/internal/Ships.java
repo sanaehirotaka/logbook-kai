@@ -476,24 +476,27 @@ public class Ships {
         // + √(各艦毎の素索敵) × (1.69)
         // + (司令部レベルを5の倍数に切り上げ) × (-0.61)
         ToDoubleFunction<SlotitemMst> mapper = item -> {
+            double itemScore = item.getSaku();
             if (SlotItemType.艦上爆撃機.equals(item)) {
-                return 1.04D;
+                itemScore *= 1.04D;
             } else if (SlotItemType.艦上攻撃機.equals(item)) {
-                return 1.37D;
+                itemScore *= 1.37D;
             } else if (SlotItemType.艦上偵察機.equals(item) || SlotItemType.艦上偵察機II.equals(item)) {
-                return 1.66D;
+                itemScore *= 1.66D;
             } else if (SlotItemType.水上偵察機.equals(item)) {
-                return 2.00D;
+                itemScore *= 2.00D;
             } else if (SlotItemType.水上爆撃機.equals(item)) {
-                return 1.78D;
+                itemScore *= 1.78D;
             } else if (SlotItemType.小型電探.equals(item)) {
-                return 1.00D;
+                itemScore *= 1.00D;
             } else if (SlotItemType.大型電探.equals(item) || SlotItemType.大型電探II.equals(item)) {
-                return 0.99D;
+                itemScore *= 0.99D;
             } else if (SlotItemType.探照灯.equals(item)) {
-                return 0.91D;
+                itemScore *= 0.91D;
+            } else {
+                itemScore *= 0;
             }
-            return 0D;
+            return itemScore;
         };
         // 装備索敵スコア
         double itemScore = ships.stream()
@@ -563,7 +566,7 @@ public class Ships {
                 .map(Math::sqrt)
                 .sum();
         // [0.4×司令部レベル(端数切り上げ)]
-        double levelScore = Math.floor(Basic.get().getLevel() * 0.4D);
+        double levelScore = Math.ceil(Basic.get().getLevel() * 0.4D);
         // 2×(6－出撃艦数)
         double fleetScore = 2 * (6 - ships.size());
 
