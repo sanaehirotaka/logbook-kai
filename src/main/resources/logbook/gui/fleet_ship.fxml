@@ -19,13 +19,13 @@
             <HBox AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label fx:id="name" styleClass="name" />
-                  <Label fx:id="level" text="Label" />
+                  <Label fx:id="level" />
                </children>
             </HBox>
-            <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+            <HBox alignment="BASELINE_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
                <children>
-                  <ProgressBar fx:id="fuel" progress="0.0" styleClass="fuel" />
-                  <ProgressBar fx:id="bull" progress="0.0" styleClass="bull" />
+                  <Label fx:id="hp" styleClass="hp" />
+                  <ImageView fx:id="supply" fitHeight="12.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" styleClass="supply" />
                   <Label fx:id="cond" styleClass="cond" />
                </children>
             </HBox>

@@ -33,27 +33,8 @@ TabPane .tab.warn .tab-label {
 TabPane .message {
     -fx-font-size: 10pt;
 }
-TabPane .fuel {
-    -fx-pref-width: 24px;
-    -fx-pref-height: 16px;
-}
-TabPane .fuel .progress {
-}
-TabPane .fuel .track{
-}
-TabPane .fuel .bar {
-    -fx-background-color: #008000;
-}
-TabPane .bull {
-    -fx-pref-width: 24px;
-    -fx-pref-height: 16px;
-}
-TabPane .bull .progress {
-}
-TabPane .bull .track{
-}
-TabPane .bull .bar {
-    -fx-background-color: #663300;
+TabPane .hp {
+    -fx-min-width: 4.25em;
 }
 TabPane .deepgreen {
     -fx-text-fill: rgb(0, 60, 0);

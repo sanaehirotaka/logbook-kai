@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.bean.Ship;
@@ -35,10 +34,10 @@ public class FleetTabShipPane extends HBox {
     private Label level;
 
     @FXML
-    private ProgressBar fuel;
+    private Label hp;
 
     @FXML
-    private ProgressBar bull;
+    private ImageView supply;
 
     @FXML
     private Label cond;
@@ -71,11 +70,9 @@ public class FleetTabShipPane extends HBox {
                 .orElse("");
         this.name.setText(name);
         this.level.setText("(Lv" + this.ship.getLv() + ")");
-        this.cond.setText(this.ship.getCond() + " cond.");
-        int fuel = this.ship.getFuel();
-        int bull = this.ship.getBull();
-        this.fuel.setProgress((double) (fuel) / (double) mst.map(ShipMst::getFuelMax).orElse(fuel));
-        this.bull.setProgress((double) (bull) / (double) mst.map(ShipMst::getBullMax).orElse(bull));
+        this.hp.setText(this.ship.getNowhp() + "/" + this.ship.getMaxhp());
+        this.supply.setImage(Ships.supplyGaugeImage(this.ship));
+        this.cond.setText(this.ship.getCond() + "cond.");
 
         ObservableList<String> styleClass = this.cond.getStyleClass();
         styleClass.clear();

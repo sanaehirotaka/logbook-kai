@@ -246,6 +246,17 @@ public class Ships {
     }
 
     /**
+     * 艦娘の補給ゲージを取得します
+     *
+     * @param ship 艦娘
+     * @return 補給ゲージ
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image supplyGaugeImage(Ship ship) throws IllegalStateException {
+        return ShipImage.getSupplyGauge(ship);
+    }
+
+    /**
      * キャラクターに対応する艦船を取得します
      *
      * @param chara キャラクター

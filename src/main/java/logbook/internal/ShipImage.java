@@ -225,6 +225,45 @@ class ShipImage {
     }
 
     /**
+     * 補給ゲージ(燃料・弾薬)を取得します
+     *
+     * @param ship 艦娘
+     * @return 補給ゲージ
+     */
+    static Image getSupplyGauge(Ship ship) {
+        Canvas canvas = new Canvas(36, 12);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        Optional<ShipMst> mstOpt = Ships.shipMst(ship);
+        if (mstOpt.isPresent()) {
+            double width = canvas.getWidth();
+
+            ShipMst mst = mstOpt.get();
+            double fuelPer = (double) ship.getFuel() / (double) mst.getFuelMax();
+            double ammoPer = (double) ship.getBull() / (double) mst.getBullMax();
+
+            gc.setFill(Color.GRAY);
+            gc.fillRect(0, 3, width, 2);
+
+            gc.setFill(Color.GRAY);
+            gc.fillRect(0, 10, width, 2);
+
+            Color fuelColor = fuelPer >= 0.5D ? Color.GREEN : fuelPer >= 0.4D ? Color.ORANGE : Color.RED;
+            Color ammoColor = ammoPer >= 0.5D ? Color.SADDLEBROWN : ammoPer >= 0.4D ? Color.ORANGE : Color.RED;
+
+            gc.setFill(fuelColor);
+            gc.fillRect(0, 0, width * fuelPer, 4);
+
+            gc.setFill(ammoColor);
+            gc.fillRect(0, 7, width * ammoPer, 4);
+        }
+        SnapshotParameters sp = new SnapshotParameters();
+        sp.setFill(Color.TRANSPARENT);
+
+        return canvas.snapshot(sp, null);
+    }
+
+    /**
      * HPゲージ
      * @param chara キャラクター
      * @param canvas Canvas
