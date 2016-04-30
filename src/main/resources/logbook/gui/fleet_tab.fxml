@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -11,7 +13,60 @@
             <Label fx:id="message" styleClass="message" />
             <VBox fx:id="ships" styleClass="ships" />
             <Separator />
-            <Label fx:id="info" wrapText="true" styleClass="info" />
+            <HBox>
+               <children>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <ImageView fx:id="airSuperiorityImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label text="制空値:" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="airSuperiority" styleClass="value" GridPane.columnIndex="1" />
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2">
+                           <children>
+                              <ImageView fx:id="touchPlaneStartProbabilityImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label text="触接開始率:" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="touchPlaneStartProbability" styleClass="value" GridPane.columnIndex="3" />
+                        <HBox alignment="CENTER_LEFT" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fx:id="viewRangeImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label text="索敵値(2-5式秋):" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="viewRange" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fx:id="decision33Img" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label text="判定式(33):" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="decision33" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <HBox alignment="CENTER_LEFT" GridPane.rowIndex="2">
+                           <children>
+                              <ImageView fx:id="lvsumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                              <Label text="艦娘レベル合計:" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="lvsum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </content>

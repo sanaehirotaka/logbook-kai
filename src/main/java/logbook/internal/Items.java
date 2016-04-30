@@ -127,6 +127,34 @@ public class Items {
     }
 
     /**
+     * 装備画像を装備種定数より取得します。
+     * @param type 装備種定数
+     * @return 装備画像
+     */
+    public static Path itemImageByType(int type) {
+        String name = ITEM_MAP.get(type);
+        if (name != null) {
+            return getItemResourcePathDir().resolve(name);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 装備画像を装備種定数より取得します。
+     * @param type 装備種定数
+     * @return 装備画像
+     */
+    public static Path borderedImageByType(int type) {
+        String name = BORDERED_ITEM_MAP.get(type);
+        if (name != null) {
+            return getItemResourcePathDir().resolve(name);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 装備アイコン(背景無し)を取得します。
      * @param item 装備
      * @return 装備アイコン(背景無し)

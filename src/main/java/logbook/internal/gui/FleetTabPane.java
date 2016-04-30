@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import logbook.bean.DeckPort;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
+import logbook.internal.Items;
 import logbook.internal.Ships;
 
 /**
@@ -58,9 +62,45 @@ public class FleetTabPane extends ScrollPane {
     @FXML
     private VBox ships;
 
-    /** 色々な情報 */
+    /** 制空値アイコン */
     @FXML
-    private Label info;
+    private ImageView airSuperiorityImg;
+
+    /** 制空値 */
+    @FXML
+    private Label airSuperiority;
+
+    /** 触接開始率アイコン */
+    @FXML
+    private ImageView touchPlaneStartProbabilityImg;
+
+    /** 触接開始率 */
+    @FXML
+    private Label touchPlaneStartProbability;
+
+    /** 索敵値(2-5式秋)アイコン */
+    @FXML
+    private ImageView viewRangeImg;
+
+    /** 索敵値(2-5式秋) */
+    @FXML
+    private Label viewRange;
+
+    /** 判定式(33)アイコン */
+    @FXML
+    private ImageView decision33Img;
+
+    /** 判定式(33) */
+    @FXML
+    private Label decision33;
+
+    /** 艦娘レベル計アイコン */
+    @FXML
+    private ImageView lvsumImg;
+
+    /** 艦娘レベル計 */
+    @FXML
+    private Label lvsum;
 
     /**
      * 艦隊ペインのコンストラクタ
@@ -82,6 +122,7 @@ public class FleetTabPane extends ScrollPane {
     @FXML
     void initialize() {
         this.update();
+        this.setIcon();
     }
 
     /**
@@ -125,22 +166,20 @@ public class FleetTabPane extends ScrollPane {
     private void updateShips() {
         this.message.setText(this.port.getName());
 
-        String info = new StringBuilder()
-                .append("制空値計: " + this.shipList.stream()
+        // 制空値
+        this.airSuperiority
+                .setText(Integer.toString(this.shipList.stream()
                         .mapToInt(Ships::airSuperiority)
-                        .sum())
-                .append("\n")
-                .append("索敵値(2-5式秋): " + MessageFormat.format("{0,number,#.##}", Ships.viewRange(this.shipList)))
-                .append("\n")
-                .append("判定式(33): " + MessageFormat.format("{0,number,#.##}", Ships.decision33(this.shipList)))
-                .append("\n")
-                .append("触接開始率: " + (int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100))
-                .append("%")
-                .append("\n")
-                .append("艦娘レベル合計: " + this.shipList.stream().mapToInt(Ship::getLv).sum())
-                .toString();
-
-        this.info.setText(info);
+                        .sum()));
+        // 触接開始率
+        this.touchPlaneStartProbability
+                .setText((int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100) + "%");
+        // 索敵値(2-5式秋)
+        this.viewRange.setText(MessageFormat.format("{0,number,#.##}", Ships.viewRange(this.shipList)));
+        // 判定式(33)
+        this.decision33.setText(MessageFormat.format("{0,number,#.##}", Ships.decision33(this.shipList)));
+        // 艦娘レベル計
+        this.lvsum.setText(Integer.toString(this.shipList.stream().mapToInt(Ship::getLv).sum()));
 
         ObservableList<Node> childs = this.ships.getChildren();
         childs.clear();
@@ -161,6 +200,27 @@ public class FleetTabPane extends ScrollPane {
             this.tabCssClass = WARN;
         } else {
             this.tabCssClass = null;
+        }
+    }
+
+    private void setIcon() {
+        Path path;
+        path = Items.itemImageByType(6);
+        if (path != null) {
+            this.airSuperiorityImg.setImage(new Image(path.toUri().toString()));
+        }
+        path = Items.itemImageByType(10);
+        if (path != null) {
+            this.touchPlaneStartProbabilityImg.setImage(new Image(path.toUri().toString()));
+        }
+        path = Items.itemImageByType(9);
+        if (path != null) {
+            this.viewRangeImg.setImage(new Image(path.toUri().toString()));
+            this.decision33Img.setImage(new Image(path.toUri().toString()));
+        }
+        path = Items.itemImageByType(28);
+        if (path != null) {
+            this.lvsumImg.setImage(new Image(path.toUri().toString()));
         }
     }
 
