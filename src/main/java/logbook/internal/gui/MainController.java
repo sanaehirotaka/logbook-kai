@@ -411,6 +411,7 @@ public class MainController extends WindowController {
                 for (int i = 0; ite.hasNext(); i++) {
                     DeckPort port = ite.next();
                     Tab tab = tabs.get(i + 1);
+                    tab.setText(port.getName());
                     Node node = tab.getContent();
                     if (node instanceof FleetTabPane) {
                         FleetTabPane pane = (FleetTabPane) node;
