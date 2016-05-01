@@ -36,19 +36,19 @@ import logbook.bean.StypeCollection;
 public class Ships {
 
     /** 小破(75%) */
-    private static final double SLIGHT_DAMAGE = 0.75D;
+    public static final double SLIGHT_DAMAGE = 0.75D;
     /** 中破(50%) */
-    private static final double HALF_DAMAGE = 0.5D;
+    public static final double HALF_DAMAGE = 0.5D;
     /** 大破(25%) */
-    private static final double BADLY_DAMAGE = 0.25D;
+    public static final double BADLY_DAMAGE = 0.25D;
     /** 疲労赤色 */
-    private static final int RED = 19;
+    public static final int RED = 19;
     /** 疲労オレンジ色 */
-    private static final int ORANGE = 29;
+    public static final int ORANGE = 29;
     /** キラキラ1段階 */
-    private static final int DARK_GREEN = 50;
+    public static final int DARK_GREEN = 50;
     /** キラキラ2段階 */
-    private static final int GREEN = 53;
+    public static final int GREEN = 53;
 
     /** 索敵係数 */
     private static final Map<SlotItemType, Double> VIEW_COEFFICIENT = new EnumMap<>(SlotItemType.class);

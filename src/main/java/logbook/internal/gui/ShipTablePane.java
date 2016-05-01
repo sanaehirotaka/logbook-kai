@@ -172,6 +172,7 @@ public class ShipTablePane extends VBox {
             this.ship.setCellFactory(p -> new ShipImageCell());
             this.type.setCellValueFactory(new PropertyValueFactory<>("type"));
             this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));
+            this.cond.setCellFactory(p -> new CondCell());
             this.cond.setCellValueFactory(new PropertyValueFactory<>("cond"));
             this.area.setCellValueFactory(new PropertyValueFactory<>("area"));
             this.seiku.setCellValueFactory(new PropertyValueFactory<>("seiku"));
@@ -297,6 +298,34 @@ public class ShipTablePane extends VBox {
                 }
             } else {
                 this.setGraphic(null);
+                this.setText(null);
+            }
+        }
+    }
+
+    /**
+     * コンディションのセル
+     *
+     */
+    private static class CondCell extends TableCell<ShipItem, Integer> {
+        @Override
+        protected void updateItem(Integer cond, boolean empty) {
+            super.updateItem(cond, empty);
+
+            if (!empty) {
+                ObservableList<String> styleClass = this.getStyleClass();
+                styleClass.removeAll("deepgreen", "green", "orange", "red");
+                if (cond >= Ships.DARK_GREEN && cond < Ships.GREEN) {
+                    styleClass.add("deepgreen");
+                } else if (cond >= Ships.GREEN) {
+                    styleClass.add("green");
+                } else if (cond <= Ships.ORANGE && cond > Ships.RED) {
+                    styleClass.add("orange");
+                } else if (cond <= Ships.RED) {
+                    styleClass.add("red");
+                }
+                this.setText(cond.toString());
+            } else {
                 this.setText(null);
             }
         }

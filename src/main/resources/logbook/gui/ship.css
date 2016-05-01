@@ -1,0 +1,14 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+TabPane .deepgreen {
+    -fx-text-fill: rgb(0, 60, 0);
+}
+TabPane .green {
+    -fx-text-fill: rgb(0, 128, 0);
+}
+TabPane .orange {
+    -fx-text-fill: rgb(255, 140, 0);
+}
+TabPane .red {
+    -fx-text-fill: rgb(255, 16, 0);
+}
