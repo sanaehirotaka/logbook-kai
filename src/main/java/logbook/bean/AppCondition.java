@@ -26,8 +26,11 @@ public class AppCondition implements Serializable {
     /** 出撃艦隊 */
     private int deckId = 0;
 
-    /** 最後の戦闘結果 */
+    /** 戦闘結果 */
     private BattleLog battleResult;
+
+    /** 最後の戦闘結果 */
+    private BattleLog battleResultConfirm;
 
     /** 退避艦ID */
     private Set<Integer> escape = new HashSet<>();
@@ -100,19 +103,35 @@ public class AppCondition implements Serializable {
     }
 
     /**
-     * 最後の戦闘結果を取得します。
-     * @return 最後の戦闘結果
+     * 戦闘結果を取得します。
+     * @return 戦闘結果
      */
     public BattleLog getBattleResult() {
         return this.battleResult;
     }
 
     /**
-     * 最後の戦闘結果を設定します。
-     * @param battleResult 最後の戦闘結果
+     * 戦闘結果を設定します。
+     * @param battleResult 戦闘結果
      */
     public void setBattleResult(BattleLog battleResult) {
         this.battleResult = battleResult;
+    }
+
+    /**
+     * 最後の戦闘結果を取得します。
+     * @return 最後の戦闘結果
+     */
+    public BattleLog getBattleResultConfirm() {
+        return battleResultConfirm;
+    }
+
+    /**
+     * 最後の戦闘結果を設定します。
+     * @param battleResultConfirm 最後の戦闘結果
+     */
+    public void setBattleResultConfirm(BattleLog battleResultConfirm) {
+        this.battleResultConfirm = battleResultConfirm;
     }
 
     /**

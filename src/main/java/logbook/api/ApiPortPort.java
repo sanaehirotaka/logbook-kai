@@ -184,5 +184,7 @@ public class ApiPortPort implements APIListenerSpi {
         condition.setMapStart(Boolean.FALSE);
         // 退避を削除
         condition.getEscape().clear();
+        // 戦闘結果を削除
+        condition.setBattleResultConfirm(null);
     }
 }

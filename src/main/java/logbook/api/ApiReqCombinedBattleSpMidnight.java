@@ -1,7 +1,9 @@
 package logbook.api;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.json.JsonObject;
 
@@ -38,7 +40,8 @@ public class ApiReqCombinedBattleSpMidnight implements APIListenerSpi {
                     p.apply(log.getBattle());
                     ShipCollection.get()
                             .getShipMap()
-                            .putAll(p.getAfterFriend().stream()
+                            .putAll(Stream.of(p.getAfterFriend(), p.getAfterFriendCombined())
+                                    .flatMap(List::stream)
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toMap(Ship::getId, v -> v)));
                 }

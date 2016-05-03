@@ -23,6 +23,7 @@ import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.MapStartNext;
@@ -53,6 +54,7 @@ public class ApiReqMapNext implements APIListenerSpi {
                 AppCondition.get()
                         .setBattleResult(log);
             }
+            log.setCombinedType(CombinedType.toCombinedType(AppCondition.get().getCombinedType()));
             log.getNext().add(MapStartNext.toMapStartNext(data));
 
             // 大破した艦娘

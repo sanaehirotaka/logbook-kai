@@ -25,7 +25,7 @@ public class ApiReqCombinedBattleGobackPort implements APIListenerSpi {
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
 
-        BattleLog log = AppCondition.get().getBattleResult();
+        BattleLog log = AppCondition.get().getBattleResultConfirm();
         if (log != null) {
             BattleResult result = log.getResult();
             Escape escape = result.getEscape();

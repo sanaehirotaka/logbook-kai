@@ -37,6 +37,8 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                 // 削除
                 AppCondition.get().setBattleResult(null);
 
+                AppCondition.get().setBattleResultConfirm(log);
+
                 log.setResult(BattleResult.toBattleResult(data));
                 log.setTime(Logs.nowString());
                 // 出撃艦隊
