@@ -45,7 +45,7 @@
                         <HBox alignment="CENTER_LEFT" GridPane.rowIndex="1">
                            <children>
                               <ImageView fx:id="viewRangeImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label text="索敵値(2-5式秋):" />
+                              <Label text="2-5式秋:" />
                            </children>
                         </HBox>
                         <Label fx:id="viewRange" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
