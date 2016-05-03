@@ -18,6 +18,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.Stype;
 import logbook.internal.Items;
+import logbook.internal.SeaArea;
 import logbook.internal.Ships;
 
 /**
@@ -520,7 +521,8 @@ public class ShipItem {
         shipItem.setType(type);
         shipItem.setLv(ship.getLv());
         shipItem.setCond(ship.getCond());
-        shipItem.setArea(""); // TODO: 海域
+        shipItem.setArea(Optional.ofNullable(SeaArea.fromArea(ship.getSallyArea()))
+                .map(SeaArea::toString).orElse(""));
         shipItem.setSeiku(Ships.airSuperiority(ship));
         shipItem.sethPower(Ships.hPower(ship));
         shipItem.setrPower(Ships.rPower(ship));
