@@ -1,6 +1,7 @@
 package logbook.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.json.JsonObject;
 
@@ -63,7 +64,7 @@ public class MapStartNext implements Serializable {
     private MapTypes.Happening happening;
 
     /** api_itemget */
-    private MapTypes.Itemget itemget;
+    private List<MapTypes.Itemget> itemget;
 
     /** api_select_route */
     private MapTypes.SelectRoute selectRoute;
@@ -331,7 +332,7 @@ public class MapStartNext implements Serializable {
      * api_itemgetを取得します。
      * @return api_itemget
      */
-    public MapTypes.Itemget getItemget() {
+    public List<MapTypes.Itemget> getItemget() {
         return this.itemget;
     }
 
@@ -339,7 +340,7 @@ public class MapStartNext implements Serializable {
      * api_itemgetを設定します。
      * @param itemget api_itemget
      */
-    public void setItemget(MapTypes.Itemget itemget) {
+    public void setItemget(List<MapTypes.Itemget> itemget) {
         this.itemget = itemget;
     }
 
@@ -400,7 +401,7 @@ public class MapStartNext implements Serializable {
                 .setInteger("api_production_kind", bean::setProductionKind)
                 .set("api_enemy", bean::setEnemy, MapTypes.Enemy::toEnemy)
                 .set("api_happening", bean::setHappening, MapTypes.Happening::toHappening)
-                .set("api_itemget", bean::setItemget, MapTypes.Itemget::toItemget)
+                .set("api_itemget", bean::setItemget, JsonHelper.toList(MapTypes.Itemget::toItemget))
                 .set("api_select_route", bean::setSelectRoute, MapTypes.SelectRoute::toSelectRoute)
                 .setInteger("api_from_no", bean::setFromNo);
         return bean;
