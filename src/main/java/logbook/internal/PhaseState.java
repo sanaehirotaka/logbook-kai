@@ -362,7 +362,7 @@ public class PhaseState {
         if (b instanceof ICombinedBattle) {
             ICombinedBattle cb = (ICombinedBattle) b;
             for (int i = 1, s = cb.getMaxhpsCombined().size(); i < s; i++) {
-                int idx = i - 1 + 6;
+                int idx = i - 1;
                 if (cb.getMaxhpsCombined().get(i) == -1) {
                     continue;
                 }
