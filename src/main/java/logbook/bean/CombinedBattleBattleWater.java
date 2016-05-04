@@ -21,7 +21,7 @@ import logbook.internal.JsonHelper;
 public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle, ISortieHougeki, IFormation, IKouku,
         ISupport, IAirBaseAttack, Serializable {
 
-    private static final long serialVersionUID = -7707485457662183362L;
+    private static final long serialVersionUID = -856889126602983978L;
 
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;

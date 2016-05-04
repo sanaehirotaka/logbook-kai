@@ -16,7 +16,7 @@ import logbook.internal.JsonHelper;
  */
 public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattle, IFormation, Serializable {
 
-    private static final long serialVersionUID = -3881074816952880520L;
+    private static final long serialVersionUID = -364877629377359534L;
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;

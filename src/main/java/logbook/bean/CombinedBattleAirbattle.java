@@ -20,7 +20,7 @@ import logbook.internal.JsonHelper;
 public class CombinedBattleAirbattle
         implements ICombinedBattle, ISortieBattle, IFormation, IAirbattle, ISupport, IAirBaseAttack, Serializable {
 
-    private static final long serialVersionUID = 4971402570408932441L;
+    private static final long serialVersionUID = 6202110621839990573L;
 
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;
