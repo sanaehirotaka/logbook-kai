@@ -199,9 +199,6 @@ public class ResourceChartController extends WindowController {
             LocalDate toDate = this.to.getValue();
             ZonedDateTime fromDateTime = ZonedDateTime.of(toDate.minusDays(scale.getDay()), LocalTime.MIN, TIME_ZONE);
             this.from.setValue(fromDateTime.toLocalDate());
-
-            this.xAxis.setTickUnit(scale.getTickUnit());
-            this.xAxis.setTickLabelFormatter(new DateTimeConverter(fromDateTime, scale.getFormat()));
             this.changeAction();
         }
     }
@@ -214,6 +211,15 @@ public class ResourceChartController extends WindowController {
         ZonedDateTime fromDateTime = ZonedDateTime.of(this.from.getValue(), LocalTime.MIN, TIME_ZONE);
         // 終了日時(自身を含む)
         ZonedDateTime toDateTime = ZonedDateTime.of(this.to.getValue(), LocalTime.MAX, TIME_ZONE);
+
+        // 横軸のtick及びフォーマットは"期間"のセレクションボックスから取得
+        ScaleOption scale = this.term.getSelectionModel().getSelectedItem();
+
+        // 横軸の目盛り設定
+        if (scale != null) {
+            this.xAxis.setTickUnit(scale.getTickUnit());
+            this.xAxis.setTickLabelFormatter(new DateTimeConverter(fromDateTime, scale.getFormat()));
+        }
 
         // ゼロを基準
         this.yAxis.setForceZeroInRange(this.forceZero.isSelected());
