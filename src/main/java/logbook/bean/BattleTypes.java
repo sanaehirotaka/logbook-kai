@@ -287,6 +287,18 @@ public class BattleTypes {
     }
 
     /**
+     * 基地航空隊
+     */
+    public interface IAirBaseAttack {
+
+        /**
+         * api_air_base_attackを取得します。
+         * @return api_air_base_attack
+         */
+        List<AirBaseAttack> getAirBaseAttack();
+    }
+
+    /**
      * 航空戦
      */
     public static class Kouku implements Serializable {
@@ -1852,6 +1864,227 @@ public class BattleTypes {
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_sp_list", bean::setSpList, JsonHelper::toIntegerList)
                     .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList));
+            return bean;
+        }
+    }
+
+    /**
+     * 基地航空戦
+     */
+    public static class AirBaseAttack implements Serializable {
+
+        private static final long serialVersionUID = -7255540756859970824L;
+
+        /** api_base_id */
+        private Integer baseId;
+
+        /** api_plane_from */
+        private List<List<Integer>> planeFrom;
+
+        /** api_squadron_plane */
+        private List<SquadronPlane> squadronPlane;
+
+        /** api_stage1 */
+        private Stage1 stage1;
+
+        /** api_stage2 */
+        private Stage2 stage2;
+
+        /** api_stage3 */
+        private Stage3 stage3;
+
+        /** api_stage_flag */
+        private List<Integer> stageFlag;
+
+        /**
+         * api_base_idを取得します。
+         * @return api_base_id
+         */
+        public Integer getBaseId() {
+            return this.baseId;
+        }
+
+        /**
+         * api_base_idを設定します。
+         * @param baseId api_base_id
+         */
+        public void setBaseId(Integer baseId) {
+            this.baseId = baseId;
+        }
+
+        /**
+         * api_plane_fromを取得します。
+         * @return api_plane_from
+         */
+        public List<List<Integer>> getPlaneFrom() {
+            return this.planeFrom;
+        }
+
+        /**
+         * api_plane_fromを設定します。
+         * @param planeFrom api_plane_from
+         */
+        public void setPlaneFrom(List<List<Integer>> planeFrom) {
+            this.planeFrom = planeFrom;
+        }
+
+        /**
+         * api_squadron_planeを取得します。
+         * @return api_squadron_plane
+         */
+        public List<SquadronPlane> getSquadronPlane() {
+            return this.squadronPlane;
+        }
+
+        /**
+         * api_squadron_planeを設定します。
+         * @param squadronPlane api_squadron_plane
+         */
+        public void setSquadronPlane(List<SquadronPlane> squadronPlane) {
+            this.squadronPlane = squadronPlane;
+        }
+
+        /**
+         * api_stage1を取得します。
+         * @return api_stage1
+         */
+        public Stage1 getStage1() {
+            return this.stage1;
+        }
+
+        /**
+         * api_stage1を設定します。
+         * @param stage1 api_stage1
+         */
+        public void setStage1(Stage1 stage1) {
+            this.stage1 = stage1;
+        }
+
+        /**
+         * api_stage2を取得します。
+         * @return api_stage2
+         */
+        public Stage2 getStage2() {
+            return this.stage2;
+        }
+
+        /**
+         * api_stage2を設定します。
+         * @param stage2 api_stage2
+         */
+        public void setStage2(Stage2 stage2) {
+            this.stage2 = stage2;
+        }
+
+        /**
+         * api_stage3を取得します。
+         * @return api_stage3
+         */
+        public Stage3 getStage3() {
+            return this.stage3;
+        }
+
+        /**
+         * api_stage3を設定します。
+         * @param stage3 api_stage3
+         */
+        public void setStage3(Stage3 stage3) {
+            this.stage3 = stage3;
+        }
+
+        /**
+         * api_stage_flagを取得します。
+         * @return api_stage_flag
+         */
+        public List<Integer> getStageFlag() {
+            return this.stageFlag;
+        }
+
+        /**
+         * api_stage_flagを設定します。
+         * @param stageFlag api_stage_flag
+         */
+        public void setStageFlag(List<Integer> stageFlag) {
+            this.stageFlag = stageFlag;
+        }
+
+        /**
+         * JsonObjectから{@link AirBaseAttack}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link AirBaseAttack}
+         */
+        public static AirBaseAttack toAirBaseAttack(JsonObject json) {
+            AirBaseAttack bean = new AirBaseAttack();
+            JsonHelper.bind(json)
+                    .setInteger("api_base_id", bean::setBaseId)
+                    .set("api_plane_from", bean::setPlaneFrom, JsonHelper.toList(JsonHelper::toIntegerList))
+                    .set("api_squadron_plane", bean::setSquadronPlane,
+                            JsonHelper.toList(SquadronPlane::toSquadronPlane))
+                    .set("api_stage1", bean::setStage1, Stage1::toStage1)
+                    .set("api_stage2", bean::setStage2, Stage2::toStage2)
+                    .set("api_stage3", bean::setStage3, Stage3::toStage3)
+                    .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList);
+            return bean;
+        }
+    }
+
+    /**
+     * api_squadron_plane
+     */
+    public static class SquadronPlane implements Serializable {
+
+        private static final long serialVersionUID = -8553957904692166481L;
+
+        /** api_count */
+        private Integer count;
+
+        /** api_mst_id */
+        private Integer mstId;
+
+        /**
+         * api_countを取得します。
+         * @return api_count
+         */
+        public Integer getCount() {
+            return this.count;
+        }
+
+        /**
+         * api_countを設定します。
+         * @param count api_count
+         */
+        public void setCount(Integer count) {
+            this.count = count;
+        }
+
+        /**
+         * api_mst_idを取得します。
+         * @return api_mst_id
+         */
+        public Integer getMstId() {
+            return this.mstId;
+        }
+
+        /**
+         * api_mst_idを設定します。
+         * @param mstId api_mst_id
+         */
+        public void setMstId(Integer mstId) {
+            this.mstId = mstId;
+        }
+
+        /**
+         * JsonObjectから{@link SquadronPlane}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link SquadronPlane}
+         */
+        public static SquadronPlane toSquadronPlane(JsonObject json) {
+            SquadronPlane bean = new SquadronPlane();
+            JsonHelper.bind(json)
+                    .setInteger("api_count", bean::setCount)
+                    .setInteger("api_mst_id", bean::setMstId);
             return bean;
         }
     }

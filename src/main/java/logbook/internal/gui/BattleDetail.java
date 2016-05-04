@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.CombinedType;
+import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
@@ -129,6 +130,18 @@ public class BattleDetail extends WindowController {
         phaseBeforePane.setText("戦闘前");
         phases.add(phaseBeforePane);
 
+        // 基地航空隊戦フェイズ
+        if (this.battle instanceof IAirBaseAttack) {
+            if (((IAirBaseAttack) this.battle).getAirBaseAttack() != null) {
+                // 基地航空隊戦フェイズ適用
+                ps.applyAirBaseAttack((IAirBaseAttack) this.battle);
+
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                phasePane.setText("基地航空隊戦フェイズ");
+                phasePane.setExpanded(false);
+                phases.add(phasePane);
+            }
+        }
         // 航空戦フェイズ
         if (this.battle instanceof IKouku) {
             if (((IKouku) this.battle).getKouku() != null) {

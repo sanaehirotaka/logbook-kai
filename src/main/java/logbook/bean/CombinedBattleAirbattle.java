@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.ICombinedBattle;
 import logbook.bean.BattleTypes.IFormation;
@@ -16,9 +17,13 @@ import logbook.internal.JsonHelper;
  * 航空戦(連合艦隊)
  *
  */
-public class CombinedBattleAirbattle implements ICombinedBattle, ISortieBattle, IFormation, IAirbattle, ISupport, Serializable {
+public class CombinedBattleAirbattle
+        implements ICombinedBattle, ISortieBattle, IFormation, IAirbattle, ISupport, IAirBaseAttack, Serializable {
 
     private static final long serialVersionUID = 4971402570408932441L;
+
+    /** api_air_base_attack */
+    private List<BattleTypes.AirBaseAttack> airBaseAttack;
 
     /** api_dock_id/api_deck_id */
     private Integer dockId;
@@ -82,6 +87,23 @@ public class CombinedBattleAirbattle implements ICombinedBattle, ISortieBattle, 
 
     /** api_kouku2 */
     private BattleTypes.Kouku kouku2;
+
+    /**
+     * api_air_base_attackを取得します。
+     * @return api_air_base_attack
+     */
+    @Override
+    public List<BattleTypes.AirBaseAttack> getAirBaseAttack() {
+        return this.airBaseAttack;
+    }
+
+    /**
+     * api_air_base_attackを設定します。
+     * @param airBaseAttack api_air_base_attack
+     */
+    public void setAirBaseAttack(List<BattleTypes.AirBaseAttack> airBaseAttack) {
+        this.airBaseAttack = airBaseAttack;
+    }
 
     /**
      * api_dock_id/api_deck_idを取得します。
@@ -448,6 +470,8 @@ public class CombinedBattleAirbattle implements ICombinedBattle, ISortieBattle, 
     public static CombinedBattleAirbattle toBattle(JsonObject json) {
         CombinedBattleAirbattle bean = new CombinedBattleAirbattle();
         JsonHelper.bind(json)
+                .set("api_air_base_attack", bean::setAirBaseAttack,
+                        JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .setInteger("api_dock_id", bean::setDockId)
                 .setInteger("api_deck_id", bean::setDockId)
                 .set("api_ship_ke", bean::setShipKe, JsonHelper::toIntegerList)

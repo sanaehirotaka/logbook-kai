@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import logbook.bean.BattleLog;
+import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.CombinedType;
+import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IBattle;
 import logbook.bean.BattleTypes.ICombinedBattle;
@@ -108,6 +110,20 @@ public class PhaseState {
     }
 
     /**
+     * 基地航空隊戦フェイズを適用します
+     *
+     * @param airBaseAttack 基地航空隊戦フェイズ
+     */
+    public void applyAirBaseAttack(IAirBaseAttack airBaseAttack) {
+        List<AirBaseAttack> attacks = airBaseAttack.getAirBaseAttack();
+        if (attacks != null) {
+            for (AirBaseAttack attack : attacks) {
+                this.applyEnemyDamage(attack.getStage3().getEdam(), this.afterEnemy);
+            }
+        }
+    }
+
+    /**
      * 航空戦フェイズを適用します
      * @param battle 航空戦フェイズ
      */
@@ -205,6 +221,10 @@ public class PhaseState {
             return;
         }
 
+        // 基地航空隊戦フェイズ
+        if (battle instanceof IAirBaseAttack) {
+            this.applyAirBaseAttack((IAirBaseAttack) battle);
+        }
         // 航空戦フェイズ
         if (battle instanceof IKouku) {
             if (((IKouku) battle).getKouku() != null) {
