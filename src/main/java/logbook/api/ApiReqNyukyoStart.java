@@ -30,7 +30,7 @@ public class ApiReqNyukyoStart implements APIListenerSpi {
             ship.setNowhp(ship.getMaxhp());
             ship.setNdockTime(0);
         }
-        // 高速修復剤未使用時でも入れ替える(艦隊タブを更新するため)
+        // 高速修復材未使用時でも入れ替える(艦隊タブを更新するため)
         map.put(shipId, ship);
     }
 }

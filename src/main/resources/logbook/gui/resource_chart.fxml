@@ -32,7 +32,7 @@
                         <CheckBox fx:id="ammo" mnemonicParsing="false" onAction="#change" selected="true" text="弾薬" />
                         <CheckBox fx:id="metal" mnemonicParsing="false" onAction="#change" selected="true" text="鋼材" />
                         <CheckBox fx:id="bauxite" mnemonicParsing="false" onAction="#change" selected="true" text="ボーキ" />
-                        <CheckBox fx:id="bucket" mnemonicParsing="false" onAction="#change" text="高速修復剤" />
+                        <CheckBox fx:id="bucket" mnemonicParsing="false" onAction="#change" text="高速修復材" />
                         <CheckBox fx:id="burner" mnemonicParsing="false" onAction="#change" text="高速建造材" />
                         <CheckBox fx:id="research" mnemonicParsing="false" onAction="#change" text="開発資材" />
                         <CheckBox fx:id="improve" mnemonicParsing="false" onAction="#change" text="改修資材" />
@@ -59,7 +59,7 @@
                   <TableColumn fx:id="ammoGap" prefWidth="110.0" text="弾薬" />
                   <TableColumn fx:id="metalGap" prefWidth="110.0" text="鋼材" />
                   <TableColumn fx:id="bauxiteGap" prefWidth="110.0" text="ボーキ" />
-                  <TableColumn fx:id="bucketGap" prefWidth="75.0" text="高速修復剤" />
+                  <TableColumn fx:id="bucketGap" prefWidth="75.0" text="高速修復材" />
                   <TableColumn fx:id="burnerGap" prefWidth="75.0" text="高速建造材" />
                   <TableColumn fx:id="researchGap" prefWidth="75.0" text="開発資材" />
                   <TableColumn fx:id="improveGap" prefWidth="75.0" text="改修資材" />
