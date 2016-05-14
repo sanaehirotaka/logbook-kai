@@ -30,6 +30,9 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 **初期の状態では艦娘の画像が表示出来ません。必ず**[FAQ](faq.md)**をお読みください。**
 
+#### プラグイン
+* [検証DBプラグイン for 航海日誌](https://github.com/sanaehirotaka/logbook-kcvdb-plugin)
+
 ### [ブラウザの設定(必須)](how-to-preference.md)
 
 ### 動作環境
