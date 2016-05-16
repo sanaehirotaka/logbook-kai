@@ -139,6 +139,7 @@ public class ApiReqMapNext implements APIListenerSpi {
                 .map(shipMap::get)
                 .filter(Objects::nonNull)
                 .filter(Ships::isBadlyDamage)
+                .filter(s -> !Ships.isEscape(s))
                 .collect(Collectors.toList());
     }
 
