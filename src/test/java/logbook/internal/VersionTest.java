@@ -102,7 +102,7 @@ public class VersionTest {
      */
     @Test
     public void testGetCurrent() {
-        Version expected = new Version(1, 2, 3);
+        Version expected = Version.UNKNOWN;
 
         assertEquals(expected, Version.getCurrent());
     }

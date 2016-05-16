@@ -2,13 +2,16 @@ package logbook.internal;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.ResourceBundle;
+import java.util.Optional;
 
 /**
  * Version info
  *
  */
 public final class Version implements Comparable<Version> {
+
+    /** UNKNOWN Version */
+    public static final Version UNKNOWN = new Version(Integer.MAX_VALUE, 0, 0);
 
     /** major */
     private final int major;
@@ -80,6 +83,9 @@ public final class Version implements Comparable<Version> {
 
     @Override
     public String toString() {
+        if (this == UNKNOWN) {
+            return "unknown";
+        }
         String version = this.major + "." + this.minor; //$NON-NLS-1$
         if (this.revision > 0) {
             version += "." + this.revision; //$NON-NLS-1$
@@ -113,7 +119,12 @@ public final class Version implements Comparable<Version> {
      * @return アプリケーションの現在のバージョン
      */
     public static Version getCurrent() {
-        String version = ResourceBundle.getBundle("logbook.version").getString("version"); //$NON-NLS-1$ //$NON-NLS-2$
+        String version = Optional.ofNullable(Version.class.getPackage())
+                .map(Package::getImplementationVersion)
+                .orElse(null);
+        if (version == null) {
+            return UNKNOWN;
+        }
         return new Version(version);
     }
 }
