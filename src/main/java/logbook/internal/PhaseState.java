@@ -118,7 +118,13 @@ public class PhaseState {
         List<AirBaseAttack> attacks = airBaseAttack.getAirBaseAttack();
         if (attacks != null) {
             for (AirBaseAttack attack : attacks) {
-                this.applyEnemyDamage(attack.getStage3().getEdam(), this.afterEnemy);
+                Stage3 stage3 = attack.getStage3();
+                if (stage3 != null) {
+                    List<Double> edam = stage3.getEdam();
+                    if (edam != null) {
+                        this.applyEnemyDamage(edam, this.afterEnemy);
+                    }
+                }
             }
         }
     }
