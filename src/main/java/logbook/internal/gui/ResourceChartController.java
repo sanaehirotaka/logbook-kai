@@ -225,7 +225,7 @@ public class ResourceChartController extends WindowController {
         this.yAxis.setForceZeroInRange(this.forceZero.isSelected());
 
         try {
-            Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL);
+            Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL.getFileName());
             List<ResourceLog> log;
             try (Stream<String> lines = Files.lines(logFile, LogWriter.DEFAULT_CHARSET)) {
                 log = lines.skip(1)
@@ -297,7 +297,7 @@ public class ResourceChartController extends WindowController {
      * 資材ログのテーブルを作成する
      */
     private void loadTable() {
-        Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL);
+        Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL.getFileName());
         Map<LocalDate, ResourceLog> logs;
         try {
             try (Stream<String> lines = Files.lines(logFile, LogWriter.DEFAULT_CHARSET)) {

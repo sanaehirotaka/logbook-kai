@@ -35,54 +35,48 @@ public final class Logs {
     /** 日付書式 */
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    /** 海戦・ドロップ報告書ヘッダー */
-    public static final String BATTLE_RESULT_HEADER = new StringJoiner(",")
-            .add("日付")
-            .add("海域").add("マス").add("ボス").add("ランク")
-            .add("艦隊行動").add("味方陣形").add("敵陣形")
-            .add("制空権")
-            .add("味方触接")
-            .add("敵触接")
-            .add("敵艦隊")
-            .add("ドロップ艦種").add("ドロップ艦娘")
-            .add("味方艦1").add("味方艦1HP")
-            .add("味方艦2").add("味方艦2HP")
-            .add("味方艦3").add("味方艦3HP")
-            .add("味方艦4").add("味方艦4HP")
-            .add("味方艦5").add("味方艦5HP")
-            .add("味方艦6").add("味方艦6HP")
-            .add("敵艦1").add("敵艦1HP")
-            .add("敵艦2").add("敵艦2HP")
-            .add("敵艦3").add("敵艦3HP")
-            .add("敵艦4").add("敵艦4HP")
-            .add("敵艦5").add("敵艦5HP")
-            .add("敵艦6").add("敵艦6HP")
-            .toString();
+    /** 海戦・ドロップ報告書 */
+    public static final Format<BattleLog> BATTLE_RESULT = new Format<BattleLog>()
+            .setName("海戦・ドロップ報告書")
+            .setHeader(new StringJoiner(",")
+                    .add("日付")
+                    .add("海域").add("マス").add("ボス").add("ランク")
+                    .add("艦隊行動").add("味方陣形").add("敵陣形")
+                    .add("制空権")
+                    .add("味方触接")
+                    .add("敵触接")
+                    .add("敵艦隊")
+                    .add("ドロップ艦種").add("ドロップ艦娘")
+                    .add("味方艦1").add("味方艦1HP")
+                    .add("味方艦2").add("味方艦2HP")
+                    .add("味方艦3").add("味方艦3HP")
+                    .add("味方艦4").add("味方艦4HP")
+                    .add("味方艦5").add("味方艦5HP")
+                    .add("味方艦6").add("味方艦6HP")
+                    .add("敵艦1").add("敵艦1HP")
+                    .add("敵艦2").add("敵艦2HP")
+                    .add("敵艦3").add("敵艦3HP")
+                    .add("敵艦4").add("敵艦4HP")
+                    .add("敵艦5").add("敵艦5HP")
+                    .add("敵艦6").add("敵艦6HP")
+                    .toString())
+            .setFormat(Logs::formatBattleLog);
 
-    /** 海戦・ドロップ報告書.csv */
-    public static final String BATTLE_RESULT = "海戦・ドロップ報告書.csv";
-
-    /** 海戦・ドロップ報告書_alternativefile.csv */
-    public static final String BATTLE_RESULT_ALT = "海戦・ドロップ報告書_alternativefile.csv";
-
-    /** 資材ログヘッダー */
-    public static final String MATERIAL_HEADER = new StringJoiner(",")
-            .add("日付")
-            .add("燃料")
-            .add("弾薬")
-            .add("鋼材")
-            .add("ボーキ")
-            .add("高速修復材")
-            .add("高速建造材")
-            .add("開発資材")
-            .add("改修資材")
-            .toString();
-
-    /** 資材ログ.csv */
-    public static final String MATERIAL = "資材ログ.csv";
-
-    /** 資材ログ_alternativefile.csv */
-    public static final String MATERIAL_ALT = "資材ログ_alternativefile.csv";
+    /** 資材ログ */
+    public static final Format<Map<Integer, Material>> MATERIAL = new Format<Map<Integer, Material>>()
+            .setName("資材ログ")
+            .setHeader(new StringJoiner(",")
+                    .add("日付")
+                    .add("燃料")
+                    .add("弾薬")
+                    .add("鋼材")
+                    .add("ボーキ")
+                    .add("高速修復材")
+                    .add("高速建造材")
+                    .add("開発資材")
+                    .add("改修資材")
+                    .toString())
+            .setFormat(Logs::formatMaterial);
 
     /**
      * 戦闘ログを文字列にします
@@ -90,7 +84,7 @@ public final class Logs {
      * @param log 戦闘ログ
      * @return 戦闘ログの文字列
      */
-    public static String formatBattleLog(BattleLog log) {
+    private static String formatBattleLog(BattleLog log) {
         IFormation battle = log.getBattle();
         BattleResult result = log.getResult();
 
@@ -219,7 +213,7 @@ public final class Logs {
      * @param material 資材ログ
      * @return 資材ログの文字列
      */
-    public static String formatMaterial(Map<Integer, Material> material) {
+    private static String formatMaterial(Map<Integer, Material> material) {
         StringJoiner joiner = new StringJoiner(",");
         // 日付
         joiner.add(nowString());
@@ -259,5 +253,74 @@ public final class Logs {
      */
     public static String nowString() {
         return DATE_FORMAT.format(now());
+    }
+
+    /**
+     * ログ情報
+     *
+     */
+    public static class Format<T> {
+
+        /** ヘッダー */
+        private String header;
+
+        /** ファイル名 */
+        private String name;
+
+        /** 代替ファイル名 */
+        private String alt = "_alternativefile";
+
+        /** 拡張子 */
+        private String ext = "csv";
+
+        /** 変換関数 */
+        private Function<T, String> function;
+
+        /**
+         * ヘッダーを取得します。
+         * @return ヘッダー
+         */
+        public String getHeader() {
+            return this.header;
+        }
+
+        /**
+         * ファイル名を取得します。
+         * @return ファイル名
+         */
+        public String getFileName() {
+            return this.name + "." + this.ext;
+        }
+
+        /**
+         * 代替ファイル名を取得します。
+         * @return 代替ファイル名
+         */
+        public String getAlterFileName() {
+            return this.name + this.alt + "." + this.ext;
+        }
+
+        /**
+         * 文字列表現を取得します。
+         * @return 文字列表現
+         */
+        public String format(T obj) {
+            return this.function.apply(obj);
+        }
+
+        Format<T> setHeader(String header) {
+            this.header = header;
+            return this;
+        }
+
+        Format<T> setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        Format<T> setFormat(Function<T, String> function) {
+            this.function = function;
+            return this;
+        }
     }
 }

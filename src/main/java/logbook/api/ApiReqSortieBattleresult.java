@@ -51,10 +51,10 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                 BattleLogs.write(log);
 
                 new LogWriter()
-                        .header(Logs.BATTLE_RESULT_HEADER)
-                        .file(Logs.BATTLE_RESULT)
-                        .alterFile(Logs.BATTLE_RESULT_ALT)
-                        .write(log, Logs::formatBattleLog);
+                        .header(Logs.BATTLE_RESULT.getHeader())
+                        .file(Logs.BATTLE_RESULT.getFileName())
+                        .alterFile(Logs.BATTLE_RESULT.getAlterFileName())
+                        .write(log, Logs.BATTLE_RESULT::format);
                 if (AppConfig.get().isApplyResult()) {
                     // 艦隊を更新
                     PhaseState p = new PhaseState(log);

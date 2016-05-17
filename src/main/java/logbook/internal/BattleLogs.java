@@ -157,7 +157,7 @@ public class BattleLogs {
                 return null;
             };
             Path dir = Paths.get(AppConfig.get().getReportPath());
-            Path path = dir.resolve(Logs.BATTLE_RESULT);
+            Path path = dir.resolve(Logs.BATTLE_RESULT.getFileName());
 
             // 今日
             ZonedDateTime now = unitToday();

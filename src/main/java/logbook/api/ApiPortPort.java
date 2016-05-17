@@ -132,10 +132,10 @@ public class ApiPortPort implements APIListenerSpi {
         if (duration.compareTo(Duration.ofSeconds(AppConfig.get().getMaterialLogInterval())) >= 0) {
             Map<Integer, Material> material = JsonHelper.toMap(array, Material::getId, Material::toMaterial);
             new LogWriter()
-                    .header(Logs.MATERIAL_HEADER)
-                    .file(Logs.MATERIAL)
-                    .alterFile(Logs.MATERIAL_ALT)
-                    .write(material, Logs::formatMaterial);
+                    .header(Logs.MATERIAL.getHeader())
+                    .file(Logs.MATERIAL.getFileName())
+                    .alterFile(Logs.MATERIAL.getAlterFileName())
+                    .write(material, Logs.MATERIAL::format);
             AppCondition.get()
                     .setWroteMaterialLogLast(System.currentTimeMillis());
         }
