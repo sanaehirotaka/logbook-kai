@@ -2,6 +2,7 @@ package logbook.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.json.JsonObject;
 
@@ -28,6 +29,11 @@ public class ApiReqHenseiChange implements APIListenerSpi {
                 .get(portId)
                 .clone();
         List<Integer> ships = new ArrayList<>(deckPort.getShip());
+        deckPort.setShip(ships);
+        DeckPortCollection.get()
+                .getDeckPortMap()
+                .put(portId, deckPort);
+
         if (shipId == -1) {
             ships.remove(shipIdx);
             ships.add(-1);
@@ -35,18 +41,22 @@ public class ApiReqHenseiChange implements APIListenerSpi {
             Integer first = ships.get(0);
             ships.replaceAll(ship -> first.equals(ship) ? ship : -1);
         } else {
-            // 艦娘の元の位置
-            int beforeIdx = ships.indexOf(shipId);
-            // 入れ替え
-            Integer to = ships.set(shipIdx, shipId);
-            if (beforeIdx != -1) {
-                ships.set(beforeIdx, to);
+            Integer from = ships.get(shipIdx);
+            for (Entry<Integer, DeckPort> entry : DeckPortCollection.get().getDeckPortMap().entrySet()) {
+                if (entry.getValue().getShip().contains(shipId)) {
+                    DeckPort port2 = entry.getValue().clone();
+                    List<Integer> ships2 = new ArrayList<>(port2.getShip());
+                    port2.setShip(ships2);
+                    DeckPortCollection.get()
+                            .getDeckPortMap()
+                            .put(port2.getId(), port2);
+
+                    ships2.set(ships2.indexOf(shipId), from);
+                    break;
+                }
             }
+            ships.set(shipIdx, shipId);
         }
-        deckPort.setShip(ships);
-        DeckPortCollection.get()
-                .getDeckPortMap()
-                .put(portId, deckPort);
     }
 
 }
