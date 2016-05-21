@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -24,11 +23,9 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.Stype;
 import logbook.internal.JsonHelper;
 import logbook.internal.LogWriter;
 import logbook.internal.Logs;
-import logbook.internal.Ships;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -196,26 +193,9 @@ public class ApiPortPort implements APIListenerSpi {
      * 泊地修理タイマーを更新する
      */
     private void akashiTimer() {
-        boolean find = false;
-        for (Entry<Integer, DeckPort> entry : DeckPortCollection.get().getDeckPortMap().entrySet()) {
-            List<Integer> ships = entry.getValue().getShip();
-            if (ships.size() > 0) {
-                Integer shipid = ships.get(0);
-                Ship ship = ShipCollection.get().getShipMap().get(shipid);
-                if (ship != null) {
-                    String type = Ships.stype(ship).map(Stype::getName).orElse("");
-                    if ("工作艦".equals(type)) {
-                        find = true;
-                        break;
-                    }
-                }
-            }
-        }
-        if (find) {
-            long timer = AppCondition.get().getAkashiTimer();
-            if (System.currentTimeMillis() - timer >= Duration.ofMinutes(20).toMillis()) {
-                AppCondition.get().setAkashiTimer(System.currentTimeMillis());
-            }
+        long timer = AppCondition.get().getAkashiTimer();
+        if (System.currentTimeMillis() - timer >= Duration.ofMinutes(20).toMillis()) {
+            AppCondition.get().setAkashiTimer(System.currentTimeMillis());
         }
     }
 }
