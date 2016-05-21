@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -59,7 +59,12 @@
                               </TitledPane>
                               <TitledPane animated="false" text="入渠">
                                  <content>
-                                    <VBox fx:id="ndockbox" />
+                                    <VBox>
+                                       <children>
+                                          <VBox fx:id="akashiTimer" />
+                                          <VBox fx:id="ndockbox" />
+                                       </children>
+                                    </VBox>
                                  </content>
                               </TitledPane>
                            </children>

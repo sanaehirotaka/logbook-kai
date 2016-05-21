@@ -109,6 +109,9 @@ public class MainController extends WindowController {
     private VBox missionbox;
 
     @FXML
+    private VBox akashiTimer;
+
+    @FXML
     private VBox ndockbox;
 
     private AudioClip clip;
@@ -316,6 +319,8 @@ public class MainController extends WindowController {
             this.button();
             // 艦隊タブ・遠征
             this.checkPort();
+            // 泊地修理タイマー
+            this.akashiTimer();
             // 入渠ドック
             this.ndock();
 
@@ -456,6 +461,25 @@ public class MainController extends WindowController {
                 if (node instanceof MissionPane) {
                     ((MissionPane) node).update();
                 }
+            }
+        }
+    }
+
+    /**
+     * 泊地修理タイマー
+     */
+    private void akashiTimer() {
+        ObservableList<Node> nodes = this.akashiTimer.getChildren();
+
+        if (AppCondition.get().getAkashiTimer() == 0) {
+            if (!nodes.isEmpty()) {
+                nodes.clear();
+            }
+        } else {
+            if (nodes.isEmpty()) {
+                nodes.add(new AkashiTimerPane());
+            } else {
+                ((AkashiTimerPane) nodes.get(0)).update();
             }
         }
     }

@@ -1,14 +1,21 @@
 package logbook.api;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.json.JsonObject;
 
+import logbook.bean.AppCondition;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.Ship;
+import logbook.bean.ShipCollection;
+import logbook.bean.Stype;
+import logbook.internal.Ships;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -21,6 +28,9 @@ public class ApiReqHenseiChange implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
+
+        // 変化した艦隊
+        Set<Integer> changed = new HashSet<>();
 
         Map<Integer, DeckPort> deckMap = DeckPortCollection.get()
                 .getDeckPortMap();
@@ -56,10 +66,30 @@ public class ApiReqHenseiChange implements APIListenerSpi {
                     } else {
                         ships2.set(ships2.indexOf(shipId), from);
                     }
+                    changed.add(port2.getId());
                     break;
                 }
             }
             deckMap.get(portId).getShip().set(shipIdx, shipId);
+        }
+        changed.add(portId);
+
+        // 随伴艦一括解除以外の場合に、変化した艦隊の旗艦に工作艦が存在する場合は泊地修理タイマーをセットする
+        if (shipId != -2) {
+            for (Integer port : changed) {
+                List<Integer> changedShips = deckMap.get(port).getShip();
+                if (changedShips.size() > 0) {
+                    Integer shipid = changedShips.get(0);
+                    Ship ship = ShipCollection.get().getShipMap().get(shipid);
+                    if (ship != null) {
+                        String type = Ships.stype(ship).map(Stype::getName).orElse("");
+                        if ("工作艦".equals(type)) {
+                            AppCondition.get().setAkashiTimer(System.currentTimeMillis());
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 

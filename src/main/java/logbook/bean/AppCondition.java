@@ -38,6 +38,9 @@ public class AppCondition implements Serializable {
     /** 最後に資材ログに書き込んだ時間 */
     private long wroteMaterialLogLast = 0;
 
+    /** 泊地修理タイマー */
+    private long akashiTimer = 0;
+
     /**
      * 連合艦隊を取得します。
      * @return 連合艦隊
@@ -123,7 +126,7 @@ public class AppCondition implements Serializable {
      * @return 最後の戦闘結果
      */
     public BattleLog getBattleResultConfirm() {
-        return battleResultConfirm;
+        return this.battleResultConfirm;
     }
 
     /**
@@ -164,6 +167,22 @@ public class AppCondition implements Serializable {
      */
     public void setWroteMaterialLogLast(long wroteMaterialLogLast) {
         this.wroteMaterialLogLast = wroteMaterialLogLast;
+    }
+
+    /**
+     * 泊地修理タイマーを取得します。
+     * @return 泊地修理タイマー
+     */
+    public long getAkashiTimer() {
+        return this.akashiTimer;
+    }
+
+    /**
+     * 泊地修理タイマーを設定します。
+     * @param akashiTimer 泊地修理タイマー
+     */
+    public void setAkashiTimer(long akashiTimer) {
+        this.akashiTimer = akashiTimer;
     }
 
     /**
