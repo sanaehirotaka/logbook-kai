@@ -60,7 +60,9 @@ public class PhaseState {
      */
     public PhaseState(CombinedType combinedType, IBattle b, Map<Integer, List<Ship>> deckMap) {
         // 連合艦隊
-        this.combinedType = combinedType;
+        if (b instanceof ICombinedBattle) {
+            this.combinedType = combinedType;
+        }
         // 味方
         if (b instanceof ICombinedBattle) {
             for (Ship ship : deckMap.get(1)) {
