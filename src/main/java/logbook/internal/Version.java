@@ -1,5 +1,6 @@
 package logbook.internal;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
@@ -8,7 +9,9 @@ import java.util.Optional;
  * Version info
  *
  */
-public final class Version implements Comparable<Version> {
+public final class Version implements Comparable<Version>, Serializable {
+
+    private static final long serialVersionUID = 770093260258378309L;
 
     /** UNKNOWN Version */
     public static final Version UNKNOWN = new Version(Integer.MAX_VALUE, 0, 0);
