@@ -25,6 +25,7 @@ logbook.api.ApiReqHenseiChange
 logbook.api.ApiReqHenseiPresetSelect
 logbook.api.ApiReqHokyuCharge
 logbook.api.ApiReqKaisouPowerup
+logbook.api.ApiReqKaisouSlotDeprive
 logbook.api.ApiReqKaisouSlotExchangeIndex
 logbook.api.ApiReqKousyouCreateitem
 logbook.api.ApiReqKousyouCreateship
