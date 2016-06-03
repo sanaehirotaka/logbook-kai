@@ -42,7 +42,7 @@ public class ShipController extends WindowController {
                         .sorted(Comparator.comparing(Ship::getShipId))
                         .sorted(Comparator.comparing(Ship::getLv).reversed())
                         .collect(Collectors.toList());
-            });
+            }, "全員");
 
             this.tab.getTabs().add(new Tab("全員", allPane));
 

@@ -124,6 +124,9 @@ public class ShipTablePane extends VBox {
     /** 艦娘一覧のハッシュ・コード */
     private int shipsHashCode;
 
+    /** 艦隊名 */
+    private String fleetName;
+
     /**
      * 所有艦娘一覧のテーブルのコンストラクタ
      *
@@ -143,7 +146,7 @@ public class ShipTablePane extends VBox {
                         .collect(Collectors.toList());
             }
             return Collections.emptyList();
-        });
+        }, port.getName());
     }
 
     /**
@@ -151,8 +154,9 @@ public class ShipTablePane extends VBox {
      *
      * @param shipSupplier 艦娘達
      */
-    public ShipTablePane(Supplier<List<Ship>> shipSupplier) {
+    public ShipTablePane(Supplier<List<Ship>> shipSupplier, String fleetName) {
         this.shipSupplier = shipSupplier;
+        this.fleetName = fleetName;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/ship_table.fxml");
             loader.setRoot(this);
@@ -242,6 +246,18 @@ public class ShipTablePane extends VBox {
     @FXML
     void selectAll() {
         TableTool.selectAll(this.table);
+    }
+
+    /**
+     * CSVファイルとして保存
+     */
+    @FXML
+    void store() {
+        try {
+            TableTool.store(this.table, "所有艦娘一覧(" + this.fleetName + ")", this.getScene().getWindow());
+        } catch (IOException e) {
+            LoggerHolder.LOG.error("CSVファイルとして保存に失敗しました", e);
+        }
     }
 
     /**

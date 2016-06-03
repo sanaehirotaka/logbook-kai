@@ -1,5 +1,6 @@
 package logbook.internal.gui;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -270,6 +271,18 @@ public class ItemController extends WindowController {
     @FXML
     void selectAllType() {
         TableTool.selectAll(this.typeTable);
+    }
+
+    /**
+     * (装備一覧)CSVファイルとして保存
+     */
+    @FXML
+    void storeType() {
+        try {
+            TableTool.store(this.typeTable, "所有装備一覧", this.getWindow());
+        } catch (IOException e) {
+            LoggerHolder.LOG.error("CSVファイルとして保存に失敗しました", e);
+        }
     }
 
     /**

@@ -35,6 +35,7 @@
              <items>
                <MenuItem mnemonicParsing="false" onAction="#copy" text="クリップボードにコピー" />
                <MenuItem mnemonicParsing="false" onAction="#selectAll" text="すべてを選択" />
+               <MenuItem mnemonicParsing="false" onAction="#store" text="CSVファイルとして保存" />
              </items>
            </ContextMenu>
         </contextMenu>
