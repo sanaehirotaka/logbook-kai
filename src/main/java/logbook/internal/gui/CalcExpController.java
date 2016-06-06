@@ -161,6 +161,9 @@ public class CalcExpController extends WindowController {
         this.rank.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((ov, o, n) -> this.update());
+        this.shortageShip.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(this::changeShip);
 
         // 旗艦ID
         Integer flagShipId = DeckPortCollection.get()
@@ -210,23 +213,50 @@ public class CalcExpController extends WindowController {
     /**
      * 艦娘を変えたとき
      */
+    private void changeShip(Ship ship) {
+        this.nowLv.getValueFactory().setValue(ship.getLv());
+
+        this.nowExpValue = ship.getExp().get(0);
+        this.nowExp.setText(Integer.toString(this.nowExpValue));
+
+        int afterLv = Ships.shipMst(ship)
+                .map(ShipMst::getAfterlv)
+                .orElse(0);
+        int goal = Math.min(Math.max(afterLv, ship.getLv() + 1), ExpTable.maxLv());
+
+        this.goalExpValue = ExpTable.get().get(goal);
+        this.goalLv.getValueFactory().setValue(goal);
+        this.goalExp.setText(String.valueOf(this.goalExpValue));
+    }
+
+    /**
+     * From Combo
+     */
     private void changeShip(ObservableValue<? extends ShipWrapper> observable, ShipWrapper oldValue,
             ShipWrapper value) {
         if (value != null) {
             Ship ship = value.getShip();
-            this.nowLv.getValueFactory().setValue(ship.getLv());
+            this.changeShip(ship);
+            // Table の同じものを選択
+            for (ShortageShipItem ss : this.item.filtered(ss -> ss.shipProperty().get().equals(ship))) {
+                ShortageShipItem selected = shortageShip.getSelectionModel().getSelectedItem();
+                if (selected != null && selected.equals(ss)) continue;
+                this.shortageShip.getSelectionModel().select(ss);
+                this.shortageShip.scrollTo(ss);
+            }
+        }
+    }
 
-            this.nowExpValue = ship.getExp().get(0);
-            this.nowExp.setText(Integer.toString(this.nowExpValue));
-
-            int afterLv = Ships.shipMst(ship)
-                    .map(ShipMst::getAfterlv)
-                    .orElse(0);
-            int goal = Math.min(Math.max(afterLv, ship.getLv() + 1), ExpTable.maxLv());
-
-            this.goalExpValue = ExpTable.get().get(goal);
-            this.goalLv.getValueFactory().setValue(goal);
-            this.goalExp.setText(String.valueOf(this.goalExpValue));
+    /**
+     * From Table
+     */
+    private void changeShip(ObservableValue<? extends ShortageShipItem> observable, ShortageShipItem oldValue,
+            ShortageShipItem value) {
+        if (value != null) {
+            Ship ship = value.shipProperty().get();
+            this.changeShip(ship);
+            // Combo の同じものを選択
+            this.ships.filtered(sw -> sw.getShip().equals(ship)).forEach(this.shipList.getSelectionModel()::select);
         }
     }
 
