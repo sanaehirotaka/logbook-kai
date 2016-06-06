@@ -1,13 +1,18 @@
 package logbook.internal;
 
 import java.beans.ExceptionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
@@ -65,6 +70,8 @@ public final class Launcher {
     void initPlugin(String[] args) {
         ExceptionListener listener = e -> LoggerHolder.LOG.warn("プラグインの初期化中に例外が発生", e); //$NON-NLS-1$
 
+        Set<String> blackList = this.getBlackList(listener);
+
         Path dir = Paths.get(AppConfig.get().getPluginsDir());
         PluginContainer container = PluginContainer.getInstance();
 
@@ -75,6 +82,7 @@ public final class Launcher {
                         .filter(Files::isRegularFile)
                         .map(p -> JarBasedPlugin.toJarBasedPlugin(p, listener))
                         .filter(Objects::nonNull)
+                        .filter(p -> !blackList.contains(p.getDigest()))
                         .collect(Collectors.toList());
 
             } catch (IOException e) {
@@ -105,6 +113,19 @@ public final class Launcher {
         } catch (IOException e) {
             listener.exceptionThrown(e);
         }
+    }
+
+    private Set<String> getBlackList(ExceptionListener listener) {
+        Set<String> blackList = Collections.emptySet();
+        InputStream in = Launcher.class.getResourceAsStream("plugin-black-list"); //$NON-NLS-1$
+        if (in != null) {
+            try (BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                blackList = r.lines().collect(Collectors.toSet());
+            } catch (IOException e) {
+                listener.exceptionThrown(e);
+            }
+        }
+        return blackList;
     }
 
     private static class LoggerHolder {
