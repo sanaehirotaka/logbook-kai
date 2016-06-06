@@ -1,11 +1,9 @@
 package logbook.plugin.gui;
 
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * GUIを持つプラグインのインターフェイスです
@@ -29,10 +27,7 @@ public interface Plugin<T> {
      * @return GUI要素
      */
     public static <T extends Plugin<R>, R> List<R> getContent(Class<T> clazz) {
-        ClassLoader classLoader = PluginContainer.getInstance().getClassLoader();
-        ServiceLoader<T> loader = ServiceLoader.load(clazz, classLoader);
-
-        return StreamSupport.stream(loader.spliterator(), false)
+        return PluginServices.instances(clazz)
                 .map(Plugin::getContent)
                 .collect(Collectors.toList());
     }
