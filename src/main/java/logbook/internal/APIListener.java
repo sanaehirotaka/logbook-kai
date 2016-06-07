@@ -8,11 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import java.util.zip.GZIPInputStream;
 
 import javax.json.Json;
@@ -25,13 +23,13 @@ import org.apache.logging.log4j.Logger;
 import logbook.Messages;
 import logbook.api.API;
 import logbook.api.APIListenerSpi;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 import logbook.proxy.ContentListenerSpi;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
 /**
- * APIを受け取りJSONをAPIListenerSpiを実装したサービスクラスに送ります
+ * APIを受け取りJSONをAPIListenerSpiを実装したサービスプロバイダに送ります
  *
  */
 public final class APIListener implements ContentListenerSpi {
@@ -41,10 +39,6 @@ public final class APIListener implements ContentListenerSpi {
     private final List<Pair> all = new ArrayList<>();
 
     public APIListener() {
-        ServiceLoader<APIListenerSpi> loader = ServiceLoader.load(
-                APIListenerSpi.class,
-                PluginContainer.getInstance().getClassLoader());
-
         Function<APIListenerSpi, Stream<Pair>> mapper = impl -> {
             API target = impl.getClass().getAnnotation(API.class);
             if (target != null) {
@@ -55,7 +49,7 @@ public final class APIListener implements ContentListenerSpi {
             }
             return Stream.empty();
         };
-        this.services = StreamSupport.stream(loader.spliterator(), false)
+        this.services = PluginServices.instances(APIListenerSpi.class)
                 .flatMap(mapper)
                 .collect(Collectors.groupingBy(Pair::getKey));
     }

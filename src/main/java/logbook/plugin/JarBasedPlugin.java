@@ -3,7 +3,10 @@ package logbook.plugin;
 import java.beans.ExceptionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -18,6 +21,8 @@ public class JarBasedPlugin {
 
     private final Manifest manifest;
 
+    private final String digest;
+
     /**
      * 指定したpathからプラグインを作成します
      * @param path Jarファイルのパス
@@ -25,6 +30,7 @@ public class JarBasedPlugin {
      */
     JarBasedPlugin(Path path) throws IOException {
         this.url = path.toUri().toURL();
+        this.digest = new String(encodeHex(digest(path)));
 
         try (JarFile file = new JarFile(path.toFile())) {
             Manifest manifest = file.getManifest();
@@ -98,6 +104,14 @@ public class JarBasedPlugin {
         return this.getAttributeValue("Bundle-License"); //$NON-NLS-1$
     }
 
+    /**
+     * このプラグインのSHA-256値を取得します。
+     * @return digest SHA-256値
+     */
+    public String getDigest() {
+        return this.digest;
+    }
+
     private String getAttributeValue(String... atters) {
         if (this.manifest != null) {
             Attributes attributes = this.manifest.getMainAttributes();
@@ -119,4 +133,29 @@ public class JarBasedPlugin {
             return null;
         }
     }
+
+    private static byte[] digest(Path path) throws IOException {
+        MessageDigest digest;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return digest.digest(Files.readAllBytes(path));
+    }
+
+    private static char[] encodeHex(byte[] data) {
+        int l = data.length;
+        char[] out = new char[l << 1];
+
+        int i = 0;
+        for (int j = 0; i < l; i++) {
+            out[(j++)] = DIGITS_LOWER[((0xF0 & data[i]) >>> 4)];
+            out[(j++)] = DIGITS_LOWER[(0xF & data[i])];
+        }
+        return out;
+    }
+
+    private static final char[] DIGITS_LOWER = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+            'e', 'f' };
 }

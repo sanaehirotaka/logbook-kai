@@ -4,11 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.BindException;
 import java.net.InetAddress;
-import java.util.List;
-import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +20,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import logbook.Messages;
 import logbook.bean.AppConfig;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * リバースプロキシ
@@ -52,7 +49,9 @@ public final class ProxyServer extends Thread {
             server.addConnector(connector);
 
             ServletHandler context = new ServletHandler();
-            ServletHolder holder = new ServletHolder(new ReverseProxyServlet(this.getServices()));
+            ServletHolder holder = new ServletHolder(
+                    new ReverseProxyServlet(PluginServices.instances(ContentListenerSpi.class)
+                            .collect(Collectors.toList())));
             holder.setInitParameter("maxThreads", "8"); //$NON-NLS-1$ //$NON-NLS-2$
             holder.setInitParameter("idleTimeout", Long.toString(TimeUnit.MINUTES.toMillis(2))); //$NON-NLS-1$
             holder.setInitParameter("timeout", Long.toString(TimeUnit.MINUTES.toMillis(2))); //$NON-NLS-1$
@@ -77,17 +76,6 @@ public final class ProxyServer extends Thread {
         } catch (Exception e) {
             LoggerHolder.LOG.warn(Messages.getString("ProxyServer.6"), e); //$NON-NLS-1$
         }
-    }
-
-    private List<ContentListenerSpi> getServices() {
-        ServiceLoader<ContentListenerSpi> loader = ServiceLoader.load(
-                ContentListenerSpi.class,
-                PluginContainer.getInstance().getClassLoader());
-
-        List<ContentListenerSpi> services = StreamSupport.stream(loader.spliterator(), false)
-                .collect(Collectors.toList());
-
-        return services;
     }
 
     private void displayAlert(Exception e) {
