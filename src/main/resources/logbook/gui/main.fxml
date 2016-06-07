@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -15,17 +16,32 @@
               <MenuItem mnemonicParsing="false" onAction="#capture" text="キャプチャ" />
               <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#battleStatus" text="直近の戦闘" />
-              <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ" />
+              <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
               <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧" />
-              <MenuItem mnemonicParsing="false" onAction="#ships" text="所有艦娘一覧" />
+              <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
+              <MenuItem mnemonicParsing="false" onAction="#ships" text="所有艦娘一覧">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
               <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#ndock" text="お風呂に入りたい艦娘" />
+              <MenuItem mnemonicParsing="false" onAction="#ndock" text="お風呂に入りたい艦娘">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
             </items>
           </Menu>
           <Menu fx:id="calc" mnemonicParsing="false" text="計算機">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#calcExp" text="経験値計算機" />
+                  <MenuItem mnemonicParsing="false" onAction="#calcExp" text="経験値計算機">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                </items>
           </Menu>
           <Menu fx:id="ext" mnemonicParsing="false" text="その他">
@@ -33,7 +49,10 @@
                   <MenuItem mnemonicParsing="false" onAction="#resourceChart" text="資材チャート" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#createPacFile" text="自動プロキシ構成スクリプト" />
-                  <MenuItem mnemonicParsing="false" onAction="#config" text="設定" />
+                  <MenuItem mnemonicParsing="false" onAction="#config" text="設定">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="COMMA" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
             </items>
           </Menu>
         </menus>
