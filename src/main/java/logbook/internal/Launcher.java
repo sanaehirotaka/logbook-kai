@@ -85,7 +85,7 @@ public final class Launcher {
                         .filter(p -> !blackList.contains(p.getDigest()))
                         .collect(Collectors.toList());
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 listener.exceptionThrown(e);
             }
         }
@@ -115,12 +115,22 @@ public final class Launcher {
         }
     }
 
+    /**
+     * プラグインブラックリストの読み込み
+     *
+     * @param listener ExceptionListener
+     * @return プラグインブラックリスト
+     */
     private Set<String> getBlackList(ExceptionListener listener) {
         Set<String> blackList = Collections.emptySet();
-        InputStream in = Launcher.class.getResourceAsStream("plugin-black-list"); //$NON-NLS-1$
+
+        InputStream in = Launcher.class.getClassLoader().getResourceAsStream("logbook/plugin-black-list"); //$NON-NLS-1$
         if (in != null) {
             try (BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-                blackList = r.lines().collect(Collectors.toSet());
+                blackList = r.lines()
+                        .filter(l -> l.length() >= 64)
+                        .map(l -> l.substring(0, 64))
+                        .collect(Collectors.toSet());
             } catch (IOException e) {
                 listener.exceptionThrown(e);
             }
