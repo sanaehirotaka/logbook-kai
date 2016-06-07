@@ -141,7 +141,7 @@ public class CaptureController extends WindowController {
                 // キャプチャボタンテキストの変更
                 this.capture.setText("停止");
                 // 閉じる時に止める
-                this.getWindow().setOnCloseRequest(this::onclose);
+                this.getWindow().setOnHidden(this::onclose);
             }
         } else {
             this.captureAction(event);
@@ -220,6 +220,7 @@ public class CaptureController extends WindowController {
      * @param event WindowEvent
      */
     private void onclose(WindowEvent event) {
+        System.out.println(1000);
         this.images.clear();
         this.timeline.stop();
     }

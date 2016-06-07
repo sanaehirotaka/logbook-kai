@@ -87,7 +87,7 @@ public class QuestController extends WindowController {
     @Override
     public void setWindow(Stage window) {
         super.setWindow(window);
-        window.setOnCloseRequest(e -> this.timeline.stop());
+        window.setOnHidden(e -> this.timeline.stop());
     }
 
     private static class LoggerHolder {
