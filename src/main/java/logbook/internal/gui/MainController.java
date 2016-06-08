@@ -253,20 +253,6 @@ public class MainController extends WindowController {
     }
 
     /**
-     * 任務一覧
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void quests(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/quest.fxml", this.getWindow(), "任務一覧");
-        } catch (Exception ex) {
-            LoggerHolder.LOG.error("任務一覧の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
      * 経験値計算機
      *
      * @param e ActionEvent

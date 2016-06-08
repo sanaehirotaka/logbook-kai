@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -34,11 +34,6 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-			  <SeparatorMenuItem mnemonicParsing="false" />
-			  <MenuItem mnemonicParsing="false" onAction="#quests" text="任務一覧">
-				 <accelerator>
-					<KeyCodeCombination alt="UP" code="Q" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-				 </accelerator></MenuItem>
             </items>
           </Menu>
           <Menu fx:id="calc" mnemonicParsing="false" text="計算機">

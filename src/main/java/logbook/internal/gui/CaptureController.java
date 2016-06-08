@@ -220,7 +220,6 @@ public class CaptureController extends WindowController {
      * @param event WindowEvent
      */
     private void onclose(WindowEvent event) {
-        System.out.println(1000);
         this.images.clear();
         this.timeline.stop();
     }
