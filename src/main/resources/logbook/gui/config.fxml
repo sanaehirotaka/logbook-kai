@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="configWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="configWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
    <children>
       <TabPane VBox.vgrow="ALWAYS">
          <tabs>
@@ -14,6 +14,7 @@
                      <children>
                         <GridPane>
                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
@@ -28,12 +29,14 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <CheckBox fx:id="useNotification" mnemonicParsing="false" text="遠征・入渠完了時に通知をする" GridPane.columnSpan="2147483647" />
                               <CheckBox fx:id="useSound" mnemonicParsing="false" text="通知でサウンドを鳴らす" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                               <CheckBox fx:id="useToast" mnemonicParsing="false" text="通知でトーストを表示" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                              <CheckBox fx:id="useRemind" mnemonicParsing="false" text="遠征完了時のリマインド" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="useRemind" mnemonicParsing="false" text="遠征完了時のリマインド(秒)" GridPane.rowIndex="3" />
+                              <TextField fx:id="remind" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="音量(%)" GridPane.rowIndex="4" />
                               <TextField fx:id="soundLevel" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label text="資材ログ保存間隔(秒)" GridPane.rowIndex="5" />
@@ -41,6 +44,9 @@
                               <CheckBox fx:id="onTop" mnemonicParsing="false" text="最前面に表示する*" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
                               <CheckBox fx:id="checkDoit" mnemonicParsing="false" text="終了時に確認する" GridPane.rowIndex="7" />
                               <CheckBox fx:id="checkUpdate" mnemonicParsing="false" text="起動時にアップデートチェック*" GridPane.columnSpan="2147483647" GridPane.rowIndex="8" />
+                              <Label text="報告書の保存先" GridPane.rowIndex="9" />
+                              <TextField fx:id="reportDir" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                              <Button onAction="#selectReportDir" mnemonicParsing="false" text="参照..." GridPane.columnIndex="2" GridPane.rowIndex="9" />
                            </children>
                         </GridPane>
                      </children>

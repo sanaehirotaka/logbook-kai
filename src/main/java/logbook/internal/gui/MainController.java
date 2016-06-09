@@ -65,8 +65,8 @@ public class MainController extends WindowController {
     /** 装備|母港枠の警告cssクラス名 */
     private static final String FULLY_CLASS = "fully";
 
-    /** 通知のインターバル */
-    private static final Duration INTERVAL = Duration.ofMinutes(1);
+    /** 通知 */
+    private static final Duration NOTIFY = Duration.ofMinutes(1);
 
     private String itemFormat;
 
@@ -612,10 +612,12 @@ public class MainController extends WindowController {
      * @param remind リマインド
      */
     private boolean requireNotify(Duration now, long timeStamp, boolean remind) {
-        if (now.compareTo(INTERVAL) <= 0) {
+        if (now.compareTo(NOTIFY) <= 0) {
             // 前回の通知からの経過時間
             Duration course = Duration.ofMillis(System.currentTimeMillis() - timeStamp);
-            if (course.compareTo(INTERVAL) >= 0) {
+            // リマインド間隔
+            Duration interval = Duration.ofSeconds(AppConfig.get().getRemind());
+            if (course.compareTo(interval) >= 0) {
                 if (timeStamp == 0L || remind) {
                     return true;
                 }

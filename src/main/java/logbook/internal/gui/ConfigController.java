@@ -1,5 +1,8 @@
 package logbook.internal.gui;
 
+import java.io.File;
+import java.util.Optional;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.DirectoryChooser;
 import logbook.bean.AppConfig;
 import logbook.internal.Config;
 import logbook.internal.ThreadManager;
@@ -35,6 +39,10 @@ public class ConfigController extends WindowController {
     /** 遠征完了時のリマインド */
     @FXML
     private CheckBox useRemind;
+
+    /** 遠征完了時のリマインド(秒) */
+    @FXML
+    private TextField remind;
 
     /** 音量 */
     @FXML
@@ -71,6 +79,10 @@ public class ConfigController extends WindowController {
     /** 起動時にアップデートチェック */
     @FXML
     private CheckBox checkUpdate;
+
+    /** 報告書の保存先 */
+    @FXML
+    private TextField reportDir;
 
     /** 通信エラーの抑止 */
     @FXML
@@ -133,6 +145,7 @@ public class ConfigController extends WindowController {
         this.useSound.setSelected(conf.isUseSound());
         this.useToast.setSelected(conf.isUseToast());
         this.useRemind.setSelected(conf.isUseRemind());
+        this.remind.setText(Integer.toString(conf.getRemind()));
         this.soundLevel.setText(Integer.toString(conf.getSoundLevel()));
         this.materialLogInterval.setText(Integer.toString(conf.getMaterialLogInterval()));
         this.applyBattle.setSelected(conf.isApplyBattle());
@@ -142,6 +155,7 @@ public class ConfigController extends WindowController {
         this.onTop.setSelected(conf.isOnTop());
         this.checkDoit.setSelected(conf.isCheckDoit());
         this.checkUpdate.setSelected(conf.isCheckUpdate());
+        this.reportDir.setText(conf.getReportPath());
         this.connectionClose.setSelected(conf.isConnectionClose());
         this.listenPort.setText(Integer.toString(conf.getListenPort()));
         this.allowOnlyFromLocalhost.setSelected(conf.isAllowOnlyFromLocalhost());
@@ -186,6 +200,7 @@ public class ConfigController extends WindowController {
         conf.setUseSound(this.useSound.isSelected());
         conf.setUseToast(this.useToast.isSelected());
         conf.setUseRemind(this.useRemind.isSelected());
+        conf.setRemind(Math.max(Integer.parseInt(this.remind.getText()), 10));
         conf.setSoundLevel(Integer.parseInt(this.soundLevel.getText()));
         conf.setMaterialLogInterval(Integer.parseInt(this.materialLogInterval.getText()));
         conf.setApplyBattle(this.applyBattle.isSelected());
@@ -195,6 +210,7 @@ public class ConfigController extends WindowController {
         conf.setOnTop(this.onTop.isSelected());
         conf.setCheckDoit(this.checkDoit.isSelected());
         conf.setCheckUpdate(this.checkUpdate.isSelected());
+        conf.setReportPath(this.reportDir.getText());
         conf.setConnectionClose(this.connectionClose.isSelected());
         conf.setListenPort(Integer.parseInt(this.listenPort.getText()));
         conf.setAllowOnlyFromLocalhost(this.allowOnlyFromLocalhost.isSelected());
@@ -208,4 +224,14 @@ public class ConfigController extends WindowController {
         this.getWindow().close();
     }
 
+    @FXML
+    void selectReportDir(ActionEvent event) {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setTitle("報告書の保存先");
+        dc.setInitialDirectory(new File(this.reportDir.getText()));
+        Optional.ofNullable(dc.showDialog(this.getWindow()))
+                .filter(File::exists)
+                .map(File::getAbsolutePath)
+                .ifPresent(this.reportDir::setText);
+    }
 }

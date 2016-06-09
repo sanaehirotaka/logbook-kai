@@ -15,7 +15,7 @@ import logbook.internal.SeaArea;
  */
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = 8523468261908058871L;
+    private static final long serialVersionUID = -3504824108958254820L;
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
@@ -28,6 +28,9 @@ public final class AppConfig implements Serializable {
 
     /** 遠征完了時のリマインド */
     private boolean useRemind = true;
+
+    /** 遠征完了時のリマインド(秒) */
+    private int remind = 60;
 
     /** 母港枠の空きがこれ以下でボタンを警告色に変える */
     private int shipFullyThreshold = 4;
@@ -178,6 +181,22 @@ public final class AppConfig implements Serializable {
     }
 
     /**
+     * 遠征完了時のリマインド(秒)を取得します。
+     * @return 遠征完了時のリマインド(秒)
+     */
+    public int getRemind() {
+        return this.remind;
+    }
+
+    /**
+     * 遠征完了時のリマインド(秒)を設定します。
+     * @param remind 遠征完了時のリマインド(秒)
+     */
+    public void setRemind(int remind) {
+        this.remind = remind;
+    }
+
+    /**
      * 母港枠の空きがこれ以下でボタンを警告色に変えるを取得します。
      * @return 母港枠の空きがこれ以下でボタンを警告色に変える
      */
@@ -214,7 +233,7 @@ public final class AppConfig implements Serializable {
      * @return 戦闘開始時に結果を反映
      */
     public boolean isApplyBattle() {
-        return applyBattle;
+        return this.applyBattle;
     }
 
     /**
@@ -230,7 +249,7 @@ public final class AppConfig implements Serializable {
      * @return 戦闘結果時に結果を反映
      */
     public boolean isApplyResult() {
-        return applyResult;
+        return this.applyResult;
     }
 
     /**
