@@ -2,10 +2,10 @@ package logbook.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,8 +35,6 @@ import logbook.proxy.ResponseMetaData;
  *
  */
 public class SWFListener implements ContentListenerSpi {
-
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     /** shipgraph -> shipid */
     private Map<String, Integer> shipgraphCache = new HashMap<>();
@@ -152,7 +150,7 @@ public class SWFListener implements ContentListenerSpi {
 
                 Path file = dir.resolve(img.getCharacterId() + "." + ext);
 
-                this.storeImage(img, file);
+                Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
@@ -176,7 +174,7 @@ public class SWFListener implements ContentListenerSpi {
 
                 Path file = dir.resolve(img.getCharacterId() + "." + ext);
 
-                this.storeImage(img, file);
+                Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
@@ -227,7 +225,7 @@ public class SWFListener implements ContentListenerSpi {
             for (int i = 0; i < sub.size(); i++) {
                 ImageTag tag = sub.get(i);
                 Path file = dir.resolve(key + "_" + i + "." + this.imageExt(tag));
-                this.storeImage(tag, file);
+                Files.copy(tag.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
@@ -249,25 +247,6 @@ public class SWFListener implements ContentListenerSpi {
             break;
         }
         return ext;
-    }
-
-    /**
-     * ImageTagをファイルに書き込みます
-     *
-     * @param tag ImageTag
-     * @param file 書き込み先
-     * @throws IOException 入出力例外
-     */
-    void storeImage(ImageTag tag, Path file) throws IOException {
-        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-        try (OutputStream out = Files.newOutputStream(file)) {
-            try (InputStream data = tag.getImageData()) {
-                int n = 0;
-                while (-1 != (n = data.read(buffer))) {
-                    out.write(buffer, 0, n);
-                }
-            }
-        }
     }
 
     private static class LoggerHolder {
