@@ -141,7 +141,7 @@ public class CaptureController extends WindowController {
                 // キャプチャボタンテキストの変更
                 this.capture.setText("停止");
                 // 閉じる時に止める
-                this.getWindow().setOnCloseRequest(this::onclose);
+                this.getWindow().setOnHidden(this::onclose);
             }
         } else {
             this.captureAction(event);
