@@ -141,7 +141,7 @@ public class CaptureController extends WindowController {
                 // キャプチャボタンテキストの変更
                 this.capture.setText("停止");
                 // 閉じる時に止める
-                this.getWindow().setOnHidden(this::onclose);
+                this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onclose);
             }
         } else {
             this.captureAction(event);
@@ -152,7 +152,7 @@ public class CaptureController extends WindowController {
     void save(ActionEvent event) {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/capturesave.fxml", this.getWindow(), "キャプチャの保存", controller -> {
-                ((CaptureSaveController)controller).setItems(this.images);
+                ((CaptureSaveController) controller).setItems(this.images);
             } , null);
         } catch (Exception ex) {
             LoggerHolder.LOG.error("キャプチャの保存に失敗しました", ex);

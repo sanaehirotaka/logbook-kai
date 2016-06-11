@@ -232,7 +232,7 @@ public class CaptureSaveController extends WindowController {
         this.list.getSelectionModel()
                 .selectedItemProperty()
                 .addListener(this::viewImage);
-        this.getWindow().setOnCloseRequest(this::onclose);
+        this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onclose);
     }
 
     /**

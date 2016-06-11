@@ -104,7 +104,7 @@ final class InternalFXMLLoader {
                         .put(key, controller.getWindowLocation());
             };
             controller.getWindow()
-                    .setOnCloseRequest(action);
+                    .addEventHandler(WindowEvent.WINDOW_HIDDEN, action);
         }
     }
 

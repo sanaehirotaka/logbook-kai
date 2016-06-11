@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logbook.bean.AppConfig;
 import logbook.internal.Version;
 
@@ -32,7 +33,7 @@ public class Main extends Application {
 
         stage.setTitle("航海日誌 " + Version.getCurrent());
 
-        stage.setOnCloseRequest(e -> {
+        stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
             if (AppConfig.get().isCheckDoit()) {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.initOwner(stage);

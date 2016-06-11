@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
@@ -42,7 +43,7 @@ public class ShipController extends WindowController {
                         .sorted(Comparator.comparing(Ship::getShipId))
                         .sorted(Comparator.comparing(Ship::getLv).reversed())
                         .collect(Collectors.toList());
-            }, "全員");
+            } , "全員");
 
             this.tab.getTabs().add(new Tab("全員", allPane));
 
@@ -82,7 +83,7 @@ public class ShipController extends WindowController {
     @Override
     public void setWindow(Stage window) {
         super.setWindow(window);
-        window.setOnHidden(e -> this.timeline.stop());
+        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
     }
 
     private static class LoggerHolder {
