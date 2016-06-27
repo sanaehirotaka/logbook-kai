@@ -15,6 +15,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.internal.Logs;
 import logbook.internal.Ships;
+import logbook.internal.Time;
 
 /**
  * お風呂に入りたい艦娘
@@ -239,43 +240,12 @@ public class RequireNdock {
         ndock.setId(ship.getId());
         ndock.setShip(ship);
         ndock.setLv(ship.getLv());
-        ndock.setTime(timeText(d));
+        ndock.setTime(Time.toString(d));
         ndock.setEnd(endText(d));
         ndock.setFuel(ship.getNdockItem().get(0));
         ndock.setMetal(ship.getNdockItem().get(1));
 
         return ndock;
-    }
-
-    /**
-     * 入渠時間のテキスト表現
-     *
-     * @param d 期間
-     * @return 入渠時間のテキスト表現
-     */
-    private static String timeText(Duration d) {
-        long days = d.toDays();
-        long hours = d.toHours() % 24;
-        long minutes = d.toMinutes() % 60;
-        long seconds = d.getSeconds() % 60;
-
-        StringBuilder sb = new StringBuilder();
-        if (days > 0) {
-            sb.append(days + "日");
-        }
-        if (hours > 0) {
-            sb.append(hours + "時間");
-        }
-        if (minutes > 0) {
-            sb.append(minutes + "分");
-        }
-        if (seconds > 0 && days == 0 && hours == 0) {
-            sb.append(seconds + "秒");
-        }
-        if (d.isZero() || d.isNegative()) {
-            sb.append("修復完了");
-        }
-        return sb.toString();
     }
 
     /**
