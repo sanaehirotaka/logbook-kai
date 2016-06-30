@@ -125,7 +125,7 @@ public class MissionPane extends AnchorPane {
             // 遠征先
             this.name.setText(mission.map(Mission::getName).orElse(""));
             // 残り時間を更新
-            this.time.setText(Time.toString(now));
+            this.time.setText(Time.toString(now, "まもなく帰還します"));
 
             // スタイルを更新
             if (now.compareTo(this.stage3) < 0) {

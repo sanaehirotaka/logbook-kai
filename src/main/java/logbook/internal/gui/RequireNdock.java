@@ -240,7 +240,7 @@ public class RequireNdock {
         ndock.setId(ship.getId());
         ndock.setShip(ship);
         ndock.setLv(ship.getLv());
-        ndock.setTime(Time.toString(d));
+        ndock.setTime(Time.toString(d, "修復完了"));
         ndock.setEnd(endText(d));
         ndock.setFuel(ship.getNdockItem().get(0));
         ndock.setMetal(ship.getNdockItem().get(1));

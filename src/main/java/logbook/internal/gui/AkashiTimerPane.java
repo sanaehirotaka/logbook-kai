@@ -53,7 +53,7 @@ public class AkashiTimerPane extends AnchorPane {
     public void update() {
         long timer = AppCondition.get().getAkashiTimer();
         if (timer > 0) {
-            this.time.setText(Time.toString(Duration.ofMillis(System.currentTimeMillis() - timer)));
+            this.time.setText(Time.toString(Duration.ofMillis(System.currentTimeMillis() - timer), ""));
         } else {
             this.time.setText("");
         }

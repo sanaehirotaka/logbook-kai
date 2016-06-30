@@ -92,7 +92,7 @@ public class NdockPane extends HBox {
         // 残り時間を計算
         Duration d = Duration.ofMillis(this.ndock.getCompleteTime() - System.currentTimeMillis());
         // 残り時間を更新
-        this.time.setText(Time.toString(d));
+        this.time.setText(Time.toString(d, "修復完了"));
 
         ObservableList<String> styleClass = this.getStyleClass();
 
