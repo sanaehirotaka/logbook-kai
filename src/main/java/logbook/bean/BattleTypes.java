@@ -142,6 +142,18 @@ public class BattleTypes {
         BattleTypes.Raigeki getOpeningAtack();
 
         /**
+         * api_opening_taisen_flagを取得します。
+         * @return api_opening_taisen_flag
+         */
+        Boolean getOpeningTaisenFlag();
+
+        /**
+         * api_opening_taisenを取得します。
+         * @return api_opening_taisen
+         */
+        BattleTypes.Hougeki getOpeningTaisen();
+
+        /**
          * api_hourai_flagを取得します。
          * @return api_hourai_flag
          */

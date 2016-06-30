@@ -165,6 +165,8 @@ public class PhaseState {
      * @param battle 昼戦砲雷撃戦フェイズ
      */
     public void applySortieHougeki(ISortieHougeki battle) {
+        // 先制対潜攻撃
+        this.applyHougeki(battle.getOpeningTaisen(), null);
         // 開幕雷撃
         this.applyRaigeki(battle.getOpeningAtack());
         if (this.combinedType == CombinedType.未結成) {

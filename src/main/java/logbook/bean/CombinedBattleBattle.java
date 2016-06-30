@@ -89,6 +89,12 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
     /** api_opening_atack */
     private BattleTypes.Raigeki openingAtack;
 
+    /** api_opening_taisen_flag */
+    private Boolean openingTaisenFlag;
+
+    /** api_opening_taisen */
+    private BattleTypes.Hougeki openingTaisen;
+
     /** api_hourai_flag */
     private List<Integer> houraiFlag;
 
@@ -479,6 +485,40 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
     }
 
     /**
+     * api_opening_taisen_flagを取得します。
+     * @return api_opening_taisen_flag
+     */
+    @Override
+    public Boolean getOpeningTaisenFlag() {
+        return this.openingTaisenFlag;
+    }
+
+    /**
+     * api_opening_taisen_flagを設定します。
+     * @param openingTaisenFlag api_opening_taisen_flag
+     */
+    public void setOpeningTaisenFlag(Boolean openingTaisenFlag) {
+        this.openingTaisenFlag = openingTaisenFlag;
+    }
+
+    /**
+     * api_opening_taisenを取得します。
+     * @return api_opening_taisen
+     */
+    @Override
+    public BattleTypes.Hougeki getOpeningTaisen() {
+        return this.openingTaisen;
+    }
+
+    /**
+     * api_opening_taisenを設定します。
+     * @param openingTaisen api_opening_taisen
+     */
+    public void setOpeningTaisen(BattleTypes.Hougeki openingTaisen) {
+        this.openingTaisen = openingTaisen;
+    }
+
+    /**
      * api_hourai_flagを取得します。
      * @return api_hourai_flag
      */
@@ -596,6 +636,8 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
                 .set("api_support_info", bean::setSupportInfo, BattleTypes.SupportInfo::toSupportInfo)
                 .setBoolean("api_opening_flag", bean::setOpeningFlag)
                 .set("api_opening_atack", bean::setOpeningAtack, BattleTypes.Raigeki::toRaigeki)
+                .setBoolean("api_opening_taisen_flag", bean::setOpeningTaisenFlag)
+                .set("api_opening_taisen", bean::setOpeningTaisen, BattleTypes.Hougeki::toHougeki)
                 .set("api_hourai_flag", bean::setHouraiFlag, JsonHelper::toIntegerList)
                 .set("api_hougeki1", bean::setHougeki1, BattleTypes.Hougeki::toHougeki)
                 .set("api_raigeki", bean::setRaigeki, BattleTypes.Raigeki::toRaigeki)
