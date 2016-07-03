@@ -317,6 +317,7 @@ public class PhaseState {
             int damage = hougeki.getDamage().get(i)
                     .stream()
                     .mapToInt(Double::intValue)
+                    .filter(d -> d > 0)
                     .sum();
             if (df <= 6) {
                 // 6以下は味方
