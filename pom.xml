@@ -4,7 +4,7 @@
     <name>logbook-kai</name>
     <artifactId>logbook-kai</artifactId>
     <groupId>logbook</groupId>
-    <version>16.6.2</version>
+    <version>16.7.1</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
