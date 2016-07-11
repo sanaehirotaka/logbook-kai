@@ -5,33 +5,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
+import lombok.Data;
 
 /**
  * アイテム種類のコレクション
  *
  */
+@Data
 public class SlotitemEquiptypeCollection implements Serializable {
 
     private static final long serialVersionUID = 1623208831316913362L;
 
     /** アイテム種類 */
     private Map<Integer, SlotitemEquiptype> equiptypeMap = new LinkedHashMap<>();
-
-    /**
-     * アイテム種類を取得します。
-     * @return アイテム種類
-     */
-    public Map<Integer, SlotitemEquiptype> getEquiptypeMap() {
-        return this.equiptypeMap;
-    }
-
-    /**
-     * アイテム種類を設定します。
-     * @param equiptypeMap アイテム種類
-     */
-    public void setEquiptypeMap(Map<Integer, SlotitemEquiptype> equiptypeMap) {
-        this.equiptypeMap = equiptypeMap;
-    }
 
     /**
      * アプリケーションのデフォルト設定ディレクトリから{@link SlotitemEquiptypeCollection}を取得します、

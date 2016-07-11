@@ -5,11 +5,13 @@ import java.io.Serializable;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import lombok.Data;
 
 /**
  * api_mst_slotitem_equiptype
  *
  */
+@Data
 public class SlotitemEquiptype implements Serializable {
 
     private static final long serialVersionUID = 6987412391631651270L;
@@ -22,54 +24,6 @@ public class SlotitemEquiptype implements Serializable {
 
     /** api_show_flg */
     private Integer showFlg;
-
-    /**
-     * api_idを取得します。
-     * @return api_id
-     */
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
-     * api_idを設定します。
-     * @param id api_id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * api_nameを取得します。
-     * @return api_name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * api_nameを設定します。
-     * @param name api_name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * api_show_flgを取得します。
-     * @return api_show_flg
-     */
-    public Integer getShowFlg() {
-        return this.showFlg;
-    }
-
-    /**
-     * api_show_flgを設定します。
-     * @param showFlg api_show_flg
-     */
-    public void setShowFlg(Integer showFlg) {
-        this.showFlg = showFlg;
-    }
 
     @Override
     public String toString() {

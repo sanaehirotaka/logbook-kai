@@ -5,11 +5,13 @@ import java.io.Serializable;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import lombok.Data;
 
 /**
  * api_mst_mission
  *
  */
+@Data
 public class Mission implements Serializable {
 
     private static final long serialVersionUID = 7503112116568598849L;
@@ -25,70 +27,6 @@ public class Mission implements Serializable {
 
     /** api_time */
     private Integer time;
-
-    /**
-     * api_idを取得します。
-     * @return api_id
-     */
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
-     * api_idを設定します。
-     * @param id api_id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * api_nameを取得します。
-     * @return api_name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * api_nameを設定します。
-     * @param name api_name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * api_detailsを取得します。
-     * @return api_details
-     */
-    public String getDetails() {
-        return this.details;
-    }
-
-    /**
-     * api_detailsを設定します。
-     * @param details api_details
-     */
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    /**
-     * api_timeを取得します。
-     * @return api_time
-     */
-    public Integer getTime() {
-        return this.time;
-    }
-
-    /**
-     * api_timeを設定します。
-     * @param time api_time
-     */
-    public void setTime(Integer time) {
-        this.time = time;
-    }
 
     @Override
     public String toString() {

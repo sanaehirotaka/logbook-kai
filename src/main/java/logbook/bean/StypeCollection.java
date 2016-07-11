@@ -5,33 +5,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
+import lombok.Data;
 
 /**
  * 艦種のコレクション
  *
  */
+@Data
 public class StypeCollection implements Serializable {
 
     private static final long serialVersionUID = -7530294903513038451L;
 
     /** 艦種 */
     private Map<Integer, Stype> stypeMap = new LinkedHashMap<>();
-
-    /**
-     * 艦種を取得します。
-     * @return 艦種
-     */
-    public Map<Integer, Stype> getStypeMap() {
-        return this.stypeMap;
-    }
-
-    /**
-     * 艦種を設定します。
-     * @param stypeMap 艦種
-     */
-    public void setStypeMap(Map<Integer, Stype> stypeMap) {
-        this.stypeMap = stypeMap;
-    }
 
     /**
      * アプリケーションのデフォルト設定ディレクトリから{@link StypeCollection}を取得します、

@@ -76,6 +76,12 @@
             <artifactId>controlsfx</artifactId>
             <version>8.40.10</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.8</version>
+            <scope>provided</scope>
+        </dependency>
 <!--
 以下の依存性は次のコマンドでmvn installすることで解決してください。
 ライブラリのダウンロード先  : https://www.free-decompiler.com/flash/download/

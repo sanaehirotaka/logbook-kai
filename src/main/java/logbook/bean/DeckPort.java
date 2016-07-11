@@ -6,11 +6,13 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import lombok.Data;
 
 /**
  * api_deck_port
  *
  */
+@Data
 public class DeckPort implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -7415061750561409381L;
@@ -29,86 +31,6 @@ public class DeckPort implements Serializable, Cloneable {
 
     /** api_ship */
     private List<Integer> ship;
-
-    /**
-     * api_flagshipを取得します。
-     * @return api_flagship
-     */
-    public Integer getFlagship() {
-        return this.flagship;
-    }
-
-    /**
-     * api_flagshipを設定します。
-     * @param flagship api_flagship
-     */
-    public void setFlagship(Integer flagship) {
-        this.flagship = flagship;
-    }
-
-    /**
-     * api_idを取得します。
-     * @return api_id
-     */
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
-     * api_idを設定します。
-     * @param id api_id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * api_missionを取得します。
-     * @return api_mission
-     */
-    public List<Long> getMission() {
-        return this.mission;
-    }
-
-    /**
-     * api_missionを設定します。
-     * @param mission api_mission
-     */
-    public void setMission(List<Long> mission) {
-        this.mission = mission;
-    }
-
-    /**
-     * api_nameを取得します。
-     * @return api_name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * api_nameを設定します。
-     * @param name api_name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * api_shipを取得します。
-     * @return api_ship
-     */
-    public List<Integer> getShip() {
-        return this.ship;
-    }
-
-    /**
-     * api_shipを設定します。
-     * @param ship api_ship
-     */
-    public void setShip(List<Integer> ship) {
-        this.ship = ship;
-    }
 
     @Override
     public DeckPort clone() {

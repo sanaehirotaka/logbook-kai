@@ -5,10 +5,12 @@ import java.io.Serializable;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import lombok.Data;
 
 /**
  * api_mst_useitem
  */
+@Data
 public class Useitem implements Serializable {
 
     private static final long serialVersionUID = -3290324243327123224L;
@@ -18,38 +20,6 @@ public class Useitem implements Serializable {
 
     /** api_name */
     private String name;
-
-    /**
-     * api_idを取得します。
-     * @return api_id
-     */
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
-     * api_idを設定します。
-     * @param id api_id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * api_nameを取得します。
-     * @return api_name
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * api_nameを設定します。
-     * @param name api_name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

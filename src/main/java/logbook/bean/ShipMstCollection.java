@@ -5,33 +5,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
+import lombok.Data;
 
 /**
  * 艦娘のコレクション
  *
  */
+@Data
 public class ShipMstCollection implements Serializable {
 
     private static final long serialVersionUID = 3473178293202796312L;
 
     /** 艦娘 */
     private Map<Integer, ShipMst> shipMap = new LinkedHashMap<>();
-
-    /**
-     * 艦娘を取得します。
-     * @return 艦娘
-     */
-    public Map<Integer, ShipMst> getShipMap() {
-        return this.shipMap;
-    }
-
-    /**
-     * 艦娘を設定します。
-     * @param shipMap 艦娘
-     */
-    public void setShipMap(Map<Integer, ShipMst> shipMap) {
-        this.shipMap = shipMap;
-    }
 
     /**
      * アプリケーションのデフォルト設定ディレクトリから{@link ShipMstCollection}を取得します、

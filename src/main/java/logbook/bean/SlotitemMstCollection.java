@@ -5,33 +5,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import logbook.internal.Config;
+import lombok.Data;
 
 /**
  * アイテムのコレクション
  *
  */
+@Data
 public class SlotitemMstCollection implements Serializable {
 
     private static final long serialVersionUID = 8409969154221160905L;
 
     /** アイテム */
     private Map<Integer, SlotitemMst> slotitemMap = new LinkedHashMap<>();
-
-    /**
-     * アイテムを取得します。
-     * @return アイテム
-     */
-    public Map<Integer, SlotitemMst> getSlotitemMap() {
-        return this.slotitemMap;
-    }
-
-    /**
-     * アイテムを設定します。
-     * @param slotitemMap アイテム
-     */
-    public void setSlotitemMap(Map<Integer, SlotitemMst> slotitemMap) {
-        this.slotitemMap = slotitemMap;
-    }
 
     /**
      * アプリケーションのデフォルト設定ディレクトリから{@link SlotitemMstCollection}を取得します、

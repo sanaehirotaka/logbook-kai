@@ -6,6 +6,7 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import lombok.Data;
 
 /**
  * 戦闘で使用される型
@@ -313,6 +314,7 @@ public class BattleTypes {
     /**
      * 航空戦
      */
+    @Data
     public static class Kouku implements Serializable {
 
         private static final long serialVersionUID = -4772699490686134759L;
@@ -331,86 +333,6 @@ public class BattleTypes {
 
         /** api_stage3_combined */
         private Stage3Combined stage3Combined;
-
-        /**
-         * api_plane_fromを取得します。
-         * @return api_plane_from
-         */
-        public List<List<Integer>> getPlaneFrom() {
-            return this.planeFrom;
-        }
-
-        /**
-         * api_plane_fromを設定します。
-         * @param planeFrom api_plane_from
-         */
-        public void setPlaneFrom(List<List<Integer>> planeFrom) {
-            this.planeFrom = planeFrom;
-        }
-
-        /**
-         * api_stage1を取得します。
-         * @return api_stage1
-         */
-        public Stage1 getStage1() {
-            return this.stage1;
-        }
-
-        /**
-         * api_stage1を設定します。
-         * @param stage1 api_stage1
-         */
-        public void setStage1(Stage1 stage1) {
-            this.stage1 = stage1;
-        }
-
-        /**
-         * api_stage2を取得します。
-         * @return api_stage2
-         */
-        public Stage2 getStage2() {
-            return this.stage2;
-        }
-
-        /**
-         * api_stage2を設定します。
-         * @param stage2 api_stage2
-         */
-        public void setStage2(Stage2 stage2) {
-            this.stage2 = stage2;
-        }
-
-        /**
-         * api_stage3を取得します。
-         * @return api_stage3
-         */
-        public Stage3 getStage3() {
-            return this.stage3;
-        }
-
-        /**
-         * api_stage3を設定します。
-         * @param stage3 api_stage3
-         */
-        public void setStage3(Stage3 stage3) {
-            this.stage3 = stage3;
-        }
-
-        /**
-         * api_stage3_combinedを取得します。
-         * @return api_stage3_combined
-         */
-        public Stage3Combined getStage3Combined() {
-            return this.stage3Combined;
-        }
-
-        /**
-         * api_stage3_combinedを設定します。
-         * @param stage3Combined api_stage3_combined
-         */
-        public void setStage3Combined(Stage3Combined stage3Combined) {
-            this.stage3Combined = stage3Combined;
-        }
 
         /**
          * JsonObjectから{@link Kouku}を構築します
@@ -433,6 +355,7 @@ public class BattleTypes {
     /**
      * 航空戦 Stage1
      */
+    @Data
     public static class Stage1 implements Serializable {
 
         private static final long serialVersionUID = 4452384504283266181L;
@@ -456,102 +379,6 @@ public class BattleTypes {
         private List<Integer> touchPlane;
 
         /**
-         * api_f_countを取得します。
-         * @return api_f_count
-         */
-        public Integer getFCount() {
-            return this.fCount;
-        }
-
-        /**
-         * api_f_countを設定します。
-         * @param fCount api_f_count
-         */
-        public void setFCount(Integer fCount) {
-            this.fCount = fCount;
-        }
-
-        /**
-         * api_f_lostcountを取得します。
-         * @return api_f_lostcount
-         */
-        public Integer getFLostcount() {
-            return this.fLostcount;
-        }
-
-        /**
-         * api_f_lostcountを設定します。
-         * @param fLostcount api_f_lostcount
-         */
-        public void setFLostcount(Integer fLostcount) {
-            this.fLostcount = fLostcount;
-        }
-
-        /**
-         * api_e_countを取得します。
-         * @return api_e_count
-         */
-        public Integer getECount() {
-            return this.eCount;
-        }
-
-        /**
-         * api_e_countを設定します。
-         * @param eCount api_e_count
-         */
-        public void setECount(Integer eCount) {
-            this.eCount = eCount;
-        }
-
-        /**
-         * api_e_lostcountを取得します。
-         * @return api_e_lostcount
-         */
-        public Integer getELostcount() {
-            return this.eLostcount;
-        }
-
-        /**
-         * api_e_lostcountを設定します。
-         * @param eLostcount api_e_lostcount
-         */
-        public void setELostcount(Integer eLostcount) {
-            this.eLostcount = eLostcount;
-        }
-
-        /**
-         * api_disp_seikuを取得します。
-         * @return api_disp_seiku
-         */
-        public Integer getDispSeiku() {
-            return this.dispSeiku;
-        }
-
-        /**
-         * api_disp_seikuを設定します。
-         * @param dispSeiku api_disp_seiku
-         */
-        public void setDispSeiku(Integer dispSeiku) {
-            this.dispSeiku = dispSeiku;
-        }
-
-        /**
-         * api_touch_planeを取得します。
-         * @return api_touch_plane
-         */
-        public List<Integer> getTouchPlane() {
-            return this.touchPlane;
-        }
-
-        /**
-         * api_touch_planeを設定します。
-         * @param touchPlane api_touch_plane
-         */
-        public void setTouchPlane(List<Integer> touchPlane) {
-            this.touchPlane = touchPlane;
-        }
-
-        /**
          * JsonObjectから{@link Stage1}を構築します
          *
          * @param json JsonObject
@@ -573,6 +400,7 @@ public class BattleTypes {
     /**
      * 航空戦 Stage2
      */
+    @Data
     public static class Stage2 implements Serializable {
 
         private static final long serialVersionUID = -4886136119036663720L;
@@ -591,86 +419,6 @@ public class BattleTypes {
 
         /** api_air_fire */
         private AirFire airFire;
-
-        /**
-         * api_f_countを取得します。
-         * @return api_f_count
-         */
-        public Integer getFCount() {
-            return this.fCount;
-        }
-
-        /**
-         * api_f_countを設定します。
-         * @param fCount api_f_count
-         */
-        public void setFCount(Integer fCount) {
-            this.fCount = fCount;
-        }
-
-        /**
-         * api_f_lostcountを取得します。
-         * @return api_f_lostcount
-         */
-        public Integer getFLostcount() {
-            return this.fLostcount;
-        }
-
-        /**
-         * api_f_lostcountを設定します。
-         * @param fLostcount api_f_lostcount
-         */
-        public void setFLostcount(Integer fLostcount) {
-            this.fLostcount = fLostcount;
-        }
-
-        /**
-         * api_e_countを取得します。
-         * @return api_e_count
-         */
-        public Integer getECount() {
-            return this.eCount;
-        }
-
-        /**
-         * api_e_countを設定します。
-         * @param eCount api_e_count
-         */
-        public void setECount(Integer eCount) {
-            this.eCount = eCount;
-        }
-
-        /**
-         * api_e_lostcountを取得します。
-         * @return api_e_lostcount
-         */
-        public Integer getELostcount() {
-            return this.eLostcount;
-        }
-
-        /**
-         * api_e_lostcountを設定します。
-         * @param eLostcount api_e_lostcount
-         */
-        public void setELostcount(Integer eLostcount) {
-            this.eLostcount = eLostcount;
-        }
-
-        /**
-         * api_air_fireを取得します。
-         * @return api_air_fire
-         */
-        public AirFire getAirFire() {
-            return this.airFire;
-        }
-
-        /**
-         * api_air_fireを設定します。
-         * @param airFire api_air_fire
-         */
-        public void setAirFire(AirFire airFire) {
-            this.airFire = airFire;
-        }
 
         /**
          * JsonObjectから{@link Stage2}を構築します
@@ -693,6 +441,7 @@ public class BattleTypes {
     /**
      * 航空戦 AirFire
      */
+    @Data
     public static class AirFire implements Serializable {
 
         private static final long serialVersionUID = 9184007312267069221L;
@@ -705,54 +454,6 @@ public class BattleTypes {
 
         /** api_use_items */
         private List<Integer> useItems;
-
-        /**
-         * api_idxを取得します。
-         * @return api_idx
-         */
-        public Integer getIdx() {
-            return this.idx;
-        }
-
-        /**
-         * api_idxを設定します。
-         * @param idx api_idx
-         */
-        public void setIdx(Integer idx) {
-            this.idx = idx;
-        }
-
-        /**
-         * api_kindを取得します。
-         * @return api_kind
-         */
-        public Integer getKind() {
-            return this.kind;
-        }
-
-        /**
-         * api_kindを設定します。
-         * @param kind api_kind
-         */
-        public void setKind(Integer kind) {
-            this.kind = kind;
-        }
-
-        /**
-         * api_use_itemsを取得します。
-         * @return api_use_items
-         */
-        public List<Integer> getUseItems() {
-            return this.useItems;
-        }
-
-        /**
-         * api_use_itemsを設定します。
-         * @param useItems api_use_items
-         */
-        public void setUseItems(List<Integer> useItems) {
-            this.useItems = useItems;
-        }
 
         /**
          * JsonObjectから{@link AirFire}を構築します
@@ -773,6 +474,7 @@ public class BattleTypes {
     /**
      * 航空戦 Stage3
      */
+    @Data
     public static class Stage3 implements Serializable {
 
         private static final long serialVersionUID = -3123663766612134315L;
@@ -802,134 +504,6 @@ public class BattleTypes {
         private List<Double> edam;
 
         /**
-         * api_frai_flagを取得します。
-         * @return api_frai_flag
-         */
-        public List<Integer> getFraiFlag() {
-            return this.fraiFlag;
-        }
-
-        /**
-         * api_frai_flagを設定します。
-         * @param fraiFlag api_frai_flag
-         */
-        public void setFraiFlag(List<Integer> fraiFlag) {
-            this.fraiFlag = fraiFlag;
-        }
-
-        /**
-         * api_erai_flagを取得します。
-         * @return api_erai_flag
-         */
-        public List<Integer> getEraiFlag() {
-            return this.eraiFlag;
-        }
-
-        /**
-         * api_erai_flagを設定します。
-         * @param eraiFlag api_erai_flag
-         */
-        public void setEraiFlag(List<Integer> eraiFlag) {
-            this.eraiFlag = eraiFlag;
-        }
-
-        /**
-         * api_fbak_flagを取得します。
-         * @return api_fbak_flag
-         */
-        public List<Integer> getFbakFlag() {
-            return this.fbakFlag;
-        }
-
-        /**
-         * api_fbak_flagを設定します。
-         * @param fbakFlag api_fbak_flag
-         */
-        public void setFbakFlag(List<Integer> fbakFlag) {
-            this.fbakFlag = fbakFlag;
-        }
-
-        /**
-         * api_ebak_flagを取得します。
-         * @return api_ebak_flag
-         */
-        public List<Integer> getEbakFlag() {
-            return this.ebakFlag;
-        }
-
-        /**
-         * api_ebak_flagを設定します。
-         * @param ebakFlag api_ebak_flag
-         */
-        public void setEbakFlag(List<Integer> ebakFlag) {
-            this.ebakFlag = ebakFlag;
-        }
-
-        /**
-         * api_fcl_flagを取得します。
-         * @return api_fcl_flag
-         */
-        public List<Integer> getFclFlag() {
-            return this.fclFlag;
-        }
-
-        /**
-         * api_fcl_flagを設定します。
-         * @param fclFlag api_fcl_flag
-         */
-        public void setFclFlag(List<Integer> fclFlag) {
-            this.fclFlag = fclFlag;
-        }
-
-        /**
-         * api_ecl_flagを取得します。
-         * @return api_ecl_flag
-         */
-        public List<Integer> getEclFlag() {
-            return this.eclFlag;
-        }
-
-        /**
-         * api_ecl_flagを設定します。
-         * @param eclFlag api_ecl_flag
-         */
-        public void setEclFlag(List<Integer> eclFlag) {
-            this.eclFlag = eclFlag;
-        }
-
-        /**
-         * api_fdamを取得します。
-         * @return api_fdam
-         */
-        public List<Double> getFdam() {
-            return this.fdam;
-        }
-
-        /**
-         * api_fdamを設定します。
-         * @param fdam api_fdam
-         */
-        public void setFdam(List<Double> fdam) {
-            this.fdam = fdam;
-        }
-
-        /**
-         * api_edamを取得します。
-         * @return api_edam
-         */
-        public List<Double> getEdam() {
-            return this.edam;
-        }
-
-        /**
-         * api_edamを設定します。
-         * @param edam api_edam
-         */
-        public void setEdam(List<Double> edam) {
-            this.edam = edam;
-        }
-
-        /**
          * JsonObjectから{@link Stage3}を構築します
          *
          * @param json JsonObject
@@ -953,6 +527,7 @@ public class BattleTypes {
     /**
      * 航空戦 Stage3Combined
      */
+    @Data
     public static class Stage3Combined implements Serializable {
 
         private static final long serialVersionUID = -628911942142343461L;
@@ -968,70 +543,6 @@ public class BattleTypes {
 
         /** api_fdam */
         private List<Double> fdam;
-
-        /**
-         * api_frai_flagを取得します。
-         * @return api_frai_flag
-         */
-        public List<Integer> getFraiFlag() {
-            return this.fraiFlag;
-        }
-
-        /**
-         * api_frai_flagを設定します。
-         * @param fraiFlag api_frai_flag
-         */
-        public void setFraiFlag(List<Integer> fraiFlag) {
-            this.fraiFlag = fraiFlag;
-        }
-
-        /**
-         * api_fbak_flagを取得します。
-         * @return api_fbak_flag
-         */
-        public List<Integer> getFbakFlag() {
-            return this.fbakFlag;
-        }
-
-        /**
-         * api_fbak_flagを設定します。
-         * @param fbakFlag api_fbak_flag
-         */
-        public void setFbakFlag(List<Integer> fbakFlag) {
-            this.fbakFlag = fbakFlag;
-        }
-
-        /**
-         * api_fcl_flagを取得します。
-         * @return api_fcl_flag
-         */
-        public List<Integer> getFclFlag() {
-            return this.fclFlag;
-        }
-
-        /**
-         * api_fcl_flagを設定します。
-         * @param fclFlag api_fcl_flag
-         */
-        public void setFclFlag(List<Integer> fclFlag) {
-            this.fclFlag = fclFlag;
-        }
-
-        /**
-         * api_fdamを取得します。
-         * @return api_fdam
-         */
-        public List<Double> getFdam() {
-            return this.fdam;
-        }
-
-        /**
-         * api_fdamを設定します。
-         * @param fdam api_fdam
-         */
-        public void setFdam(List<Double> fdam) {
-            this.fdam = fdam;
-        }
 
         /**
          * JsonObjectから{@link Stage3Combined}を構築します
@@ -1053,6 +564,7 @@ public class BattleTypes {
     /**
      * 支援
      */
+    @Data
     public static class SupportInfo implements Serializable {
 
         private static final long serialVersionUID = 4584855806683009170L;
@@ -1062,38 +574,6 @@ public class BattleTypes {
 
         /** api_support_hourai */
         private SupportHourai supportHourai;
-
-        /**
-         * api_support_airatackを取得します。
-         * @return api_support_airatack
-         */
-        public SupportAiratack getSupportAiratack() {
-            return this.supportAiratack;
-        }
-
-        /**
-         * api_support_airatackを設定します。
-         * @param supportAiratack api_support_airatack
-         */
-        public void setSupportAiratack(SupportAiratack supportAiratack) {
-            this.supportAiratack = supportAiratack;
-        }
-
-        /**
-         * api_support_houraiを取得します。
-         * @return api_support_hourai
-         */
-        public SupportHourai getSupportHourai() {
-            return this.supportHourai;
-        }
-
-        /**
-         * api_support_houraiを設定します。
-         * @param supportHourai api_support_hourai
-         */
-        public void setSupportHourai(SupportHourai supportHourai) {
-            this.supportHourai = supportHourai;
-        }
 
         /**
          * JsonObjectから{@link SupportInfo}を構築します
@@ -1113,6 +593,7 @@ public class BattleTypes {
     /**
      * 支援 Airatack
      */
+    @Data
     public static class SupportAiratack implements Serializable {
 
         private static final long serialVersionUID = -152573445471984643L;
@@ -1142,134 +623,6 @@ public class BattleTypes {
         private Stage3 stage3;
 
         /**
-         * api_deck_idを取得します。
-         * @return api_deck_id
-         */
-        public Integer getDeckId() {
-            return this.deckId;
-        }
-
-        /**
-         * api_deck_idを設定します。
-         * @param deckId api_deck_id
-         */
-        public void setDeckId(Integer deckId) {
-            this.deckId = deckId;
-        }
-
-        /**
-         * api_ship_idを取得します。
-         * @return api_ship_id
-         */
-        public List<Integer> getShipId() {
-            return this.shipId;
-        }
-
-        /**
-         * api_ship_idを設定します。
-         * @param shipId api_ship_id
-         */
-        public void setShipId(List<Integer> shipId) {
-            this.shipId = shipId;
-        }
-
-        /**
-         * api_undressing_flagを取得します。
-         * @return api_undressing_flag
-         */
-        public List<Integer> getUndressingFlag() {
-            return this.undressingFlag;
-        }
-
-        /**
-         * api_undressing_flagを設定します。
-         * @param undressingFlag api_undressing_flag
-         */
-        public void setUndressingFlag(List<Integer> undressingFlag) {
-            this.undressingFlag = undressingFlag;
-        }
-
-        /**
-         * api_stage_flagを取得します。
-         * @return api_stage_flag
-         */
-        public List<Integer> getStageFlag() {
-            return this.stageFlag;
-        }
-
-        /**
-         * api_stage_flagを設定します。
-         * @param stageFlag api_stage_flag
-         */
-        public void setStageFlag(List<Integer> stageFlag) {
-            this.stageFlag = stageFlag;
-        }
-
-        /**
-         * api_plane_fromを取得します。
-         * @return api_plane_from
-         */
-        public List<List<Integer>> getPlaneFrom() {
-            return this.planeFrom;
-        }
-
-        /**
-         * api_plane_fromを設定します。
-         * @param planeFrom api_plane_from
-         */
-        public void setPlaneFrom(List<List<Integer>> planeFrom) {
-            this.planeFrom = planeFrom;
-        }
-
-        /**
-         * api_stage1を取得します。
-         * @return api_stage1
-         */
-        public Stage1 getStage1() {
-            return this.stage1;
-        }
-
-        /**
-         * api_stage1を設定します。
-         * @param stage1 api_stage1
-         */
-        public void setStage1(Stage1 stage1) {
-            this.stage1 = stage1;
-        }
-
-        /**
-         * api_stage2を取得します。
-         * @return api_stage2
-         */
-        public Stage2 getStage2() {
-            return this.stage2;
-        }
-
-        /**
-         * api_stage2を設定します。
-         * @param stage2 api_stage2
-         */
-        public void setStage2(Stage2 stage2) {
-            this.stage2 = stage2;
-        }
-
-        /**
-         * api_stage3を取得します。
-         * @return api_stage3
-         */
-        public Stage3 getStage3() {
-            return this.stage3;
-        }
-
-        /**
-         * api_stage3を設定します。
-         * @param stage3 api_stage3
-         */
-        public void setStage3(Stage3 stage3) {
-            this.stage3 = stage3;
-        }
-
-        /**
          * JsonObjectから{@link SupportAiratack}を構築します
          *
          * @param json JsonObject
@@ -1293,6 +646,7 @@ public class BattleTypes {
     /**
      * 支援 Hourai
      */
+    @Data
     public static class SupportHourai implements Serializable {
 
         private static final long serialVersionUID = 3060460027587015362L;
@@ -1311,86 +665,6 @@ public class BattleTypes {
 
         /** api_damage */
         private List<Double> damage;
-
-        /**
-         * api_deck_idを取得します。
-         * @return api_deck_id
-         */
-        public Integer getDeckId() {
-            return this.deckId;
-        }
-
-        /**
-         * api_deck_idを設定します。
-         * @param deckId api_deck_id
-         */
-        public void setDeckId(Integer deckId) {
-            this.deckId = deckId;
-        }
-
-        /**
-         * api_ship_idを取得します。
-         * @return api_ship_id
-         */
-        public List<Integer> getShipId() {
-            return this.shipId;
-        }
-
-        /**
-         * api_ship_idを設定します。
-         * @param shipId api_ship_id
-         */
-        public void setShipId(List<Integer> shipId) {
-            this.shipId = shipId;
-        }
-
-        /**
-         * api_undressing_flagを取得します。
-         * @return api_undressing_flag
-         */
-        public List<Integer> getUndressingFlag() {
-            return this.undressingFlag;
-        }
-
-        /**
-         * api_undressing_flagを設定します。
-         * @param undressingFlag api_undressing_flag
-         */
-        public void setUndressingFlag(List<Integer> undressingFlag) {
-            this.undressingFlag = undressingFlag;
-        }
-
-        /**
-         * api_cl_listを取得します。
-         * @return api_cl_list
-         */
-        public List<Integer> getClList() {
-            return this.clList;
-        }
-
-        /**
-         * api_cl_listを設定します。
-         * @param clList api_cl_list
-         */
-        public void setClList(List<Integer> clList) {
-            this.clList = clList;
-        }
-
-        /**
-         * api_damageを取得します。
-         * @return api_damage
-         */
-        public List<Double> getDamage() {
-            return this.damage;
-        }
-
-        /**
-         * api_damageを設定します。
-         * @param damage api_damage
-         */
-        public void setDamage(List<Double> damage) {
-            this.damage = damage;
-        }
 
         /**
          * JsonObjectから{@link SupportHourai}を構築します
@@ -1413,6 +687,7 @@ public class BattleTypes {
     /**
      * 雷撃
      */
+    @Data
     public static class Raigeki implements Serializable {
 
         private static final long serialVersionUID = 4769524848250854584L;
@@ -1442,134 +717,6 @@ public class BattleTypes {
         private List<Integer> ecl;
 
         /**
-         * api_fraiを取得します。
-         * @return api_frai
-         */
-        public List<Integer> getFrai() {
-            return this.frai;
-        }
-
-        /**
-         * api_fraiを設定します。
-         * @param frai api_frai
-         */
-        public void setFrai(List<Integer> frai) {
-            this.frai = frai;
-        }
-
-        /**
-         * api_eraiを取得します。
-         * @return api_erai
-         */
-        public List<Integer> getErai() {
-            return this.erai;
-        }
-
-        /**
-         * api_eraiを設定します。
-         * @param erai api_erai
-         */
-        public void setErai(List<Integer> erai) {
-            this.erai = erai;
-        }
-
-        /**
-         * api_fdamを取得します。
-         * @return api_fdam
-         */
-        public List<Double> getFdam() {
-            return this.fdam;
-        }
-
-        /**
-         * api_fdamを設定します。
-         * @param fdam api_fdam
-         */
-        public void setFdam(List<Double> fdam) {
-            this.fdam = fdam;
-        }
-
-        /**
-         * api_edamを取得します。
-         * @return api_edam
-         */
-        public List<Double> getEdam() {
-            return this.edam;
-        }
-
-        /**
-         * api_edamを設定します。
-         * @param edam api_edam
-         */
-        public void setEdam(List<Double> edam) {
-            this.edam = edam;
-        }
-
-        /**
-         * api_fydamを取得します。
-         * @return api_fydam
-         */
-        public List<Double> getFydam() {
-            return this.fydam;
-        }
-
-        /**
-         * api_fydamを設定します。
-         * @param fydam api_fydam
-         */
-        public void setFydam(List<Double> fydam) {
-            this.fydam = fydam;
-        }
-
-        /**
-         * api_eydamを取得します。
-         * @return api_eydam
-         */
-        public List<Double> getEydam() {
-            return this.eydam;
-        }
-
-        /**
-         * api_eydamを設定します。
-         * @param eydam api_eydam
-         */
-        public void setEydam(List<Double> eydam) {
-            this.eydam = eydam;
-        }
-
-        /**
-         * api_fclを取得します。
-         * @return api_fcl
-         */
-        public List<Integer> getFcl() {
-            return this.fcl;
-        }
-
-        /**
-         * api_fclを設定します。
-         * @param fcl api_fcl
-         */
-        public void setFcl(List<Integer> fcl) {
-            this.fcl = fcl;
-        }
-
-        /**
-         * api_eclを取得します。
-         * @return api_ecl
-         */
-        public List<Integer> getEcl() {
-            return this.ecl;
-        }
-
-        /**
-         * api_eclを設定します。
-         * @param ecl api_ecl
-         */
-        public void setEcl(List<Integer> ecl) {
-            this.ecl = ecl;
-        }
-
-        /**
          * JsonObjectから{@link Raigeki}を構築します
          *
          * @param json JsonObject
@@ -1593,6 +740,7 @@ public class BattleTypes {
     /**
      * 砲撃
      */
+    @Data
     public static class Hougeki implements IHougeki, Serializable {
 
         private static final long serialVersionUID = -5339612671179791906L;
@@ -1616,107 +764,6 @@ public class BattleTypes {
         public List<List<Double>> damage;
 
         /**
-         * api_at_listを取得します。
-         * @return api_at_list
-         */
-        @Override
-        public List<Integer> getAtList() {
-            return this.atList;
-        }
-
-        /**
-         * api_at_listを設定します。
-         * @param atList api_at_list
-         */
-        public void setAtList(List<Integer> atList) {
-            this.atList = atList;
-        }
-
-        /**
-         * api_at_typeを取得します。
-         * @return api_at_type
-         */
-        public List<Integer> getAtType() {
-            return this.atType;
-        }
-
-        /**
-         * api_at_typeを設定します。
-         * @param atType api_at_type
-         */
-        public void setAtType(List<Integer> atType) {
-            this.atType = atType;
-        }
-
-        /**
-         * api_df_listを取得します。
-         * @return api_df_list
-         */
-        @Override
-        public List<List<Integer>> getDfList() {
-            return this.dfList;
-        }
-
-        /**
-         * api_df_listを設定します。
-         * @param dfList api_df_list
-         */
-        public void setDfList(List<List<Integer>> dfList) {
-            this.dfList = dfList;
-        }
-
-        /**
-         * api_si_listを取得します。
-         * @return api_si_list
-         */
-        @Override
-        public List<List<Integer>> getSiList() {
-            return this.siList;
-        }
-
-        /**
-         * api_si_listを設定します。
-         * @param siList api_si_list
-         */
-        public void setSiList(List<List<Integer>> siList) {
-            this.siList = siList;
-        }
-
-        /**
-         * api_cl_listを取得します。
-         * @return api_cl_list
-         */
-        @Override
-        public List<List<Integer>> getClList() {
-            return this.clList;
-        }
-
-        /**
-         * api_cl_listを設定します。
-         * @param clList api_cl_list
-         */
-        public void setClList(List<List<Integer>> clList) {
-            this.clList = clList;
-        }
-
-        /**
-         * api_damageを取得します。
-         * @return api_damage
-         */
-        @Override
-        public List<List<Double>> getDamage() {
-            return this.damage;
-        }
-
-        /**
-         * api_damageを設定します。
-         * @param damage api_damage
-         */
-        public void setDamage(List<List<Double>> damage) {
-            this.damage = damage;
-        }
-
-        /**
          * JsonObjectから{@link Hougeki}を構築します
          *
          * @param json JsonObject
@@ -1738,6 +785,7 @@ public class BattleTypes {
     /**
      * 砲撃
      */
+    @Data
     public static class MidnightHougeki implements IHougeki, Serializable {
 
         private static final long serialVersionUID = 8897484398602178656L;
@@ -1761,107 +809,6 @@ public class BattleTypes {
         private List<List<Double>> damage;
 
         /**
-         * api_at_listを取得します。
-         * @return api_at_list
-         */
-        @Override
-        public List<Integer> getAtList() {
-            return this.atList;
-        }
-
-        /**
-         * api_at_listを設定します。
-         * @param atList api_at_list
-         */
-        public void setAtList(List<Integer> atList) {
-            this.atList = atList;
-        }
-
-        /**
-         * api_df_listを取得します。
-         * @return api_df_list
-         */
-        @Override
-        public List<List<Integer>> getDfList() {
-            return this.dfList;
-        }
-
-        /**
-         * api_df_listを設定します。
-         * @param dfList api_df_list
-         */
-        public void setDfList(List<List<Integer>> dfList) {
-            this.dfList = dfList;
-        }
-
-        /**
-         * api_si_listを取得します。
-         * @return api_si_list
-         */
-        @Override
-        public List<List<Integer>> getSiList() {
-            return this.siList;
-        }
-
-        /**
-         * api_si_listを設定します。
-         * @param siList api_si_list
-         */
-        public void setSiList(List<List<Integer>> siList) {
-            this.siList = siList;
-        }
-
-        /**
-         * api_cl_listを取得します。
-         * @return api_cl_list
-         */
-        @Override
-        public List<List<Integer>> getClList() {
-            return this.clList;
-        }
-
-        /**
-         * api_cl_listを設定します。
-         * @param clList api_cl_list
-         */
-        public void setClList(List<List<Integer>> clList) {
-            this.clList = clList;
-        }
-
-        /**
-         * api_sp_listを取得します。
-         * @return api_sp_list
-         */
-        public List<Integer> getSpList() {
-            return this.spList;
-        }
-
-        /**
-         * api_sp_listを設定します。
-         * @param spList api_sp_list
-         */
-        public void setSpList(List<Integer> spList) {
-            this.spList = spList;
-        }
-
-        /**
-         * api_damageを取得します。
-         * @return api_damage
-         */
-        @Override
-        public List<List<Double>> getDamage() {
-            return this.damage;
-        }
-
-        /**
-         * api_damageを設定します。
-         * @param damage api_damage
-         */
-        public void setDamage(List<List<Double>> damage) {
-            this.damage = damage;
-        }
-
-        /**
          * JsonObjectから{@link MidnightHougeki}を構築します
          *
          * @param json JsonObject
@@ -1883,6 +830,7 @@ public class BattleTypes {
     /**
      * 基地航空戦
      */
+    @Data
     public static class AirBaseAttack implements Serializable {
 
         private static final long serialVersionUID = -7255540756859970824L;
@@ -1909,118 +857,6 @@ public class BattleTypes {
         private List<Integer> stageFlag;
 
         /**
-         * api_base_idを取得します。
-         * @return api_base_id
-         */
-        public Integer getBaseId() {
-            return this.baseId;
-        }
-
-        /**
-         * api_base_idを設定します。
-         * @param baseId api_base_id
-         */
-        public void setBaseId(Integer baseId) {
-            this.baseId = baseId;
-        }
-
-        /**
-         * api_plane_fromを取得します。
-         * @return api_plane_from
-         */
-        public List<List<Integer>> getPlaneFrom() {
-            return this.planeFrom;
-        }
-
-        /**
-         * api_plane_fromを設定します。
-         * @param planeFrom api_plane_from
-         */
-        public void setPlaneFrom(List<List<Integer>> planeFrom) {
-            this.planeFrom = planeFrom;
-        }
-
-        /**
-         * api_squadron_planeを取得します。
-         * @return api_squadron_plane
-         */
-        public List<SquadronPlane> getSquadronPlane() {
-            return this.squadronPlane;
-        }
-
-        /**
-         * api_squadron_planeを設定します。
-         * @param squadronPlane api_squadron_plane
-         */
-        public void setSquadronPlane(List<SquadronPlane> squadronPlane) {
-            this.squadronPlane = squadronPlane;
-        }
-
-        /**
-         * api_stage1を取得します。
-         * @return api_stage1
-         */
-        public Stage1 getStage1() {
-            return this.stage1;
-        }
-
-        /**
-         * api_stage1を設定します。
-         * @param stage1 api_stage1
-         */
-        public void setStage1(Stage1 stage1) {
-            this.stage1 = stage1;
-        }
-
-        /**
-         * api_stage2を取得します。
-         * @return api_stage2
-         */
-        public Stage2 getStage2() {
-            return this.stage2;
-        }
-
-        /**
-         * api_stage2を設定します。
-         * @param stage2 api_stage2
-         */
-        public void setStage2(Stage2 stage2) {
-            this.stage2 = stage2;
-        }
-
-        /**
-         * api_stage3を取得します。
-         * @return api_stage3
-         */
-        public Stage3 getStage3() {
-            return this.stage3;
-        }
-
-        /**
-         * api_stage3を設定します。
-         * @param stage3 api_stage3
-         */
-        public void setStage3(Stage3 stage3) {
-            this.stage3 = stage3;
-        }
-
-        /**
-         * api_stage_flagを取得します。
-         * @return api_stage_flag
-         */
-        public List<Integer> getStageFlag() {
-            return this.stageFlag;
-        }
-
-        /**
-         * api_stage_flagを設定します。
-         * @param stageFlag api_stage_flag
-         */
-        public void setStageFlag(List<Integer> stageFlag) {
-            this.stageFlag = stageFlag;
-        }
-
-        /**
          * JsonObjectから{@link AirBaseAttack}を構築します
          *
          * @param json JsonObject
@@ -2044,6 +880,7 @@ public class BattleTypes {
     /**
      * api_squadron_plane
      */
+    @Data
     public static class SquadronPlane implements Serializable {
 
         private static final long serialVersionUID = -8553957904692166481L;
@@ -2053,38 +890,6 @@ public class BattleTypes {
 
         /** api_mst_id */
         private Integer mstId;
-
-        /**
-         * api_countを取得します。
-         * @return api_count
-         */
-        public Integer getCount() {
-            return this.count;
-        }
-
-        /**
-         * api_countを設定します。
-         * @param count api_count
-         */
-        public void setCount(Integer count) {
-            this.count = count;
-        }
-
-        /**
-         * api_mst_idを取得します。
-         * @return api_mst_id
-         */
-        public Integer getMstId() {
-            return this.mstId;
-        }
-
-        /**
-         * api_mst_idを設定します。
-         * @param mstId api_mst_id
-         */
-        public void setMstId(Integer mstId) {
-            this.mstId = mstId;
-        }
 
         /**
          * JsonObjectから{@link SquadronPlane}を構築します
@@ -2105,15 +910,7 @@ public class BattleTypes {
      * 陣形
      */
     public enum Formation {
-        単縦陣,
-        複縦陣,
-        輪形陣,
-        梯形陣,
-        単横陣,
-        第一警戒航行序列,
-        第二警戒航行序列,
-        第三警戒航行序列,
-        第四警戒航行序列;
+        単縦陣, 複縦陣, 輪形陣, 梯形陣, 単横陣, 第一警戒航行序列, 第二警戒航行序列, 第三警戒航行序列, 第四警戒航行序列;
 
         /**
          * 陣形を取得します
@@ -2150,10 +947,7 @@ public class BattleTypes {
      * 艦隊行動
      */
     public enum Intercept {
-        同航戦,
-        反航戦,
-        Ｔ字戦有利,
-        Ｔ字戦不利;
+        同航戦, 反航戦, Ｔ字戦有利, Ｔ字戦不利;
 
         /**
          * 艦隊行動を取得します
@@ -2181,11 +975,7 @@ public class BattleTypes {
      * 制空権表示
      */
     public enum DispSeiku {
-        制空均衡,
-        制空権確保,
-        航空優勢,
-        航空劣勢,
-        制空権喪失;
+        制空均衡, 制空権確保, 航空優勢, 航空劣勢, 制空権喪失;
 
         /**
          * 制空権表示を取得します
@@ -2216,10 +1006,7 @@ public class BattleTypes {
      * 0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊
      */
     public enum CombinedType {
-        未結成,
-        機動部隊,
-        水上部隊,
-        輸送部隊;
+        未結成, 機動部隊, 水上部隊, 輸送部隊;
 
         public static CombinedType toCombinedType(int i) {
             switch (i) {
