@@ -41,7 +41,7 @@ final class ConfigReader<T> {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ArrayIndexOutOfBoundsException e) {
             this.getListener().exceptionThrown(e);
         }
         return instance;
