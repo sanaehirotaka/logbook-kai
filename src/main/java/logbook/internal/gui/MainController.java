@@ -33,6 +33,8 @@ import javafx.scene.media.AudioClip;
 import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
+import logbook.bean.AppQuest;
+import logbook.bean.AppQuestCollection;
 import logbook.bean.Basic;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.CombinedType;
@@ -78,6 +80,9 @@ public class MainController extends WindowController {
     /** 入渠ドックコレクションのハッシュ・コード */
     private int ndockHashCode;
 
+    /** 任務コレクションのハッシュ・コード */
+    private int questHashCode;
+
     /** 遠征通知のタイムスタンプ */
     private Map<Integer, Long> timeStampMission = new HashMap<>();
 
@@ -114,6 +119,9 @@ public class MainController extends WindowController {
     @FXML
     private VBox ndockbox;
 
+    @FXML
+    private VBox questbox;
+
     private AudioClip clip;
 
     @FXML
@@ -142,6 +150,11 @@ public class MainController extends WindowController {
             timeline.getKeyFrames().add(new KeyFrame(
                     javafx.util.Duration.seconds(1),
                     this::update));
+
+            // 古い任務を除く
+            AppQuestCollection.get()
+                    .update();
+
             timeline.play();
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
@@ -182,7 +195,7 @@ public class MainController extends WindowController {
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                         "直近の戦闘", c -> {
                             ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
-                        } , null);
+                        }, null);
             } else {
                 Alert alert = new Alert(AlertType.INFORMATION);
                 alert.initOwner(this.getWindow());
@@ -323,6 +336,8 @@ public class MainController extends WindowController {
             this.akashiTimer();
             // 入渠ドック
             this.ndock();
+            // 任務
+            this.quest();
 
             // 遠征・入渠完了時に通知をする
             if (AppConfig.get().isUseNotification()) {
@@ -508,6 +523,27 @@ public class MainController extends WindowController {
                     ((NdockPane) node).update();
                 }
             }
+        }
+    }
+
+    /**
+     * 任務の更新
+     */
+    private void quest() {
+        Map<Integer, AppQuest> questMap = AppQuestCollection.get()
+                .getQuest();
+
+        if (this.questHashCode != questMap.hashCode()) {
+            // ハッシュ・コードが変わっている場合任務の更新
+            ObservableList<Node> quest = this.questbox.getChildren();
+            quest.clear();
+            questMap.values()
+                    .stream()
+                    .map(QuestPane::new)
+                    .forEach(quest::add);
+
+            // ハッシュ・コードの更新
+            this.questHashCode = questMap.hashCode();
         }
     }
 

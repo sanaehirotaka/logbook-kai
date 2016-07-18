@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root prefHeight="40.0" prefWidth="260.0" styleClass="quest" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="type" maxWidth="1.7976931348623157E308" styleClass="type" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="0" />
+      <Label fx:id="name" maxWidth="1.7976931348623157E308" styleClass="name" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" />
+      <Label fx:id="progress" maxWidth="1.7976931348623157E308" styleClass="progress" AnchorPane.leftAnchor="61.0" AnchorPane.topAnchor="1.0" />
+      <Hyperlink layoutX="195.0" layoutY="3.0" onAction="#remove" styleClass="remove" text="除去" underline="true" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="1.0" />
+      <Hyperlink layoutX="207.0" onAction="#search" styleClass="search" text="検索" underline="true" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
+   </children>
+</fx:root>

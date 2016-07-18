@@ -104,6 +104,79 @@ TabPane .value {
 .ndock.stage3 {
     -fx-background-color: #FFD700;
 }
+/* îCñ± */
+.quest {
+    -fx-font-size: 9pt;
+}
+.quest .name {
+    -fx-font-size: 14pt;
+}
+.quest .progress {
+    -fx-background-color: #007b43;
+    -fx-text-fill: white;
+}
+.quest .remove {
+    -fx-text-fill: #d9333f;
+	-fx-padding: 0;
+}
+.quest .search {
+	-fx-padding: 0;
+}
+/* ï“ê¨ */
+.quest.deck {
+    -fx-background-color: #c1d8ac;
+}
+.quest.deck .type {
+    -fx-background-color: #007b43;
+    -fx-text-fill: white;
+}
+/* èoåÇ */
+.quest.sortie {
+    -fx-background-color: #fdeff2;
+}
+.quest.sortie .type {
+    -fx-background-color: #e60033;
+    -fx-text-fill: white;
+}
+/* ââèK */
+.quest.practice {
+    -fx-background-color: #cee4ae;
+}
+.quest.practice .type {
+    -fx-background-color: #3eb370;
+    -fx-text-fill: white;
+}
+/* âìê™ */
+.quest.mission {
+    -fx-background-color: #ebf6f7;
+}
+.quest.mission .type {
+    -fx-background-color: #007bbb;
+    -fx-text-fill: white;
+}
+/* ï‚ãã */
+.quest.supply {
+    -fx-background-color: #fefea0;
+}
+.quest.supply .type {
+    -fx-background-color: #ffd900;
+}
+/* çHè± */
+.quest.kousyou {
+    -fx-background-color: #d3cbc6;
+}
+.quest.kousyou .type {
+    -fx-background-color: #98623c;
+    -fx-text-fill: white;
+}
+/* â¸ëï */
+.quest.kaisou {
+    -fx-background-color: #dbd0e6;
+}
+.quest.kaisou .type {
+    -fx-background-color: #7058a3;
+    -fx-text-fill: white;
+}
 .fully {
     -fx-base: #FFD700;
 }

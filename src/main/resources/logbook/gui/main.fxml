@@ -86,6 +86,11 @@
                                     </VBox>
                                  </content>
                               </TitledPane>
+                              <TitledPane animated="false" text="任務">
+                                 <content>
+                                    <VBox fx:id="questbox" />
+                                 </content>
+                              </TitledPane>
                            </children>
                         </VBox>
                      </content>
