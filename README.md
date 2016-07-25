@@ -30,6 +30,10 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 **初期の状態では艦娘の画像が表示出来ません。必ず**[FAQ](faq.md)**をお読みください。**
 
+#### プラグイン
+* [Pushbullet Plugin](https://github.com/rsky/logbook-kai-plugins)
+ * 遠征・入渠の通知をiPhone/Android端末へプッシュ通知することが可能になります。
+
 ### [ブラウザの設定(必須)](how-to-preference.md)
 
 ### 動作環境
