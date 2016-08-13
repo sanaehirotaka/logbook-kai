@@ -95,6 +95,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> tPower;
 
+    /** 対潜(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> tais;
+
     /** 装備1 */
     @FXML
     private TableColumn<ShipItem, Integer> slot1;
@@ -184,6 +188,7 @@ public class ShipTablePane extends VBox {
             this.rPower.setCellValueFactory(new PropertyValueFactory<>("rPower"));
             this.yPower.setCellValueFactory(new PropertyValueFactory<>("yPower"));
             this.tPower.setCellValueFactory(new PropertyValueFactory<>("tPower"));
+            this.tais.setCellValueFactory(new PropertyValueFactory<>("tais"));
             this.slot1.setCellValueFactory(new PropertyValueFactory<>("slot1"));
             this.slot1.setCellFactory(p -> new ItemImageCell());
             this.slot2.setCellValueFactory(new PropertyValueFactory<>("slot2"));

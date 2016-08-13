@@ -60,6 +60,9 @@ public class ShipItem {
     /** 対潜火力 */
     private IntegerProperty tPower;
 
+    /** 対潜(素) */
+    private IntegerProperty tais;
+
     /** 装備1 */
     private IntegerProperty slot1;
 
@@ -340,6 +343,30 @@ public class ShipItem {
     }
 
     /**
+     * 対潜(素)を取得します。
+     * @return 対潜(素)
+     */
+    public IntegerProperty taisProperty() {
+        return this.tais;
+    }
+
+    /**
+     * 対潜(素)を取得します。
+     * @return 対潜(素)
+     */
+    public int getTais() {
+        return this.tais.get();
+    }
+
+    /**
+     * 対潜(素)を設定します。
+     * @param tPower 対潜(素)
+     */
+    public void setTais(int tais) {
+        this.tais = new SimpleIntegerProperty(tais);
+    }
+
+    /**
      * 装備1を取得します。
      * @return 装備1
      */
@@ -470,17 +497,17 @@ public class ShipItem {
             return Items.slotitemMst(item)
                     .map(mst -> {
 
-                StringBuilder text = new StringBuilder(mst.getName());
+                        StringBuilder text = new StringBuilder(mst.getName());
 
-                text.append(Optional.ofNullable(item.getAlv())
-                        .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
-                        .orElse(""));
-                text.append(Optional.ofNullable(item.getLevel())
-                        .filter(lv -> lv > 0)
-                        .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
-                        .orElse(""));
-                return text.toString();
-            }).orElse("");
+                        text.append(Optional.ofNullable(item.getAlv())
+                                .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
+                                .orElse(""));
+                        text.append(Optional.ofNullable(item.getLevel())
+                                .filter(lv -> lv > 0)
+                                .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
+                                .orElse(""));
+                        return text.toString();
+                    }).orElse("");
         };
 
         return new StringJoiner("\t")
@@ -497,6 +524,7 @@ public class ShipItem {
                 .add(Integer.toString(this.rPower.get()))
                 .add(Integer.toString(this.yPower.get()))
                 .add(Integer.toString(this.tPower.get()))
+                .add(Integer.toString(this.tais.get()))
                 .add(slotItemName.apply(this.slot1.get()))
                 .add(slotItemName.apply(this.slot2.get()))
                 .add(slotItemName.apply(this.slot3.get()))
@@ -528,6 +556,18 @@ public class ShipItem {
         shipItem.setrPower(Ships.rPower(ship));
         shipItem.setyPower(Ships.yPower(ship));
         shipItem.settPower(Ships.tPower(ship));
+
+        Map<Integer, SlotItem> items = SlotItemCollection.get()
+                .getSlotitemMap();
+        int taisen = ship.getTaisen().get(0);
+        taisen = taisen - ship.getSlot()
+                .stream()
+                .map(items::get)
+                .map(Items::slotitemMst)
+                .mapToInt(e -> e.map(i -> i.getTais()).orElse(0))
+                .sum();
+        shipItem.setTais(taisen);
+
         shipItem.setSlot1(ship.getSlot().get(0));
         shipItem.setSlot2(ship.getSlot().get(1));
         shipItem.setSlot3(ship.getSlot().get(2));

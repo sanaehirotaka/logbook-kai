@@ -24,6 +24,7 @@
           <TableColumn fx:id="rPower" prefWidth="60.0" text="雷戦火力" />
           <TableColumn fx:id="yPower" prefWidth="60.0" text="夜戦火力" />
           <TableColumn fx:id="tPower" prefWidth="60.0" text="対潜火力" />
+          <TableColumn fx:id="tais" prefWidth="60.0" text="対潜(素)" />
           <TableColumn fx:id="slot1" prefWidth="200.0" text="装備1" />
           <TableColumn fx:id="slot2" prefWidth="200.0" text="装備2" />
           <TableColumn fx:id="slot3" prefWidth="200.0" text="装備3" />
