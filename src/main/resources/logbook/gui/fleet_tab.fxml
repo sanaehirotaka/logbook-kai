@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox fx:id="infobox">
          <children>
@@ -26,6 +26,7 @@
                       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <HBox alignment="CENTER_LEFT">
@@ -63,6 +64,7 @@
                            </children>
                         </HBox>
                         <Label fx:id="lvsum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="cond" GridPane.columnSpan="4" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </children>

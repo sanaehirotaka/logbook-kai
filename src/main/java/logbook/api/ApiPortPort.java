@@ -1,6 +1,8 @@
 package logbook.api;
 
 import java.time.Duration;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +76,19 @@ public class ApiPortPort implements APIListenerSpi {
         Map<Integer, Ship> afterShipMap = JsonHelper.toMap(array, Ship::getId, Ship::toShip);
         // 差し替え後のID
         Set<Integer> afterShipIds = afterShipMap.keySet();
+
+        // cond値が更新されたかを検出
+        Predicate<Ship> up = before -> {
+            Ship after = afterShipMap.get(before.getId());
+            if (after != null) {
+                return !before.getCond().equals(after.getCond());
+            }
+            return false;
+        };
+        if (map.values().stream().anyMatch(up)) {
+            ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
+            AppCondition.get().setCondUpdateTime(time.toEpochSecond());
+        }
 
         // 差し替え前に存在して、差し替え後に存在しない艦娘の装備を廃棄する
         beforeShipIds.stream()

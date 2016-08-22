@@ -43,6 +43,9 @@ public class AppCondition implements Serializable {
     /** 泊地修理タイマー */
     private long akashiTimer = 0;
 
+    /** cond値更新時間(エポック秒) */
+    private long condUpdateTime = 0;
+
     /**
      * アプリケーションのデフォルト設定ディレクトリから{@link AppCondition}を取得します、
      * これは次の記述と同等です

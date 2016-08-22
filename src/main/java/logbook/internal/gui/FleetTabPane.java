@@ -3,6 +3,11 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,12 +25,14 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import logbook.bean.AppCondition;
 import logbook.bean.DeckPort;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Items;
 import logbook.internal.Ships;
+import logbook.internal.Time;
 
 /**
  * 艦隊タブ
@@ -101,6 +108,10 @@ public class FleetTabPane extends ScrollPane {
     /** 艦娘レベル計 */
     @FXML
     private Label lvsum;
+
+    /** 疲労 */
+    @FXML
+    private Label cond;
 
     /**
      * 艦隊ペインのコンストラクタ
@@ -200,6 +211,35 @@ public class FleetTabPane extends ScrollPane {
             this.tabCssClass = WARN;
         } else {
             this.tabCssClass = null;
+        }
+        // 疲労
+        int minCond = this.shipList.stream()
+                .mapToInt(Ship::getCond)
+                .min()
+                .orElse(49);
+        if (minCond < 49) {
+
+            long cut = AppCondition.get().getCondUpdateTime();
+            // 疲労抜け想定時刻(エポック秒)
+            long end = cut + (-Math.floorDiv(49 - minCond, -3) * 60);
+
+            // 現在時刻
+            ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
+            // 現在時刻(エポック秒)
+            long nowepoch = now.toEpochSecond();
+
+            if (end > nowepoch) {
+                ZonedDateTime disp = ZonedDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.systemDefault());
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+                this.cond.setText(MessageFormat.format("疲労抜け時刻 : {0} ({1})",
+                        format.format(disp),
+                        Time.toString(Duration.between(now, disp), "")));
+            } else {
+                this.cond.setText("");
+            }
+        } else {
+            this.cond.setText("");
         }
     }
 
