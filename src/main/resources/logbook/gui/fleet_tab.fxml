@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox fx:id="infobox">
          <children>
@@ -26,7 +26,6 @@
                       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <HBox alignment="CENTER_LEFT">
@@ -64,7 +63,16 @@
                            </children>
                         </HBox>
                         <Label fx:id="lvsum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label fx:id="cond" GridPane.columnSpan="4" GridPane.rowIndex="3" />
+                        <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <children>
+                              <Label prefHeight="24.0" text="疲労回復:">
+                                 <padding>
+                                    <Insets left="24.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <Label fx:id="cond" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                </children>

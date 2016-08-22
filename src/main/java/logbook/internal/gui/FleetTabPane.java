@@ -3,7 +3,6 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.MessageFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -32,7 +31,6 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Items;
 import logbook.internal.Ships;
-import logbook.internal.Time;
 
 /**
  * 艦隊タブ
@@ -221,7 +219,7 @@ public class FleetTabPane extends ScrollPane {
 
             long cut = AppCondition.get().getCondUpdateTime();
             // 疲労抜け想定時刻(エポック秒)
-            long end = cut + (-Math.floorDiv(49 - minCond, -3) * 60);
+            long end = cut + (-Math.floorDiv(49 - minCond, -3) * 180);
 
             // 現在時刻
             ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
@@ -230,11 +228,9 @@ public class FleetTabPane extends ScrollPane {
 
             if (end > nowepoch) {
                 ZonedDateTime disp = ZonedDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.systemDefault());
-                DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
 
-                this.cond.setText(MessageFormat.format("疲労抜け時刻 : {0} ({1})",
-                        format.format(disp),
-                        Time.toString(Duration.between(now, disp), "")));
+                this.cond.setText(format.format(disp));
             } else {
                 this.cond.setText("");
             }
