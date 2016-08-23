@@ -8,7 +8,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import logbook.bean.QuestList.Quest;
 import logbook.internal.Config;
@@ -24,7 +24,7 @@ public class AppQuestCollection implements Serializable {
     private static final long serialVersionUID = 1439562010375402524L;
 
     /** 任務 */
-    private Map<Integer, AppQuest> quest = new TreeMap<>();
+    private Map<Integer, AppQuest> quest = new ConcurrentSkipListMap<>();
 
     /**
      * 任務を更新します
@@ -32,7 +32,8 @@ public class AppQuestCollection implements Serializable {
     public void update() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
 
-        for (Iterator<Entry<Integer, AppQuest>> iterator = this.quest.entrySet().iterator(); iterator.hasNext();) {
+        Map<Integer, AppQuest> copyMap = new ConcurrentSkipListMap<>(this.quest);
+        for (Iterator<Entry<Integer, AppQuest>> iterator = copyMap.entrySet().iterator(); iterator.hasNext();) {
             Entry<Integer, AppQuest> entry = iterator.next();
 
             String exp = entry.getValue().getExpire();
@@ -45,6 +46,7 @@ public class AppQuestCollection implements Serializable {
                 }
             }
         }
+        this.quest = copyMap;
     }
 
     /**
@@ -55,15 +57,17 @@ public class AppQuestCollection implements Serializable {
     public void update(QuestList questList) {
         this.update();
 
+        Map<Integer, AppQuest> copyMap = new ConcurrentSkipListMap<>(this.quest);
         for (Quest quest : questList.getList()) {
             if (quest != null) {
-                this.quest.remove(quest.getNo());
+                copyMap.remove(quest.getNo());
 
                 if (quest.getState() == 2) {
-                    this.quest.put(quest.getNo(), AppQuest.toAppQuest(quest));
+                    copyMap.put(quest.getNo(), AppQuest.toAppQuest(quest));
                 }
             }
         }
+        this.quest = copyMap;
     }
 
     /**
