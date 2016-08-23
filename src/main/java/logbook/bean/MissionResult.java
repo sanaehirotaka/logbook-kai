@@ -1,8 +1,10 @@
 package logbook.bean;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
@@ -109,7 +111,13 @@ public class MissionResult implements Serializable {
                 .setString("api_detail", bean::setDetail)
                 .setInteger("api_get_exp", bean::setGetExp)
                 .set("api_get_exp_lvup", bean::setGetExpLvup, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_get_material", bean::setGetMaterial, JsonHelper::toIntegerList)
+                .set("api_get_material", bean::setGetMaterial, val -> {
+                    if (val instanceof JsonArray) {
+                        return JsonHelper.toIntegerList((JsonArray) val);
+                    } else {
+                        return Arrays.asList(0, 0, 0, 0);
+                    }
+                })
                 .set("api_get_ship_exp", bean::setGetShipExp, JsonHelper::toIntegerList)
                 .setString("api_maparea_name", bean::setMapareaName)
                 .setInteger("api_member_exp", bean::setMemberExp)
