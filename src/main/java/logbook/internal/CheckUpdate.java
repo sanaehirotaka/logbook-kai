@@ -18,22 +18,30 @@ import javafx.scene.control.ButtonType;
  */
 public class CheckUpdate implements Runnable {
 
+    private static final String[] CHECK_SITES = {
+            "https://kancolle.sanaechan.net/logbook-kai.txt",
+            "http://kancolle.sanaechan.net/logbook-kai.txt"
+    };
+
     @Override
     public void run() {
-        URI uri = URI.create("http://kancolle.sanaechan.net/logbook-kai.txt");
+        for (String checkSite : CHECK_SITES) {
+            URI uri = URI.create(checkSite);
 
-        try (InputStream in = uri.toURL().openStream()) {
-            byte[] b = new byte[1024];
-            int l = in.read(b, 0, b.length);
-            String str = new String(b, 0, l);
+            try (InputStream in = uri.toURL().openStream()) {
+                byte[] b = new byte[1024];
+                int l = in.read(b, 0, b.length);
+                String str = new String(b, 0, l);
 
-            Version newversion = new Version(str);
+                Version newversion = new Version(str);
 
-            if (Version.getCurrent().compareTo(newversion) < 0) {
-                Platform.runLater(() -> CheckUpdate.openInfo(Version.getCurrent(), newversion));
+                if (Version.getCurrent().compareTo(newversion) < 0) {
+                    Platform.runLater(() -> CheckUpdate.openInfo(Version.getCurrent(), newversion));
+                }
+                break;
+            } catch (Exception e) {
+                LoggerHolder.LOG.warn("アップデートチェックで例外", e);
             }
-        } catch (Exception e) {
-            LoggerHolder.LOG.warn("アップデートチェックで例外", e);
         }
     }
 
