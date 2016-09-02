@@ -2,12 +2,16 @@ package logbook.internal;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
@@ -143,7 +147,7 @@ public final class JsonHelper {
 
     /**
      * JsonValueをLongのListに変換します<br>
-     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
      * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
      *
      * @param val 変換するJsonValue
@@ -169,7 +173,7 @@ public final class JsonHelper {
 
     /**
      * JsonValueをIntegerのListに変換します<br>
-     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
      * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
      *
      * @param val 変換するJsonArray
@@ -195,7 +199,7 @@ public final class JsonHelper {
 
     /**
      * JsonValueをDoubleのListに変換します<br>
-     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
      * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
      *
      * @param val 変換するJsonArray
@@ -221,7 +225,7 @@ public final class JsonHelper {
 
     /**
      * JsonValueをBigDecimalのListに変換します<br>
-     * valのJsonArrayのばあい内容はすべてJsonNumberである必要があります<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
      * valがJsonArrayではない場合{@code Collections#emptyList()}を返します。<br>
      *
      * @param val 変換するJsonArray
@@ -259,6 +263,153 @@ public final class JsonHelper {
     }
 
     /**
+     * JsonArrayをLongのSetに変換します<br>
+     * JsonArrayの内容はすべてJsonNumberである必要があります
+     *
+     * @param val 変換するJsonArray
+     * @return LongのSet
+     */
+    public static Set<Long> toLongSet(JsonArray val) {
+        return toSet(val, JsonHelper::toLong);
+    }
+
+    /**
+     * JsonValueをLongのSetに変換します<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptySet()}を返します。<br>
+     *
+     * @param val 変換するJsonValue
+     * @return LongのSet
+     */
+    public static Set<Long> checkedToLongSet(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toSet((JsonArray) val, JsonHelper::toLong);
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * JsonArrayをIntegerのSetに変換します<br>
+     * JsonArrayの内容はすべてJsonNumberである必要があります
+     *
+     * @param val 変換するJsonArray
+     * @return IntegerのSet
+     */
+    public static Set<Integer> toIntegerSet(JsonArray val) {
+        return toSet(val, JsonHelper::toInteger);
+    }
+
+    /**
+     * JsonValueをIntegerのSetに変換します<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptySet()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return IntegerのSet
+     */
+    public static Set<Integer> checkedToIntegerSet(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toSet((JsonArray) val, JsonHelper::toInteger);
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * JsonArrayをDoubleのSetに変換します<br>
+     * JsonArrayの内容はすべてJsonNumberである必要があります
+     *
+     * @param val 変換するJsonArray
+     * @return DoubleのSet
+     */
+    public static Set<Double> toDoubleSet(JsonArray val) {
+        return toSet(val, JsonHelper::toDouble);
+    }
+
+    /**
+     * JsonValueをDoubleのSetに変換します<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptySet()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return DoubleのSet
+     */
+    public static Set<Double> checkedToDoubleSet(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toSet((JsonArray) val, JsonHelper::toDouble);
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * JsonArrayをBigDecimalのSetに変換します<br>
+     * JsonArrayの内容はすべてJsonNumberである必要があります
+     *
+     * @param val 変換するJsonArray
+     * @return BigDecimalのSet
+     */
+    public static Set<BigDecimal> toBigDecimalSet(JsonArray val) {
+        return toSet(val, JsonHelper::toBigDecimal);
+    }
+
+    /**
+     * JsonValueをBigDecimalのSetに変換します<br>
+     * valのJsonArrayの場合、内容はすべてJsonNumberである必要があります<br>
+     * valがJsonArrayではない場合{@code Collections#emptySet()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return BigDecimalのSet
+     */
+    public static Set<BigDecimal> checkedToBigDecimalSet(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toSet((JsonArray) val, JsonHelper::toBigDecimal);
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * JsonArrayをStringのSetに変換します<br>
+     *
+     * @param val 変換するJsonArray
+     * @return StringのSet
+     */
+    public static Set<String> toStringSet(JsonArray val) {
+        return toSet(val, JsonHelper::toString);
+    }
+
+    /**
+     * JsonValueをStringのSetに変換します<br>
+     * valがJsonArrayではない場合{@code Collections#emptySet()}を返します。<br>
+     *
+     * @param val 変換するJsonArray
+     * @return StringのSet
+     */
+    public static Set<String> checkedToStringSet(JsonValue val) {
+        if (val instanceof JsonArray) {
+            return toSet((JsonArray) val, JsonHelper::toString);
+        }
+        return Collections.emptySet();
+    }
+
+    /**
+     * JsonArrayをCollectionに変換します
+     *
+     * @param <T> JsonArrayの内容の型
+     * @param <R> functionの戻り値の型
+     * @param array 変換するJsonArray
+     * @param function JsonValueを受け取って変換するFunction
+     * @param supplier Collectionインスタンスを供給するSupplier
+     * @return 変換後のCollection
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends JsonValue, C extends Collection<R>, R> C toCollection(JsonArray array, Function<T, R> function, Supplier<C> supplier) {
+        C collection = supplier.get();
+        for (JsonValue val : array) {
+            collection.add(function.apply((T) val));
+        }
+        return collection;
+    }
+
+    /**
      * JsonArrayをListに変換します
      *
      * @param <T> JsonArrayの内容の型
@@ -267,13 +418,8 @@ public final class JsonHelper {
      * @param function JsonValueを受け取って変換するFunction
      * @return 変換後のList
      */
-    @SuppressWarnings("unchecked")
     public static <T extends JsonValue, R> List<R> toList(JsonArray array, Function<T, R> function) {
-        List<R> list = new ArrayList<>();
-        for (JsonValue val : array) {
-            list.add(function.apply((T) val));
-        }
-        return list;
+        return toCollection(array, function, ArrayList::new);
     }
 
     /**
@@ -286,6 +432,31 @@ public final class JsonHelper {
      */
     public static <T extends JsonValue, R> Function<JsonArray, List<R>> toList(Function<T, R> function) {
         return val -> JsonHelper.toList(val, function);
+    }
+
+    /**
+     * JsonArrayをSetに変換します
+     *
+     * @param <T> JsonArrayの内容の型
+     * @param <R> functionの戻り値の型
+     * @param array 変換するJsonArray
+     * @param function JsonValueを受け取って変換するFunction
+     * @return 変換後のSet
+     */
+    public static <T extends JsonValue, R> Set<R> toSet(JsonArray array, Function<T, R> function) {
+        return toCollection(array, function, LinkedHashSet::new);
+    }
+
+    /**
+     * JsonArrayをSetに変換する関数を返します
+     *
+     * @param <T> JsonArrayの内容の型
+     * @param <R> functionの戻り値の型
+     * @param function JsonValueを受け取って変換するFunction
+     * @return Setに変換する関数
+     */
+    public static <T extends JsonValue, R> Function<JsonArray, Set<R>> toSet(Function<T, R> function) {
+        return val -> JsonHelper.toSet(val, function);
     }
 
     /**
