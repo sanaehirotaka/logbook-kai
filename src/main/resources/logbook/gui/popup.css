@@ -1,0 +1,33 @@
+.popover {
+	-fx-font-family: "Meiryo UI";
+	-fx-font-weight: normal;
+	-fx-font-size: 0.9em;
+}
+
+.popover>.border {
+	-fx-stroke-type: outside;
+}
+
+.popover>.content>.title>.text {
+	-fx-text-fill: green;
+}
+
+.popover>.content>.title>.icon>.graphics>.circle {
+	-fx-fill: transparent;
+	-fx-effect: none;
+}
+
+.popover>.content>.title>.icon>.graphics>.line {
+	-fx-stroke: transparent;
+	-fx-stroke-width: 0;
+}
+
+.title {
+	-fx-font-size: 1.1em;
+	-fx-text-fill: green;
+}
+
+.value {
+	-fx-font-size: 1.1em;
+	-fx-font-weight: bold;
+}

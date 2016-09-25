@@ -1,10 +1,13 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +18,7 @@ import javafx.scene.layout.HBox;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.internal.Ships;
+import logbook.plugin.PluginContainer;
 
 /**
  * 艦隊タブの艦娘
@@ -23,6 +27,8 @@ import logbook.internal.Ships;
 public class FleetTabShipPane extends HBox {
 
     private Ship ship;
+
+    private PopOver pop;
 
     @FXML
     private ImageView img;
@@ -85,6 +91,30 @@ public class FleetTabShipPane extends HBox {
         } else if (Ships.isRed(this.ship)) {
             styleClass.add("red");
         }
+
+        this.setOnMouseEntered(e -> {
+            if (this.pop != null) {
+                this.pop.hide();
+            }
+            this.pop = new PopOver(new FleetTabShipPopup(this.ship));
+            this.pop.setOpacity(0.95D);
+            this.pop.setDetached(true);
+            this.pop.setCornerRadius(0);
+            this.pop.setTitle(name);
+            this.pop.setArrowLocation(ArrowLocation.TOP_LEFT);
+            URL url = PluginContainer.getInstance()
+                    .getClassLoader()
+                    .getResource("logbook/gui/popup.css");
+            this.pop.getRoot()
+                    .getStylesheets()
+                    .add(url.toString());
+            this.pop.show(this);
+        });
+        this.setOnMouseExited(e -> {
+            if (this.pop != null) {
+                this.pop.hide();
+            }
+        });
     }
 
     private static class LoggerHolder {
