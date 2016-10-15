@@ -1,7 +1,7 @@
 .popover {
 	-fx-font-family: "Meiryo UI";
 	-fx-font-weight: normal;
-	-fx-font-size: 0.9em;
+	-fx-padding: 3px;
 }
 
 .popover>.border {
@@ -23,11 +23,11 @@
 }
 
 .title {
-	-fx-font-size: 1.1em;
+	-fx-font-size: 1em;
 	-fx-text-fill: green;
 }
 
 .value {
-	-fx-font-size: 1.1em;
+	-fx-font-size: 1em;
 	-fx-font-weight: bold;
 }

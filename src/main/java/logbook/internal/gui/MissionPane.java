@@ -1,11 +1,18 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.net.URL;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +24,7 @@ import logbook.bean.DeckPort;
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.internal.Time;
+import logbook.plugin.PluginContainer;
 
 /**
  * 艦隊
@@ -27,6 +35,8 @@ public class MissionPane extends AnchorPane {
     /** 艦隊 */
     private final DeckPort port;
 
+    private PopOver pop;
+
     /** 色変化1段階目 */
     private final Duration stage1 = Duration.ofMinutes(20);
 
@@ -35,6 +45,9 @@ public class MissionPane extends AnchorPane {
 
     /** 色変化3段階目 */
     private final Duration stage3 = Duration.ofMinutes(5);
+
+    /** 日付書式 */
+    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M月d日 H時m分s秒");
 
     @FXML
     private ProgressBar progress;
@@ -136,6 +149,38 @@ public class MissionPane extends AnchorPane {
                 styleClass.add("stage1");
             }
         }
+
+        // マウスオーバーでのポップアップ
+        this.setOnMouseEntered(e -> {
+            if (this.pop != null) {
+                this.pop.hide();
+            }
+            if (time > 0) {
+                ZonedDateTime dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time),
+                        ZoneOffset.systemDefault());
+
+                String message = DATE_FORMAT.format(dateTime) + " 頃に帰投します";
+
+                this.pop = new PopOver(new Label(message));
+                this.pop.setOpacity(0.95D);
+                this.pop.setDetached(true);
+                this.pop.setCornerRadius(0);
+                this.pop.setTitle(this.port.getName());
+                this.pop.setArrowLocation(ArrowLocation.TOP_LEFT);
+                URL url = PluginContainer.getInstance()
+                        .getClassLoader()
+                        .getResource("logbook/gui/popup.css");
+                this.pop.getRoot()
+                        .getStylesheets()
+                        .add(url.toString());
+                this.pop.show(this);
+            }
+        });
+        this.setOnMouseExited(e -> {
+            if (this.pop != null) {
+                this.pop.hide();
+            }
+        });
     }
 
     private static class LoggerHolder {
