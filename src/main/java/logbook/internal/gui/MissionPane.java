@@ -46,9 +46,6 @@ public class MissionPane extends AnchorPane {
     /** 色変化3段階目 */
     private final Duration stage3 = Duration.ofMinutes(5);
 
-    /** 日付書式 */
-    public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("M月d日 H時m分s秒");
-
     @FXML
     private ProgressBar progress;
 
@@ -158,9 +155,14 @@ public class MissionPane extends AnchorPane {
             if (time > 0) {
                 ZonedDateTime dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time),
                         ZoneOffset.systemDefault());
-
-                String message = DATE_FORMAT.format(dateTime) + " 頃に帰投します";
-
+                String message;
+                if (dateTime.toLocalDate().equals(ZonedDateTime.now().toLocalDate())) {
+                    message = "今日 " + DateTimeFormatter.ofPattern("H時m分s秒").format(dateTime)
+                            + " 頃に帰投します";
+                } else {
+                    message = DateTimeFormatter.ofPattern("M月d日 H時m分s秒").format(dateTime)
+                            + " 頃に帰投します";
+                }
                 this.pop = new PopOver(new Label(message));
                 this.pop.setOpacity(0.95D);
                 this.pop.setDetached(true);
