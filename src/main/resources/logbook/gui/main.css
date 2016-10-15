@@ -26,9 +26,14 @@ TabPane .tab.alert .tab-label {
     -fx-text-fill: white;
 }
 TabPane .tab.warn {
-    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #FFD700, transparent);;
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #FFD700, transparent);
 }
 TabPane .tab.warn .tab-label {
+}
+TabPane .tab.empty {
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #87CEFA, transparent);
+}
+TabPane .tab.empty .tab-label {
 }
 TabPane .message {
     -fx-font-size: 10pt;

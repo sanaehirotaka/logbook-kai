@@ -38,12 +38,6 @@ import logbook.internal.Ships;
  */
 public class FleetTabPane extends ScrollPane {
 
-    /** 警告CSSクラス名 */
-    private static final String ALERT = "alert";
-
-    /** 注意CSSクラス名 */
-    private static final String WARN = "warn";
-
     /** 艦隊 */
     private DeckPort port;
 
@@ -198,15 +192,18 @@ public class FleetTabPane extends ScrollPane {
 
         if (this.shipList.stream().anyMatch(Ships::isBadlyDamage)) {
             // 大破時
-            this.tabCssClass = ALERT;
+            this.tabCssClass = "alert";
         } else if (this.shipList.stream().anyMatch(Ships::isHalfDamage)) {
             // 中破時
-            this.tabCssClass = WARN;
+            this.tabCssClass = "warn";
         } else if (this.shipList.stream()
                 .anyMatch(ship -> !ship.getFuel().equals(Ships.shipMst(ship).map(ShipMst::getFuelMax).orElse(0)) ||
                         !ship.getBull().equals(Ships.shipMst(ship).map(ShipMst::getBullMax).orElse(0)))) {
             // 未補給時
-            this.tabCssClass = WARN;
+            this.tabCssClass = "warn";
+        } else if (this.port.getId() > 1 && this.port.getMission().get(0) == 0L) {
+            // 遠征未出撃
+            this.tabCssClass = "empty";
         } else {
             this.tabCssClass = null;
         }
