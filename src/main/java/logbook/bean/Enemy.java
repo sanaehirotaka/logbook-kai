@@ -29,9 +29,6 @@ public class Enemy implements Chara, Serializable, Cloneable {
     /** 装備 */
     private List<Integer> slot;
 
-    /** 強化 */
-    private List<Integer> kyouka;
-
     @Override
     public Enemy clone() {
         try {

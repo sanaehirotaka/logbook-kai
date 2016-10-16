@@ -19,6 +19,7 @@
          <children>
             <VBox fx:id="afterFriend" />
             <VBox fx:id="afterFriendCombined" GridPane.columnIndex="1" />
+            <VBox fx:id="afterEnemyCombined" GridPane.columnIndex="2" />
             <VBox fx:id="afterEnemy" GridPane.columnIndex="3" />
          </children>
       </GridPane>

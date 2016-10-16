@@ -55,9 +55,6 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
     /** api_eSlot */
     private List<List<Integer>> eSlot;
 
-    /** api_eKyouka */
-    private List<List<Integer>> eKyouka;
-
     /** api_fParam */
     private List<List<Integer>> fParam;
 
@@ -133,7 +130,6 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
                 .set("api_maxhps_combined", bean::setMaxhpsCombined, JsonHelper::toIntegerList)
                 .setBoolean("api_midnight_flag", bean::setMidnightFlag)
                 .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_eKyouka", bean::setEKyouka, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam_combined", bean::setFParamCombined, JsonHelper.toList(JsonHelper::toIntegerList))

@@ -59,12 +59,6 @@ public class BattleTypes {
         List<List<Integer>> getESlot();
 
         /**
-         * api_eKyoukaを取得します。
-         * @return api_eKyouka
-         */
-        List<List<Integer>> getEKyouka();
-
-        /**
          * api_fParamを取得します。
          * @return api_fParam
          */
@@ -99,6 +93,60 @@ public class BattleTypes {
          * @return api_fParam_combined
          */
         List<List<Integer>> getFParamCombined();
+    }
+
+    /**
+     * 連合艦隊での戦闘を表します
+     */
+    public interface ICombinedEcBattle extends IBattle {
+
+        /**
+         * api_ship_ke_combinedを取得します。
+         * @return api_ship_ke_combined
+         */
+        List<Integer> getShipKeCombined();
+
+        /**
+         * api_ship_lv_combinedを取得します。
+         * @return api_ship_lv_combined
+         */
+        List<Integer> getShipLvCombined();
+
+        /**
+         * api_nowhps_combinedを取得します。
+         * @return api_nowhps_combined
+         */
+        List<Integer> getNowhpsCombined();
+
+        /**
+         * api_maxhps_combinedを取得します。
+         * @return api_maxhps_combined
+         */
+        List<Integer> getMaxhpsCombined();
+
+        /**
+         * api_eSlot_combinedを取得します。
+         * @return api_eSlot_combined
+         */
+        List<List<Integer>> getESlotCombined();
+
+        /**
+         * api_eParam_combinedを取得します。
+         * @return api_eParam_combined
+         */
+        List<List<Integer>> getEParamCombined();
+    }
+
+    /**
+     * 連合艦隊での夜戦を表します
+     */
+    public interface ICombinedEcMidnightBattle extends ICombinedEcBattle {
+
+        /**
+         * api_active_deckを取得します。
+         * @return api_active_deck
+         */
+        List<Integer> getActiveDeck();
     }
 
     /**
@@ -297,6 +345,11 @@ public class BattleTypes {
          * @return api_damage
          */
         List<List<Double>> getDamage();
+
+        /**
+         * api_at_eflagを取得します。
+         */
+        List<Integer> getAtEflag();
     }
 
     /**
@@ -332,7 +385,7 @@ public class BattleTypes {
         private Stage3 stage3;
 
         /** api_stage3_combined */
-        private Stage3Combined stage3Combined;
+        private Stage3 stage3Combined;
 
         /**
          * JsonObjectから{@link Kouku}を構築します
@@ -347,7 +400,7 @@ public class BattleTypes {
                     .set("api_stage1", bean::setStage1, Stage1::toStage1)
                     .set("api_stage2", bean::setStage2, Stage2::toStage2)
                     .set("api_stage3", bean::setStage3, Stage3::toStage3)
-                    .set("api_stage3_combined", bean::setStage3Combined, Stage3Combined::toStage3Combined);
+                    .set("api_stage3_combined", bean::setStage3Combined, Stage3::toStage3);
             return bean;
         }
     }
@@ -520,43 +573,6 @@ public class BattleTypes {
                     .set("api_ecl_flag", bean::setEclFlag, JsonHelper::toIntegerList)
                     .set("api_fdam", bean::setFdam, JsonHelper::toDoubleList)
                     .set("api_edam", bean::setEdam, JsonHelper::toDoubleList);
-            return bean;
-        }
-    }
-
-    /**
-     * 航空戦 Stage3Combined
-     */
-    @Data
-    public static class Stage3Combined implements Serializable {
-
-        private static final long serialVersionUID = -628911942142343461L;
-
-        /** api_frai_flag */
-        private List<Integer> fraiFlag;
-
-        /** api_fbak_flag */
-        private List<Integer> fbakFlag;
-
-        /** api_fcl_flag */
-        private List<Integer> fclFlag;
-
-        /** api_fdam */
-        private List<Double> fdam;
-
-        /**
-         * JsonObjectから{@link Stage3Combined}を構築します
-         *
-         * @param json JsonObject
-         * @return {@link Stage3Combined}
-         */
-        public static Stage3Combined toStage3Combined(JsonObject json) {
-            Stage3Combined bean = new Stage3Combined();
-            JsonHelper.bind(json)
-                    .set("api_frai_flag", bean::setFraiFlag, JsonHelper::toIntegerList)
-                    .set("api_fbak_flag", bean::setFbakFlag, JsonHelper::toIntegerList)
-                    .set("api_fcl_flag", bean::setFclFlag, JsonHelper::toIntegerList)
-                    .set("api_fdam", bean::setFdam, JsonHelper::toDoubleList);
             return bean;
         }
     }
@@ -763,6 +779,9 @@ public class BattleTypes {
         /** api_damage */
         public List<List<Double>> damage;
 
+        /** api_at_eflag */
+        public List<Integer> atEflag;
+
         /**
          * JsonObjectから{@link Hougeki}を構築します
          *
@@ -777,7 +796,8 @@ public class BattleTypes {
                     .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
-                    .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList));
+                    .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList))
+                    .set("api_at_eflag", bean::setAtEflag, JsonHelper::toIntegerList);
             return bean;
         }
     }
@@ -808,6 +828,9 @@ public class BattleTypes {
         /** api_damage */
         private List<List<Double>> damage;
 
+        /** api_at_eflag */
+        private List<Integer> atEflag;
+
         /**
          * JsonObjectから{@link MidnightHougeki}を構築します
          *
@@ -822,7 +845,8 @@ public class BattleTypes {
                     .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_sp_list", bean::setSpList, JsonHelper::toIntegerList)
-                    .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList));
+                    .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList))
+                    .set("api_at_eflag", bean::setAtEflag, JsonHelper::toIntegerList);
             return bean;
         }
     }
@@ -853,6 +877,9 @@ public class BattleTypes {
         /** api_stage3 */
         private Stage3 stage3;
 
+        /** api_stage3_combined */
+        private Stage3 stage3Combined;
+
         /** api_stage_flag */
         private List<Integer> stageFlag;
 
@@ -872,6 +899,7 @@ public class BattleTypes {
                     .set("api_stage1", bean::setStage1, Stage1::toStage1)
                     .set("api_stage2", bean::setStage2, Stage2::toStage2)
                     .set("api_stage3", bean::setStage3, Stage3::toStage3)
+                    .set("api_stage3_combined", bean::setStage3Combined, Stage3::toStage3)
                     .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList);
             return bean;
         }

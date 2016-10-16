@@ -48,9 +48,6 @@ public class SortieBattle
     /** api_eSlot */
     private List<List<Integer>> eSlot;
 
-    /** api_eKyouka */
-    private List<List<Integer>> eKyouka;
-
     /** api_fParam */
     private List<List<Integer>> fParam;
 
@@ -121,7 +118,6 @@ public class SortieBattle
                 .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
                 .setBoolean("api_midnight_flag", bean::setMidnightFlag)
                 .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_eKyouka", bean::setEKyouka, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_search", bean::setSearch, JsonHelper::toIntegerList)

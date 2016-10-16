@@ -30,7 +30,11 @@ public class BattleDetailPhase extends TitledPane {
     @FXML
     private VBox afterFriendCombined;
 
-    /** 敵 */
+    /** 敵第2艦隊 */
+    @FXML
+    private VBox afterEnemyCombined;
+
+    /** 敵第1艦隊 */
     @FXML
     private VBox afterEnemy;
 
@@ -61,6 +65,11 @@ public class BattleDetailPhase extends TitledPane {
         for (Ship ship : this.phase.getAfterFriendCombined()) {
             if (ship != null) {
                 this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship));
+            }
+        }
+        for (Enemy enemy : this.phase.getAfterEnemyCombined()) {
+            if (enemy != null) {
+                this.afterEnemyCombined.getChildren().add(new BattleDetailPhaseShip(enemy));
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemy()) {

@@ -12,6 +12,8 @@ import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IBattle;
 import logbook.bean.BattleTypes.ICombinedBattle;
+import logbook.bean.BattleTypes.ICombinedEcBattle;
+import logbook.bean.BattleTypes.ICombinedEcMidnightBattle;
 import logbook.bean.BattleTypes.IHougeki;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.IMidnightBattle;
@@ -20,16 +22,18 @@ import logbook.bean.BattleTypes.ISupport;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Raigeki;
 import logbook.bean.BattleTypes.Stage3;
-import logbook.bean.BattleTypes.Stage3Combined;
 import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.BattleTypes.SupportHourai;
 import logbook.bean.BattleTypes.SupportInfo;
+import logbook.bean.Chara;
 import logbook.bean.Enemy;
 import logbook.bean.Ship;
+import lombok.Getter;
 
 /**
  * 戦闘フェイズにおける味方と敵のステータス
  */
+@Getter
 public class PhaseState {
 
     /** 連合艦隊 */
@@ -43,6 +47,9 @@ public class PhaseState {
 
     /** フェイズ後敵 */
     private List<Enemy> afterEnemy = new ArrayList<>();
+
+    /** フェイズ後敵(第2艦隊) */
+    private List<Enemy> afterEnemyCombined = new ArrayList<>();
 
     /**
      * 戦闘から新規フェイズを作成します
@@ -72,7 +79,13 @@ public class PhaseState {
                 this.afterFriendCombined.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
             }
         } else {
-            List<Ship> ships = deckMap.get(b.getDockId());
+            List<Ship> ships;
+            if (b instanceof ICombinedEcMidnightBattle) {
+                ICombinedEcMidnightBattle ecmb = (ICombinedEcMidnightBattle) b;
+                ships = deckMap.get(ecmb.getActiveDeck().get(0));
+            } else {
+                ships = deckMap.get(b.getDockId());
+            }
             for (Ship ship : ships) {
                 this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
             }
@@ -84,9 +97,22 @@ public class PhaseState {
                 e.setShipId(b.getShipKe().get(i));
                 e.setLv(b.getShipLv().get(i));
                 e.setSlot(b.getESlot().get(i - 1));
-                e.setKyouka(b.getEKyouka().get(i - 1));
 
                 this.afterEnemy.add(e);
+            }
+        }
+        // 敵(第2艦隊)
+        if (b instanceof ICombinedEcBattle) {
+            ICombinedEcBattle ecb = (ICombinedEcBattle) b;
+            for (int i = 1, s = ecb.getShipKeCombined().size(); i < s; i++) {
+                if (ecb.getShipKeCombined().get(i) != -1) {
+                    Enemy e = new Enemy();
+                    e.setShipId(ecb.getShipKeCombined().get(i));
+                    e.setLv(ecb.getShipLvCombined().get(i));
+                    e.setSlot(ecb.getESlotCombined().get(i - 1));
+
+                    this.afterEnemyCombined.add(e);
+                }
             }
         }
         this.setInitialHp(b);
@@ -109,6 +135,9 @@ public class PhaseState {
         for (Enemy enemy : ps.afterEnemy) {
             this.afterEnemy.add(Optional.ofNullable(enemy).map(Enemy::clone).orElse(null));
         }
+        for (Enemy enemy : ps.afterEnemyCombined) {
+            this.afterEnemyCombined.add(Optional.ofNullable(enemy).map(Enemy::clone).orElse(null));
+        }
     }
 
     /**
@@ -125,6 +154,13 @@ public class PhaseState {
                     List<Double> edam = stage3.getEdam();
                     if (edam != null) {
                         this.applyEnemyDamage(edam, this.afterEnemy);
+                    }
+                }
+                Stage3 stage3Combined = attack.getStage3Combined();
+                if (stage3Combined != null) {
+                    List<Double> edam = stage3Combined.getEdam();
+                    if (edam != null) {
+                        this.applyEnemyDamage(edam, this.afterEnemyCombined);
                     }
                 }
             }
@@ -166,35 +202,45 @@ public class PhaseState {
      */
     public void applySortieHougeki(ISortieHougeki battle) {
         // 先制対潜攻撃
-        this.applyHougeki(battle.getOpeningTaisen(), null);
+        this.applyHougeki(battle.getOpeningTaisen(), this.afterFriend, this.afterEnemy);
         // 開幕雷撃
         this.applyRaigeki(battle.getOpeningAtack());
-        if (this.combinedType == CombinedType.未結成) {
+        if (battle instanceof ICombinedEcBattle) {
+            // 連合艦隊(敵)
+            // 1巡目
+            this.applyHougeki(battle.getHougeki1());
+            // 雷撃
+            this.applyRaigeki(battle.getRaigeki());
+            // 1巡目
+            this.applyHougeki(battle.getHougeki2());
+            // 2巡目
+            this.applyHougeki(battle.getHougeki3());
+        } else if (this.combinedType == CombinedType.未結成) {
             // 連合艦隊以外
             // 1巡目
-            this.applyHougeki(battle.getHougeki1(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki1(), this.afterFriend, this.afterEnemy);
             // 2巡目
-            this.applyHougeki(battle.getHougeki2(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki2(), this.afterFriend, this.afterEnemy);
             // 雷撃
             this.applyRaigeki(battle.getRaigeki());
         } else if (this.combinedType == CombinedType.機動部隊 || this.combinedType == CombinedType.輸送部隊) {
             // 空母機動部隊、輸送護衛部隊
             // 第2艦隊1巡目
-            this.applyHougeki(battle.getHougeki1(), this.afterFriendCombined);
+            this.applyHougeki(battle.getHougeki1(), this.afterFriendCombined, this.afterEnemy);
             // 第2艦隊雷撃
             this.applyRaigeki(battle.getRaigeki());
             // 第1艦隊1巡目
-            this.applyHougeki(battle.getHougeki2(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki2(), this.afterFriend, this.afterEnemy);
             // 第1艦隊2巡目
-            this.applyHougeki(battle.getHougeki3(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki3(), this.afterFriend, this.afterEnemy);
         } else if (this.combinedType == CombinedType.水上部隊) {
             // 水上打撃部隊
             // 第1艦隊1巡目
-            this.applyHougeki(battle.getHougeki1(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki1(), this.afterFriend, this.afterEnemy);
             // 第1艦隊2巡目
-            this.applyHougeki(battle.getHougeki2(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki2(), this.afterFriend, this.afterEnemy);
             // 第2艦隊1巡目
-            this.applyHougeki(battle.getHougeki3(), this.afterFriendCombined);
+            this.applyHougeki(battle.getHougeki3(), this.afterFriendCombined, this.afterEnemy);
             // 第2艦隊雷撃
             this.applyRaigeki(battle.getRaigeki());
         }
@@ -213,12 +259,28 @@ public class PhaseState {
      * @param battle 夜戦
      */
     public void applyMidnightBattle(IMidnightBattle battle) {
-        if (this.combinedType == CombinedType.未結成) {
+        if (battle instanceof ICombinedEcMidnightBattle) {
+            ICombinedEcMidnightBattle ecBattle = (ICombinedEcMidnightBattle) battle;
+
+            List<Ship> friend;
+            if (ecBattle.getActiveDeck().get(0) == 1) {
+                friend = this.afterFriend;
+            } else {
+                friend = this.afterFriendCombined;
+            }
+            List<Enemy> enemy;
+            if (ecBattle.getActiveDeck().get(1) == 1) {
+                enemy = this.afterEnemy;
+            } else {
+                enemy = this.afterEnemyCombined;
+            }
+            this.applyHougeki(battle.getHougeki(), friend, enemy);
+        } else if (this.combinedType == CombinedType.未結成) {
             // 連合艦隊以外
-            this.applyHougeki(battle.getHougeki(), this.afterFriend);
+            this.applyHougeki(battle.getHougeki(), this.afterFriend, this.afterEnemy);
         } else {
             // 連合艦隊
-            this.applyHougeki(battle.getHougeki(), this.afterFriendCombined);
+            this.applyHougeki(battle.getHougeki(), this.afterFriendCombined, this.afterEnemy);
         }
     }
 
@@ -275,9 +337,12 @@ public class PhaseState {
             this.applyFriendDamage(stage3.getFdam(), this.afterFriend);
             this.applyEnemyDamage(stage3.getEdam(), this.afterEnemy);
         }
-        Stage3Combined stage3Combined = kouku.getStage3Combined();
+        Stage3 stage3Combined = kouku.getStage3Combined();
         if (stage3Combined != null) {
             this.applyFriendDamage(stage3Combined.getFdam(), this.afterFriendCombined);
+            if (stage3Combined.getEdam() != null) {
+                this.applyEnemyDamage(stage3Combined.getEdam(), this.afterEnemyCombined);
+            }
         }
     }
 
@@ -298,15 +363,51 @@ public class PhaseState {
             this.applyFriendDamage(raigeki.getFdam(), this.afterFriend);
         }
         // 敵
-        this.applyEnemyDamage(raigeki.getEdam(), this.afterEnemy);
+        this.applyEnemyDamage(raigeki.getEdam());
     }
 
     /**
      * 砲撃戦フェイズを適用します
      * @param hougeki 砲撃戦フェイズ
      * @param friend 交戦する味方
+     * @param enemy 交戦する敵
      */
-    private void applyHougeki(IHougeki hougeki, List<Ship> friend) {
+    private void applyHougeki(IHougeki hougeki, List<Ship> friend, List<Enemy> enemy) {
+        if (hougeki == null) {
+            return;
+        }
+
+        if (hougeki.getAtEflag() == null) {
+            for (int i = 1, s = hougeki.getDamage().size(); i < s; i++) {
+                // 防御側インデックス(1-6,7-12)
+                int df = hougeki.getDfList().get(i).get(0);
+                int damage = hougeki.getDamage().get(i)
+                        .stream()
+                        .mapToInt(Double::intValue)
+                        .filter(d -> d > 0)
+                        .sum();
+                if (df <= 6) {
+                    // 6以下は味方
+                    Ship ship = friend.get(df - 1);
+                    if (ship != null) {
+                        ship.setNowhp(ship.getNowhp() - damage);
+                    }
+                } else {
+                    // 7以上は敵
+                    Enemy ship = enemy.get(df - 1 - 6);
+                    ship.setNowhp(ship.getNowhp() - damage);
+                }
+            }
+        } else {
+            this.applyHougeki(hougeki);
+        }
+    }
+
+    /**
+     * 砲撃戦フェイズを適用します(新API用)
+     * @param hougeki 砲撃戦フェイズ
+     */
+    private void applyHougeki(IHougeki hougeki) {
         if (hougeki == null) {
             return;
         }
@@ -319,16 +420,30 @@ public class PhaseState {
                     .mapToInt(Double::intValue)
                     .filter(d -> d > 0)
                     .sum();
+            // 攻撃側が味方の場合true
+            boolean atkfriend = hougeki.getAtEflag().get(i) == 0;
+            Chara target;
             if (df <= 6) {
-                // 6以下は味方
-                Ship ship = friend.get(df - 1);
-                if (ship != null) {
-                    ship.setNowhp(ship.getNowhp() - damage);
+                // 6以下は第1艦隊
+                List<? extends Chara> tl;
+                if (atkfriend) {
+                    tl = this.afterEnemy;
+                } else {
+                    tl = this.afterFriend;
                 }
+                target = tl.get(df - 1);
             } else {
-                // 7以上は敵
-                Enemy enemy = this.afterEnemy.get(df - 1 - 6);
-                enemy.setNowhp(enemy.getNowhp() - damage);
+                // 7以上は第2艦隊
+                List<? extends Chara> tl;
+                if (atkfriend) {
+                    tl = this.afterEnemyCombined;
+                } else {
+                    tl = this.afterFriendCombined;
+                }
+                target = tl.get(df - 1 - 6);
+            }
+            if (target != null) {
+                target.setNowhp(target.getNowhp() - damage);
             }
         }
     }
@@ -351,7 +466,28 @@ public class PhaseState {
     }
 
     /**
-     * ダメージを適用します
+     * ダメージを適用します(敵第1艦隊(+第2艦隊)固定の場合に使用)
+     * @param damage ダメージ(one-based)
+     */
+    private void applyEnemyDamage(List<Double> damages) {
+        for (int i = 1, s = damages.size(); i < s; i++) {
+            int damage = damages.get(i).intValue();
+            if (damage != 0) {
+                Enemy enemy;
+                if (i <= 6) {
+                    enemy = this.afterEnemy.get(i - 1);
+                } else {
+                    enemy = this.afterEnemyCombined.get(i - (6 + 1));
+                }
+                if (enemy != null) {
+                    enemy.setNowhp(enemy.getNowhp() - damage);
+                }
+            }
+        }
+    }
+
+    /**
+     * ダメージを適用します(敵艦隊指定の場合に使用)
      * @param damage ダメージ(one-based)
      * @param enemies 敵
      */
@@ -392,7 +528,7 @@ public class PhaseState {
         }
         if (b instanceof ICombinedBattle) {
             ICombinedBattle cb = (ICombinedBattle) b;
-            for (int i = 1, s = cb.getMaxhpsCombined().size(); i < s; i++) {
+            for (int i = 1, s = 6 + 1; i < s; i++) {
                 int idx = i - 1;
                 if (cb.getMaxhpsCombined().get(i) == -1) {
                     continue;
@@ -403,53 +539,18 @@ public class PhaseState {
                 }
             }
         }
-    }
-
-    /**
-     * フェイズ後味方(第1艦隊)を取得します。
-     * @return フェイズ後味方(第1艦隊)
-     */
-    public List<Ship> getAfterFriend() {
-        return this.afterFriend;
-    }
-
-    /**
-     * フェイズ後味方(第1艦隊)を設定します。
-     * @param afterFriend フェイズ後味方(第1艦隊)
-     */
-    public void setAfterFriend(List<Ship> afterFriend) {
-        this.afterFriend = afterFriend;
-    }
-
-    /**
-     * フェイズ後味方(第2艦隊)を取得します。
-     * @return フェイズ後味方(第2艦隊)
-     */
-    public List<Ship> getAfterFriendCombined() {
-        return this.afterFriendCombined;
-    }
-
-    /**
-     * フェイズ後味方(第2艦隊)を設定します。
-     * @param afterFriendCombined フェイズ後味方(第2艦隊)
-     */
-    public void setAfterFriendCombined(List<Ship> afterFriendCombined) {
-        this.afterFriendCombined = afterFriendCombined;
-    }
-
-    /**
-     * フェイズ後敵を取得します。
-     * @return フェイズ後敵
-     */
-    public List<Enemy> getAfterEnemy() {
-        return this.afterEnemy;
-    }
-
-    /**
-     * フェイズ後敵を設定します。
-     * @param afterEnemy フェイズ後敵
-     */
-    public void setAfterEnemy(List<Enemy> afterEnemy) {
-        this.afterEnemy = afterEnemy;
+        if (b instanceof ICombinedEcBattle) {
+            ICombinedEcBattle ecb = (ICombinedEcBattle) b;
+            for (int i = 6 + 1, s = 12 + 1; i < s; i++) {
+                int idx = i - (6 + 1);
+                if (ecb.getMaxhpsCombined().get(i) == -1) {
+                    continue;
+                }
+                if (this.afterEnemyCombined.get(idx) != null) {
+                    this.afterEnemyCombined.get(idx).setMaxhp(ecb.getMaxhpsCombined().get(i));
+                    this.afterEnemyCombined.get(idx).setNowhp(ecb.getNowhpsCombined().get(i));
+                }
+            }
+        }
     }
 }

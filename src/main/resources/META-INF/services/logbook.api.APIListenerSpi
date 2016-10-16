@@ -16,6 +16,8 @@ logbook.api.ApiReqBattleMidnightSpMidnight
 logbook.api.ApiReqCombinedBattleAirbattle
 logbook.api.ApiReqCombinedBattleBattle
 logbook.api.ApiReqCombinedBattleBattleWater
+logbook.api.ApiReqCombinedBattleEcBattle
+logbook.api.ApiReqCombinedBattleEcMidnightBattle
 logbook.api.ApiReqCombinedBattleBattleresult
 logbook.api.ApiReqCombinedBattleGobackPort
 logbook.api.ApiReqCombinedBattleLdAirbattle

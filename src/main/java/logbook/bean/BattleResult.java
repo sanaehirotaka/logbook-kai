@@ -17,9 +17,6 @@ public class BattleResult implements Serializable {
 
     private static final long serialVersionUID = 2163846602385545034L;
 
-    /** api_ship_id */
-    private List<Integer> shipId;
-
     /** api_win_rank */
     private String winRank;
 
@@ -278,7 +275,6 @@ public class BattleResult implements Serializable {
     public static BattleResult toBattleResult(JsonObject json) {
         BattleResult bean = new BattleResult();
         JsonHelper.bind(json)
-                .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
                 .setString("api_win_rank", bean::setWinRank)
                 .setInteger("api_get_exp", bean::setGetExp)
                 .setInteger("api_mvp", bean::setMvp)

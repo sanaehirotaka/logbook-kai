@@ -26,10 +26,22 @@ public interface Chara {
     Integer getNowhp();
 
     /**
+     * HPを設定します。
+     * @param nowhp HP
+     */
+    void setNowhp(Integer nowhp);
+
+    /**
      * 最大HPを取得します。
      * @return 最大HP
      */
     Integer getMaxhp();
+
+    /**
+     * 最大HPを設定します。
+     * @param maxhp 最大HP
+     */
+    void setMaxhp(Integer maxhp);
 
     /**
      * 装備を取得します。

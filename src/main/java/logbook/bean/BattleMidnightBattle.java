@@ -36,9 +36,6 @@ public class BattleMidnightBattle implements IMidnightBattle, Serializable {
     /** api_eSlot */
     private List<List<Integer>> eSlot;
 
-    /** api_eKyouka */
-    private List<List<Integer>> eKyouka;
-
     /** api_fParam */
     private List<List<Integer>> fParam;
 
@@ -70,7 +67,6 @@ public class BattleMidnightBattle implements IMidnightBattle, Serializable {
                 .set("api_nowhps", bean::setNowhps, JsonHelper::toIntegerList)
                 .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
                 .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
-                .set("api_eKyouka", bean::setEKyouka, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
