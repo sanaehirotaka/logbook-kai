@@ -18,9 +18,17 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -28,6 +36,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
@@ -106,6 +117,11 @@ public class CaptureController extends WindowController {
     }
 
     @FXML
+    void detectManual(ActionEvent event) {
+        this.detectManualAction();
+    }
+
+    @FXML
     void cyclic(ActionEvent event) {
         if (this.timeline.getStatus() == Status.RUNNING) {
             // キャプチャ中であれば止める
@@ -153,7 +169,7 @@ public class CaptureController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/capturesave.fxml", this.getWindow(), "キャプチャの保存", controller -> {
                 ((CaptureSaveController) controller).setItems(this.images);
-            } , null);
+            }, null);
         } catch (Exception ex) {
             LoggerHolder.LOG.error("キャプチャの保存に失敗しました", ex);
         }
@@ -170,32 +186,106 @@ public class CaptureController extends WindowController {
      */
     private void detectAction() {
         try {
-            Window window = this.getWindow();
-            int x = (int) window.getX();
-            int y = (int) window.getY();
-            GraphicsConfiguration gc = ScreenCapture.detectScreenDevice(x, y);
-
+            GraphicsConfiguration gc = this.currentGraphicsConfiguration();
             Robot robot = new Robot(gc.getDevice());
             BufferedImage image = robot.createScreenCapture(gc.getBounds());
-
             Rectangle relative = ScreenCapture.detectGameScreen(image, 800, 480);
+            Rectangle screenBounds = gc.getBounds();
+            this.setBounds(robot, relative, screenBounds);
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("座標取得に失敗しました", e);
+        }
+    }
 
-            if (relative != null) {
-                Rectangle fixed = new Rectangle(relative.x + gc.getBounds().x, relative.y + gc.getBounds().y,
-                        relative.width, relative.height);
+    private Point2D start;
 
-                String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
-                this.message.setText(text);
-                this.capture.setDisable(false);
-                this.config.setDisable(false);
-                this.sc = new ScreenCapture(robot, fixed);
-                this.sc.setItems(this.images);
-            } else {
-                this.message.setText("座標未設定");
-                this.capture.setDisable(true);
-                this.config.setDisable(true);
-                this.sc = null;
-            }
+    private Point2D end;
+
+    /**
+     * 座標取得アクション
+     */
+    private void detectManualAction() {
+        try {
+            GraphicsConfiguration gcnf = this.currentGraphicsConfiguration();
+            Robot robot = new Robot(gcnf.getDevice());
+
+            BufferedImage bufferedImage = robot.createScreenCapture(gcnf.getBounds());
+
+            WritableImage image = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            Stage stage = new Stage();
+            Group root = new Group();
+            Canvas canvas = new Canvas();
+            canvas.widthProperty().bind(stage.widthProperty());
+            canvas.heightProperty().bind(stage.heightProperty());
+
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(1);
+            gc.setLineDashes(5, 5);
+
+            // ドラッグの開始
+            canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+                this.start = new Point2D(e.getX(), e.getY());
+            });
+            // ドラッグ中
+            canvas.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+                Point2D now = new Point2D(e.getX(), e.getY());
+
+                double x = Math.min(this.start.getX(), now.getX()) + 0.5;
+                double y = Math.min(this.start.getY(), now.getY()) + 0.5;
+                double w = Math.abs(this.start.getX() - now.getX());
+                double h = Math.abs(this.start.getY() - now.getY());
+
+                gc.strokeRect(x, y, w, h);
+            });
+            // ドラッグの終了
+            canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+                this.end = new Point2D(e.getX(), e.getY());
+                if (!this.start.equals(this.end)) {
+
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.initOwner(this.getWindow());
+                    alert.setTitle("矩形選択");
+                    alert.setHeaderText("");
+                    alert.setContentText("この範囲でよろしいですか？");
+                    if (alert.showAndWait().orElse(null) == ButtonType.OK) {
+                        int x = (int) Math.min(this.start.getX(), this.end.getX());
+                        int y = (int) Math.min(this.start.getY(), this.end.getY());
+                        int w = (int) Math.abs(this.start.getX() - this.end.getX());
+                        int h = (int) Math.abs(this.start.getY() - this.end.getY());
+
+                        Rectangle tmp = getTrimSize(bufferedImage.getSubimage(x, y, w, h));
+                        Rectangle relative = new Rectangle(
+                                (int) (x + tmp.getX()),
+                                (int) (y + tmp.getY()),
+                                (int) tmp.getWidth(),
+                                (int) tmp.getHeight());
+
+                        Rectangle screenBounds = gcnf.getBounds();
+
+                        this.setBounds(robot, relative, screenBounds);
+
+                        stage.setFullScreen(false);
+                    }
+                }
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            });
+
+            root.getChildren().addAll(new ImageView(image), canvas);
+
+            stage.setScene(new Scene(root));
+            stage.initOwner(this.getWindow());
+            stage.setTitle("座標取得");
+            stage.setFullScreenExitHint("キャプチャする領域をマウスでドラッグして下さい。 [Esc]キーでキャンセル");
+            stage.setFullScreen(true);
+            stage.fullScreenProperty().addListener((ov, o, n) -> {
+                if (!n)
+                    stage.close();
+            });
+            stage.show();
         } catch (Exception e) {
             LoggerHolder.LOG.error("座標取得に失敗しました", e);
         }
@@ -237,6 +327,102 @@ public class CaptureController extends WindowController {
                 this.image.setImage(new Image(new ByteArrayInputStream(data)));
             }
         }
+    }
+
+    private static final int WHITE = java.awt.Color.WHITE.getRGB();
+
+    /**
+     * トリムサイズを返します
+     *
+     * @param image
+     * @return
+     */
+    public static Rectangle getTrimSize(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int startwidth = width / 2;
+        int startheightTop = (height / 3) * 2;
+        int startheightButton = height / 3;
+
+        int x = 0;
+        int y = 0;
+        int w = 0;
+        int h = 0;
+
+        // 左トリム(上)
+        for (int i = 0; i < width; i++) {
+            if (image.getRGB(i, startheightTop) != WHITE) {
+                x = i;
+                break;
+            }
+        }
+        // 左トリム(下)
+        for (int i = 0; i < width; i++) {
+            if (image.getRGB(i, startheightButton) != WHITE) {
+                x = Math.min(x, i);
+                break;
+            }
+        }
+        // 上トリム
+        for (int i = 0; i < height; i++) {
+            if (image.getRGB(startwidth, i) != WHITE) {
+                y = i;
+                break;
+            }
+        }
+        // 右トリム(上)
+        for (int i = width - 1; i >= 0; i--) {
+            if (image.getRGB(i, startheightTop) != WHITE) {
+                w = (i - x) + 1;
+                break;
+            }
+        }
+        // 右トリム(下)
+        for (int i = width - 1; i >= 0; i--) {
+            if (image.getRGB(i, startheightButton) != WHITE) {
+                w = Math.max(w, (i - x) + 1);
+                break;
+            }
+        }
+        // 下トリム
+        for (int i = height - 1; i >= 0; i--) {
+            if (image.getRGB(startwidth, i) != WHITE) {
+                h = (i - y) + 1;
+                break;
+            }
+        }
+
+        if ((w == 0) || (h == 0)) {
+            return new Rectangle(0, 0, image.getWidth(), image.getHeight());
+        } else {
+            return new Rectangle(x, y, w, h);
+        }
+    }
+
+    private void setBounds(Robot robot, Rectangle relative, Rectangle screenBounds) {
+        if (relative != null) {
+            Rectangle fixed = new Rectangle(relative.x + screenBounds.x, relative.y + screenBounds.y,
+                    relative.width, relative.height);
+
+            String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
+            this.message.setText(text);
+            this.capture.setDisable(false);
+            this.config.setDisable(false);
+            this.sc = new ScreenCapture(robot, fixed);
+            this.sc.setItems(this.images);
+        } else {
+            this.message.setText("座標未設定");
+            this.capture.setDisable(true);
+            this.config.setDisable(true);
+            this.sc = null;
+        }
+    }
+
+    private GraphicsConfiguration currentGraphicsConfiguration() {
+        Window window = this.getWindow();
+        int x = (int) window.getX();
+        int y = (int) window.getY();
+        return ScreenCapture.detectScreenDevice(x, y);
     }
 
     private static class LoggerHolder {

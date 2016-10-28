@@ -10,7 +10,12 @@
    <children>
       <ToolBar>
         <items>
-          <Button mnemonicParsing="false" onAction="#detect" text="座標取得" />
+            <MenuButton mnemonicParsing="false" text="座標取得">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#detect" text="自動" />
+                  <MenuItem mnemonicParsing="false" onAction="#detectManual" text="手動" />
+              </items>
+            </MenuButton>
             <MenuButton fx:id="config" disable="true" mnemonicParsing="false" text="設定">
               <items>
                   <CheckMenuItem fx:id="cyclic" mnemonicParsing="false" onAction="#cyclic" text="連写" />
