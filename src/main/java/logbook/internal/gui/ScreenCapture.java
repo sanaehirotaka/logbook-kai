@@ -48,12 +48,6 @@ class ScreenCapture {
 
     private static final int WHITE = Color.WHITE.getRGB();
 
-    /** 改装一覧の範囲(艦娘除く) */
-    static final Rectangle UNIT_WITHOUT_SHIP_RECT = new Rectangle(327, 103, 230, 365);
-
-    /** 改装一覧の範囲 */
-    static final Rectangle UNIT_RECT = new Rectangle(327, 103, 460, 365);
-
     private Robot robot;
 
     /** キャプチャ範囲 */
@@ -65,6 +59,26 @@ class ScreenCapture {
     private int size = 200;
 
     private ObservableList<ImageData> list;
+
+    /** 切り取り範囲 */
+    enum CutType {
+        /** 切り取らない */
+        NONE(null),
+        /** 改装一覧の範囲(艦娘除く) */
+        UNIT_WITHOUT_SHIP(new Rectangle(327, 103, 230, 365)),
+        /** 改装一覧の範囲 */
+        UNIT(new Rectangle(327, 103, 460, 365));
+
+        private Rectangle angle;
+
+        private CutType(Rectangle angle) {
+            this.angle = angle;
+        }
+
+        Rectangle getAngle() {
+            return this.angle;
+        }
+    }
 
     /**
      * スクリーンショット
@@ -255,10 +269,21 @@ class ScreenCapture {
                     iwp.setCompressionQuality(QUALITY);
                 }
                 writer.setOutput(ios);
-                int x = rect.x;
-                int y = rect.y;
-                int w = rect.width;
-                int h = rect.height;
+                int x;
+                int y;
+                int w;
+                int h;
+                if (image.getWidth() == 800 && image.getHeight() == 480) {
+                    x = rect.x;
+                    y = rect.y;
+                    w = rect.width;
+                    h = rect.height;
+                } else {
+                    x = (int) (rect.x * ((double) image.getWidth() / 800));
+                    y = (int) (rect.y * ((double) image.getHeight() / 480));
+                    w = (int) (rect.width * ((double) image.getWidth() / 800));
+                    h = (int) (rect.height * ((double) image.getHeight() / 480));
+                }
                 writer.write(null, new IIOImage(image.getSubimage(x, y, w, h), null, null), iwp);
             } finally {
                 writer.dispose();
@@ -389,7 +414,7 @@ class ScreenCapture {
          * @param image 画像データ
          */
         void setImage(byte[] image) {
-            this.image = new SoftReference<byte[]>(image);
+            this.image = new SoftReference<>(image);
         }
 
         @Override

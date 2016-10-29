@@ -22,6 +22,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -98,17 +99,17 @@ public class CaptureController extends WindowController {
 
     @FXML
     void cutNone(ActionEvent event) {
-        this.sc.setCutRect(null);
+        this.sc.setCutRect(ScreenCapture.CutType.NONE.getAngle());
     }
 
     @FXML
     void cutUnit(ActionEvent event) {
-        this.sc.setCutRect(ScreenCapture.UNIT_RECT);
+        this.sc.setCutRect(ScreenCapture.CutType.UNIT.getAngle());
     }
 
     @FXML
     void cutUnitWithoutShip(ActionEvent event) {
-        this.sc.setCutRect(ScreenCapture.UNIT_WITHOUT_SHIP_RECT);
+        this.sc.setCutRect(ScreenCapture.CutType.UNIT_WITHOUT_SHIP.getAngle());
     }
 
     @FXML
@@ -218,6 +219,7 @@ public class CaptureController extends WindowController {
             Canvas canvas = new Canvas();
             canvas.widthProperty().bind(stage.widthProperty());
             canvas.heightProperty().bind(stage.heightProperty());
+            canvas.setCursor(Cursor.CROSSHAIR);
 
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.setStroke(Color.BLACK);
