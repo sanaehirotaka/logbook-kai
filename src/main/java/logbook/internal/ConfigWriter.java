@@ -3,7 +3,6 @@ package logbook.internal;
 import java.beans.ExceptionListener;
 import java.beans.XMLEncoder;
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,7 +49,7 @@ final class ConfigWriter {
                     encoder.writeObject(instance);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             this.getListener().exceptionThrown(e);
         }
     }

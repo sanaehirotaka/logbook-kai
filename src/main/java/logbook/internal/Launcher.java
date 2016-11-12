@@ -36,8 +36,9 @@ public final class Launcher {
      * アプリケーションの起動
      *
      * @param args アプリケーション引数
+     * @throws Exception
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Launcher launcher = new Launcher();
         try {
             launcher.initPlugin(args);
@@ -46,9 +47,13 @@ public final class Launcher {
             LoggerHolder.LOG.warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
         } finally {
             try {
-                launcher.exitLocal();
-            } finally {
-                launcher.exitPlugin();
+                try {
+                    launcher.exitLocal();
+                } finally {
+                    launcher.exitPlugin();
+                }
+            } catch (Exception | Error e) {
+                LoggerHolder.LOG.warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
             }
         }
     }
@@ -96,10 +101,16 @@ public final class Launcher {
      * アプリケーションの終了処理
      */
     void exitLocal() {
-        Config.getDefault().store();
-        ProxyServer.getInstance().interrupt();
-        ScheduledExecutorService executor = ThreadManager.getExecutorService();
-        executor.shutdownNow();
+        try {
+            Config.getDefault().store();
+        } finally {
+            try {
+                ProxyServer.getInstance().interrupt();
+            } finally {
+                ScheduledExecutorService executor = ThreadManager.getExecutorService();
+                executor.shutdownNow();
+            }
+        }
     }
 
     /**
