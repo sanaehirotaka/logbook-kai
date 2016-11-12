@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -201,7 +202,9 @@ public class ShipTablePane extends VBox {
             this.slotEx.setCellFactory(p -> new ItemImageCell());
 
             this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            this.table.setItems(this.shipItems);
+            SortedList<ShipItem> sortedList = new SortedList<>(this.shipItems);
+            this.table.setItems(sortedList);
+            sortedList.comparatorProperty().bind(this.table.comparatorProperty());
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             this.update();
 
