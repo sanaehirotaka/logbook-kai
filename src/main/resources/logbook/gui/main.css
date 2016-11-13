@@ -116,6 +116,9 @@ TabPane .value {
 .quest .name {
     -fx-font-size: 14pt;
 }
+.quest:hover .name {
+    -fx-font-size: 9pt;
+}
 .quest .progress {
     -fx-background-color: #007b43;
     -fx-text-fill: white;

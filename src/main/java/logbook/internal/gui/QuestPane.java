@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.PopOver;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,6 +25,8 @@ import logbook.bean.QuestList.Quest;
 public class QuestPane extends AnchorPane {
 
     private AppQuest quest;
+
+    private PopOver pop;
 
     @FXML
     private Label type;
@@ -107,6 +110,13 @@ public class QuestPane extends AnchorPane {
 
             this.name.setText(quest.getTitle());
 
+            // マウスオーバーでのポップアップ
+            this.setOnMouseEntered(e -> {
+                this.name.setText(this.quest.getQuest().getDetail());
+            });
+            this.setOnMouseExited(e -> {
+                this.name.setText(this.quest.getQuest().getTitle());
+            });
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
