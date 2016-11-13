@@ -43,6 +43,12 @@ public class Createship implements Serializable {
     /** 秘書艦 */
     private Ship secretary;
 
+    /** 空きドック */
+    private Integer emptyDock;
+
+    /** 建造ドック */
+    private Kdock kdock;
+
     /**
      * RequestMetaDataから{@link Createship}を構築します
      *

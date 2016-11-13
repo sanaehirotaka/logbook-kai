@@ -263,9 +263,12 @@ public class Ships {
      * @return 艦船
      */
     public static Optional<ShipMst> shipMst(Chara chara) {
-        ShipMst mst = ShipMstCollection.get()
-                .getShipMap()
-                .get(chara.getShipId());
+        ShipMst mst = null;
+        if (chara != null) {
+            mst = ShipMstCollection.get()
+                    .getShipMap()
+                    .get(chara.getShipId());
+        }
         return Optional.ofNullable(mst);
     }
 

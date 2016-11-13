@@ -43,8 +43,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
-import logbook.internal.LogWriter;
 import logbook.internal.Logs;
+import logbook.internal.log.LogWriter;
+import logbook.internal.log.MaterialLogFormat;
 
 /**
  * 資材ログ
@@ -225,7 +226,7 @@ public class ResourceChartController extends WindowController {
         this.yAxis.setForceZeroInRange(this.forceZero.isSelected());
 
         try {
-            Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL.getFileName());
+            Path logFile = Paths.get(AppConfig.get().getReportPath(), new MaterialLogFormat().fileName());
             List<ResourceLog> log;
             try (Stream<String> lines = Files.lines(logFile, LogWriter.DEFAULT_CHARSET)) {
                 log = lines.skip(1)
@@ -297,7 +298,7 @@ public class ResourceChartController extends WindowController {
      * 資材ログのテーブルを作成する
      */
     private void loadTable() {
-        Path logFile = Paths.get(AppConfig.get().getReportPath(), Logs.MATERIAL.getFileName());
+        Path logFile = Paths.get(AppConfig.get().getReportPath(), new MaterialLogFormat().fileName());
         Map<LocalDate, ResourceLog> logs;
         try {
             try (Stream<String> lines = Files.lines(logFile, LogWriter.DEFAULT_CHARSET)) {

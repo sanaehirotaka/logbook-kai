@@ -3,8 +3,8 @@ package logbook.api;
 import javax.json.JsonObject;
 
 import logbook.bean.MissionResult;
-import logbook.internal.LogWriter;
-import logbook.internal.Logs;
+import logbook.internal.log.LogWriter;
+import logbook.internal.log.MissionResultLogFormat;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -22,11 +22,8 @@ public class ApiReqMissionResult implements APIListenerSpi {
         if (data != null) {
             MissionResult result = MissionResult.toMissionResult(data);
 
-            new LogWriter()
-                    .header(Logs.MISSION_RESULT.getHeader())
-                    .file(Logs.MISSION_RESULT.getFileName())
-                    .alterFile(Logs.MISSION_RESULT.getAlterFileName())
-                    .write(result, Logs.MISSION_RESULT::format);
+            LogWriter.getInstance(MissionResultLogFormat::new)
+                    .write(result);
         }
     }
 

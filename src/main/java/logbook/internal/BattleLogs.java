@@ -36,6 +36,8 @@ import org.apache.logging.log4j.Logger;
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
 import logbook.internal.gui.BattleLogCollect;
+import logbook.internal.log.BattleResultLogFormat;
+import logbook.internal.log.LogWriter;
 
 /**
  * 戦闘ログに関するクラス
@@ -157,7 +159,7 @@ public class BattleLogs {
                 return null;
             };
             Path dir = Paths.get(AppConfig.get().getReportPath());
-            Path path = dir.resolve(Logs.BATTLE_RESULT.getFileName());
+            Path path = dir.resolve(new BattleResultLogFormat().fileName());
 
             // 今日
             ZonedDateTime now = unitToday();

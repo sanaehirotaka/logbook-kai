@@ -14,9 +14,10 @@ import logbook.bean.BattleResult;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.BattleLogs;
-import logbook.internal.LogWriter;
 import logbook.internal.Logs;
 import logbook.internal.PhaseState;
+import logbook.internal.log.BattleResultLogFormat;
+import logbook.internal.log.LogWriter;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -46,11 +47,8 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 // 戦闘ログの保存
                 BattleLogs.write(log);
 
-                new LogWriter()
-                        .header(Logs.BATTLE_RESULT.getHeader())
-                        .file(Logs.BATTLE_RESULT.getFileName())
-                        .alterFile(Logs.BATTLE_RESULT.getAlterFileName())
-                        .write(log, Logs.BATTLE_RESULT::format);
+                LogWriter.getInstance(BattleResultLogFormat::new)
+                        .write(log);
                 if (AppConfig.get().isApplyResult()) {
                     // 艦隊を更新
                     PhaseState p = new PhaseState(log);

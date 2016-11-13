@@ -10,8 +10,8 @@ import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.Material;
 import logbook.internal.JsonHelper;
-import logbook.internal.LogWriter;
-import logbook.internal.Logs;
+import logbook.internal.log.LogWriter;
+import logbook.internal.log.MaterialLogFormat;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -30,11 +30,8 @@ public class ApiGetMemberMaterial implements APIListenerSpi {
                     .getWroteMaterialLogLast());
             if (duration.compareTo(Duration.ofSeconds(AppConfig.get().getMaterialLogInterval())) >= 0) {
                 Map<Integer, Material> material = JsonHelper.toMap(array, Material::getId, Material::toMaterial);
-                new LogWriter()
-                        .header(Logs.MATERIAL.getHeader())
-                        .file(Logs.MATERIAL.getFileName())
-                        .alterFile(Logs.MATERIAL.getAlterFileName())
-                        .write(material, Logs.MATERIAL::format);
+                LogWriter.getInstance(MaterialLogFormat::new)
+                        .write(material);
                 AppCondition.get()
                         .setWroteMaterialLogLast(System.currentTimeMillis());
             }
