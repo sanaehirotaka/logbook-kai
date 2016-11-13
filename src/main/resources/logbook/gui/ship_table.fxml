@@ -1,17 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.ToggleSwitch?>
 
-<fx:root type="VBox" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="600.0" prefWidth="800.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.101" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox>
          <children>
+            <TitledPane animated="false" expanded="false" text="フィルター">
+               <content>
+                  <FlowPane>
+                     <children>
+                        <VBox prefWidth="400.0">
+                           <children>
+                              <FlowPane>
+                                 <children>
+                                    <ToggleSwitch fx:id="typeFilter" text="艦種" />
+                                 </children>
+                              </FlowPane>
+                              <FlowPane>
+                                 <children>
+                                    <CheckBox fx:id="destroyer" disable="true" mnemonicParsing="false" selected="true" text="駆逐艦" />
+                                    <CheckBox fx:id="lightCruiser" disable="true" mnemonicParsing="false" selected="true" text="軽巡洋艦" />
+                                    <CheckBox fx:id="torpedoCruiser" disable="true" mnemonicParsing="false" selected="true" text="重雷装巡洋艦" />
+                                    <CheckBox fx:id="heavyCruiser" disable="true" mnemonicParsing="false" selected="true" text="重巡洋艦" />
+                                    <CheckBox fx:id="flyingDeckCruiser" disable="true" mnemonicParsing="false" selected="true" text="航空巡洋艦" />
+                                    <CheckBox fx:id="seaplaneTender" disable="true" mnemonicParsing="false" selected="true" text="水上機母艦" />
+                                    <CheckBox fx:id="escortCarrier" disable="true" mnemonicParsing="false" selected="true" text="軽空母" />
+                                    <CheckBox fx:id="carrier" disable="true" mnemonicParsing="false" selected="true" text="正規空母" />
+                                    <CheckBox fx:id="armoredcarrier" disable="true" mnemonicParsing="false" selected="true" text="装甲空母" />
+                                    <CheckBox fx:id="battleship" disable="true" mnemonicParsing="false" selected="true" text="戦艦" />
+                                    <CheckBox fx:id="flyingDeckBattleship" disable="true" mnemonicParsing="false" selected="true" text="航空戦艦" />
+                                    <CheckBox fx:id="submarine" disable="true" mnemonicParsing="false" selected="true" text="潜水艦" />
+                                    <CheckBox fx:id="carrierSubmarine" disable="true" mnemonicParsing="false" selected="true" text="潜水空母" />
+                                    <CheckBox fx:id="landingship" disable="true" mnemonicParsing="false" selected="true" text="揚陸艦" />
+                                    <CheckBox fx:id="repairship" disable="true" mnemonicParsing="false" selected="true" text="工作艦" />
+                                    <CheckBox fx:id="submarineTender" disable="true" mnemonicParsing="false" selected="true" text="潜水母艦" />
+                                    <CheckBox fx:id="trainingShip" disable="true" mnemonicParsing="false" selected="true" text="練習巡洋艦" />
+                                    <CheckBox fx:id="supply" disable="true" mnemonicParsing="false" selected="true" text="補給艦" />
+                                    <CheckBox fx:id="allTypes" disable="true" mnemonicParsing="false" onAction="#allTypeAction" selected="true" text="すべて" />
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </VBox>
+                        <VBox prefWidth="130.0">
+                           <children>
+                              <FlowPane>
+                                 <children>
+                                    <ToggleSwitch fx:id="condFilter" text="コンディション" />
+                                 </children>
+                              </FlowPane>
+                              <FlowPane>
+                                 <children>
+                                    <TextField fx:id="conditionValue" disable="true" prefWidth="70.0" text="53" />
+                                    <ChoiceBox fx:id="conditionType" disable="true" />
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </VBox>
+                        <VBox prefWidth="130.0">
+                           <children>
+                              <FlowPane>
+                                 <children>
+                                    <ToggleSwitch fx:id="levelFilter" text="レベル" />
+                                 </children>
+                              </FlowPane>
+                              <FlowPane>
+                                 <children>
+                                    <TextField fx:id="levelValue" disable="true" prefWidth="70.0" text="98" />
+                                    <ChoiceBox fx:id="levelType" disable="true" />
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </VBox>
+                     </children>
+                  </FlowPane>
+               </content>
+            </TitledPane>
             <Label fx:id="message" styleClass="message" />
          </children>
       </VBox>
-      <TableView fx:id="table" prefHeight="600.0" prefWidth="800.0" VBox.vgrow="ALWAYS">
+      <TableView fx:id="table" cacheShape="false" VBox.vgrow="ALWAYS">
         <columns>
           <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
           <TableColumn fx:id="ship" prefWidth="260.0" text="艦娘" />

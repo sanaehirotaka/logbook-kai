@@ -15,8 +15,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import logbook.internal.log.LogWriter;
 import javafx.stage.Window;
-import logbook.internal.LogWriter;
 
 /**
  * TableViewに関係するメソッドを集めたクラス

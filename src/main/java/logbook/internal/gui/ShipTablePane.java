@@ -2,30 +2,44 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.ToggleSwitch;
+import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
+import org.controlsfx.control.textfield.TextFields;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 import logbook.Messages;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
@@ -36,6 +50,8 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
+import logbook.internal.Operator;
+import logbook.internal.ShipFilter;
 import logbook.internal.Ships;
 
 /**
@@ -43,6 +59,110 @@ import logbook.internal.Ships;
  *
  */
 public class ShipTablePane extends VBox {
+
+    /** 艦種 */
+    @FXML
+    private ToggleSwitch typeFilter;
+
+    /** 駆逐艦 */
+    @FXML
+    private CheckBox destroyer;
+
+    /** 軽巡洋艦 */
+    @FXML
+    private CheckBox lightCruiser;
+
+    /** 重雷装巡洋艦 */
+    @FXML
+    private CheckBox torpedoCruiser;
+
+    /** 重巡洋艦 */
+    @FXML
+    private CheckBox heavyCruiser;
+
+    /** 航空巡洋艦 */
+    @FXML
+    private CheckBox flyingDeckCruiser;
+
+    /** 水上機母艦 */
+    @FXML
+    private CheckBox seaplaneTender;
+
+    /** 軽空母 */
+    @FXML
+    private CheckBox escortCarrier;
+
+    /** 正規空母 */
+    @FXML
+    private CheckBox carrier;
+
+    /** 装甲空母 */
+    @FXML
+    private CheckBox armoredcarrier;
+
+    /** 戦艦 */
+    @FXML
+    private CheckBox battleship;
+
+    /** 航空戦艦 */
+    @FXML
+    private CheckBox flyingDeckBattleship;
+
+    /** 潜水艦 */
+    @FXML
+    private CheckBox submarine;
+
+    /** 潜水空母 */
+    @FXML
+    private CheckBox carrierSubmarine;
+
+    /** 揚陸艦 */
+    @FXML
+    private CheckBox landingship;
+
+    /** 工作艦 */
+    @FXML
+    private CheckBox repairship;
+
+    /** 潜水母艦 */
+    @FXML
+    private CheckBox submarineTender;
+
+    /** 練習巡洋艦 */
+    @FXML
+    private CheckBox trainingShip;
+
+    /** 補給艦 */
+    @FXML
+    private CheckBox supply;
+
+    /** すべて */
+    @FXML
+    private CheckBox allTypes;
+
+    /** コンディション */
+    @FXML
+    private ToggleSwitch condFilter;
+
+    /** コンディション */
+    @FXML
+    private TextField conditionValue;
+
+    /** コンディション条件 */
+    @FXML
+    private ChoiceBox<Operator> conditionType;
+
+    /**　レベル */
+    @FXML
+    private ToggleSwitch levelFilter;
+
+    /**　レベル */
+    @FXML
+    private TextField levelValue;
+
+    /**　レベル条件 */
+    @FXML
+    private ChoiceBox<Operator> levelType;
 
     /** メッセージ */
     @FXML
@@ -126,6 +246,12 @@ public class ShipTablePane extends VBox {
     /** 艦娘達 */
     private final ObservableList<ShipItem> shipItems = FXCollections.observableArrayList();
 
+    /** フィルター */
+    private final FilteredList<ShipItem> filteredShipItems = new FilteredList<>(this.shipItems);
+
+    /** フィルターの更新停止 */
+    private boolean disableFilterUpdate;
+
     /** 艦娘一覧のハッシュ・コード */
     private int shipsHashCode;
 
@@ -175,6 +301,77 @@ public class ShipTablePane extends VBox {
     @FXML
     void initialize() {
         try {
+            // フィルター 初期値
+            this.conditionType.setItems(FXCollections.observableArrayList(Operator.values()));
+            this.conditionType.getSelectionModel().select(Operator.GE);
+            this.levelType.setItems(FXCollections.observableArrayList(Operator.values()));
+            this.levelType.getSelectionModel().select(Operator.GE);
+            // フィルターのバインド
+            this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.destroyer.setDisable(!nv);
+                this.lightCruiser.setDisable(!nv);
+                this.torpedoCruiser.setDisable(!nv);
+                this.heavyCruiser.setDisable(!nv);
+                this.flyingDeckCruiser.setDisable(!nv);
+                this.seaplaneTender.setDisable(!nv);
+                this.escortCarrier.setDisable(!nv);
+                this.carrier.setDisable(!nv);
+                this.armoredcarrier.setDisable(!nv);
+                this.battleship.setDisable(!nv);
+                this.flyingDeckBattleship.setDisable(!nv);
+                this.submarine.setDisable(!nv);
+                this.carrierSubmarine.setDisable(!nv);
+                this.landingship.setDisable(!nv);
+                this.repairship.setDisable(!nv);
+                this.submarineTender.setDisable(!nv);
+                this.trainingShip.setDisable(!nv);
+                this.supply.setDisable(!nv);
+                this.allTypes.setDisable(!nv);
+            });
+            this.condFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.conditionValue.setDisable(!nv);
+                this.conditionType.setDisable(!nv);
+            });
+            this.levelFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.levelValue.setDisable(!nv);
+                this.levelType.setDisable(!nv);
+            });
+
+            this.typeFilter.selectedProperty().addListener(this::filterAction);
+            this.destroyer.selectedProperty().addListener(this::filterAction);
+            this.lightCruiser.selectedProperty().addListener(this::filterAction);
+            this.torpedoCruiser.selectedProperty().addListener(this::filterAction);
+            this.heavyCruiser.selectedProperty().addListener(this::filterAction);
+            this.flyingDeckCruiser.selectedProperty().addListener(this::filterAction);
+            this.seaplaneTender.selectedProperty().addListener(this::filterAction);
+            this.escortCarrier.selectedProperty().addListener(this::filterAction);
+            this.carrier.selectedProperty().addListener(this::filterAction);
+            this.armoredcarrier.selectedProperty().addListener(this::filterAction);
+            this.battleship.selectedProperty().addListener(this::filterAction);
+            this.flyingDeckBattleship.selectedProperty().addListener(this::filterAction);
+            this.submarine.selectedProperty().addListener(this::filterAction);
+            this.carrierSubmarine.selectedProperty().addListener(this::filterAction);
+            this.landingship.selectedProperty().addListener(this::filterAction);
+            this.repairship.selectedProperty().addListener(this::filterAction);
+            this.submarineTender.selectedProperty().addListener(this::filterAction);
+            this.trainingShip.selectedProperty().addListener(this::filterAction);
+            this.supply.selectedProperty().addListener(this::filterAction);
+            this.condFilter.selectedProperty().addListener(this::filterAction);
+            this.conditionValue.textProperty().addListener(this::filterAction);
+            this.conditionType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+            this.levelFilter.selectedProperty().addListener(this::filterAction);
+            this.levelValue.textProperty().addListener(this::filterAction);
+            this.levelType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+
+            this.conditionValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+            TextFields.bindAutoCompletion(this.conditionValue, new SuggestSupport("53", "50", "49", "33", "30", "20"));
+            this.conditionValue.setText("53");
+
+            this.levelValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
+            TextFields.bindAutoCompletion(this.levelValue,
+                    new SuggestSupport("100", "99", "90", "80", "75", "70", "65", "60", "55", "50", "40", "30", "20"));
+            this.levelValue.setText("98");
+
             // カラムとオブジェクトのバインド
             this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
             this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
@@ -202,7 +399,7 @@ public class ShipTablePane extends VBox {
             this.slotEx.setCellFactory(p -> new ItemImageCell());
 
             this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            SortedList<ShipItem> sortedList = new SortedList<>(this.shipItems);
+            SortedList<ShipItem> sortedList = new SortedList<>(this.filteredShipItems);
             this.table.setItems(sortedList);
             sortedList.comparatorProperty().bind(this.table.comparatorProperty());
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
@@ -241,6 +438,34 @@ public class ShipTablePane extends VBox {
     }
 
     /**
+     * 艦種:すべて
+     */
+    @FXML
+    void allTypeAction() {
+        this.disableFilterUpdate = true;
+        boolean selected = this.allTypes.isSelected();
+        this.destroyer.setSelected(selected);
+        this.lightCruiser.setSelected(selected);
+        this.torpedoCruiser.setSelected(selected);
+        this.heavyCruiser.setSelected(selected);
+        this.flyingDeckCruiser.setSelected(selected);
+        this.seaplaneTender.setSelected(selected);
+        this.escortCarrier.setSelected(selected);
+        this.carrier.setSelected(selected);
+        this.armoredcarrier.setSelected(selected);
+        this.battleship.setSelected(selected);
+        this.flyingDeckBattleship.setSelected(selected);
+        this.submarine.setSelected(selected);
+        this.carrierSubmarine.setSelected(selected);
+        this.landingship.setSelected(selected);
+        this.repairship.setSelected(selected);
+        this.submarineTender.setSelected(selected);
+        this.trainingShip.setSelected(selected);
+        this.disableFilterUpdate = false;
+        this.supply.setSelected(selected);
+    }
+
+    /**
      * クリップボードにコピー
      */
     @FXML
@@ -269,6 +494,62 @@ public class ShipTablePane extends VBox {
     }
 
     /**
+     * フィルターを設定する
+     */
+    private void filterAction(ObservableValue<?> observable, Object oldValue, Object newValue) {
+        if (!this.disableFilterUpdate) {
+            ShipFilter filter = this.createFilter();
+            this.filteredShipItems.setPredicate(filter);
+        }
+    }
+
+    /**
+     * 艦娘フィルターを作成する
+     * @return　艦娘フィルター
+     */
+    private ShipFilter createFilter() {
+        Set<String> types = Arrays.asList(
+                this.destroyer,
+                this.lightCruiser,
+                this.torpedoCruiser,
+                this.heavyCruiser,
+                this.flyingDeckCruiser,
+                this.seaplaneTender,
+                this.escortCarrier,
+                this.carrier,
+                this.armoredcarrier,
+                this.battleship,
+                this.flyingDeckBattleship,
+                this.submarine,
+                this.carrierSubmarine,
+                this.landingship,
+                this.repairship,
+                this.submarineTender,
+                this.trainingShip,
+                this.supply)
+                .stream()
+                .filter(CheckBox::isSelected)
+                .map(CheckBox::getText)
+                .collect(Collectors.toSet());
+
+        int condition = Integer.parseInt(this.conditionValue.getText().isEmpty() ? "0"
+                : this.conditionValue.getText());
+        int level = Integer.parseInt(this.levelValue.getText().isEmpty() ? "0"
+                : this.levelValue.getText());
+
+        return ShipFilter.DefaultFilter.builder()
+                .typeFilter(this.typeFilter.isSelected())
+                .types(types)
+                .condFilter(this.condFilter.isSelected())
+                .conditionValue(condition)
+                .conditionType(this.conditionType.getValue())
+                .levelFilter(this.levelFilter.isSelected())
+                .levelValue(level)
+                .levelType(this.levelType.getValue())
+                .build();
+    }
+
+    /**
      * 艦娘画像のセル
      *
      */
@@ -285,6 +566,31 @@ public class ShipTablePane extends VBox {
             } else {
                 this.setGraphic(null);
                 this.setText(null);
+            }
+        }
+    }
+
+    /**
+     * サジェスト対応
+     *
+     */
+    private static class SuggestSupport implements Callback<ISuggestionRequest, Collection<String>> {
+
+        private List<String> values;
+
+        public SuggestSupport(String... values) {
+            this.values = Arrays.asList(values);
+        }
+
+        @Override
+        public Collection<String> call(ISuggestionRequest param) {
+            String text = param.getUserText();
+            if (text.isEmpty()) {
+                return this.values;
+            } else {
+                return this.values.stream()
+                        .filter(v -> v.startsWith(text))
+                        .collect(Collectors.toList());
             }
         }
     }
