@@ -7,7 +7,6 @@ import java.net.URLEncoder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.PopOver;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,8 +24,6 @@ import logbook.bean.QuestList.Quest;
 public class QuestPane extends AnchorPane {
 
     private AppQuest quest;
-
-    private PopOver pop;
 
     @FXML
     private Label type;
