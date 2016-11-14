@@ -1,19 +1,16 @@
 package logbook.proxy;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.Cookie;
-
 /**
  * リクエストに含まれている情報を ContentListener に提供するオブジェクト
  *
  */
-public interface RequestMetaData extends Serializable {
+public interface RequestMetaData {
 
     /**
      * リクエストに含まれるメッセージボディの MIME タイプを返します
@@ -22,15 +19,10 @@ public interface RequestMetaData extends Serializable {
     String getContentType();
 
     /**
-     * このリクエストと一緒にクライアントから送られてきた全ての Cookie オブジェクトのコレクションを返します
-     * @return クライアントから送られてきた Cookie のコレクション。 リクエストに Cookie が付加されていない場合は 空のコレクション
-     */
-    Collection<Cookie> getCookies();
-
-    /**
      * リクエストヘッダを返します
      * @return リクエストヘッダのMap
      */
+    @Deprecated
     Map<String, Collection<String>> getHeaders();
 
     /**
@@ -49,6 +41,7 @@ public interface RequestMetaData extends Serializable {
      * リクエストのプロトコル名とバージョンを返します
      * @return リクエストのプロトコル名とバージョン
      */
+    @Deprecated
     String getProtocol();
 
     /**
@@ -61,12 +54,14 @@ public interface RequestMetaData extends Serializable {
      * リクエストを送ってきたクライアントまたは最後のプロキシの IP アドレスを返します
      * @return リクエストを送ってきたクライアントの IP アドレス
      */
+    @Deprecated
     String getRemoteAddr();
 
     /**
      * リクエストを送ったクライアントまたは最後のプロキシの送信元 IP ポートを返します
      * @return リクエストを送ってきたクライアントの IP ポート
      */
+    @Deprecated
     int getRemotePort();
 
     /**
@@ -79,24 +74,28 @@ public interface RequestMetaData extends Serializable {
      * クライアントがこのリクエストを生成するのに使ったURLを返します
      * @return URL
      */
+    @Deprecated
     String getRequestURL();
 
     /**
      * リクエストのスキーム名を返します
      * @return リクエストのスキーム名
      */
+    @Deprecated
     String getScheme();
 
     /**
      * リクエストが送られたサーバのホスト名を返します
      * @return リクエストが送られたサーバのホスト名
      */
+    @Deprecated
     String getServerName();
 
     /**
      * リクエストが送られたサーバのポート番号を返します
      * @return リクエストが送られたサーバのポート番号
      */
+    @Deprecated
     int getServerPort();
 
     /**

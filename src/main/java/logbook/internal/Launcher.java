@@ -24,7 +24,7 @@ import logbook.bean.AppConfig;
 import logbook.internal.gui.Main;
 import logbook.plugin.JarBasedPlugin;
 import logbook.plugin.PluginContainer;
-import logbook.proxy.ProxyServer;
+import logbook.proxy.NettyProxyServer;
 
 /**
  * アプリケーション
@@ -105,7 +105,7 @@ public final class Launcher {
             Config.getDefault().store();
         } finally {
             try {
-                ProxyServer.getInstance().interrupt();
+                NettyProxyServer.getInstance().interrupt();
             } finally {
                 ScheduledExecutorService executor = ThreadManager.getExecutorService();
                 executor.shutdownNow();

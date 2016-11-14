@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.Notifications;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
@@ -56,7 +57,7 @@ import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
 import logbook.plugin.gui.MainExtMenu;
 import logbook.plugin.gui.Plugin;
-import logbook.proxy.ProxyServer;
+import logbook.proxy.NettyProxyServer;
 
 /**
  * UIコントローラー
@@ -128,7 +129,7 @@ public class MainController extends WindowController {
     void initialize() {
         try {
             // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
-            ProxyServer.getInstance().start();
+            NettyProxyServer.getInstance().start();
             // アップデートチェック
             if (AppConfig.get().isCheckUpdate()) {
                 ThreadManager.getExecutorService().execute(new CheckUpdate());
@@ -146,7 +147,7 @@ public class MainController extends WindowController {
                     .forEach(this.ext.getItems()::add);
 
             Timeline timeline = new Timeline();
-            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.setCycleCount(Animation.INDEFINITE);
             timeline.getKeyFrames().add(new KeyFrame(
                     javafx.util.Duration.seconds(1),
                     this::update));
