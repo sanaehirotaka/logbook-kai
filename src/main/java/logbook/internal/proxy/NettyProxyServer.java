@@ -1,4 +1,4 @@
-package logbook.proxy;
+package logbook.internal.proxy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -56,14 +56,12 @@ import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.internal.ThreadManager;
 import logbook.plugin.PluginServices;
+import logbook.proxy.ContentListenerSpi;
+import logbook.proxy.ProxyServerSpi;
+import logbook.proxy.RequestMetaData;
+import logbook.proxy.ResponseMetaData;
 
-public class NettyProxyServer extends Thread {
-
-    private static final NettyProxyServer SERVER = new NettyProxyServer();
-
-    public NettyProxyServer() {
-        this.setDaemon(true);
-    }
+public class NettyProxyServer implements ProxyServerSpi {
 
     @Override
     public void run() {
@@ -102,7 +100,7 @@ public class NettyProxyServer extends Thread {
             }
             HttpProxyServer server = serverBuilder.start();
             try {
-                this.join();
+                Thread.currentThread().join();
             } catch (InterruptedException ex) {
                 server.abort();
             }
@@ -139,14 +137,6 @@ public class NettyProxyServer extends Thread {
         };
 
         Platform.runLater(runnable);
-    }
-
-    /**
-     * リバースプロキシ を取得します
-     * @return リバースプロキシ スレッドインスタンス
-     */
-    public static NettyProxyServer getInstance() {
-        return SERVER;
     }
 
     static class Interceptor {

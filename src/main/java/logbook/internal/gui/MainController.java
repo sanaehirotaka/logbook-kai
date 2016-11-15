@@ -53,11 +53,11 @@ import logbook.internal.Audios;
 import logbook.internal.CheckUpdate;
 import logbook.internal.Ships;
 import logbook.internal.ThreadManager;
+import logbook.internal.proxy.ProxyHolder;
 import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
 import logbook.plugin.gui.MainExtMenu;
 import logbook.plugin.gui.Plugin;
-import logbook.proxy.NettyProxyServer;
 
 /**
  * UIコントローラー
@@ -129,7 +129,7 @@ public class MainController extends WindowController {
     void initialize() {
         try {
             // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
-            NettyProxyServer.getInstance().start();
+            ProxyHolder.getInstance().start();
             // アップデートチェック
             if (AppConfig.get().isCheckUpdate()) {
                 ThreadManager.getExecutorService().execute(new CheckUpdate());

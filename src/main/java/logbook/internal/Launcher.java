@@ -22,9 +22,9 @@ import org.apache.logging.log4j.Logger;
 import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.internal.gui.Main;
+import logbook.internal.proxy.ProxyHolder;
 import logbook.plugin.JarBasedPlugin;
 import logbook.plugin.PluginContainer;
-import logbook.proxy.NettyProxyServer;
 
 /**
  * アプリケーション
@@ -105,7 +105,7 @@ public final class Launcher {
             Config.getDefault().store();
         } finally {
             try {
-                NettyProxyServer.getInstance().interrupt();
+                ProxyHolder.getInstance().interrupt();
             } finally {
                 ScheduledExecutorService executor = ThreadManager.getExecutorService();
                 executor.shutdownNow();
