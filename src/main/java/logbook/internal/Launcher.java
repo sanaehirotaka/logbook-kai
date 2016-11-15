@@ -102,10 +102,10 @@ public final class Launcher {
      */
     void exitLocal() {
         try {
-            Config.getDefault().store();
+            ProxyHolder.getInstance().interrupt();
         } finally {
+            Config.getDefault().store();
             try {
-                ProxyHolder.getInstance().interrupt();
             } finally {
                 ScheduledExecutorService executor = ThreadManager.getExecutorService();
                 executor.shutdownNow();
