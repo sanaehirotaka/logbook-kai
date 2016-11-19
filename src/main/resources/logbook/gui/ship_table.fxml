@@ -53,7 +53,7 @@
                               </FlowPane>
                            </children>
                         </VBox>
-                        <VBox prefWidth="130.0">
+                        <VBox prefWidth="125.0">
                            <children>
                               <FlowPane>
                                  <children>
@@ -68,7 +68,7 @@
                               </FlowPane>
                            </children>
                         </VBox>
-                        <VBox prefWidth="130.0">
+                        <VBox prefWidth="125.0">
                            <children>
                               <FlowPane>
                                  <children>
@@ -79,6 +79,20 @@
                                  <children>
                                     <TextField fx:id="levelValue" disable="true" prefWidth="70.0" text="98" />
                                     <ChoiceBox fx:id="levelType" disable="true" />
+                                 </children>
+                              </FlowPane>
+                           </children>
+                        </VBox>
+                        <VBox prefWidth="100.0">
+                           <children>
+                              <FlowPane>
+                                 <children>
+                                    <ToggleSwitch fx:id="seaAreaFilter" text="海域" />
+                                 </children>
+                              </FlowPane>
+                              <FlowPane>
+                                 <children>
+                                    <ChoiceBox fx:id="seaArea" disable="true" />
                                  </children>
                               </FlowPane>
                            </children>

@@ -51,6 +51,7 @@ import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
 import logbook.internal.Operator;
+import logbook.internal.SeaArea;
 import logbook.internal.ShipFilter;
 import logbook.internal.Ships;
 
@@ -163,6 +164,14 @@ public class ShipTablePane extends VBox {
     /**　レベル条件 */
     @FXML
     private ChoiceBox<Operator> levelType;
+
+    /** 海域 */
+    @FXML
+    private ToggleSwitch seaAreaFilter;
+
+    /** 海域条件 */
+    @FXML
+    private ChoiceBox<SeaArea> seaArea;
 
     /** メッセージ */
     @FXML
@@ -306,6 +315,9 @@ public class ShipTablePane extends VBox {
             this.conditionType.getSelectionModel().select(Operator.GE);
             this.levelType.setItems(FXCollections.observableArrayList(Operator.values()));
             this.levelType.getSelectionModel().select(Operator.GE);
+            this.seaArea.setItems(FXCollections.observableArrayList(
+                    Arrays.stream(SeaArea.values()).filter(e -> e.getArea() > 0).collect(Collectors.toList())));
+
             // フィルターのバインド
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.destroyer.setDisable(!nv);
@@ -336,6 +348,9 @@ public class ShipTablePane extends VBox {
                 this.levelValue.setDisable(!nv);
                 this.levelType.setDisable(!nv);
             });
+            this.seaAreaFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.seaArea.setDisable(!nv);
+            });
 
             this.typeFilter.selectedProperty().addListener(this::filterAction);
             this.destroyer.selectedProperty().addListener(this::filterAction);
@@ -362,6 +377,8 @@ public class ShipTablePane extends VBox {
             this.levelFilter.selectedProperty().addListener(this::filterAction);
             this.levelValue.textProperty().addListener(this::filterAction);
             this.levelType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+            this.seaAreaFilter.selectedProperty().addListener(this::filterAction);
+            this.seaArea.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
 
             this.conditionValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
             TextFields.bindAutoCompletion(this.conditionValue, new SuggestSupport("53", "50", "49", "33", "30", "20"));
@@ -546,6 +563,8 @@ public class ShipTablePane extends VBox {
                 .levelFilter(this.levelFilter.isSelected())
                 .levelValue(level)
                 .levelType(this.levelType.getValue())
+                .seaAreaFilter(this.seaAreaFilter.isSelected())
+                .seaArea(this.seaArea.getValue() == null ? "" : this.seaArea.getValue().toString())
                 .build();
     }
 
