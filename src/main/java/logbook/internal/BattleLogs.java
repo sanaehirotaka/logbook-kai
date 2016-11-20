@@ -169,6 +169,7 @@ public class BattleLogs {
             if (Files.exists(path)) {
                 List<SimpleBattleLog> all = Files.lines(path, LogWriter.DEFAULT_CHARSET)
                         .skip(1)
+                        .filter(l -> !l.isEmpty())
                         .map(mapper)
                         .filter(Objects::nonNull)
                         .filter(log -> log.getDate().compareTo(limit) > 0)
