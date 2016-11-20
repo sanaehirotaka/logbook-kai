@@ -67,11 +67,10 @@ public class PhaseState {
      */
     public PhaseState(CombinedType combinedType, IBattle b, Map<Integer, List<Ship>> deckMap) {
         // 連合艦隊
-        if (b instanceof ICombinedBattle) {
-            this.combinedType = combinedType;
-        }
+        this.combinedType = combinedType;
         // 味方
-        if (b instanceof ICombinedBattle) {
+        if (b instanceof ICombinedBattle
+                || (b instanceof ICombinedEcMidnightBattle && this.combinedType != CombinedType.未結成)) {
             for (Ship ship : deckMap.get(1)) {
                 this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
             }
@@ -186,12 +185,12 @@ public class PhaseState {
             if (air != null) {
                 Stage3 stage3 = air.getStage3();
                 if (stage3 != null) {
-                    this.applyEnemyDamage(stage3.getEdam(), this.afterEnemy);
+                    this.applyEnemyDamage(stage3.getEdam());
                 }
             }
             SupportHourai hou = support.getSupportHourai();
             if (hou != null) {
-                this.applyEnemyDamage(hou.getDamage(), this.afterEnemy);
+                this.applyEnemyDamage(hou.getDamage());
             }
         }
     }
@@ -206,7 +205,6 @@ public class PhaseState {
         // 開幕雷撃
         this.applyRaigeki(battle.getOpeningAtack());
         if (battle instanceof ICombinedEcBattle) {
-            // 連合艦隊(敵)
             // 1巡目
             this.applyHougeki(battle.getHougeki1());
             // 雷撃
@@ -355,7 +353,10 @@ public class PhaseState {
             return;
         }
 
-        if (this.combinedType != CombinedType.未結成) {
+        if (raigeki.getFdam().size() > 12) {
+            // 新API
+            this.applyFriendDamage(raigeki.getFdam());
+        } else if (this.combinedType != CombinedType.未結成) {
             // 連合艦隊の場合、第2艦隊にダメージを適用
             this.applyFriendDamage(raigeki.getFdam(), this.afterFriendCombined);
         } else {
@@ -449,6 +450,27 @@ public class PhaseState {
     }
 
     /**
+     * ダメージを適用します(敵第1艦隊(+第2艦隊)固定の場合に使用)
+     * @param damage ダメージ(one-based)
+     */
+    private void applyFriendDamage(List<Double> damages) {
+        for (int i = 1, s = damages.size(); i < s; i++) {
+            int damage = damages.get(i).intValue();
+            if (damage != 0) {
+                Ship ship;
+                if (i <= 6) {
+                    ship = this.afterFriend.get(i - 1);
+                } else {
+                    ship = this.afterFriendCombined.get(i - (6 + 1));
+                }
+                if (ship != null) {
+                    ship.setNowhp(ship.getNowhp() - damage);
+                }
+            }
+        }
+    }
+
+    /**
      * ダメージを適用します
      * @param damage ダメージ(one-based)
      * @param friend 味方
@@ -526,31 +548,37 @@ public class PhaseState {
                 }
             }
         }
-        if (b instanceof ICombinedBattle) {
-            ICombinedBattle cb = (ICombinedBattle) b;
-            for (int i = 1, s = 6 + 1; i < s; i++) {
-                int idx = i - 1;
-                if (cb.getMaxhpsCombined().get(i) == -1) {
+        if (b instanceof ICombinedBattle || b instanceof ICombinedEcBattle) {
+            List<Integer> maxHps;
+            List<Integer> nowHps;
+
+            if (b instanceof ICombinedBattle) {
+                maxHps = ((ICombinedBattle) b).getMaxhpsCombined();
+                nowHps = ((ICombinedBattle) b).getNowhpsCombined();
+            } else {
+                maxHps = ((ICombinedEcBattle) b).getMaxhpsCombined();
+                nowHps = ((ICombinedEcBattle) b).getNowhpsCombined();
+            }
+
+            for (int i = 1, s = maxHps.size(); i < s; i++) {
+                int idx;
+                if (maxHps.get(i) == -1) {
                     continue;
                 }
-                if (this.afterFriendCombined.get(idx) != null) {
-                    this.afterFriendCombined.get(idx).setMaxhp(cb.getMaxhpsCombined().get(i));
-                    this.afterFriendCombined.get(idx).setNowhp(cb.getNowhpsCombined().get(i));
+                Chara chara;
+                if (i <= 6) {
+                    idx = i - 1;
+                    chara = this.afterFriendCombined.get(idx);
+                } else {
+                    idx = i - (6 + 1);
+                    chara = this.afterEnemyCombined.get(idx);
+                }
+                if (chara != null) {
+                    chara.setMaxhp(maxHps.get(i));
+                    chara.setNowhp(nowHps.get(i));
                 }
             }
         }
-        if (b instanceof ICombinedEcBattle) {
-            ICombinedEcBattle ecb = (ICombinedEcBattle) b;
-            for (int i = 6 + 1, s = 12 + 1; i < s; i++) {
-                int idx = i - (6 + 1);
-                if (ecb.getMaxhpsCombined().get(i) == -1) {
-                    continue;
-                }
-                if (this.afterEnemyCombined.get(idx) != null) {
-                    this.afterEnemyCombined.get(idx).setMaxhp(ecb.getMaxhpsCombined().get(i));
-                    this.afterEnemyCombined.get(idx).setNowhp(ecb.getNowhpsCombined().get(i));
-                }
-            }
-        }
+
     }
 }
