@@ -569,11 +569,10 @@ public class PhaseState {
                 if (i <= 6) {
                     idx = i - 1;
                     chara = this.afterFriendCombined.get(idx);
+                    chara.setNowhp(nowHps.get(i));
                 } else {
                     idx = i - (6 + 1);
                     chara = this.afterEnemyCombined.get(idx);
-                }
-                if (chara != null) {
                     chara.setMaxhp(maxHps.get(i));
                     chara.setNowhp(nowHps.get(i));
                 }
