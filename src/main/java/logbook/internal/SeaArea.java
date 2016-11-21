@@ -39,7 +39,8 @@ public enum SeaArea {
 
     輸送部隊(null, "輸送部隊", -1, 1),
     迎撃部隊(null, "迎撃部隊", -1, 2),
-    連合艦隊(null, "連合艦隊", -1, 3);
+    増派部隊(null, "増派部隊", -1, 3),
+    決戦部隊(null, "決戦部隊", -1, 4);
 
     /** 短い名前 */
     private String shortName;
@@ -122,7 +123,9 @@ public enum SeaArea {
         case 2:
             return SeaArea.迎撃部隊;
         case 3:
-            return SeaArea.連合艦隊;
+            return SeaArea.増派部隊;
+        case 4:
+            return SeaArea.決戦部隊;
         default:
             return null;
         }
