@@ -45,7 +45,7 @@ public final class Version implements Comparable<Version>, Serializable {
      */
     public Version(String version) {
         int major = 0, minor = 0, revision = 0;
-        Iterator<String> ite = Arrays.asList(version.split("\\.")).iterator(); //$NON-NLS-1$
+        Iterator<String> ite = Arrays.asList(version.trim().split("\\.")).iterator(); //$NON-NLS-1$
         if (ite.hasNext()) {
             major = Integer.parseInt(ite.next());
         }
