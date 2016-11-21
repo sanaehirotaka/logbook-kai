@@ -560,21 +560,25 @@ public class PhaseState {
                 nowHps = ((ICombinedEcBattle) b).getNowhpsCombined();
             }
 
-            for (int i = 1, s = maxHps.size(); i < s; i++) {
+            for (int i = 1, s = nowHps.size(); i < s; i++) {
                 int idx;
-                if (maxHps.get(i) == -1) {
+                if (nowHps.get(i) == -1) {
                     continue;
                 }
                 Chara chara;
                 if (i <= 6) {
                     idx = i - 1;
                     chara = this.afterFriendCombined.get(idx);
-                    chara.setNowhp(nowHps.get(i));
+                    if (chara != null) {
+                        chara.setNowhp(nowHps.get(i));
+                    }
                 } else {
                     idx = i - (6 + 1);
                     chara = this.afterEnemyCombined.get(idx);
-                    chara.setMaxhp(maxHps.get(i));
-                    chara.setNowhp(nowHps.get(i));
+                    if (chara != null) {
+                        chara.setMaxhp(maxHps.get(i));
+                        chara.setNowhp(nowHps.get(i));
+                    }
                 }
             }
         }
