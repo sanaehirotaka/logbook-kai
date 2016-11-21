@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -149,7 +150,7 @@ public class CaptureController extends WindowController {
                 this.capture.setText("開始");
             } else {
                 // キャプチャ中で無ければ開始する
-                this.timeline.setCycleCount(Timeline.INDEFINITE);
+                this.timeline.setCycleCount(Animation.INDEFINITE);
                 this.timeline.getKeyFrames().clear();
                 this.timeline.getKeyFrames()
                         .add(new KeyFrame(javafx.util.Duration.millis(100),
@@ -249,7 +250,7 @@ public class CaptureController extends WindowController {
                 if (!this.start.equals(this.end)) {
 
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.initOwner(this.getWindow());
+                    alert.initOwner(stage);
                     alert.setTitle("矩形選択");
                     alert.setHeaderText("");
                     alert.setContentText("この範囲でよろしいですか？");
@@ -275,11 +276,9 @@ public class CaptureController extends WindowController {
                 }
                 gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             });
-
             root.getChildren().addAll(new ImageView(image), canvas);
 
             stage.setScene(new Scene(root));
-            stage.initOwner(this.getWindow());
             stage.setTitle("座標取得");
             stage.setFullScreenExitHint("キャプチャする領域をマウスでドラッグして下さい。 [Esc]キーでキャンセル");
             stage.setFullScreen(true);
@@ -287,6 +286,7 @@ public class CaptureController extends WindowController {
                 if (!n)
                     stage.close();
             });
+            stage.setAlwaysOnTop(true);
             stage.show();
         } catch (Exception e) {
             LoggerHolder.LOG.error("座標取得に失敗しました", e);
