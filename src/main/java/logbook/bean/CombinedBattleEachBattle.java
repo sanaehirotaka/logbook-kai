@@ -24,6 +24,8 @@ import lombok.Data;
 public class CombinedBattleEachBattle implements ICombinedBattle, ICombinedEcBattle,
         ISortieBattle, ISortieHougeki, IFormation, IKouku, ISupport, IAirBaseAttack, Serializable {
 
+    private static final long serialVersionUID = 5915335230012435843L;
+
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;
 

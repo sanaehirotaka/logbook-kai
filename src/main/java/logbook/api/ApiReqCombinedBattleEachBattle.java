@@ -18,10 +18,12 @@ import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
 /**
- * /kcsapi/api_req_combined_battle/each_battle
+ * /kcsapi/api_req_combined_battle/each_battle<br>
+ * /kcsapi/api_req_combined_battle/each_battle_water
  *
  */
-@API("/kcsapi/api_req_combined_battle/each_battle")
+@API({ "/kcsapi/api_req_combined_battle/each_battle",
+        "/kcsapi/api_req_combined_battle/each_battle_water" })
 public class ApiReqCombinedBattleEachBattle implements APIListenerSpi {
 
     @Override
