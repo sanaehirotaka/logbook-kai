@@ -2,14 +2,18 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -24,19 +28,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
@@ -45,15 +55,16 @@ import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.ShipLabelCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
 import logbook.internal.Operator;
-import logbook.internal.SeaArea;
 import logbook.internal.ShipFilter;
 import logbook.internal.Ships;
+import lombok.val;
 
 /**
  * 所有艦娘一覧のテーブル
@@ -165,13 +176,13 @@ public class ShipTablePane extends VBox {
     @FXML
     private ChoiceBox<Operator> levelType;
 
-    /** 海域 */
+    /** ラベル */
     @FXML
-    private ToggleSwitch seaAreaFilter;
+    private ToggleSwitch labelFilter;
 
-    /** 海域条件 */
+    /** ラベル条件 */
     @FXML
-    private ChoiceBox<SeaArea> seaArea;
+    private ChoiceBox<String> labelValue;
 
     /** メッセージ */
     @FXML
@@ -201,9 +212,9 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> cond;
 
-    /** 海域 */
+    /** ラベル */
     @FXML
-    private TableColumn<ShipItem, String> area;
+    private TableColumn<ShipItem, Set<String>> label;
 
     /** 制空 */
     @FXML
@@ -315,8 +326,6 @@ public class ShipTablePane extends VBox {
             this.conditionType.getSelectionModel().select(Operator.GE);
             this.levelType.setItems(FXCollections.observableArrayList(Operator.values()));
             this.levelType.getSelectionModel().select(Operator.GE);
-            this.seaArea.setItems(FXCollections.observableArrayList(
-                    Arrays.stream(SeaArea.values()).filter(e -> e.getArea() > 0).collect(Collectors.toList())));
 
             // フィルターのバインド
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
@@ -348,8 +357,8 @@ public class ShipTablePane extends VBox {
                 this.levelValue.setDisable(!nv);
                 this.levelType.setDisable(!nv);
             });
-            this.seaAreaFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.seaArea.setDisable(!nv);
+            this.labelFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.labelValue.setDisable(!nv);
             });
 
             this.typeFilter.selectedProperty().addListener(this::filterAction);
@@ -377,8 +386,8 @@ public class ShipTablePane extends VBox {
             this.levelFilter.selectedProperty().addListener(this::filterAction);
             this.levelValue.textProperty().addListener(this::filterAction);
             this.levelType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
-            this.seaAreaFilter.selectedProperty().addListener(this::filterAction);
-            this.seaArea.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+            this.labelFilter.selectedProperty().addListener(this::filterAction);
+            this.labelValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
 
             this.conditionValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
             TextFields.bindAutoCompletion(this.conditionValue, new SuggestSupport("53", "50", "49", "33", "30", "20"));
@@ -397,7 +406,8 @@ public class ShipTablePane extends VBox {
             this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));
             this.cond.setCellFactory(p -> new CondCell());
             this.cond.setCellValueFactory(new PropertyValueFactory<>("cond"));
-            this.area.setCellValueFactory(new PropertyValueFactory<>("area"));
+            this.label.setCellValueFactory(new PropertyValueFactory<>("label"));
+            this.label.setCellFactory(p -> new LabelCell());
             this.seiku.setCellValueFactory(new PropertyValueFactory<>("seiku"));
             this.hPower.setCellValueFactory(new PropertyValueFactory<>("hPower"));
             this.rPower.setCellValueFactory(new PropertyValueFactory<>("rPower"));
@@ -443,6 +453,9 @@ public class ShipTablePane extends VBox {
                 this.shipItems.addAll(ships.stream()
                         .map(ShipItem::toShipItem)
                         .collect(Collectors.toList()));
+
+                this.updateLabel();
+
                 this.message.setText("制空値計: " + ships.stream()
                         .mapToInt(Ships::airSuperiority)
                         .sum()
@@ -451,6 +464,23 @@ public class ShipTablePane extends VBox {
             }
         } catch (Exception e) {
             LoggerHolder.LOG.error("画面の更新に失敗しました", e);
+        }
+    }
+
+    /**
+     * ラベルの更新
+     */
+    private void updateLabel() {
+        Set<String> labels = new TreeSet<>();
+        this.shipItems.forEach(ship -> {
+            labels.addAll(ship.getLabel());
+        });
+        Set<String> beforeLabels = new HashSet<>(this.labelValue.getItems());
+        this.labelValue.getItems().removeIf(l -> !labels.contains(l));
+        for (String label : labels) {
+            if (!beforeLabels.contains(label)) {
+                this.labelValue.getItems().add(label);
+            }
         }
     }
 
@@ -510,6 +540,72 @@ public class ShipTablePane extends VBox {
         }
     }
 
+    @FXML
+    void addLabel() {
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.initOwner(this.getScene().getWindow());
+        dialog.setTitle("艦娘にラベルを追加");
+        dialog.setHeaderText("ラベルを追加");
+
+        TextFields.bindAutoCompletion(dialog.getEditor(), new SuggestSupport(this.labelValue.getItems()));
+
+        val result = dialog.showAndWait();
+        if (result.isPresent()) {
+            String label = result.get();
+            if (!label.isEmpty()) {
+                val labelMap = ShipLabelCollection.get()
+                        .getLabels();
+                val selections = this.table.getSelectionModel()
+                        .getSelectedItems();
+                for (ShipItem ship : selections) {
+                    ship.labelProperty().get()
+                            .add(label);
+                    val labels = labelMap.computeIfAbsent(ship.getId(), k -> new LinkedHashSet<>());
+                    labels.add(label);
+                }
+                this.updateLabel();
+                this.table.refresh();
+            }
+        }
+    }
+
+    @FXML
+    void removeLabel() {
+        Set<String> labels = new TreeSet<>();
+        val selections = this.table.getSelectionModel()
+                .getSelectedItems();
+        for (ShipItem ship : selections) {
+            labels.addAll(ship.getLabel());
+        }
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>();
+        dialog.initOwner(this.getScene().getWindow());
+        dialog.getItems().addAll(labels);
+        dialog.setTitle("艦娘からラベルを除去");
+        dialog.setHeaderText("ラベルを除去");
+
+        val result = dialog.showAndWait();
+        if (result.isPresent()) {
+            String label = result.get();
+            if (!label.isEmpty()) {
+                val labelMap = ShipLabelCollection.get()
+                        .getLabels();
+                for (ShipItem ship : selections) {
+                    ship.labelProperty().get()
+                            .remove(label);
+                    labelMap.computeIfPresent(ship.getId(), (k, v) -> {
+                        v.remove(label);
+                        if (v.isEmpty())
+                            return null;
+                        return v;
+                    });
+                }
+                this.updateLabel();
+                this.table.refresh();
+            }
+        }
+    }
+
     /**
      * フィルターを設定する
      */
@@ -563,8 +659,8 @@ public class ShipTablePane extends VBox {
                 .levelFilter(this.levelFilter.isSelected())
                 .levelValue(level)
                 .levelType(this.levelType.getValue())
-                .seaAreaFilter(this.seaAreaFilter.isSelected())
-                .seaArea(this.seaArea.getValue() == null ? "" : this.seaArea.getValue().toString())
+                .labelFilter(this.labelFilter.isSelected())
+                .labelValue(this.labelValue.getValue() == null ? "" : this.labelValue.getValue())
                 .build();
     }
 
@@ -596,6 +692,10 @@ public class ShipTablePane extends VBox {
     private static class SuggestSupport implements Callback<ISuggestionRequest, Collection<String>> {
 
         private List<String> values;
+
+        public SuggestSupport(List<String> values) {
+            this.values = new ArrayList<>(values);
+        }
 
         public SuggestSupport(String... values) {
             this.values = Arrays.asList(values);
@@ -677,6 +777,60 @@ public class ShipTablePane extends VBox {
             } else {
                 this.setText(null);
             }
+        }
+    }
+
+    /**
+     * ラベルのセル
+     *
+     */
+    class LabelCell extends TableCell<ShipItem, Set<String>> {
+        @Override
+        protected void updateItem(Set<String> labels, boolean empty) {
+            super.updateItem(labels, empty);
+
+            if (!empty) {
+                FlowPane pane = new FlowPane();
+                for (String label : labels) {
+                    Button button = new Button(label);
+                    button.setStyle("-fx-color: " + this.colorCode(label.hashCode()));
+                    button.setOnAction(this::handle);
+                    pane.getChildren().add(button);
+                }
+                this.setGraphic(pane);
+                this.setText(null);
+            } else {
+                this.setGraphic(null);
+                this.setText(null);
+            }
+        }
+
+        private void handle(ActionEvent e) {
+            Object src = e.getSource();
+            if (src instanceof Labeled) {
+                Labeled label = (Labeled) src;
+                ShipTablePane.this.labelValue.getSelectionModel().select(label.getText());
+                ShipTablePane.this.labelFilter.setSelected(true);
+            }
+        }
+
+        /**
+         * シード値seedから#rrggbb形式のカラーコードを返します<br>
+         * 同じシード値であれば必ず同じカラーコードを返します
+         *
+         * @param seed シード値
+         * @return カラーコード
+         */
+        private String colorCode(int seed) {
+            long n = 123456789L;
+            n ^= seed * 2685821657736338717L;
+            for (int i = 0; i < 3; i++) {
+                n ^= n >>> 13;
+                n ^= n << 17;
+                n ^= n >>> 15;
+            }
+            String hex = Long.toString(n & 0xFFFFFF, 16);
+            return "#" + ("000000" + hex).substring(hex.length());
         }
     }
 

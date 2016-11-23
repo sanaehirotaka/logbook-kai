@@ -1,9 +1,12 @@
 package logbook.internal.gui;
 
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -11,8 +14,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import logbook.Messages;
 import logbook.bean.Ship;
+import logbook.bean.ShipLabelCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
@@ -42,8 +47,8 @@ public class ShipItem {
     /** cond */
     private IntegerProperty cond;
 
-    /** 海域 */
-    private StringProperty area;
+    /** ラベル */
+    private ObjectProperty<Set<String>> label;
 
     /** 制空 */
     private IntegerProperty seiku;
@@ -199,27 +204,27 @@ public class ShipItem {
     }
 
     /**
-     * 海域を取得します。
-     * @return 海域
+     * ラベルを取得します。
+     * @return ラベル
      */
-    public StringProperty areaProperty() {
-        return this.area;
+    public ObjectProperty<Set<String>> labelProperty() {
+        return this.label;
     }
 
     /**
-     * 海域を取得します。
-     * @return 海域
+     * ラベルを取得します。
+     * @return ラベル
      */
-    public String getArea() {
-        return this.area.get();
+    public Set<String> getLabel() {
+        return this.label.get();
     }
 
     /**
-     * 海域を設定します。
-     * @param area 海域
+     * ラベルを設定します。
+     * @param area ラベル
      */
-    public void setArea(String area) {
-        this.area = new SimpleStringProperty(area);
+    public void setLabel(Set<String> label) {
+        this.label = new SimpleObjectProperty<>(label);
     }
 
     /**
@@ -518,7 +523,7 @@ public class ShipItem {
                 .add(this.type.get())
                 .add(Integer.toString(this.lv.get()))
                 .add(Integer.toString(this.cond.get()))
-                .add(this.area.get())
+                .add(this.label.get().stream().collect(Collectors.joining(",")))
                 .add(Integer.toString(this.seiku.get()))
                 .add(Integer.toString(this.hPower.get()))
                 .add(Integer.toString(this.rPower.get()))
@@ -549,8 +554,19 @@ public class ShipItem {
         shipItem.setType(type);
         shipItem.setLv(ship.getLv());
         shipItem.setCond(ship.getCond());
-        shipItem.setArea(Optional.ofNullable(SeaArea.fromArea(ship.getSallyArea()))
-                .map(SeaArea::toString).orElse(""));
+        Set<String> label = new LinkedHashSet<>();
+        SeaArea area = SeaArea.fromArea(ship.getSallyArea());
+        if (area != null) {
+            label.add(area.toString());
+        }
+        Set<String> shipLabels = ShipLabelCollection.get()
+                .getLabels()
+                .get(ship.getId());
+        if (shipLabels != null) {
+            label.addAll(shipLabels);
+        }
+
+        shipItem.setLabel(FXCollections.observableSet(label));
         shipItem.setSeiku(Ships.airSuperiority(ship));
         shipItem.sethPower(Ships.hPower(ship));
         shipItem.setrPower(Ships.rPower(ship));

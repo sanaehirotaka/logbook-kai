@@ -39,11 +39,11 @@ public interface ShipFilter extends Predicate<ShipItem> {
         /**　レベル条件 */
         private Operator levelType;
 
-        /** 海域 */
-        private boolean seaAreaFilter;
+        /** ラベル */
+        private boolean labelFilter;
 
-        /** 海域 */
-        private String seaArea;
+        /** ラベル */
+        private String labelValue;
 
         @Override
         public boolean test(ShipItem ship) {
@@ -58,8 +58,8 @@ public interface ShipFilter extends Predicate<ShipItem> {
             if (result && this.levelFilter) {
                 result = eval(ship.getLv(), this.levelValue, this.levelType);
             }
-            if (result && this.seaAreaFilter) {
-                result = seaArea.equals(ship.getArea());
+            if (result && this.labelFilter) {
+                result = ship.getLabel().contains(labelValue);
             }
             return result;
         }

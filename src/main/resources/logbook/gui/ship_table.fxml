@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -68,7 +69,7 @@
                               </FlowPane>
                            </children>
                         </VBox>
-                        <VBox prefWidth="125.0">
+                        <VBox prefWidth="110.0">
                            <children>
                               <FlowPane>
                                  <children>
@@ -83,16 +84,16 @@
                               </FlowPane>
                            </children>
                         </VBox>
-                        <VBox prefWidth="100.0">
+                        <VBox prefWidth="125.0">
                            <children>
                               <FlowPane>
                                  <children>
-                                    <ToggleSwitch fx:id="seaAreaFilter" text="海域" />
+                                    <ToggleSwitch fx:id="labelFilter" text="ラベル" />
                                  </children>
                               </FlowPane>
                               <FlowPane>
                                  <children>
-                                    <ChoiceBox fx:id="seaArea" disable="true" />
+                                    <ChoiceBox fx:id="labelValue" disable="true" prefWidth="120.0" />
                                  </children>
                               </FlowPane>
                            </children>
@@ -111,7 +112,7 @@
           <TableColumn fx:id="type" prefWidth="75.0" text="艦種" />
           <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
           <TableColumn fx:id="cond" prefWidth="50.0" text="cond" />
-          <TableColumn fx:id="area" prefWidth="75.0" text="海域" />
+          <TableColumn fx:id="label" prefWidth="100.0" text="ラベル" />
           <TableColumn fx:id="seiku" prefWidth="50.0" text="制空" />
           <TableColumn fx:id="hPower" prefWidth="60.0" text="砲戦火力" />
           <TableColumn fx:id="rPower" prefWidth="60.0" text="雷戦火力" />
@@ -130,6 +131,9 @@
                <MenuItem mnemonicParsing="false" onAction="#copy" text="クリップボードにコピー" />
                <MenuItem mnemonicParsing="false" onAction="#selectAll" text="すべてを選択" />
                <MenuItem mnemonicParsing="false" onAction="#store" text="CSVファイルとして保存" />
+               <SeparatorMenuItem />
+               <MenuItem mnemonicParsing="false" onAction="#addLabel" text="艦娘にラベルを追加" />
+               <MenuItem mnemonicParsing="false" onAction="#removeLabel" text="艦娘からラベルを除去" />
              </items>
            </ContextMenu>
         </contextMenu>
