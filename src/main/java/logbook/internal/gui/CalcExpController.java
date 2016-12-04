@@ -227,6 +227,7 @@ public class CalcExpController extends WindowController {
         this.goalExpValue = ExpTable.get().get(goal);
         this.goalLv.getValueFactory().setValue(goal);
         this.goalExp.setText(String.valueOf(this.goalExpValue));
+        this.update();
     }
 
     /**
@@ -239,8 +240,10 @@ public class CalcExpController extends WindowController {
             this.changeShip(ship);
             // Table の同じものを選択
             for (ShortageShipItem ss : this.item.filtered(ss -> ss.shipProperty().get().equals(ship))) {
-                ShortageShipItem selected = shortageShip.getSelectionModel().getSelectedItem();
-                if (selected != null && selected.equals(ss)) continue;
+                ShortageShipItem selected = this.shortageShip.getSelectionModel().getSelectedItem();
+                if (selected != null && selected.equals(ss)) {
+                    continue;
+                }
                 this.shortageShip.getSelectionModel().select(ss);
                 this.shortageShip.scrollTo(ss);
             }
