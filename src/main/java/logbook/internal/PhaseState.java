@@ -39,6 +39,9 @@ public class PhaseState {
     /** 連合艦隊 */
     private CombinedType combinedType = CombinedType.未結成;
 
+    /** 連合艦隊での出撃 */
+    private boolean combined;
+
     /** フェイズ後味方(第1艦隊) */
     private List<Ship> afterFriend = new ArrayList<>();
 
@@ -68,6 +71,9 @@ public class PhaseState {
     public PhaseState(CombinedType combinedType, IBattle b, Map<Integer, List<Ship>> deckMap) {
         // 連合艦隊
         this.combinedType = combinedType;
+        this.combined = combinedType != CombinedType.未結成 &&
+                (b instanceof ICombinedBattle || b instanceof ICombinedEcMidnightBattle);
+
         // 味方
         if (b instanceof ICombinedBattle
                 || (b instanceof ICombinedEcMidnightBattle && this.combinedType != CombinedType.未結成)) {
@@ -125,6 +131,8 @@ public class PhaseState {
      */
     public PhaseState(PhaseState ps) {
         this.combinedType = ps.combinedType;
+        this.combined = ps.combined;
+
         for (Ship ship : ps.afterFriend) {
             this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
         }
@@ -213,7 +221,7 @@ public class PhaseState {
             this.applyHougeki(battle.getHougeki2());
             // 2巡目
             this.applyHougeki(battle.getHougeki3());
-        } else if (this.combinedType == CombinedType.未結成) {
+        } else if (!this.combined) {
             // 連合艦隊以外
             // 1巡目
             this.applyHougeki(battle.getHougeki1(), this.afterFriend, this.afterEnemy);
@@ -273,12 +281,12 @@ public class PhaseState {
                 enemy = this.afterEnemyCombined;
             }
             this.applyHougeki(battle.getHougeki(), friend, enemy);
-        } else if (this.combinedType == CombinedType.未結成) {
-            // 連合艦隊以外
-            this.applyHougeki(battle.getHougeki(), this.afterFriend, this.afterEnemy);
-        } else {
+        } else if (this.combined) {
             // 連合艦隊
             this.applyHougeki(battle.getHougeki(), this.afterFriendCombined, this.afterEnemy);
+        } else {
+            // 連合艦隊以外
+            this.applyHougeki(battle.getHougeki(), this.afterFriend, this.afterEnemy);
         }
     }
 
@@ -356,7 +364,7 @@ public class PhaseState {
         if (raigeki.getFdam().size() > 12) {
             // 新API
             this.applyFriendDamage(raigeki.getFdam());
-        } else if (this.combinedType != CombinedType.未結成) {
+        } else if (this.combined) {
             // 連合艦隊の場合、第2艦隊にダメージを適用
             this.applyFriendDamage(raigeki.getFdam(), this.afterFriendCombined);
         } else {
