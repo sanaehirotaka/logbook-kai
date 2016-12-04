@@ -341,6 +341,7 @@ public class CalcExpController extends WindowController {
      * チャートを作る
      */
     private void chart() {
+        int nowExpValue = this.nowExpValue;
         int nowLvValue = this.nowLv.getValue();
         int goalLvValue = this.goalLv.getValue();
 
@@ -370,6 +371,14 @@ public class CalcExpController extends WindowController {
                 .filter(e -> e.getKey() <= nowLvValue)
                 .map(e -> new XYChart.Data<Number, Number>(e.getKey(), e.getValue()))
                 .collect(Collectors.toList()));
+
+        if (ExpTable.get().containsKey(nowLvValue + 1)
+                && !ExpTable.get().get(nowLvValue).equals(ExpTable.get().get(nowLvValue + 1))) {
+            double per = ((double) nowExpValue - ExpTable.get().get(nowLvValue))
+                    / ((double) ExpTable.get().get(nowLvValue + 1) - ExpTable.get().get(nowLvValue));
+
+            now.getData().add(new XYChart.Data<Number, Number>(nowLvValue + per, nowExpValue));
+        }
 
         this.expChart.getData().clear();
         this.expChart.getData().addAll(Arrays.asList(total, goal, now));
