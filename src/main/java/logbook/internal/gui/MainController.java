@@ -50,14 +50,14 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
-import logbook.internal.CheckUpdate;
 import logbook.internal.Ships;
-import logbook.internal.ThreadManager;
 import logbook.internal.proxy.ProxyHolder;
+import logbook.plugin.PluginServices;
 import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
 import logbook.plugin.gui.MainExtMenu;
 import logbook.plugin.gui.Plugin;
+import logbook.plugin.lifecycle.StartUp;
 
 /**
  * UIコントローラー
@@ -130,10 +130,6 @@ public class MainController extends WindowController {
         try {
             // サーバーの起動に失敗した場合にダイアログを表示するために、UIスレッドの初期化後にサーバーを起動する必要がある
             ProxyHolder.getInstance().start();
-            // アップデートチェック
-            if (AppConfig.get().isCheckUpdate()) {
-                ThreadManager.getExecutorService().execute(new CheckUpdate());
-            }
 
             this.itemFormat = this.item.getText();
             this.shipFormat = this.ship.getText();
@@ -157,6 +153,12 @@ public class MainController extends WindowController {
                     .update();
 
             timeline.play();
+
+            // 開始処理
+            PluginServices.instances(StartUp.class)
+                .map(Thread::new)
+                .peek(t -> t.setDaemon(true))
+                .forEach(Thread::start);
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }

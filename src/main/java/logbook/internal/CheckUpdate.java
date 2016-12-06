@@ -11,12 +11,13 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import logbook.plugin.lifecycle.StartUp;
 
 /**
  * アップデートチェック
  *
  */
-public class CheckUpdate implements Runnable {
+public class CheckUpdate implements StartUp {
 
     private static final String[] CHECK_SITES = {
             "https://kancolle.sanaechan.net/logbook-kai.txt",
