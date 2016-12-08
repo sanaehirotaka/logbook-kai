@@ -7,11 +7,16 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.ToggleSwitch;
 
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -26,6 +31,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
+import logbook.internal.ItemFilter;
 import logbook.internal.Items;
 import logbook.internal.Ships;
 
@@ -34,6 +40,18 @@ import logbook.internal.Ships;
  *
  */
 public class ItemController extends WindowController {
+
+    // フィルター
+
+    /** 種類 */
+    @FXML
+    private ToggleSwitch typeFilter;
+
+    /** 種類 */
+    @FXML
+    private ChoiceBox<String> typeValue;
+
+    // 一覧(装備一覧)
 
     /** 一覧 */
     @FXML
@@ -95,6 +113,8 @@ public class ItemController extends WindowController {
     @FXML
     private TableColumn<Item, Integer> souk;
 
+    // 一覧(所持)
+
     /** 詳細・名前 */
     @FXML
     private Label detailName;
@@ -116,7 +136,7 @@ public class ItemController extends WindowController {
     private TableColumn<DetailItem, Ship> ship;
 
     /** 一覧 */
-    private ObservableList<Item> types = FXCollections.observableArrayList();
+    private FilteredList<Item> types;
 
     /** 詳細一覧 */
     private ObservableList<DetailItem> details = FXCollections.observableArrayList();
@@ -124,6 +144,13 @@ public class ItemController extends WindowController {
     @FXML
     void initialize() {
         try {
+            this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.typeValue.setDisable(!nv);
+                this.typeValue.setDisable(!nv);
+            });
+            this.typeFilter.selectedProperty().addListener(this::filterAction);
+            this.typeValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+
             // カラムとオブジェクトのバインド
             this.name.setCellValueFactory(new PropertyValueFactory<>("id"));
             this.name.setCellFactory(p -> new ItemImageCell());
@@ -151,7 +178,7 @@ public class ItemController extends WindowController {
             this.detailTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.detailTable.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             // 行を作る
-            List<Item> items = SlotitemMstCollection.get()
+            ObservableList<Item> items = SlotitemMstCollection.get()
                     .getSlotitemMap()
                     .values()
                     .stream()
@@ -159,11 +186,22 @@ public class ItemController extends WindowController {
                     .filter(e -> e.getCount() > 0)
                     .sorted(Comparator.comparing(Item::getName))
                     .sorted(Comparator.comparing(Item::getType3))
-                    .collect(Collectors.toList());
-            this.types.addAll(items);
-            this.typeTable.setItems(this.types);
-            // 最初は空のリスト
-            this.detailTable.setItems(this.details);
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            // 種類フィルター
+            this.typeValue.setItems(items.stream()
+                    .map(Item::typeProperty)
+                    .map(StringProperty::get)
+                    .distinct()
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+            // 装備一覧(装備一覧)
+            this.types = new FilteredList<>(items);
+            SortedList<Item> sortedListTypes = new SortedList<>(this.types);
+            this.typeTable.setItems(sortedListTypes);
+            sortedListTypes.comparatorProperty().bind(this.typeTable.comparatorProperty());
+            // 装備一覧(所持) 最初は空のリスト
+            SortedList<DetailItem> sortedListDetail = new SortedList<>(this.details);
+            this.detailTable.setItems(sortedListDetail);
+            sortedListDetail.comparatorProperty().bind(this.detailTable.comparatorProperty());
 
             // 装備が選択された時のリスナーを設定
             this.typeTable.getSelectionModel()
@@ -173,6 +211,17 @@ public class ItemController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * フィルターを設定する
+     */
+    private void filterAction(ObservableValue<?> observable, Object oldValue, Object newValue) {
+        ItemFilter filter = ItemFilter.DefaultFilter.builder()
+                .typeFilter(this.typeFilter.isSelected())
+                .typeValue(this.typeValue.getValue() == null ? "" : this.typeValue.getValue())
+                .build();
+        this.types.setPredicate(filter);
     }
 
     /**

@@ -1,20 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.ToggleSwitch?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="itemWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.66" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="itemWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemController">
    <children>
       <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
          <items>
-            <AnchorPane>
+            <VBox>
                <children>
-                  <TableView fx:id="typeTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TitledPane animated="false" expanded="false" text="フィルター">
+		             <content>
+		                <FlowPane>
+		                   <children>
+		                      <VBox prefWidth="125.0">
+		                         <children>
+		                            <FlowPane>
+		                               <children>
+		                                  <ToggleSwitch fx:id="typeFilter" text="種類" />
+		                               </children>
+		                            </FlowPane>
+		                            <FlowPane>
+		                               <children>
+		                                  <ChoiceBox fx:id="typeValue" disable="true" prefWidth="120.0" />
+		                               </children>
+		                            </FlowPane>
+		                         </children>
+		                      </VBox>
+		                   </children>
+		                </FlowPane>
+		             </content>
+                  </TitledPane>
+                  <TableView fx:id="typeTable" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="name" prefWidth="170.0" text="名称" />
-                      <TableColumn fx:id="type" prefWidth="120.0" text="種別" />
+                      <TableColumn fx:id="type" prefWidth="120.0" text="種類" />
                       <TableColumn fx:id="count" prefWidth="35.0" text="個数" />
                       <TableColumn fx:id="houg" prefWidth="35.0" text="火力" />
                       <TableColumn fx:id="houm" prefWidth="35.0" text="命中" />
@@ -39,10 +68,10 @@
                     </contextMenu>
                   </TableView>
                </children>
-            </AnchorPane>
+            </VBox>
             <VBox>
                <children>
-                  <Label styleClass="detailName" fx:id="detailName" text="" />
+                  <Label fx:id="detailName" styleClass="detailName" text="" />
                   <TableView fx:id="detailTable" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="alv" prefWidth="50.0" text="熟練" />
