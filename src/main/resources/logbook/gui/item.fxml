@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
@@ -31,7 +31,7 @@
 		                            </FlowPane>
 		                            <FlowPane>
 		                               <children>
-		                                  <ChoiceBox fx:id="typeValue" disable="true" prefWidth="120.0" />
+		                                  <ComboBox fx:id="typeValue" disable="true" prefWidth="120.0" />
 		                               </children>
 		                            </FlowPane>
 		                         </children>

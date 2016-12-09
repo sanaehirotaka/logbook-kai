@@ -16,7 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -49,7 +49,7 @@ public class ItemController extends WindowController {
 
     /** 種類 */
     @FXML
-    private ChoiceBox<String> typeValue;
+    private ComboBox<String> typeValue;
 
     // 一覧(装備一覧)
 
