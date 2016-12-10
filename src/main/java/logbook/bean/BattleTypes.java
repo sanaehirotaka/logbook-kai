@@ -275,6 +275,12 @@ public class BattleTypes {
     public interface IKouku extends IBattle {
 
         /**
+         * api_injection_koukuを取得します。
+         * @return api_injection_kouku
+         */
+        BattleTypes.Kouku getInjectionKouku();
+
+        /**
          * api_koukuを取得します。
          * @return api_kouku
          */
@@ -356,6 +362,12 @@ public class BattleTypes {
      * 基地航空隊
      */
     public interface IAirBaseAttack {
+
+        /**
+         * api_air_base_injectionを取得します。
+         * @return api_air_base_injection
+         */
+        List<AirBaseAttack> getAirBaseInjection();
 
         /**
          * api_air_base_attackを取得します。
@@ -865,7 +877,7 @@ public class BattleTypes {
         /** api_plane_from */
         private List<List<Integer>> planeFrom;
 
-        /** api_squadron_plane */
+        /** api_squadron_plane または api_air_base_data */
         private List<SquadronPlane> squadronPlane;
 
         /** api_stage1 */
@@ -895,6 +907,8 @@ public class BattleTypes {
                     .setInteger("api_base_id", bean::setBaseId)
                     .set("api_plane_from", bean::setPlaneFrom, JsonHelper.toList(JsonHelper::toIntegerList))
                     .set("api_squadron_plane", bean::setSquadronPlane,
+                            JsonHelper.toList(SquadronPlane::toSquadronPlane))
+                    .set("api_air_base_data", bean::setSquadronPlane,
                             JsonHelper.toList(SquadronPlane::toSquadronPlane))
                     .set("api_stage1", bean::setStage1, Stage1::toStage1)
                     .set("api_stage2", bean::setStage2, Stage2::toStage2)

@@ -130,6 +130,30 @@ public class BattleDetail extends WindowController {
         phaseBeforePane.setText("戦闘前");
         phases.add(phaseBeforePane);
 
+        // 基地航空隊戦フェイズ(噴式強襲)
+        if (this.battle instanceof IAirBaseAttack) {
+            if (((IAirBaseAttack) this.battle).getAirBaseInjection() != null) {
+                // 基地航空隊戦フェイズ適用
+                ps.applyAirBaseInject((IAirBaseAttack) this.battle);
+
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                phasePane.setText("基地航空隊戦フェイズ(噴式強襲)");
+                phasePane.setExpanded(false);
+                phases.add(phasePane);
+            }
+        }
+        // 航空戦フェイズ(噴式強襲)
+        if (this.battle instanceof IKouku) {
+            if (((IKouku) this.battle).getInjectionKouku() != null) {
+                // 航空戦フェイズ適用
+                ps.applyInjectionKouku((IKouku) this.battle);
+
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                phasePane.setText("航空戦フェイズ(噴式強襲)");
+                phasePane.setExpanded(false);
+                phases.add(phasePane);
+            }
+        }
         // 基地航空隊戦フェイズ
         if (this.battle instanceof IAirBaseAttack) {
             if (((IAirBaseAttack) this.battle).getAirBaseAttack() != null) {

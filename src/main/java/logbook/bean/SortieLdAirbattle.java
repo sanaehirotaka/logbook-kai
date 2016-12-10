@@ -19,7 +19,10 @@ import lombok.Data;
 @Data
 public class SortieLdAirbattle implements ISortieBattle, IFormation, IKouku, IAirBaseAttack, Serializable {
 
-    private static final long serialVersionUID = -251933012802230295L;
+    private static final long serialVersionUID = -1090849552625550232L;
+
+    /** api_air_base_injection */
+    private List<BattleTypes.AirBaseAttack> airBaseInjection;
 
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;
@@ -60,6 +63,9 @@ public class SortieLdAirbattle implements ISortieBattle, IFormation, IKouku, IAi
     /** api_stage_flag */
     private List<Integer> stageFlag;
 
+    /** api_injection_kouku */
+    private BattleTypes.Kouku injectionKouku;
+
     /** api_kouku */
     private BattleTypes.Kouku kouku;
 
@@ -72,6 +78,8 @@ public class SortieLdAirbattle implements ISortieBattle, IFormation, IKouku, IAi
     public static SortieLdAirbattle toBattle(JsonObject json) {
         SortieLdAirbattle bean = new SortieLdAirbattle();
         JsonHelper.bind(json)
+                .set("api_air_base_injection", bean::setAirBaseInjection,
+                        JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .set("api_air_base_attack", bean::setAirBaseAttack,
                         JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .setInteger("api_dock_id", bean::setDockId)
@@ -87,6 +95,7 @@ public class SortieLdAirbattle implements ISortieBattle, IFormation, IKouku, IAi
                 .set("api_search", bean::setSearch, JsonHelper::toIntegerList)
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
+                .set("api_injection_kouku", bean::setInjectionKouku, BattleTypes.Kouku::toKouku)
                 .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku);
         return bean;
     }

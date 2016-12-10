@@ -148,35 +148,34 @@ public class PhaseState {
     }
 
     /**
+     * 基地航空隊戦フェイズ(噴式強襲)を適用します
+     *
+     * @param airBaseAttack 基地航空隊戦
+     */
+    public void applyAirBaseInject(IAirBaseAttack airBaseAttack) {
+        this.applyAirBaseAttack(airBaseAttack.getAirBaseInjection());
+    }
+
+    /**
      * 基地航空隊戦フェイズを適用します
      *
-     * @param airBaseAttack 基地航空隊戦フェイズ
+     * @param airBaseAttack 基地航空隊戦
      */
     public void applyAirBaseAttack(IAirBaseAttack airBaseAttack) {
-        List<AirBaseAttack> attacks = airBaseAttack.getAirBaseAttack();
-        if (attacks != null) {
-            for (AirBaseAttack attack : attacks) {
-                Stage3 stage3 = attack.getStage3();
-                if (stage3 != null) {
-                    List<Double> edam = stage3.getEdam();
-                    if (edam != null) {
-                        this.applyEnemyDamage(edam, this.afterEnemy);
-                    }
-                }
-                Stage3 stage3Combined = attack.getStage3Combined();
-                if (stage3Combined != null) {
-                    List<Double> edam = stage3Combined.getEdam();
-                    if (edam != null) {
-                        this.applyEnemyDamage(edam, this.afterEnemyCombined);
-                    }
-                }
-            }
-        }
+        this.applyAirBaseAttack(airBaseAttack.getAirBaseAttack());
+    }
+
+    /**
+     * 航空戦フェイズ(噴式強襲)を適用します
+     * @param battle 航空戦
+     */
+    public void applyInjectionKouku(IKouku battle) {
+        this.applyKouku(battle.getInjectionKouku());
     }
 
     /**
      * 航空戦フェイズを適用します
-     * @param battle 航空戦フェイズ
+     * @param battle 航空戦
      */
     public void applyKouku(IKouku battle) {
         this.applyKouku(battle.getKouku());
@@ -299,21 +298,25 @@ public class PhaseState {
             return;
         }
 
+        // 基地航空隊戦フェイズ(噴式強襲)
+        if (battle instanceof IAirBaseAttack) {
+            this.applyAirBaseInject((IAirBaseAttack) battle);
+        }
+        // 航空戦フェイズ(噴式強襲)
+        if (battle instanceof IKouku) {
+            this.applyInjectionKouku((IKouku) battle);
+        }
         // 基地航空隊戦フェイズ
         if (battle instanceof IAirBaseAttack) {
             this.applyAirBaseAttack((IAirBaseAttack) battle);
         }
         // 航空戦フェイズ
         if (battle instanceof IKouku) {
-            if (((IKouku) battle).getKouku() != null) {
-                this.applyKouku((IKouku) battle);
-            }
+            this.applyKouku((IKouku) battle);
         }
         // 支援フェイズ
         if (battle instanceof ISupport) {
-            if (((ISupport) battle).getSupportInfo() != null) {
-                this.applySupport((ISupport) battle);
-            }
+            this.applySupport((ISupport) battle);
         }
         // 砲雷撃戦フェイズ
         if (battle instanceof ISortieHougeki) {
@@ -326,6 +329,32 @@ public class PhaseState {
         // 夜戦
         if (battle instanceof IMidnightBattle) {
             this.applyMidnightBattle((IMidnightBattle) battle);
+        }
+    }
+
+    /**
+     * 基地航空隊戦フェイズを適用します
+     *
+     * @param attacks 基地航空隊戦フェイズ
+     */
+    private void applyAirBaseAttack(List<AirBaseAttack> attacks) {
+        if (attacks != null) {
+            for (AirBaseAttack attack : attacks) {
+                Stage3 stage3 = attack.getStage3();
+                if (stage3 != null) {
+                    List<Double> edam = stage3.getEdam();
+                    if (edam != null) {
+                        this.applyEnemyDamage(edam, this.afterEnemy);
+                    }
+                }
+                Stage3 stage3Combined = attack.getStage3Combined();
+                if (stage3Combined != null) {
+                    List<Double> edam = stage3Combined.getEdam();
+                    if (edam != null) {
+                        this.applyEnemyDamage(edam, this.afterEnemyCombined);
+                    }
+                }
+            }
         }
     }
 

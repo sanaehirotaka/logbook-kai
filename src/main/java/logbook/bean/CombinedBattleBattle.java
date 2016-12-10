@@ -23,7 +23,10 @@ import lombok.Data;
 public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISortieHougeki, IFormation, IKouku,
         ISupport, IAirBaseAttack, Serializable {
 
-    private static final long serialVersionUID = 5468173170860958349L;
+    private static final long serialVersionUID = 1636245765528487955L;
+
+    /** api_air_base_injection */
+    private List<BattleTypes.AirBaseAttack> airBaseInjection;
 
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;
@@ -73,6 +76,9 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
     /** api_stage_flag */
     private List<Integer> stageFlag;
 
+    /** api_injection_kouku */
+    private BattleTypes.Kouku injectionKouku;
+
     /** api_kouku */
     private BattleTypes.Kouku kouku;
 
@@ -118,6 +124,8 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
     public static CombinedBattleBattle toBattle(JsonObject json) {
         CombinedBattleBattle bean = new CombinedBattleBattle();
         JsonHelper.bind(json)
+                .set("api_air_base_injection", bean::setAirBaseInjection,
+                        JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .set("api_air_base_attack", bean::setAirBaseAttack,
                         JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .setInteger("api_dock_id", bean::setDockId)
@@ -136,6 +144,7 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
                 .set("api_search", bean::setSearch, JsonHelper::toIntegerList)
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
+                .set("api_injection_kouku", bean::setInjectionKouku, BattleTypes.Kouku::toKouku)
                 .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku)
                 .setBoolean("api_support_flag", bean::setSupportFlag)
                 .set("api_support_info", bean::setSupportInfo, BattleTypes.SupportInfo::toSupportInfo)

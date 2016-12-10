@@ -448,7 +448,8 @@ public class Ships {
                     || SlotItemType.艦上攻撃機.equals(itemMst)
                     || SlotItemType.艦上爆撃機.equals(itemMst)
                     || SlotItemType.水上爆撃機.equals(itemMst)
-                    || SlotItemType.水上戦闘機.equals(itemMst)) {
+                    || SlotItemType.水上戦闘機.equals(itemMst)
+                    || SlotItemType.噴式戦闘爆撃機.equals(itemMst)) {
                 // 制空値
                 local += itemMst.getTyku() * Math.sqrt(onslot);
 
@@ -459,7 +460,9 @@ public class Ships {
                     // 熟練ボーナス
                     local += Math.sqrt(skillLevel.applyAsInt(item.getAlv()) / 10D);
                     // 制空ボーナス
-                    if (SlotItemType.艦上戦闘機.equals(itemMst) || SlotItemType.水上戦闘機.equals(itemMst)) {
+                    if (SlotItemType.艦上戦闘機.equals(itemMst)
+                            || SlotItemType.水上戦闘機.equals(itemMst)
+                            || SlotItemType.噴式戦闘爆撃機.equals(itemMst)) {
                         local += bonusF.applyAsInt(item.getAlv());
                     } else if (SlotItemType.水上爆撃機.equals(itemMst)) {
                         local += bonusS.applyAsInt(item.getAlv());
