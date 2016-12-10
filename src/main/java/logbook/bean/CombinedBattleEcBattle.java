@@ -29,7 +29,7 @@ public class CombinedBattleEcBattle implements ICombinedEcBattle, ISortieBattle,
     private static final long serialVersionUID = 9219457270531289491L;
 
     /** api_air_base_injection */
-    private List<BattleTypes.AirBaseAttack> airBaseInjection;
+    private BattleTypes.AirBaseAttack airBaseInjection;
 
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;
@@ -140,7 +140,7 @@ public class CombinedBattleEcBattle implements ICombinedEcBattle, ISortieBattle,
         CombinedBattleEcBattle bean = new CombinedBattleEcBattle();
         JsonHelper.bind(json)
                 .set("api_air_base_injection", bean::setAirBaseInjection,
-                        JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
+                        BattleTypes.AirBaseAttack::toAirBaseAttack)
                 .set("api_air_base_attack", bean::setAirBaseAttack,
                         JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .setInteger("api_dock_id", bean::setDockId)

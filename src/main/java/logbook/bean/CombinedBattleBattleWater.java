@@ -26,7 +26,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
     private static final long serialVersionUID = -6447392433716613671L;
 
     /** api_air_base_injection */
-    private List<BattleTypes.AirBaseAttack> airBaseInjection;
+    private BattleTypes.AirBaseAttack airBaseInjection;
 
     /** api_air_base_attack */
     private List<BattleTypes.AirBaseAttack> airBaseAttack;
@@ -125,7 +125,7 @@ public class CombinedBattleBattleWater implements ICombinedBattle, ISortieBattle
         CombinedBattleBattleWater bean = new CombinedBattleBattleWater();
         JsonHelper.bind(json)
                 .set("api_air_base_injection", bean::setAirBaseInjection,
-                        JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
+                        BattleTypes.AirBaseAttack::toAirBaseAttack)
                 .set("api_air_base_attack", bean::setAirBaseAttack,
                         JsonHelper.toList(BattleTypes.AirBaseAttack::toAirBaseAttack))
                 .setInteger("api_dock_id", bean::setDockId)

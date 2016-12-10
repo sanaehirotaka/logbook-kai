@@ -367,7 +367,7 @@ public class BattleTypes {
          * api_air_base_injectionを取得します。
          * @return api_air_base_injection
          */
-        List<AirBaseAttack> getAirBaseInjection();
+        AirBaseAttack getAirBaseInjection();
 
         /**
          * api_air_base_attackを取得します。

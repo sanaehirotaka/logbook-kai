@@ -1,6 +1,7 @@
 package logbook.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -153,7 +154,9 @@ public class PhaseState {
      * @param airBaseAttack 基地航空隊戦
      */
     public void applyAirBaseInject(IAirBaseAttack airBaseAttack) {
-        this.applyAirBaseAttack(airBaseAttack.getAirBaseInjection());
+        if (airBaseAttack.getAirBaseInjection() != null) {
+            this.applyAirBaseAttack(Arrays.asList(airBaseAttack.getAirBaseInjection()));
+        }
     }
 
     /**
