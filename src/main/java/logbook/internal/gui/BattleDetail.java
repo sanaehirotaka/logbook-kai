@@ -1,5 +1,6 @@
 package logbook.internal.gui;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import logbook.bean.BattleTypes;
+import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
@@ -20,6 +22,8 @@ import logbook.bean.BattleTypes.ISortieHougeki;
 import logbook.bean.BattleTypes.ISupport;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
+import logbook.bean.BattleTypes.Stage2;
+import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.Ship;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
@@ -136,7 +140,14 @@ public class BattleDetail extends WindowController {
                 // 基地航空隊戦フェイズ適用
                 ps.applyAirBaseInject((IAirBaseAttack) this.battle);
 
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                BattleDetailPhase phasePane;
+
+                if (((IAirBaseAttack) battle).getAirBaseInjection().getStage2() != null) {
+                    Stage2 stage2 = ((IAirBaseAttack) battle).getAirBaseInjection().getStage2();
+                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "基地航空隊"));
+                } else {
+                    phasePane = new BattleDetailPhase(ps);
+                }
                 phasePane.setText("基地航空隊戦フェイズ(噴式強襲)");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -148,7 +159,15 @@ public class BattleDetail extends WindowController {
                 // 航空戦フェイズ適用
                 ps.applyInjectionKouku((IKouku) this.battle);
 
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                BattleDetailPhase phasePane;
+
+                if (((IKouku) this.battle).getInjectionKouku().getStage2() != null) {
+                    Stage2 stage2 = ((IKouku) this.battle).getInjectionKouku().getStage2();
+                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "僚艦"));
+                } else {
+                    phasePane = new BattleDetailPhase(ps);
+                }
+                phasePane = new BattleDetailPhase(ps);
                 phasePane.setText("航空戦フェイズ(噴式強襲)");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -160,7 +179,20 @@ public class BattleDetail extends WindowController {
                 // 基地航空隊戦フェイズ適用
                 ps.applyAirBaseAttack((IAirBaseAttack) this.battle);
 
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                List<BattleDetailPhaseStage2> stage2s = new ArrayList<>();
+                for (AirBaseAttack airBaseAttack : ((IAirBaseAttack) this.battle).getAirBaseAttack()) {
+                    if (airBaseAttack.getStage2() != null) {
+                        stage2s.add(new BattleDetailPhaseStage2(airBaseAttack.getStage2(), "基地航空隊"));
+                    }
+                }
+
+                BattleDetailPhase phasePane;
+
+                if (!stage2s.isEmpty()) {
+                    phasePane = new BattleDetailPhase(ps, stage2s.toArray(new BattleDetailPhaseStage2[stage2s.size()]));
+                } else {
+                    phasePane = new BattleDetailPhase(ps);
+                }
                 phasePane.setText("基地航空隊戦フェイズ");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -172,7 +204,15 @@ public class BattleDetail extends WindowController {
                 // 航空戦フェイズ適用
                 ps.applyKouku((IKouku) this.battle);
 
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                BattleDetailPhase phasePane;
+
+                if (((IKouku) this.battle).getKouku().getStage2() != null) {
+                    Stage2 stage2 = ((IKouku) this.battle).getKouku().getStage2();
+                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "僚艦"));
+                } else {
+                    phasePane = new BattleDetailPhase(ps);
+                }
+
                 phasePane.setText("航空戦フェイズ");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -184,7 +224,18 @@ public class BattleDetail extends WindowController {
                 // 支援フェイズ適用
                 ps.applySupport((ISupport) this.battle);
 
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                SupportAiratack supportAir = ((ISupport) this.battle).getSupportInfo()
+                        .getSupportAiratack();
+
+                BattleDetailPhase phasePane;
+
+                if (supportAir != null && supportAir.getStage2() != null) {
+                    Stage2 stage2 = supportAir.getStage2();
+                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "支援艦隊"));
+                } else {
+                    phasePane = new BattleDetailPhase(ps);
+                }
+
                 phasePane.setText("支援フェイズ");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -202,13 +253,23 @@ public class BattleDetail extends WindowController {
         }
         // 航空戦
         if (this.battle instanceof IAirbattle) {
-            // 航空戦適用
-            ps.applyAirbattle((IAirbattle) this.battle);
+            if (((IAirbattle) this.battle).getKouku2() != null) {
+                // 航空戦適用
+                ps.applyAirbattle((IAirbattle) this.battle);
 
-            BattleDetailPhase phasePane = new BattleDetailPhase(ps);
-            phasePane.setText("航空戦");
-            phasePane.setExpanded(false);
-            phases.add(phasePane);
+                BattleDetailPhase phasePane;
+
+                if (((IAirbattle) this.battle).getKouku2().getStage2() != null) {
+                    Stage2 stage2 = ((IAirbattle) this.battle).getKouku2().getStage2();
+                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "僚艦"));
+                } else {
+                    phasePane = new BattleDetailPhase(ps);
+                }
+
+                phasePane.setText("航空戦");
+                phasePane.setExpanded(false);
+                phases.add(phasePane);
+            }
         }
         // 特殊夜戦
         if (this.battle instanceof IMidnightBattle) {

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 import logbook.bean.Enemy;
@@ -21,6 +22,13 @@ public class BattleDetailPhase extends TitledPane {
 
     /** フェイズ */
     private PhaseState phase;
+
+    /** 付加情報 */
+    private Node[] nodes;
+
+    /** 付加情報 */
+    @FXML
+    private VBox infomation;
 
     /** 第1艦隊 */
     @FXML
@@ -43,7 +51,7 @@ public class BattleDetailPhase extends TitledPane {
     *
     * @param phase フェイズ
     */
-    public BattleDetailPhase(PhaseState phase) {
+    public BattleDetailPhase(PhaseState phase, Node... infomation) {
         this.phase = phase;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battle_detail_phase.fxml");
@@ -57,6 +65,11 @@ public class BattleDetailPhase extends TitledPane {
 
     @FXML
     void initialize() {
+
+        if (this.nodes != null) {
+            this.infomation.getChildren().addAll(this.nodes);
+        }
+
         for (Ship ship : this.phase.getAfterFriend()) {
             if (ship != null) {
                 this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship));

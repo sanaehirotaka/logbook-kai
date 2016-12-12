@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<fx:root type="VBox" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <FlowPane>
+         <children>
+            <Label fx:id="fName" text="僚艦" textFill="BLUE" />
+            <Label text="(艦爆/艦攻)搭載機数:" />
+            <Label fx:id="fCount" text="0" />
+            <Label text="→" />
+            <Label fx:id="fCountAfter" style="-fx-font-weight: bold;" text="0" />
+            <Label text="機" />
+            <Label text="(" />
+            <Label fx:id="fLostcount" style="-fx-font-weight: bold;" text="0" />
+            <Label text="機被撃墜)" />
+         </children>
+      </FlowPane>
+      <FlowPane>
+         <children>
+            <Label fx:id="eName" text="敵艦" textFill="RED" />
+            <Label text="(艦爆/艦攻)搭載機数:" />
+            <Label fx:id="eCount" text="0" />
+            <Label text="→" />
+            <Label fx:id="eCountAfter" style="-fx-font-weight: bold;" text="0" />
+            <Label text="機" />
+            <Label text="(" />
+            <Label fx:id="eLostcount" style="-fx-font-weight: bold;" text="0" />
+            <Label text="機被撃墜)" />
+         </children>
+      </FlowPane>
+   </children>
+</fx:root>
