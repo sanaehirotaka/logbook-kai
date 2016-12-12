@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +25,7 @@ public class BattleDetailPhase extends TitledPane {
     private PhaseState phase;
 
     /** 付加情報 */
-    private Node[] nodes;
+    private List<? extends Node> nodes;
 
     /** 付加情報 */
     @FXML
@@ -51,8 +52,19 @@ public class BattleDetailPhase extends TitledPane {
     *
     * @param phase フェイズ
     */
-    public BattleDetailPhase(PhaseState phase, Node... infomation) {
+    public BattleDetailPhase(PhaseState phase) {
+        this(phase, null);
+    }
+
+    /**
+    * 戦闘ログ詳細のフェーズのコンストラクタ
+    *
+    * @param phase フェイズ
+    * @param infomation 付加情報
+    */
+    public BattleDetailPhase(PhaseState phase, List<? extends Node> infomation) {
         this.phase = phase;
+        this.nodes = infomation;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battle_detail_phase.fxml");
             loader.setRoot(this);
