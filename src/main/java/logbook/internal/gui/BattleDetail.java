@@ -140,14 +140,18 @@ public class BattleDetail extends WindowController {
                 // 基地航空隊戦フェイズ適用
                 ps.applyAirBaseInject((IAirBaseAttack) this.battle);
 
-                BattleDetailPhase phasePane;
+                List<Node> stage = new ArrayList<>();
 
-                if (((IAirBaseAttack) battle).getAirBaseInjection().getStage2() != null) {
-                    Stage2 stage2 = ((IAirBaseAttack) battle).getAirBaseInjection().getStage2();
-                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "基地航空隊"));
-                } else {
-                    phasePane = new BattleDetailPhase(ps);
+                AirBaseAttack airBaseAttack = ((IAirBaseAttack) this.battle).getAirBaseInjection();
+                if (airBaseAttack.getStage1() != null) {
+                    Stage1 stage1 = airBaseAttack.getStage1();
+                    stage.add(new BattleDetailPhaseStage1(stage1, "基地航空隊"));
                 }
+                if (airBaseAttack.getStage2() != null) {
+                    Stage2 stage2 = airBaseAttack.getStage2();
+                    stage.add(new BattleDetailPhaseStage2(stage2, "基地航空隊"));
+                }
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
                 phasePane.setText("基地航空隊戦フェイズ(噴式強襲)");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -159,14 +163,18 @@ public class BattleDetail extends WindowController {
                 // 航空戦フェイズ適用
                 ps.applyInjectionKouku((IKouku) this.battle);
 
-                BattleDetailPhase phasePane;
+                List<Node> stage = new ArrayList<>();
 
-                if (((IKouku) this.battle).getInjectionKouku().getStage2() != null) {
-                    Stage2 stage2 = ((IKouku) this.battle).getInjectionKouku().getStage2();
-                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "僚艦"));
-                } else {
-                    phasePane = new BattleDetailPhase(ps);
+                Kouku kouku = ((IKouku) this.battle).getInjectionKouku();
+                if (kouku.getStage1() != null) {
+                    Stage1 stage1 = kouku.getStage1();
+                    stage.add(new BattleDetailPhaseStage1(stage1, "僚艦"));
                 }
+                if (kouku.getStage2() != null) {
+                    Stage2 stage2 = kouku.getStage2();
+                    stage.add(new BattleDetailPhaseStage2(stage2, "僚艦"));
+                }
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
                 phasePane = new BattleDetailPhase(ps);
                 phasePane.setText("航空戦フェイズ(噴式強襲)");
                 phasePane.setExpanded(false);
@@ -179,20 +187,17 @@ public class BattleDetail extends WindowController {
                 // 基地航空隊戦フェイズ適用
                 ps.applyAirBaseAttack((IAirBaseAttack) this.battle);
 
-                List<BattleDetailPhaseStage2> stage2s = new ArrayList<>();
+                List<Node> stage = new ArrayList<>();
+
                 for (AirBaseAttack airBaseAttack : ((IAirBaseAttack) this.battle).getAirBaseAttack()) {
+                    if (airBaseAttack.getStage1() != null) {
+                        stage.add(new BattleDetailPhaseStage1(airBaseAttack.getStage1(), "基地航空隊"));
+                    }
                     if (airBaseAttack.getStage2() != null) {
-                        stage2s.add(new BattleDetailPhaseStage2(airBaseAttack.getStage2(), "基地航空隊"));
+                        stage.add(new BattleDetailPhaseStage2(airBaseAttack.getStage2(), "基地航空隊"));
                     }
                 }
-
-                BattleDetailPhase phasePane;
-
-                if (!stage2s.isEmpty()) {
-                    phasePane = new BattleDetailPhase(ps, stage2s.toArray(new BattleDetailPhaseStage2[stage2s.size()]));
-                } else {
-                    phasePane = new BattleDetailPhase(ps);
-                }
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
                 phasePane.setText("基地航空隊戦フェイズ");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -204,15 +209,18 @@ public class BattleDetail extends WindowController {
                 // 航空戦フェイズ適用
                 ps.applyKouku((IKouku) this.battle);
 
-                BattleDetailPhase phasePane;
+                List<Node> stage = new ArrayList<>();
 
-                if (((IKouku) this.battle).getKouku().getStage2() != null) {
-                    Stage2 stage2 = ((IKouku) this.battle).getKouku().getStage2();
-                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "僚艦"));
-                } else {
-                    phasePane = new BattleDetailPhase(ps);
+                Kouku kouku = ((IKouku) this.battle).getKouku();
+                if (kouku.getStage1() != null) {
+                    Stage1 stage1 = kouku.getStage1();
+                    stage.add(new BattleDetailPhaseStage1(stage1, "僚艦"));
                 }
-
+                if (kouku.getStage2() != null) {
+                    Stage2 stage2 = kouku.getStage2();
+                    stage.add(new BattleDetailPhaseStage2(stage2, "僚艦"));
+                }
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
                 phasePane.setText("航空戦フェイズ");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -227,15 +235,19 @@ public class BattleDetail extends WindowController {
                 SupportAiratack supportAir = ((ISupport) this.battle).getSupportInfo()
                         .getSupportAiratack();
 
-                BattleDetailPhase phasePane;
+                List<Node> stage = new ArrayList<>();
 
-                if (supportAir != null && supportAir.getStage2() != null) {
-                    Stage2 stage2 = supportAir.getStage2();
-                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "支援艦隊"));
-                } else {
-                    phasePane = new BattleDetailPhase(ps);
+                if (supportAir != null) {
+                    if (supportAir.getStage1() != null) {
+                        Stage1 stage1 = supportAir.getStage1();
+                        stage.add(new BattleDetailPhaseStage1(stage1, "支援艦隊"));
+                    }
+                    if (supportAir.getStage2() != null) {
+                        Stage2 stage2 = supportAir.getStage2();
+                        stage.add(new BattleDetailPhaseStage2(stage2, "支援艦隊"));
+                    }
                 }
-
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
                 phasePane.setText("支援フェイズ");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);
@@ -257,15 +269,18 @@ public class BattleDetail extends WindowController {
                 // 航空戦適用
                 ps.applyAirbattle((IAirbattle) this.battle);
 
-                BattleDetailPhase phasePane;
+                List<Node> stage = new ArrayList<>();
 
-                if (((IAirbattle) this.battle).getKouku2().getStage2() != null) {
-                    Stage2 stage2 = ((IAirbattle) this.battle).getKouku2().getStage2();
-                    phasePane = new BattleDetailPhase(ps, new BattleDetailPhaseStage2(stage2, "僚艦"));
-                } else {
-                    phasePane = new BattleDetailPhase(ps);
+                Kouku kouku = ((IAirbattle) this.battle).getKouku2();
+                if (kouku.getStage1() != null) {
+                    Stage1 stage1 = kouku.getStage1();
+                    stage.add(new BattleDetailPhaseStage1(stage1, "僚艦"));
                 }
-
+                if (kouku.getStage2() != null) {
+                    Stage2 stage2 = kouku.getStage2();
+                    stage.add(new BattleDetailPhaseStage2(stage2, "僚艦"));
+                }
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
                 phasePane.setText("航空戦");
                 phasePane.setExpanded(false);
                 phases.add(phasePane);

@@ -13,7 +13,7 @@
          <children>
             <StackPane>
                <children>
-                  <Label text="対空砲火" />
+                  <Label text="制空戦闘" />
                </children>
             </StackPane>
             <VBox>
@@ -21,7 +21,7 @@
                   <FlowPane>
                      <children>
                         <Label fx:id="fName" text="僚艦" textFill="BLUE" />
-                        <Label text="(艦爆/艦攻)搭載機数:" />
+                        <Label text="搭載機数:" />
                         <Label fx:id="fCount" text="0" />
                         <Label text="→" />
                         <Label fx:id="fCountAfter" style="-fx-font-weight: bold;" text="0" />
@@ -34,7 +34,7 @@
                   <FlowPane>
                      <children>
                         <Label fx:id="eName" text="敵艦" textFill="RED" />
-                        <Label text="(艦爆/艦攻)搭載機数:" />
+                        <Label text="搭載機数:" />
                         <Label fx:id="eCount" text="0" />
                         <Label text="→" />
                         <Label fx:id="eCountAfter" style="-fx-font-weight: bold;" text="0" />

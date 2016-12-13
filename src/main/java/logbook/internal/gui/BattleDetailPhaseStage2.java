@@ -47,7 +47,7 @@ public class BattleDetailPhaseStage2 extends VBox {
 
     /**
     * Stage2 詳細
-    * @param stage2　Stage2
+    * @param stage2 Stage2
     * @param friendName 味方の名前(僚艦/基地航空隊 等)
     */
     public BattleDetailPhaseStage2(Stage2 stage2, String friendName) {
