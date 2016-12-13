@@ -11,12 +11,12 @@
     -fx-padding: 6px;
 }
 
-/* Š—L‘•”õˆê—— */
+/* æ‰€æœ‰è£…å‚™ä¸€è¦§ */
 .itemWindow .detailName {
     -fx-font-size: 16pt;
 }
 
-/* Š—LŠÍ–ºˆê—— */
+/* æ‰€æœ‰è‰¦å¨˜ä¸€è¦§ */
 .shipWindow .tab-pane .tab-label {
     -fx-tab-min-width: 4em;
     -fx-font-size: 1.2em;
@@ -24,11 +24,11 @@
 .shipWindow .message {
     -fx-font-size: 12pt;
 }
-/* ƒLƒƒƒvƒ`ƒƒ */
+/* ã‚­ãƒ£ãƒ—ãƒãƒ£ */
 .captureWindow .capture {
     -fx-font-weight: bold;
 }
-/* İ’è */
+/* è¨­å®š */
 .configWindow .configInner,.configWindow .footer {
     -fx-padding: 10px;
 }
