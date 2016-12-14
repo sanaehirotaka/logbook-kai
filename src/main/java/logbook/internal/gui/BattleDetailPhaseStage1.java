@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.Stage1;
 
 /**
@@ -45,6 +46,9 @@ public class BattleDetailPhaseStage1 extends VBox {
     @FXML
     private Label eLostcount;
 
+    @FXML
+    private Label dispSeiku;
+
     /**
     * Stage1 詳細
     * @param stage1 stage1
@@ -77,6 +81,11 @@ public class BattleDetailPhaseStage1 extends VBox {
                 this.eCount.setText(Integer.toString(this.stage1.getECount()));
                 this.eCountAfter.setText(Integer.toString(this.stage1.getECount() - this.stage1.getELostcount()));
                 this.eLostcount.setText(Integer.toString(this.stage1.getELostcount()));
+            }
+            if (this.stage1.getDispSeiku() != null) {
+                BattleTypes.DispSeiku ds = BattleTypes.DispSeiku.toDispSeiku(this.stage1.getDispSeiku());
+                this.dispSeiku.getStyleClass().add("dispseiku" + this.stage1.getDispSeiku());
+                this.dispSeiku.setText(ds.toString());
             }
         }
     }

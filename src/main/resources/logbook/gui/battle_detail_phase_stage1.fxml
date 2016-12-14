@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
 <fx:root style="-fx-border-width: 1px; -fx-border-color: #ccc;" type="VBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
@@ -18,7 +17,7 @@
             </StackPane>
             <VBox>
                <children>
-                  <FlowPane>
+                  <HBox>
                      <children>
                         <Label fx:id="fName" text="僚艦" textFill="BLUE" />
                         <Label text="搭載機数:" />
@@ -30,8 +29,8 @@
                         <Label fx:id="fLostcount" style="-fx-font-weight: bold;" text="0" />
                         <Label text="機撃墜)" />
                      </children>
-                  </FlowPane>
-                  <FlowPane>
+                  </HBox>
+                  <HBox>
                      <children>
                         <Label fx:id="eName" text="敵艦" textFill="RED" />
                         <Label text="搭載機数:" />
@@ -43,9 +42,14 @@
                         <Label fx:id="eLostcount" style="-fx-font-weight: bold;" text="0" />
                         <Label text="機撃墜)" />
                      </children>
-                  </FlowPane>
+                  </HBox>
                </children>
             </VBox>
+            <StackPane>
+               <children>
+                  <Label fx:id="dispSeiku" />
+               </children>
+            </StackPane>
          </children>
       </HBox>
    </children>

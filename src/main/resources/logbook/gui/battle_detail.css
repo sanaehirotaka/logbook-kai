@@ -1,0 +1,20 @@
+/* 制空均衡 */
+.dispseiku0 {
+	-fx-text-fill: darkred;
+}
+/* 制空権確保 */
+.dispseiku1 {
+	-fx-text-fill: green;
+}
+/* 航空優勢 */
+.dispseiku2 {
+	-fx-text-fill: green;
+}
+/* 航空劣勢 */
+.dispseiku3 {
+	-fx-text-fill: darkred;
+}
+/* 制空権喪失 */
+.dispseiku4 {
+	-fx-text-fill: red;
+}
