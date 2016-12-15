@@ -6,10 +6,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import logbook.Messages;
 import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.CombinedType;
@@ -25,6 +27,7 @@ import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.BattleTypes.Stage2;
 import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.Ship;
+import logbook.bean.ShipMst;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.PhaseState;
@@ -48,13 +51,41 @@ public class BattleDetail extends WindowController {
     /** 夜戦 */
     private IMidnightBattle midnight;
 
-    /** 情報 */
-    @FXML
-    private Label info;
-
     /** フェーズ */
     @FXML
     private VBox phase;
+
+    /** 艦隊行動: */
+    @FXML
+    private Label intercept;
+
+    /** 味方陣形 */
+    @FXML
+    private Label fFormation;
+
+    /** 味方陣形 */
+    @FXML
+    private Label eFormation;
+
+    /** 制空値計 */
+    @FXML
+    private Label seiku;
+
+    /** 味方触接 */
+    @FXML
+    private Label dispSeiku;
+
+    /** 味方触接 */
+    @FXML
+    private Label fTouchPlane;
+
+    /** 敵触接 */
+    @FXML
+    private Label eTouchPlane;
+
+    /** 対空CI */
+    @FXML
+    private Label tykuCI;
 
     /**
      * 戦況表示
@@ -72,6 +103,16 @@ public class BattleDetail extends WindowController {
         this.update();
     }
 
+    /**
+     * 画像ファイルに保存
+     *
+     * @param event ActionEvent
+     */
+    @FXML
+    void storeImageAction(ActionEvent event) {
+        Tools.Conrtol.storeSnapshot(phase, "戦闘ログのスナップショット", getWindow());
+    }
+
     private void update() {
         this.setInfo();
         this.setPhase();
@@ -80,49 +121,54 @@ public class BattleDetail extends WindowController {
     private void setInfo() {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap);
 
-        StringBuilder info = new StringBuilder()
-                // 艦隊行動
-                .append("艦隊行動:")
-                .append(BattleTypes.Intercept.toIntercept(this.battle.getFormation().get(2)).toString())
-                .append("\n")
-                // 味方陣形
-                .append("味方陣形:")
-                .append(BattleTypes.Formation.toFormation(this.battle.getFormation().get(0)).toString())
-                // 敵陣形
-                .append("/")
-                .append("敵陣形:")
-                .append(BattleTypes.Formation.toFormation(this.battle.getFormation().get(1)).toString())
-                .append("\n")
-                // 制空値計
-                .append("制空値計: " + ps.getAfterFriend().stream()
-                        .filter(Objects::nonNull)
-                        .mapToInt(Ships::airSuperiority)
-                        .sum());
+        // 艦隊行動
+        this.intercept.setText(BattleTypes.Intercept.toIntercept(this.battle.getFormation().get(2)).toString());
+        // 味方陣形
+        this.fFormation.setText(BattleTypes.Formation.toFormation(this.battle.getFormation().get(0)).toString());
+        // 敵陣形
+        this.eFormation.setText(BattleTypes.Formation.toFormation(this.battle.getFormation().get(1)).toString());
+        // 制空値計
+        this.seiku.setText(Integer.toString(ps.getAfterFriend().stream()
+                .filter(Objects::nonNull)
+                .mapToInt(Ships::airSuperiority)
+                .sum()));
 
         if (this.battle instanceof IKouku) {
             Kouku kouku = ((IKouku) this.battle).getKouku();
             Stage1 stage1 = kouku.getStage1();
+            Stage2 stage2 = kouku.getStage2();
 
             if (stage1 != null) {
                 Map<Integer, SlotitemMst> slotitemMst = SlotitemMstCollection.get()
                         .getSlotitemMap();
-                info.append("(")
-                        // 制空権
-                        .append(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString())
-                        .append(")")
-                        .append("\n")
-                        // 触接
-                        .append("味方触接:")
-                        .append(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(0)))
-                                .map(SlotitemMst::getName)
-                                .orElse("なし"))
-                        .append("/").append("敵触接:")
-                        .append(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(1)))
-                                .map(SlotitemMst::getName)
-                                .orElse("なし"));
+                // 制空権
+                this.dispSeiku.setText(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString());
+                // 触接
+                this.fTouchPlane.setText(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(0)))
+                        .map(SlotitemMst::getName)
+                        .orElse("なし"));
+                this.eTouchPlane.setText(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(1)))
+                        .map(SlotitemMst::getName)
+                        .orElse("なし"));
+            }
+            if (stage2 != null) {
+                // 対空CI
+                if (stage2.getAirFire() != null && stage2.getAirFire().getIdx() != null) {
+                    // インデックスは0始まり
+                    int idx = stage2.getAirFire().getIdx();
+                    Ship ship;
+                    if (idx < 6) {
+                        ship = ps.getAfterFriend().get(idx);
+                    } else {
+                        ship = ps.getAfterFriendCombined().get(6 - idx);
+                    }
+                    this.tykuCI.setText(
+                            Messages.getString("ship.name", Ships.shipMst(ship)
+                                    .map(ShipMst::getName)
+                                    .orElse(""), ship.getLv()));
+                }
             }
         }
-        this.info.setText(info.toString());
     }
 
     private void setPhase() {
@@ -174,7 +220,7 @@ public class BattleDetail extends WindowController {
                     Stage2 stage2 = kouku.getStage2();
                     stage.add(new BattleDetailPhaseStage2(stage2, "僚艦"));
                 }
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
                 phasePane = new BattleDetailPhase(ps);
                 phasePane.setText("航空戦フェイズ(噴式強襲)");
                 phasePane.setExpanded(false);

@@ -1,15 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
+<ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
    <content>
       <VBox fx:id="phase">
          <children>
-            <Label fx:id="info" wrapText="true" />
+            <HBox>
+               <children>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints vgrow="SOMETIMES" />
+                      <RowConstraints vgrow="SOMETIMES" />
+                      <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="艦隊行動:" />
+                        <Label fx:id="intercept" GridPane.columnIndex="1" />
+                        <Label text="味方陣形:" GridPane.rowIndex="1" />
+                        <Label fx:id="fFormation" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="敵陣形:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label fx:id="eFormation" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="制空値計:" GridPane.rowIndex="2" />
+                        <Label fx:id="seiku" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label text="制空権:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label fx:id="dispSeiku" text="-" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label text="味方触接:" GridPane.rowIndex="3" />
+                        <Label fx:id="fTouchPlane" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="敵触接:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label fx:id="eTouchPlane" text="-" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Label text="対空CI:" GridPane.rowIndex="4" />
+                        <Label fx:id="tykuCI" text="-" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
+                     </children>
+                  </GridPane>
+                  <Button mnemonicParsing="false" onAction="#storeImageAction" text="画像ファイルに保存..." />
+               </children>
+            </HBox>
          </children>
       </VBox>
    </content>
