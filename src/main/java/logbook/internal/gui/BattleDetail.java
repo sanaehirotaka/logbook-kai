@@ -110,7 +110,7 @@ public class BattleDetail extends WindowController {
      */
     @FXML
     void storeImageAction(ActionEvent event) {
-        Tools.Conrtol.storeSnapshot(phase, "戦闘ログのスナップショット", getWindow());
+        Tools.Conrtol.storeSnapshot(this.phase, "戦闘ログのスナップショット", this.getWindow());
     }
 
     private void update() {
@@ -160,7 +160,7 @@ public class BattleDetail extends WindowController {
                     if (idx < 6) {
                         ship = ps.getAfterFriend().get(idx);
                     } else {
-                        ship = ps.getAfterFriendCombined().get(6 - idx);
+                        ship = ps.getAfterFriendCombined().get(idx - 6);
                     }
                     this.tykuCI.setText(
                             Messages.getString("ship.name", Ships.shipMst(ship)
