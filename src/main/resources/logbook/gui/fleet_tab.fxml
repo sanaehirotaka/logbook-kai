@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox fx:id="infobox">
          <children>
@@ -44,18 +50,16 @@
                         <Label fx:id="touchPlaneStartProbability" styleClass="value" GridPane.columnIndex="3" />
                         <HBox alignment="CENTER_LEFT" GridPane.rowIndex="1">
                            <children>
-                              <ImageView fx:id="viewRangeImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label text="2-5式秋:" />
-                           </children>
-                        </HBox>
-                        <Label fx:id="viewRange" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="1">
-                           <children>
                               <ImageView fx:id="decision33Img" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                               <Label text="判定式(33):" />
                            </children>
                         </HBox>
-                        <Label fx:id="decision33" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                           <children>
+                              <Label fx:id="decision33" styleClass="value" />
+                              <Button fx:id="branchCoefficientButton" mnemonicParsing="false" onAction="#changeBranchCoefficient" text="分岐点係数:1" />
+                           </children>
+                        </HBox>
                         <HBox alignment="CENTER_LEFT" GridPane.rowIndex="2">
                            <children>
                               <ImageView fx:id="lvsumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />

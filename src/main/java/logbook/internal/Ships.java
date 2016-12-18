@@ -93,6 +93,8 @@ public class Ships {
         VIEW_COEFFICIENT.put(SlotItemType.水上戦闘機, 0.6D);
         // 艦上偵察機(II)：1
         VIEW_COEFFICIENT.put(SlotItemType.艦上偵察機II, 1.0D);
+        // 噴式戦闘爆撃機：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.噴式戦闘爆撃機, 0.6D);
 
         // 改修係数
         // 小型電探：1.25
@@ -450,8 +452,19 @@ public class Ships {
                     || SlotItemType.水上爆撃機.equals(itemMst)
                     || SlotItemType.水上戦闘機.equals(itemMst)
                     || SlotItemType.噴式戦闘爆撃機.equals(itemMst)) {
+                // 対空値
+                double tyku = itemMst.getTyku();
+
+                if (item.getLevel() != null) {
+                    if (SlotItemType.艦上戦闘機.equals(itemMst)) {
+                        tyku += 0.2D * item.getLevel();
+                    } else if (SlotItemType.艦上爆撃機.equals(itemMst)) {
+                        tyku += 0.25D * item.getLevel();
+                    }
+                }
+
                 // 制空値
-                local += itemMst.getTyku() * Math.sqrt(onslot);
+                local += tyku * Math.sqrt(onslot);
 
                 if (item.getAlv() != null) {
                     // 上昇制空値＝内部熟練ボーナス＋制空ボーナス(艦戦/水爆)
@@ -480,6 +493,7 @@ public class Ships {
      * @param ships 艦娘達
      * @return 索敵値(2-5式秋)
      */
+    @Deprecated
     public static double viewRange(List<Ship> ships) {
         // 索敵スコア
         // = 艦上爆撃機 × (1.04)
@@ -542,6 +556,17 @@ public class Ships {
      * @return 判定式(33)
      */
     public static double decision33(List<Ship> ships) {
+        return decision33(ships, 1);
+    }
+
+    /**
+     * 判定式(33)
+     *
+     * @param ships 艦娘達
+     * @param branchCoefficient 分岐点係数
+     * @return 判定式(33)
+     */
+    public static double decision33(List<Ship> ships, double branchCoefficient) {
         // 装備マスタ
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
                 .getSlotitemMap();
@@ -558,7 +583,7 @@ public class Ships {
 
         //  索敵スコア＝(装備倍率×装備索敵値)の和＋√(各艦娘の素索敵)の和－[0.4×司令部レベル(端数切り上げ)]＋2×(6－出撃艦数)
 
-        // 裝備係数(索敵)×(裝備索敵値+改修係数(索敵)×√★)の和
+        // (裝備係数(索敵)×(裝備索敵値+改修係数(索敵)×√★))の和
         double itemView = ships.stream()
                 .flatMap(toSlotItem)
                 .mapToDouble(e -> {
@@ -587,7 +612,7 @@ public class Ships {
         // 2×(6－出撃艦数)
         double fleetScore = 2 * (6 - ships.size());
 
-        return itemView + shipView - levelScore + fleetScore;
+        return (branchCoefficient * itemView) + shipView - levelScore + fleetScore;
     }
 
     /**
