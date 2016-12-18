@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import logbook.Messages;
 import logbook.bean.BattleTypes;
@@ -30,6 +31,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
+import logbook.internal.Items;
 import logbook.internal.PhaseState;
 import logbook.internal.Ships;
 
@@ -75,9 +77,17 @@ public class BattleDetail extends WindowController {
     @FXML
     private Label dispSeiku;
 
+    /** 味方触接アイコン */
+    @FXML
+    private ImageView fTouchPlaneImage;
+
     /** 味方触接 */
     @FXML
     private Label fTouchPlane;
+
+    /** 敵触接アイコン */
+    @FXML
+    private ImageView eTouchPlaneImage;
 
     /** 敵触接 */
     @FXML
@@ -143,13 +153,35 @@ public class BattleDetail extends WindowController {
                         .getSlotitemMap();
                 // 制空権
                 this.dispSeiku.setText(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString());
-                // 触接
-                this.fTouchPlane.setText(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(0)))
-                        .map(SlotitemMst::getName)
-                        .orElse("なし"));
-                this.eTouchPlane.setText(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(1)))
-                        .map(SlotitemMst::getName)
-                        .orElse("なし"));
+                this.dispSeiku.getStyleClass().add("dispseiku" + stage1.getDispSeiku());
+                // 味方触接
+                SlotitemMst fTouchPlaneItem = slotitemMst.get(stage1.getTouchPlane().get(0));
+                if (fTouchPlaneItem != null) {
+                    Image image = Items.itemImage(fTouchPlaneItem);
+                    if (image != null) {
+                        this.fTouchPlaneImage.setImage(image);
+                    }
+                    this.fTouchPlane.setText(fTouchPlaneItem.getName()
+                            + "(+" + (int) (Ships.touchPlaneAttackCompensation(fTouchPlaneItem) * 100) + "%)");
+                } else {
+                    this.fTouchPlaneImage.setFitWidth(0);
+                    this.fTouchPlaneImage.setFitHeight(0);
+                    this.fTouchPlane.setText("なし");
+                }
+                // 敵触接
+                SlotitemMst eTouchPlaneItem = slotitemMst.get(stage1.getTouchPlane().get(1));
+                if (eTouchPlaneItem != null) {
+                    Image image = Items.itemImage(eTouchPlaneItem);
+                    if (image != null) {
+                        this.eTouchPlaneImage.setImage(image);
+                    }
+                    this.eTouchPlane.setText(eTouchPlaneItem.getName()
+                            + "(+" + (int) (Ships.touchPlaneAttackCompensation(eTouchPlaneItem) * 100) + "%)");
+                } else {
+                    this.eTouchPlaneImage.setFitWidth(0);
+                    this.eTouchPlaneImage.setFitHeight(0);
+                    this.eTouchPlane.setText("なし");
+                }
             }
             if (stage2 != null) {
                 // 対空CI

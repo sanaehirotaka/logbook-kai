@@ -663,6 +663,30 @@ public class Ships {
     }
 
     /**
+     * 触接攻撃力補正
+     *
+     * @param item 装備(偵察機/艦攻)
+     * @return 0.0以上の数値
+     */
+    public static double touchPlaneAttackCompensation(SlotitemMst item) {
+        if (item != null) {
+            Integer houm = item.getHoum();
+            if (houm != null) {
+                switch (houm) {
+                case 0:
+                case 1:
+                    return 1.12D;
+                case 2:
+                    return 1.17D;
+                case 3:
+                    return 1.2D;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /**
      * 装備定義を取得します
      *
      * @param chara キャラクター
