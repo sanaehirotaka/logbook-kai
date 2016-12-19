@@ -459,7 +459,6 @@ public class ShipTablePane extends VBox {
                 this.message.setText("制空値計: " + ships.stream()
                         .mapToInt(Ships::airSuperiority)
                         .sum()
-                        + " 索敵値(2-5式秋): " + MessageFormat.format("{0,number,#.##}", Ships.viewRange(ships))
                         + " 判定式(33): " + MessageFormat.format("{0,number,#.##}", Ships.decision33(ships)));
             }
         } catch (Exception e) {
