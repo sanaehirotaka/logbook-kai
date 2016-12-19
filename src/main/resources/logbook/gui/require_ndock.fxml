@@ -22,6 +22,8 @@
              <items>
                <MenuItem mnemonicParsing="false" onAction="#copy" text="クリップボードにコピー" />
                <MenuItem mnemonicParsing="false" onAction="#selectAll" text="すべてを選択" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#columnVisible" text="列の表示・非表示" />
              </items>
            </ContextMenu>
         </contextMenu>

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import logbook.internal.Config;
 import logbook.internal.Rank;
@@ -17,7 +18,7 @@ import lombok.Data;
 @Data
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = -3504824108958254820L;
+    private static final long serialVersionUID = 1609207862902171553L;
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
@@ -114,6 +115,9 @@ public final class AppConfig implements Serializable {
 
     /** ウインドウ位置 */
     private Map<String, WindowLocation> windowLocationMap = new HashMap<>();
+
+    /** テーブル列の表示・非表示 */
+    private Map<String, Set<String>> columnVisibleMap = new HashMap<>();
 
     /** キャプチャの保存先 */
     private String captureDir;

@@ -144,6 +144,9 @@ public class ItemController extends WindowController {
     @FXML
     void initialize() {
         try {
+            TableTool.setVisible(this.typeTable, this.getClass().toString() + "#" + "typeTable");
+            TableTool.setVisible(this.detailTable, this.getClass().toString() + "#" + "detailTable");
+
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.typeValue.setDisable(!nv);
                 this.typeValue.setDisable(!nv);
@@ -207,7 +210,6 @@ public class ItemController extends WindowController {
             this.typeTable.getSelectionModel()
                     .selectedItemProperty()
                     .addListener(this::detail);
-
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
@@ -335,6 +337,19 @@ public class ItemController extends WindowController {
     }
 
     /**
+     * (装備一覧)テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisibleType() {
+        try {
+            TableTool.showVisibleSetting(this.typeTable, this.getClass().toString() + "#" + "typeTable",
+                    this.getWindow());
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
      * (所持)クリップボードにコピー
      */
     @FXML
@@ -348,6 +363,19 @@ public class ItemController extends WindowController {
     @FXML
     void selectAllDetail() {
         TableTool.selectAll(this.detailTable);
+    }
+
+    /**
+     * (所持)テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisibleDetail() {
+        try {
+            TableTool.showVisibleSetting(this.detailTable, this.getClass().toString() + "#" + "detailTable",
+                    this.getWindow());
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
     }
 
     private static class LoggerHolder {

@@ -2,6 +2,9 @@ package logbook.internal.gui;
 
 import java.util.Comparator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -53,6 +56,8 @@ public class RequireNdockController extends WindowController {
 
     @FXML
     void initialize() {
+        TableTool.setVisible(this.table, this.getClass().toString() + "#" + "table");
+
         // カラムとオブジェクトのバインド
         this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
@@ -94,6 +99,19 @@ public class RequireNdockController extends WindowController {
     }
 
     /**
+     * テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisible() {
+        try {
+            TableTool.showVisibleSetting(this.table, this.getClass().toString() + "#" + "table",
+                    this.getWindow());
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
      * 艦娘画像のセル
      *
      */
@@ -112,5 +130,10 @@ public class RequireNdockController extends WindowController {
                 this.setText(null);
             }
         }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(RequireNdockController.class);
     }
 }

@@ -49,6 +49,8 @@
                          <items>
                            <MenuItem mnemonicParsing="false" onAction="#copyDetail" text="クリップボードにコピー" />
                            <MenuItem mnemonicParsing="false" onAction="#selectAllDetail" text="すべてを選択" />
+                           <SeparatorMenuItem mnemonicParsing="false" />
+                           <MenuItem mnemonicParsing="false" onAction="#columnVisibleDetail" text="列の表示・非表示" />
                          </items>
                        </ContextMenu>
                     </contextMenu>

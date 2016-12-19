@@ -48,6 +48,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 import logbook.Messages;
@@ -321,6 +322,8 @@ public class ShipTablePane extends VBox {
     @FXML
     void initialize() {
         try {
+            TableTool.setVisible(this.table, this.getClass().toString() + "#" + "table");
+
             // フィルター 初期値
             this.conditionType.setItems(FXCollections.observableArrayList(Operator.values()));
             this.conditionType.getSelectionModel().select(Operator.GE);
@@ -431,7 +434,6 @@ public class ShipTablePane extends VBox {
             sortedList.comparatorProperty().bind(this.table.comparatorProperty());
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             this.update();
-
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
@@ -602,6 +604,19 @@ public class ShipTablePane extends VBox {
                 this.updateLabel();
                 this.table.refresh();
             }
+        }
+    }
+
+    /**
+     * テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisible() {
+        try {
+            TableTool.showVisibleSetting(this.table, this.getClass().toString() + "#" + "table",
+                    (Stage) this.getScene().getWindow());
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 

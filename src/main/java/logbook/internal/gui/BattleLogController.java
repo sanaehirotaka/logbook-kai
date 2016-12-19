@@ -142,6 +142,8 @@ public class BattleLogController extends WindowController {
     @FXML
     void initialize() {
         try {
+            TableTool.setVisible(this.detail, this.getClass().toString() + "#" + "detail");
+
             // 統計
             this.collect.setShowRoot(false);
             this.collect.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -176,8 +178,8 @@ public class BattleLogController extends WindowController {
 
                                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                                         "戦闘ログ", c -> {
-                                    ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
-                                } , null);
+                                            ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
+                                        }, null);
                             } catch (Exception ex) {
                                 LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);
                             }
@@ -263,7 +265,6 @@ public class BattleLogController extends WindowController {
                 root.getChildren().add(unitRoot);
 
             }
-
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
@@ -283,6 +284,18 @@ public class BattleLogController extends WindowController {
     @FXML
     void selectAllDetail() {
         TableTool.selectAll(this.detail);
+    }
+
+    /**
+     * テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisibleDetail() {
+        try {
+            TableTool.showVisibleSetting(this.detail, this.getClass().toString() + "#" + "detail", this.getWindow());
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
     }
 
     /**

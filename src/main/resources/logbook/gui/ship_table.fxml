@@ -128,12 +128,14 @@
         <contextMenu>
            <ContextMenu>
              <items>
+               <MenuItem mnemonicParsing="false" onAction="#addLabel" text="艦娘にラベルを追加" />
+               <MenuItem mnemonicParsing="false" onAction="#removeLabel" text="艦娘からラベルを除去" />
+               <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#copy" text="クリップボードにコピー" />
                <MenuItem mnemonicParsing="false" onAction="#selectAll" text="すべてを選択" />
                <MenuItem mnemonicParsing="false" onAction="#store" text="CSVファイルとして保存" />
-               <SeparatorMenuItem />
-               <MenuItem mnemonicParsing="false" onAction="#addLabel" text="艦娘にラベルを追加" />
-               <MenuItem mnemonicParsing="false" onAction="#removeLabel" text="艦娘からラベルを除去" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#columnVisible" text="列の表示・非表示" />
              </items>
            </ContextMenu>
         </contextMenu>

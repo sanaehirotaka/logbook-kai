@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -19,26 +20,26 @@
             <VBox>
                <children>
                   <TitledPane animated="false" expanded="false" text="フィルター">
-		             <content>
-		                <FlowPane>
-		                   <children>
-		                      <VBox prefWidth="125.0">
-		                         <children>
-		                            <FlowPane>
-		                               <children>
-		                                  <ToggleSwitch fx:id="typeFilter" text="種類" />
-		                               </children>
-		                            </FlowPane>
-		                            <FlowPane>
-		                               <children>
-		                                  <ComboBox fx:id="typeValue" disable="true" prefWidth="120.0" />
-		                               </children>
-		                            </FlowPane>
-		                         </children>
-		                      </VBox>
-		                   </children>
-		                </FlowPane>
-		             </content>
+                 <content>
+                    <FlowPane>
+                       <children>
+                          <VBox prefWidth="125.0">
+                             <children>
+                                <FlowPane>
+                                   <children>
+                                      <ToggleSwitch fx:id="typeFilter" text="種類" />
+                                   </children>
+                                </FlowPane>
+                                <FlowPane>
+                                   <children>
+                                      <ComboBox fx:id="typeValue" disable="true" prefWidth="120.0" />
+                                   </children>
+                                </FlowPane>
+                             </children>
+                          </VBox>
+                       </children>
+                    </FlowPane>
+                 </content>
                   </TitledPane>
                   <TableView fx:id="typeTable" VBox.vgrow="ALWAYS">
                     <columns>
@@ -63,6 +64,8 @@
                            <MenuItem mnemonicParsing="false" onAction="#copyType" text="クリップボードにコピー" />
                            <MenuItem mnemonicParsing="false" onAction="#selectAllType" text="すべてを選択" />
                            <MenuItem mnemonicParsing="false" onAction="#storeType" text="CSVファイルとして保存" />
+                           <SeparatorMenuItem mnemonicParsing="false" />
+                           <MenuItem mnemonicParsing="false" onAction="#columnVisibleType" text="列の表示・非表示" />
                          </items>
                        </ContextMenu>
                     </contextMenu>
@@ -83,6 +86,8 @@
                          <items>
                            <MenuItem mnemonicParsing="false" onAction="#copyDetail" text="クリップボードにコピー" />
                            <MenuItem mnemonicParsing="false" onAction="#selectAllDetail" text="すべてを選択" />
+                           <SeparatorMenuItem mnemonicParsing="false" />
+                           <MenuItem mnemonicParsing="false" onAction="#columnVisibleDetail" text="列の表示・非表示" />
                          </items>
                        </ContextMenu>
                     </contextMenu>

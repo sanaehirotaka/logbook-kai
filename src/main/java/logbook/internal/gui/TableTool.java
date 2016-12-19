@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 /**
@@ -71,4 +72,25 @@ class TableTool {
     static void store(TableView<?> table, String title, Window own) throws IOException {
         Tools.Table.store(table, title, own);
     }
+
+    /**
+     * テーブル列の表示・非表示の設定を行う
+     * @param table テーブル
+     * @param key テーブルのキー名
+     * @param window 親ウインドウ
+     * @throws IOException 入出力例外が発生した場合
+     */
+    static void showVisibleSetting(TableView<?> table, String key, Stage window) throws IOException {
+        Tools.Table.showVisibleSetting(table, key, window);
+    }
+
+    /**
+     * テーブル列の表示・非表示の設定を行う
+     * @param table テーブル
+     * @param key テーブルのキー名
+     */
+    static void setVisible(TableView<?> table, String key) {
+        Tools.Table.setVisible(table, key);
+    }
+
 }

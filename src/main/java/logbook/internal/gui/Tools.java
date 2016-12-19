@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -15,18 +16,20 @@ import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
-import javafx.stage.Window;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import logbook.bean.AppConfig;
 import logbook.internal.log.LogWriter;
 
 /**
@@ -222,6 +225,37 @@ class Tools {
             File f = chooser.showSaveDialog(own);
             if (f != null) {
                 Files.write(f.toPath(), content.getBytes(LogWriter.DEFAULT_CHARSET));
+            }
+        }
+
+        /**
+         * テーブル列の表示・非表示の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         * @param window 親ウインドウ
+         * @throws IOException 入出力例外が発生した場合
+         */
+        static void showVisibleSetting(TableView<?> table, String key, Stage window) throws IOException {
+            InternalFXMLLoader.showWindow("logbook/gui/column_visible.fxml", window, "テーブル列の表示・非表示", w -> {
+                ((ColumnVisibleController) w).setData(table, key);
+            }, null);
+        }
+
+        /**
+         * テーブル列の表示・非表示の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         */
+        static void setVisible(TableView<?> table, String key) {
+            Set<String> setting = AppConfig.get()
+                    .getColumnVisibleMap()
+                    .get(key);
+            if (setting != null) {
+                table.getColumns().forEach(column -> {
+                    if (setting.contains(column.getText())) {
+                        column.setVisible(false);
+                    }
+                });
             }
         }
 
