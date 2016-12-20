@@ -1,5 +1,6 @@
 package logbook.internal.gui;
 
+import java.time.Duration;
 import java.util.Comparator;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Ships;
+import logbook.internal.Time;
 
 public class RequireNdockController extends WindowController {
 
@@ -38,7 +40,7 @@ public class RequireNdockController extends WindowController {
 
     /** 時間 */
     @FXML
-    private TableColumn<RequireNdock, String> time;
+    private TableColumn<RequireNdock, Duration> time;
 
     /** 今から */
     @FXML
@@ -64,6 +66,7 @@ public class RequireNdockController extends WindowController {
         this.ship.setCellFactory(p -> new ShipImageCell());
         this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));
         this.time.setCellValueFactory(new PropertyValueFactory<>("time"));
+        this.time.setCellFactory(p -> new TimeCell());
         this.end.setCellValueFactory(new PropertyValueFactory<>("end"));
         this.fuel.setCellValueFactory(new PropertyValueFactory<>("fuel"));
         this.metal.setCellValueFactory(new PropertyValueFactory<>("metal"));
@@ -108,6 +111,23 @@ public class RequireNdockController extends WindowController {
                     this.getWindow());
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
+     * 時間のセル
+     *
+     */
+    private static class TimeCell extends TableCell<RequireNdock, Duration> {
+        @Override
+        protected void updateItem(Duration time, boolean empty) {
+            super.updateItem(time, empty);
+
+            if (!empty && time != null) {
+                this.setText(Time.toString(time, "修復完了"));
+            } else {
+                this.setText(null);
+            }
         }
     }
 

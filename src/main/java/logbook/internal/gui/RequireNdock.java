@@ -33,7 +33,7 @@ public class RequireNdock {
     private IntegerProperty lv;
 
     /** 時間 */
-    private StringProperty time;
+    private ObjectProperty<Duration> time;
 
     /** 今から */
     private StringProperty end;
@@ -120,7 +120,7 @@ public class RequireNdock {
      * 時間を取得します。
      * @return time
      */
-    public StringProperty timeProperty() {
+    public ObjectProperty<Duration> timeProperty() {
         return this.time;
     }
 
@@ -128,7 +128,7 @@ public class RequireNdock {
      * 時間を取得します。
      * @return 時間
      */
-    public String getTime() {
+    public Duration getTime() {
         return this.time.get();
     }
 
@@ -136,8 +136,8 @@ public class RequireNdock {
      * 時間を設定します。
      * @param time 時間
      */
-    public void setTime(String time) {
-        this.time = new SimpleStringProperty(time);
+    public void setTime(Duration time) {
+        this.time = new SimpleObjectProperty<>(time);
     }
 
     /**
@@ -220,7 +220,7 @@ public class RequireNdock {
                         .map(s -> Ships.shipMst(s).map(ShipMst::getName).orElse(""))
                         .orElse(""))
                 .add(Integer.toString(this.lv.get()))
-                .add(this.time.get())
+                .add(Time.toString(this.time.get(), "修復完了"))
                 .add(this.end.get())
                 .add(Integer.toString(this.fuel.get()))
                 .add(Integer.toString(this.metal.get()))
@@ -240,7 +240,7 @@ public class RequireNdock {
         ndock.setId(ship.getId());
         ndock.setShip(ship);
         ndock.setLv(ship.getLv());
-        ndock.setTime(Time.toString(d, "修復完了"));
+        ndock.setTime(d);
         ndock.setEnd(endText(d));
         ndock.setFuel(ship.getNdockItem().get(0));
         ndock.setMetal(ship.getNdockItem().get(1));
