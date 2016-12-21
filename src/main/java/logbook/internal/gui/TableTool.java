@@ -22,7 +22,7 @@ class TableTool {
      * @return ヘッダ付きの文字列
      */
     static <T> String toString(TableView<?> table, List<?> rows) {
-        return Tools.Table.toString(table, rows);
+        return Tools.Tables.toString(table, rows);
     }
 
     /**
@@ -32,7 +32,7 @@ class TableTool {
      * @return ヘッダ付きの文字列
      */
     static String selectionToString(TableView<?> table) {
-        return Tools.Table.selectionToString(table);
+        return Tools.Tables.selectionToString(table);
     }
 
     /**
@@ -41,7 +41,7 @@ class TableTool {
      * @param table テーブル
      */
     static void selectionCopy(TableView<?> table) {
-        Tools.Table.selectionCopy(table);
+        Tools.Tables.selectionCopy(table);
     }
 
     /**
@@ -50,7 +50,7 @@ class TableTool {
      * @param table テーブル
      */
     static void selectAll(TableView<?> table) {
-        Tools.Table.selectAll(table);
+        Tools.Tables.selectAll(table);
     }
 
     /**
@@ -59,7 +59,7 @@ class TableTool {
      * @param event キーボードイベント
      */
     static void defaultOnKeyPressedHandler(KeyEvent event) {
-        Tools.Table.defaultOnKeyPressedHandler(event);
+        Tools.Tables.defaultOnKeyPressedHandler(event);
     }
 
     /**
@@ -70,7 +70,7 @@ class TableTool {
      * @param own 親ウインドウ
      */
     static void store(TableView<?> table, String title, Window own) throws IOException {
-        Tools.Table.store(table, title, own);
+        Tools.Tables.store(table, title, own);
     }
 
     /**
@@ -81,7 +81,7 @@ class TableTool {
      * @throws IOException 入出力例外が発生した場合
      */
     static void showVisibleSetting(TableView<?> table, String key, Stage window) throws IOException {
-        Tools.Table.showVisibleSetting(table, key, window);
+        Tools.Tables.showVisibleSetting(table, key, window);
     }
 
     /**
@@ -90,7 +90,7 @@ class TableTool {
      * @param key テーブルのキー名
      */
     static void setVisible(TableView<?> table, String key) {
-        Tools.Table.setVisible(table, key);
+        Tools.Tables.setVisible(table, key);
     }
 
 }

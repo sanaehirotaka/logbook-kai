@@ -2,6 +2,7 @@ package logbook.internal.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,12 +15,14 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -29,8 +32,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import logbook.bean.AppConfig;
+import logbook.bean.WindowLocation;
 import logbook.internal.log.LogWriter;
+import logbook.plugin.PluginContainer;
 
 /**
  * JavaFx Tools
@@ -39,10 +45,66 @@ import logbook.internal.log.LogWriter;
 class Tools {
 
     /**
+     * window
+     *
+     */
+    static class Windows {
+
+        /**
+         * ウインドウの設定
+         * @param stage Stage
+         * @throws IOException 入出力例外が発生した場合
+         */
+        static void setIcon(Stage stage) throws IOException {
+            // アイコン
+            String[] uris = { "logbook/gui/icon_256x256.png", "logbook/gui/icon_128x128.png",
+                    "logbook/gui/icon_64x64.png",
+                    "logbook/gui/icon_32x32.png" };
+
+            for (String uri : uris) {
+                try (InputStream is = PluginContainer.getInstance()
+                        .getClassLoader()
+                        .getResourceAsStream(uri)) {
+                    stage.getIcons().add(new Image(is));
+                }
+            }
+        }
+
+        /**
+         * デフォルトの閉じるアクション
+         * @param controller WindowController
+         */
+        static void defaultCloseAction(WindowController controller) {
+            if (controller.getWindow() != null) {
+                EventHandler<WindowEvent> action = e -> {
+                    String key = controller.getClass().getCanonicalName();
+                    AppConfig.get()
+                            .getWindowLocationMap()
+                            .put(key, controller.getWindowLocation());
+                };
+                controller.getWindow()
+                        .addEventHandler(WindowEvent.WINDOW_HIDDEN, action);
+            }
+        }
+
+        /**
+         * デフォルトのウインドウ設定
+         * @param controller WindowController
+         */
+        static void defaultOpenAction(WindowController controller) {
+            String key = controller.getClass().getCanonicalName();
+            WindowLocation location = AppConfig.get()
+                    .getWindowLocationMap()
+                    .get(key);
+            controller.setWindowLocation(location);
+        }
+    }
+
+    /**
      * misc
      *
      */
-    static class Conrtol {
+    static class Conrtols {
 
         /**
          * ノードの内容をPNGファイルとして出力します
@@ -124,7 +186,7 @@ class Tools {
      * TableViewに関係するメソッドを集めたクラス
      *
      */
-    static class Table {
+    static class Tables {
 
         private static final String SEPARATOR = "\t"; //$NON-NLS-1$
 

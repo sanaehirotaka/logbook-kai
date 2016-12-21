@@ -120,7 +120,7 @@ public class BattleDetail extends WindowController {
      */
     @FXML
     void storeImageAction(ActionEvent event) {
-        Tools.Conrtol.storeSnapshot(this.phase, "戦闘ログのスナップショット", this.getWindow());
+        Tools.Conrtols.storeSnapshot(this.phase, "戦闘ログのスナップショット", this.getWindow());
     }
 
     private void update() {

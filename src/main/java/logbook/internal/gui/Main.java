@@ -27,7 +27,7 @@ public class Main extends Application {
         WindowController controller = loader.getController();
         controller.setWindow(stage);
         // アイコンの設定
-        InternalFXMLLoader.setIcon(stage);
+        Tools.Windows.setIcon(stage);
         // 最前面に表示する
         stage.setAlwaysOnTop(AppConfig.get().isOnTop());
 
@@ -52,7 +52,7 @@ public class Main extends Application {
                         .put(controller.getClass().getCanonicalName(), controller.getWindowLocation());
             }
         });
-        InternalFXMLLoader.defaultOpenAction(controller);
+        Tools.Windows.defaultOpenAction(controller);
 
         stage.show();
     }
