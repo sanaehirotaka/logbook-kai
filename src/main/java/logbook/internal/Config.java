@@ -15,12 +15,12 @@ import java.util.function.Supplier;
 public final class Config {
 
     /** 設定ファイル デフォルトディレクトリ */
-    private static final String CONFIG_DIR = "./config"; //$NON-NLS-1$
+    public static final Path CONFIG_DIR = Paths.get("./config"); //$NON-NLS-1$
 
     /** 設定ファイル 拡張子 */
     private static final String CONFIG_EXT = ".xml"; //$NON-NLS-1$
 
-    private static final Config DEFAULT = new Config(Paths.get(CONFIG_DIR));
+    private static final Config DEFAULT = new Config(CONFIG_DIR);
 
     private final Path dir;
 
