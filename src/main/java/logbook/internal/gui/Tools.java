@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn;
@@ -28,6 +29,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -122,7 +124,9 @@ class Tools {
                         new ExtensionFilter("PNG Files", "*.png"));
                 File f = chooser.showSaveDialog(own);
                 if (f != null) {
-                    WritableImage image = node.snapshot(null, null);
+                    SnapshotParameters sp = new SnapshotParameters();
+                    sp.setFill(Color.WHITESMOKE);
+                    WritableImage image = node.snapshot(sp, null);
                     try (OutputStream out = Files.newOutputStream(f.toPath())) {
                         ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", out);
                     }
