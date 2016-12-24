@@ -584,11 +584,13 @@ public class ShipItem {
                 .sum();
         shipItem.setTais(taisen);
 
-        shipItem.setSlot1(ship.getSlot().get(0));
-        shipItem.setSlot2(ship.getSlot().get(1));
-        shipItem.setSlot3(ship.getSlot().get(2));
-        shipItem.setSlot4(ship.getSlot().get(3));
+        int slotNum = ship.getSlotnum();
+        shipItem.setSlot1(ship.getSlot().get(0) == -1 && slotNum <= 0 ? 0 : ship.getSlot().get(0));
+        shipItem.setSlot2(ship.getSlot().get(1) == -1 && slotNum <= 1 ? 0 : ship.getSlot().get(1));
+        shipItem.setSlot3(ship.getSlot().get(2) == -1 && slotNum <= 2 ? 0 : ship.getSlot().get(2));
+        shipItem.setSlot4(ship.getSlot().get(3) == -1 && slotNum <= 3 ? 0 : ship.getSlot().get(3));
         shipItem.setSlotEx(ship.getSlotEx());
+
         return shipItem;
     }
 }

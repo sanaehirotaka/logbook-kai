@@ -12,3 +12,9 @@ TabPane .orange {
 TabPane .red {
     -fx-text-fill: rgb(255, 16, 0);
 }
+.table-row-cell .none {
+    -fx-background-color: lightgray;
+}
+.table-row-cell:selected .none {
+    -fx-background-color: none;
+}

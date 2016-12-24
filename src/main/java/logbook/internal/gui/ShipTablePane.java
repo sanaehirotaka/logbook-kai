@@ -733,14 +733,22 @@ public class ShipTablePane extends VBox {
      *
      */
     private static class ItemImageCell extends TableCell<ShipItem, Integer> {
+
+        private Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+
         @Override
         protected void updateItem(Integer itemId, boolean empty) {
             super.updateItem(itemId, empty);
 
             if (!empty) {
-                SlotItem item = SlotItemCollection.get()
-                        .getSlotitemMap()
-                        .get(itemId);
+                if (itemId == 0) {
+                    this.getStyleClass().add("none");
+                } else {
+                    this.getStyleClass().removeAll("none");
+                }
+
+                SlotItem item = this.itemMap.get(itemId);
                 Optional<SlotitemMst> mst = Items.slotitemMst(item);
 
                 if (mst.isPresent()) {
@@ -762,6 +770,7 @@ public class ShipTablePane extends VBox {
             } else {
                 this.setGraphic(null);
                 this.setText(null);
+                this.getStyleClass().removeAll("none");
             }
         }
     }
