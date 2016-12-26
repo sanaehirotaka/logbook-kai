@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Arc?>
 
-<fx:root styleClass="quest" type="HBox" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root styleClass="quest" type="HBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -20,6 +20,9 @@
                      </children>
                   </StackPane>
                   <Hyperlink fx:id="name" onAction="#expand" styleClass="name" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
+                  <Hyperlink onAction="#search" styleClass="search" text="検索" underline="true" />
                </children>
             </HBox>
             <VBox fx:id="detailView">
@@ -29,14 +32,6 @@
                         <Label fx:id="detail" styleClass="detail" wrapText="true" />
                      </children>
                   </VBox>
-                  <HBox>
-                     <children>
-                        <Label fx:id="type" maxWidth="1.7976931348623157E308" styleClass="type" />
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
-                        <Hyperlink onAction="#search" styleClass="search" text="検索" underline="true" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
          </children>

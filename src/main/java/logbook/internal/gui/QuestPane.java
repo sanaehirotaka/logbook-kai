@@ -43,9 +43,6 @@ public class QuestPane extends HBox {
     @FXML
     private Label detail;
 
-    @FXML
-    private Label type;
-
     /**
      * 任務のコンストラクタ
      *
@@ -74,39 +71,30 @@ public class QuestPane extends HBox {
 
             switch (quest.getCategory()) {
             case 1:
-                this.type.setText("編成");
                 this.getStyleClass().add("deck");
                 break;
             case 2:
-                this.type.setText("出撃");
                 this.getStyleClass().add("sortie");
                 break;
             case 3:
-                this.type.setText("演習");
                 this.getStyleClass().add("practice");
                 break;
             case 4:
-                this.type.setText("遠征");
                 this.getStyleClass().add("mission");
                 break;
             case 5:
-                this.type.setText("補給/入渠");
                 this.getStyleClass().add("supply");
                 break;
             case 6:
-                this.type.setText("工廠");
                 this.getStyleClass().add("kousyou");
                 break;
             case 7:
-                this.type.setText("改装");
                 this.getStyleClass().add("kaisou");
                 break;
             case 8:
-                this.type.setText("出撃");
                 this.getStyleClass().add("sortie");
                 break;
             default:
-                this.type.setText("その他");
                 break;
             }
 
@@ -154,7 +142,13 @@ public class QuestPane extends HBox {
 
     @FXML
     void expand(ActionEvent event) {
-        this.detailView.setVisible(!this.detailView.isVisible());
+        boolean expanded = !this.detailView.isVisible();
+        this.detailView.setVisible(expanded);
+        if (expanded) {
+            this.getStyleClass().add("expanded");
+        } else {
+            this.getStyleClass().remove("expanded");
+        }
     }
 
     private static class LoggerHolder {

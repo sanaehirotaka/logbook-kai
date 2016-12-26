@@ -111,7 +111,13 @@ TabPane .value {
 }
 /* 任務 */
 .quest {
-    -fx-font-size: 10pt;
+    -fx-font-size: 9pt;
+    -fx-border-width: 1px;
+    -fx-border-color: transparent;
+}
+.quest Hyperlink {
+    -fx-border-width: 0;
+    -fx-padding: 1px;
 }
 .quest .name {
     -fx-font-size: 11pt;
@@ -130,19 +136,22 @@ TabPane .value {
     -fx-text-fill: white;
 }
 .quest .remove {
+    -fx-font-size: 8pt;
     -fx-text-fill: #d9333f;
-    -fx-padding: 0;
 }
 .quest .search {
-    -fx-padding: 0;
+    -fx-font-size: 8pt;
+}
+.quest.expanded {
+    -fx-border-style: solid;
 }
 /* 編成 */
 .quest.deck {
     -fx-background-color: #c1d8ac;
 }
-.quest.deck .type {
-    -fx-background-color: #007b43;
-    -fx-text-fill: white;
+.quest.deck.expanded {
+    -fx-background-color: derive(#c1d8ac, -5%);
+    -fx-border-color: #007b43;
 }
 .quest.deck .progress {
     -fx-fill: #007b43;
@@ -151,31 +160,31 @@ TabPane .value {
 .quest.sortie {
     -fx-background-color: #fdeff2;
 }
-.quest.sortie .type {
-    -fx-background-color: #e60033;
-    -fx-text-fill: white;
+.quest.sortie.expanded {
+    -fx-background-color: derive(#fdeff2, -5%);
+    -fx-border-color: #e60033;
 }
 .quest.sortie .progress {
     -fx-fill: #e60033;
 }
 /* 演習 */
 .quest.practice {
-    -fx-background-color: #cee4ae;
+    -fx-background-color: #daebc0;
 }
-.quest.practice .type {
-    -fx-background-color: #3eb370;
-    -fx-text-fill: white;
+.quest.practice.expanded {
+    -fx-background-color: derive(#daebc0, -5%);
+    -fx-border-color: #38a566;
 }
 .quest.practice .progress {
-    -fx-fill: #3eb370;
+    -fx-fill: #38a566;
 }
 /* 遠征 */
 .quest.mission {
     -fx-background-color: #ebf6f7;
 }
-.quest.mission .type {
-    -fx-background-color: #007bbb;
-    -fx-text-fill: white;
+.quest.mission.expanded {
+    -fx-background-color: derive(#ebf6f7, -5%);
+    -fx-border-color: #007bbb;
 }
 .quest.mission .progress {
     -fx-fill: #007bbb;
@@ -184,19 +193,20 @@ TabPane .value {
 .quest.supply {
     -fx-background-color: #fefea0;
 }
-.quest.supply .type {
-    -fx-background-color: #ffd900;
+.quest.supply.expanded {
+    -fx-background-color: derive(#fefea0, -5%);
+    -fx-border-color: #ffd900;
 }
 .quest.supply .progress {
     -fx-fill: #ffd900;
 }
 /* 工廠 */
 .quest.kousyou {
-    -fx-background-color: #d3cbc6;
+    -fx-background-color: #e0dbd8;
 }
-.quest.kousyou .type {
-    -fx-background-color: #98623c;
-    -fx-text-fill: white;
+.quest.kousyou.expanded {
+    -fx-background-color: derive(#e0dbd8, -5%);
+    -fx-border-color: #98623c;
 }
 .quest.kousyou .progress {
     -fx-fill: #98623c;
@@ -205,9 +215,9 @@ TabPane .value {
 .quest.kaisou {
     -fx-background-color: #dbd0e6;
 }
-.quest.kaisou .type {
-    -fx-background-color: #7058a3;
-    -fx-text-fill: white;
+.quest.kaisou.expanded {
+    -fx-background-color: derive(#dbd0e6, -5%);
+    -fx-border-color: #7058a3;
 }
 .quest.kaisou .progress {
     -fx-fill: #7058a3;
