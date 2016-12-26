@@ -11,8 +11,11 @@ import org.apache.logging.log4j.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Arc;
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCollection;
 import logbook.bean.QuestList.Quest;
@@ -21,18 +24,27 @@ import logbook.bean.QuestList.Quest;
  * 任務
  *
  */
-public class QuestPane extends AnchorPane {
+public class QuestPane extends HBox {
 
     private AppQuest quest;
 
     @FXML
+    private Arc progress;
+
+    @FXML
+    private Hyperlink name;
+
+    @FXML
+    private VBox detailView;
+
+    @FXML
+    private VBox infomation;
+
+    @FXML
+    private Label detail;
+
+    @FXML
     private Label type;
-
-    @FXML
-    private Label name;
-
-    @FXML
-    private Label progress;
 
     /**
      * 任務のコンストラクタ
@@ -54,6 +66,10 @@ public class QuestPane extends AnchorPane {
     @FXML
     void initialize() {
         try {
+            // 詳細は初期表示しない
+            this.detailView.managedProperty().bind(this.detailView.visibleProperty());
+            this.detailView.setVisible(false);
+
             Quest quest = this.quest.getQuest();
 
             switch (quest.getCategory()) {
@@ -96,24 +112,23 @@ public class QuestPane extends AnchorPane {
 
             switch (quest.getProgressFlag()) {
             case 1:
-                this.progress.setText("50%");
+                this.progress.setRadiusX(5);
+                this.progress.setRadiusY(5);
+                this.progress.setLength(360 * 0.5);
                 break;
             case 2:
-                this.progress.setText("80%");
+                this.progress.setRadiusX(5);
+                this.progress.setRadiusY(5);
+                this.progress.setLength(360 * 0.8);
                 break;
             default:
+                this.progress.setRadiusX(2);
+                this.progress.setRadiusY(2);
+                this.progress.setLength(360);
                 break;
             }
-
             this.name.setText(quest.getTitle());
-
-            // マウスオーバーでのポップアップ
-            this.setOnMouseEntered(e -> {
-                this.name.setText(this.quest.getQuest().getDetail());
-            });
-            this.setOnMouseExited(e -> {
-                this.name.setText(this.quest.getQuest().getTitle());
-            });
+            this.detail.setText(quest.getDetail());
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
@@ -135,6 +150,11 @@ public class QuestPane extends AnchorPane {
         } catch (Exception e) {
             LoggerHolder.LOG.warn("ブラウザを開けませんでした", e);
         }
+    }
+
+    @FXML
+    void expand(ActionEvent event) {
+        this.detailView.setVisible(!this.detailView.isVisible());
     }
 
     private static class LoggerHolder {

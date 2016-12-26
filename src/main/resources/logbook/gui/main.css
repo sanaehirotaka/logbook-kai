@@ -111,13 +111,19 @@ TabPane .value {
 }
 /* 任務 */
 .quest {
-    -fx-font-size: 9pt;
+    -fx-font-size: 10pt;
 }
 .quest .name {
-    -fx-font-size: 14pt;
+    -fx-font-size: 11pt;
+    -fx-underline: false;
+    -fx-text-fill: black;
 }
-.quest:hover .name {
-    -fx-font-size: 9pt;
+.quest .name:visible {
+    -fx-text-fill: black;
+}
+.quest .name:hover {
+    -fx-cursor: hand;
+    -fx-underline: true;
 }
 .quest .progress {
     -fx-background-color: #007b43;
@@ -125,10 +131,10 @@ TabPane .value {
 }
 .quest .remove {
     -fx-text-fill: #d9333f;
-	-fx-padding: 0;
+    -fx-padding: 0;
 }
 .quest .search {
-	-fx-padding: 0;
+    -fx-padding: 0;
 }
 /* 編成 */
 .quest.deck {
@@ -138,6 +144,9 @@ TabPane .value {
     -fx-background-color: #007b43;
     -fx-text-fill: white;
 }
+.quest.deck .progress {
+    -fx-fill: #007b43;
+}
 /* 出撃 */
 .quest.sortie {
     -fx-background-color: #fdeff2;
@@ -145,6 +154,9 @@ TabPane .value {
 .quest.sortie .type {
     -fx-background-color: #e60033;
     -fx-text-fill: white;
+}
+.quest.sortie .progress {
+    -fx-fill: #e60033;
 }
 /* 演習 */
 .quest.practice {
@@ -154,6 +166,9 @@ TabPane .value {
     -fx-background-color: #3eb370;
     -fx-text-fill: white;
 }
+.quest.practice .progress {
+    -fx-fill: #3eb370;
+}
 /* 遠征 */
 .quest.mission {
     -fx-background-color: #ebf6f7;
@@ -162,12 +177,18 @@ TabPane .value {
     -fx-background-color: #007bbb;
     -fx-text-fill: white;
 }
+.quest.mission .progress {
+    -fx-fill: #007bbb;
+}
 /* 補給 */
 .quest.supply {
     -fx-background-color: #fefea0;
 }
 .quest.supply .type {
     -fx-background-color: #ffd900;
+}
+.quest.supply .progress {
+    -fx-fill: #ffd900;
 }
 /* 工廠 */
 .quest.kousyou {
@@ -177,6 +198,9 @@ TabPane .value {
     -fx-background-color: #98623c;
     -fx-text-fill: white;
 }
+.quest.kousyou .progress {
+    -fx-fill: #98623c;
+}
 /* 改装 */
 .quest.kaisou {
     -fx-background-color: #dbd0e6;
@@ -185,6 +209,10 @@ TabPane .value {
     -fx-background-color: #7058a3;
     -fx-text-fill: white;
 }
+.quest.kaisou .progress {
+    -fx-fill: #7058a3;
+}
+
 .fully {
     -fx-base: #FFD700;
 }

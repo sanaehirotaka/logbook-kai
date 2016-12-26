@@ -1,17 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
 
-<fx:root prefHeight="40.0" prefWidth="260.0" styleClass="quest" type="AnchorPane" xmlns="http://javafx.com/javafx/8.0.92" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root styleClass="quest" type="HBox" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="type" maxWidth="1.7976931348623157E308" styleClass="type" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="0" />
-      <Label fx:id="name" maxWidth="1.7976931348623157E308" styleClass="name" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" />
-      <Label fx:id="progress" maxWidth="1.7976931348623157E308" styleClass="progress" AnchorPane.leftAnchor="61.0" AnchorPane.topAnchor="1.0" />
-      <Hyperlink layoutX="195.0" layoutY="3.0" onAction="#remove" styleClass="remove" text="除去" underline="true" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="1.0" />
-      <Hyperlink layoutX="207.0" onAction="#search" styleClass="search" text="検索" underline="true" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
+      <VBox HBox.hgrow="ALWAYS">
+         <children>
+            <HBox>
+               <children>
+                  <StackPane minHeight="10.0" minWidth="10.0" prefHeight="10.0" prefWidth="10.0">
+                     <children>
+                        <Arc fx:id="progress" length="0" radiusX="5.0" radiusY="5.0" startAngle="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="progress" type="ROUND" />
+                     </children>
+                  </StackPane>
+                  <Hyperlink fx:id="name" onAction="#expand" styleClass="name" />
+               </children>
+            </HBox>
+            <VBox fx:id="detailView">
+               <children>
+                  <VBox fx:id="infomation">
+                     <children>
+                        <Label fx:id="detail" styleClass="detail" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="type" maxWidth="1.7976931348623157E308" styleClass="type" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
+                        <Hyperlink onAction="#search" styleClass="search" text="検索" underline="true" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
    </children>
 </fx:root>
