@@ -100,11 +100,13 @@ public class QuestPane extends HBox {
 
             switch (quest.getProgressFlag()) {
             case 1:
+                this.progress.setStartAngle(90);
                 this.progress.setRadiusX(5);
                 this.progress.setRadiusY(5);
                 this.progress.setLength(360 * 0.5);
                 break;
             case 2:
+                this.progress.setStartAngle(45);
                 this.progress.setRadiusX(5);
                 this.progress.setRadiusY(5);
                 this.progress.setLength(360 * 0.8);
