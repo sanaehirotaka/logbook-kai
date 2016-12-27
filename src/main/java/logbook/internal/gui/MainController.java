@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.Notifications;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -20,7 +19,6 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -156,9 +154,9 @@ public class MainController extends WindowController {
 
             // 開始処理
             PluginServices.instances(StartUp.class)
-                .map(Thread::new)
-                .peek(t -> t.setDaemon(true))
-                .forEach(Thread::start);
+                    .map(Thread::new)
+                    .peek(t -> t.setDaemon(true))
+                    .forEach(Thread::start);
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
@@ -585,7 +583,7 @@ public class MainController extends WindowController {
     private void pushNotifyMission(DeckPort port) {
         if (AppConfig.get().isUseToast()) {
             String message = Messages.getString("mission.complete", port.getName()); //$NON-NLS-1$
-            this.showNotify(null, "遠征完了", message);
+            Tools.Conrtols.showNotify(null, "遠征完了", message);
         }
         if (AppConfig.get().isUseSound()) {
             this.soundNotify(Paths.get(AppConfig.get().getMissionSoundDir()));
@@ -636,7 +634,7 @@ public class MainController extends WindowController {
 
             ImageView img = new ImageView(Ships.shipWithItemImage(ship));
 
-            this.showNotify(img, "修復完了", message);
+            Tools.Conrtols.showNotify(img, "修復完了", message);
         }
         if (AppConfig.get().isUseSound()) {
             this.soundNotify(Paths.get(AppConfig.get().getNdockSoundDir()));
@@ -663,26 +661,6 @@ public class MainController extends WindowController {
             }
         }
         return false;
-    }
-
-    /**
-     * 通知を表示する
-     *
-     * @param node グラフィック
-     * @param title タイトル
-     * @param message メッセージ
-     */
-    private void showNotify(Node node, String title, String message) {
-        Notifications notifications = Notifications.create()
-                .graphic(node)
-                .title(title)
-                .text(message)
-                .position(Pos.BOTTOM_RIGHT);
-        if (node == null) {
-            notifications.showInformation();
-        } else {
-            notifications.show();
-        }
     }
 
     /**

@@ -41,7 +41,7 @@ public class SWFListener implements ContentListenerSpi {
 
     @Override
     public boolean test(RequestMetaData request) {
-        return request.getRequestURI().startsWith("/kcs/resources/");
+        return request.getRequestURI().startsWith("/kcs/resources/swf/");
     }
 
     @Override

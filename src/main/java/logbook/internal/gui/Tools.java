@@ -14,8 +14,11 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import org.controlsfx.control.Notifications;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
@@ -35,6 +38,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import logbook.bean.AppConfig;
 import logbook.bean.WindowLocation;
 import logbook.internal.log.LogWriter;
@@ -44,20 +48,20 @@ import logbook.plugin.PluginContainer;
  * JavaFx Tools
  *
  */
-class Tools {
+public class Tools {
 
     /**
      * window
      *
      */
-    static class Windows {
+    public static class Windows {
 
         /**
          * ウインドウの設定
          * @param stage Stage
          * @throws IOException 入出力例外が発生した場合
          */
-        static void setIcon(Stage stage) throws IOException {
+        public static void setIcon(Stage stage) throws IOException {
             // アイコン
             String[] uris = { "logbook/gui/icon_256x256.png", "logbook/gui/icon_128x128.png",
                     "logbook/gui/icon_64x64.png",
@@ -76,7 +80,7 @@ class Tools {
          * デフォルトの閉じるアクション
          * @param controller WindowController
          */
-        static void defaultCloseAction(WindowController controller) {
+        public static void defaultCloseAction(WindowController controller) {
             if (controller.getWindow() != null) {
                 EventHandler<WindowEvent> action = e -> {
                     String key = controller.getClass().getCanonicalName();
@@ -93,7 +97,7 @@ class Tools {
          * デフォルトのウインドウ設定
          * @param controller WindowController
          */
-        static void defaultOpenAction(WindowController controller) {
+        public static void defaultOpenAction(WindowController controller) {
             String key = controller.getClass().getCanonicalName();
             WindowLocation location = AppConfig.get()
                     .getWindowLocationMap()
@@ -106,7 +110,7 @@ class Tools {
      * misc
      *
      */
-    static class Conrtols {
+    public static class Conrtols {
 
         /**
          * ノードの内容をPNGファイルとして出力します
@@ -115,7 +119,7 @@ class Tools {
          * @param title タイトル及びファイル名
          * @param own 親ウインドウ
          */
-        static void storeSnapshot(Node node, String title, Window own) {
+        public static void storeSnapshot(Node node, String title, Window own) {
             try {
                 FileChooser chooser = new FileChooser();
                 chooser.setTitle(title + "の保存");
@@ -144,7 +148,7 @@ class Tools {
          * @param message タイトル
          * @param own 親ウインドウ
          */
-        static void alert(AlertType type, String title, String message, Window own) {
+        public static void alert(AlertType type, String title, String message, Window own) {
             alert(type, title, message, (Node) null, own);
         }
 
@@ -157,7 +161,7 @@ class Tools {
          * @param t 例外
          * @param own 親ウインドウ
          */
-        static void alert(AlertType type, String title, String message, Throwable t, Window own) {
+        public static void alert(AlertType type, String title, String message, Throwable t, Window own) {
             StringWriter w = new StringWriter();
             t.printStackTrace(new PrintWriter(w));
             String stackTrace = w.toString();
@@ -175,7 +179,7 @@ class Tools {
          * @param content コンテンツ
          * @param own 親ウインドウ
          */
-        static void alert(AlertType type, String title, String message, Node content, Window own) {
+        public static void alert(AlertType type, String title, String message, Node content, Window own) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.initOwner(own);
             alert.setTitle(title);
@@ -184,13 +188,46 @@ class Tools {
             alert.getDialogPane().setExpandableContent(content);
             alert.showAndWait();
         }
+
+        /**
+         * 通知を表示する
+         *
+         * @param node グラフィック
+         * @param title タイトル
+         * @param message メッセージ
+         */
+        public static void showNotify(Node node, String title, String message) {
+            showNotify(node, title, message, Duration.seconds(5));
+        }
+
+        /**
+         * 通知を表示する
+         *
+         * @param node グラフィック
+         * @param title タイトル
+         * @param message メッセージ
+         * @param hide 消えるまでの秒数
+         */
+        public static void showNotify(Node node, String title, String message, Duration hide) {
+            Notifications notifications = Notifications.create()
+                    .graphic(node)
+                    .title(title)
+                    .text(message)
+                    .hideAfter(hide)
+                    .position(Pos.BOTTOM_RIGHT);
+            if (node == null) {
+                notifications.showInformation();
+            } else {
+                notifications.show();
+            }
+        }
     }
 
     /**
      * TableViewに関係するメソッドを集めたクラス
      *
      */
-    static class Tables {
+    public static class Tables {
 
         private static final String SEPARATOR = "\t"; //$NON-NLS-1$
 
@@ -207,7 +244,7 @@ class Tools {
          * @param rows 行
          * @return ヘッダ付きの文字列
          */
-        static <T> String toString(TableView<?> table, List<?> rows) {
+        public static <T> String toString(TableView<?> table, List<?> rows) {
             String body = rows.stream()
                     .map(Object::toString)
                     .collect(Collectors.joining(NL));
@@ -222,7 +259,7 @@ class Tools {
          * @param table テーブル
          * @return ヘッダ付きの文字列
          */
-        static String selectionToString(TableView<?> table) {
+        public static String selectionToString(TableView<?> table) {
             return toString(table, table.getSelectionModel()
                     .getSelectedItems());
         }
@@ -232,7 +269,7 @@ class Tools {
          *
          * @param table テーブル
          */
-        static void selectionCopy(TableView<?> table) {
+        public static void selectionCopy(TableView<?> table) {
             ClipboardContent content = new ClipboardContent();
             content.putString(selectionToString(table));
             Clipboard.getSystemClipboard()
@@ -244,7 +281,7 @@ class Tools {
          *
          * @param table テーブル
          */
-        static void selectAll(TableView<?> table) {
+        public static void selectAll(TableView<?> table) {
             // Selection All
             table.getSelectionModel()
                     .selectAll();
@@ -255,7 +292,7 @@ class Tools {
          *
          * @param event キーボードイベント
          */
-        static void defaultOnKeyPressedHandler(KeyEvent event) {
+        public static void defaultOnKeyPressedHandler(KeyEvent event) {
             if (event.getSource() instanceof TableView<?>) {
                 TableView<?> table = (TableView<?>) event.getSource();
                 // Copy
@@ -272,7 +309,7 @@ class Tools {
          * @param title タイトル及びファイル名
          * @param own 親ウインドウ
          */
-        static void store(TableView<?> table, String title, Window own) throws IOException {
+        public static void store(TableView<?> table, String title, Window own) throws IOException {
             String body = table.getItems()
                     .stream()
                     .map(Object::toString)
@@ -301,7 +338,7 @@ class Tools {
          * @param window 親ウインドウ
          * @throws IOException 入出力例外が発生した場合
          */
-        static void showVisibleSetting(TableView<?> table, String key, Stage window) throws IOException {
+        public static void showVisibleSetting(TableView<?> table, String key, Stage window) throws IOException {
             InternalFXMLLoader.showWindow("logbook/gui/column_visible.fxml", window, "テーブル列の表示・非表示", w -> {
                 ((ColumnVisibleController) w).setData(table, key);
             }, null);
@@ -312,7 +349,7 @@ class Tools {
          * @param table テーブル
          * @param key テーブルのキー名
          */
-        static void setVisible(TableView<?> table, String key) {
+        public static void setVisible(TableView<?> table, String key) {
             Set<String> setting = AppConfig.get()
                     .getColumnVisibleMap()
                     .get(key);

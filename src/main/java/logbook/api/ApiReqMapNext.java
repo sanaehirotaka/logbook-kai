@@ -11,11 +11,8 @@ import javax.json.JsonObject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.Notifications;
 
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
@@ -32,6 +29,7 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Audios;
 import logbook.internal.Ships;
+import logbook.internal.gui.Tools;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -100,28 +98,7 @@ public class ApiReqMapNext implements APIListenerSpi {
                     .map(ShipMst::getName)
                     .orElse(""), ship.getLv());
 
-            showNotify(node, "大破警告", message);
-        }
-    }
-
-    /**
-     * 通知を表示する
-     *
-     * @param node グラフィック
-     * @param title タイトル
-     * @param message メッセージ
-     */
-    private static void showNotify(Node node, String title, String message) {
-        Notifications notifications = Notifications.create()
-                .graphic(node)
-                .title(title)
-                .text(message)
-                .hideAfter(Duration.seconds(30))
-                .position(Pos.BOTTOM_RIGHT);
-        if (node == null) {
-            notifications.showInformation();
-        } else {
-            notifications.show();
+            Tools.Conrtols.showNotify(node, "大破警告", message, Duration.seconds(30));
         }
     }
 

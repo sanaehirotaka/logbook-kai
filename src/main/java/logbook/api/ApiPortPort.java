@@ -68,24 +68,27 @@ public class ApiPortPort implements APIListenerSpi {
      * @param array api_ship
      */
     private void apiShip(JsonArray array) {
-        Map<Integer, Ship> map = ShipCollection.get()
+        // 差し替え前
+        Map<Integer, Ship> before = ShipCollection.get()
                 .getShipMap();
         // 差し替え前のID
-        Set<Integer> beforeShipIds = map.keySet();
+        Set<Integer> beforeShipIds = before.keySet();
         // 差し替え後
         Map<Integer, Ship> afterShipMap = JsonHelper.toMap(array, Ship::getId, Ship::toShip);
         // 差し替え後のID
         Set<Integer> afterShipIds = afterShipMap.keySet();
 
         // cond値が更新されたかを検出
-        Predicate<Ship> up = before -> {
-            Ship after = afterShipMap.get(before.getId());
-            if (after != null) {
-                return !before.getCond().equals(after.getCond());
+        Predicate<Ship> update = beforeShip -> {
+            Ship afterShip = afterShipMap.get(beforeShip.getId());
+            if (afterShip != null) {
+                return !beforeShip.getCond().equals(afterShip.getCond());
             }
             return false;
         };
-        if (map.values().stream().anyMatch(up)) {
+        if (before.values().stream()
+                .filter(ship -> ship.getCond() < 49)
+                .anyMatch(update)) {
             ZonedDateTime time = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
             AppCondition.get().setCondUpdateTime(time.toEpochSecond());
         }
@@ -93,7 +96,7 @@ public class ApiPortPort implements APIListenerSpi {
         // 差し替え前に存在して、差し替え後に存在しない艦娘の装備を廃棄する
         beforeShipIds.stream()
                 .filter(((Predicate<Integer>) afterShipIds::contains).negate())
-                .map(map::get)
+                .map(before::get)
                 .forEach(this::destryItem);
 
         ShipCollection.get()
