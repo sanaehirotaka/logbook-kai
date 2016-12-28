@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.Messages;
 import logbook.bean.Chara;
+import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.internal.Ships;
 
@@ -56,9 +57,23 @@ public class BattleDetailPhaseShip extends HBox {
     @FXML
     void initialize() {
         this.img.setImage(Ships.shipWithItemWithoutStateBannerImage(this.chara));
-        this.name.setText(Messages.getString("ship.name", Ships.shipMst(this.chara)
-                .map(ShipMst::getName)
-                .orElse(""), this.chara.getLv()));
+        if (this.chara instanceof Ship) {
+            // 艦娘
+            this.name.setText(Messages.getString("ship.name", Ships.shipMst(this.chara)
+                    .map(ShipMst::getName)
+                    .orElse(""), this.chara.getLv()));
+        } else {
+            // 敵艦
+            this.name.setText(Messages.getString("ship.name", Ships.shipMst(this.chara)
+                    .map(mst -> {
+                        if (mst.getYomi() == null || mst.getYomi().isEmpty()) {
+                            return mst.getName();
+                        } else {
+                            return mst.getName() + mst.getYomi();
+                        }
+                    })
+                    .orElse(""), this.chara.getLv()));
+        }
         this.hp.setText(this.chara.getNowhp() + "/" + this.chara.getMaxhp());
     }
 
