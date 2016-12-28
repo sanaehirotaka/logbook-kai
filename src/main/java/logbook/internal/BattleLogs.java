@@ -204,16 +204,19 @@ public class BattleLogs {
         // ボスフィルタ
         Predicate<SimpleBattleLog> bossFilter = bossOnly ? e -> e.getBoss().indexOf("ボス") != -1 : anyFilter;
 
-        // 出撃
-        long start = 0;
-        if (!bossOnly) {
-            // ボスのみの場合は出撃を集計しない
-            start = logs.stream()
+        // 出撃回数
+        String start;
+        if (bossOnly) {
+            // 集計対象をボスのみにする場合は出撃を集計しない
+            start = "-";
+        } else {
+            start = Long.toString(logs.stream()
                     .filter(areaFilter)
                     .map(SimpleBattleLog::getBoss)
-                    .filter("出撃"::equals)
-                    .count();
+                    .filter(boss -> boss.indexOf("出撃") != -1)
+                    .count());
         }
+
         // 評価(S-D)
         Map<String, Long> rank = logs.stream()
                 .filter(areaFilter)
@@ -228,11 +231,7 @@ public class BattleLogs {
         long win = s + a + b;
 
         BattleLogCollect value = new BattleLogCollect();
-        if (bossOnly) {
-            value.setStart("-");
-        } else {
-            value.setStart(String.valueOf(start));
-        }
+        value.setStart(start);
         value.setWin(String.valueOf(win));
         value.setS(String.valueOf(s));
         value.setA(String.valueOf(a));
