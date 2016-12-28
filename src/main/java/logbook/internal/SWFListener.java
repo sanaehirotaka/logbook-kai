@@ -80,21 +80,25 @@ public class SWFListener implements ContentListenerSpi {
             int extIndex = uri.lastIndexOf('.');
             String shipgraph = uri.substring(nameIndex + 1, extIndex);
 
+            Map<Integer, ShipMst> shipMstMap = ShipMstCollection.get()
+                    .getShipMap();
+
             Integer shipid = this.shipgraphCache.get(shipgraph);
             if (shipid == null) {
                 synchronized (this.shipgraphCache) {
-                    ShipMstCollection.get()
-                            .getShipMap()
-                            .forEach((k, v) -> this.shipgraphCache.put(v.getGraph(), k));
+                    shipMstMap.forEach((k, v) -> this.shipgraphCache.put(v.getGraph(), k));
                 }
                 shipid = this.shipgraphCache.get(shipgraph);
             }
             if (shipid != null) {
-                // ./resources/ships/[name]
-                Path dir = ShipMst.getResourcePathDir(ShipMstCollection.get()
-                        .getShipMap()
-                        .get(shipid));
-                this.storeImages(dir, in);
+                ShipMst shipMst = shipMstMap.get(shipid);
+                if (shipMst != null) {
+                    synchronized (shipMst) {
+                        // ./resources/ships/[name]
+                        Path dir = ShipMst.getResourcePathDir(shipMst);
+                        this.storeImages(dir, in);
+                    }
+                }
             }
         }
     }
