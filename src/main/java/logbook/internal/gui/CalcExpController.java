@@ -25,7 +25,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -460,9 +459,7 @@ public class CalcExpController extends WindowController {
 
         @Override
         public String toString() {
-            return Messages.getString("ship.name", Ships.shipMst(this.ship)
-                    .map(ShipMst::getName)
-                    .orElse(""), this.ship.getLv());
+            return Ships.toName(this.ship);
         }
     }
 }

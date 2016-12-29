@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
-import logbook.Messages;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
 import logbook.bean.BattleTypes;
@@ -150,10 +149,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
             Ship ship = friendFleet.get(i);
             if (ship != null) {
                 // 名前
-                String name = Ships.shipMst(ship)
-                        .map(ShipMst::getName)
-                        .orElse("");
-                joiner.add(Messages.getString("ship.name", name, ship.getLv())); //$NON-NLS-1$
+                joiner.add(Ships.toName(ship));
                 // HP
                 joiner.add(battle.getNowhps().get(i + 1) + "/" + battle.getMaxhps().get(i + 1));
             } else {

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.scene.image.Image;
+import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.Basic;
 import logbook.bean.Chara;
@@ -684,6 +685,36 @@ public class Ships {
             }
         }
         return 0;
+    }
+
+    /**
+     * キャラクターの名前を取得します
+     *
+     * @param chara キャラクター
+     * @return 名前
+     */
+    public static String toName(Chara chara) {
+        if (chara == null) {
+            return "";
+        }
+        if (chara instanceof Ship) {
+            // 艦娘
+            return Messages.getString("ship.name", shipMst(chara)
+                    .map(ShipMst::getName)
+                    .orElse(""), chara.getLv());
+        } else {
+            // 敵艦
+            return Messages.getString("ship.name", shipMst(chara)
+                    .map(mst -> {
+                        String yomi = mst.getYomi();
+                        if (yomi == null || "-".equals(yomi) || yomi.isEmpty()) {
+                            return mst.getName();
+                        } else {
+                            return mst.getName() + yomi;
+                        }
+                    })
+                    .orElse(""), chara.getLv());
+        }
     }
 
     /**

@@ -24,9 +24,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import logbook.Messages;
 import logbook.bean.Ship;
-import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
@@ -294,10 +292,7 @@ public class ItemController extends WindowController {
             if (!empty) {
                 this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
                 if (ship != null) {
-                    String name = Ships.shipMst(ship)
-                            .map(ShipMst::getName)
-                            .orElse("");
-                    this.setText(Messages.getString("ship.name", name, ship.getLv())); //$NON-NLS-1$
+                    this.setText(Ships.toName(ship));
                 } else {
                     this.setText("未装備");
                 }

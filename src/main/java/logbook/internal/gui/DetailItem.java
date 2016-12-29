@@ -11,7 +11,6 @@ import javafx.beans.property.StringProperty;
 import logbook.Messages;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
-import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.internal.Ships;
 
@@ -122,9 +121,7 @@ public class DetailItem {
                 .add(this.alv.get())
                 .add(this.level.get())
                 .add(Optional.ofNullable(this.ship.get())
-                        .map(s -> Messages.getString("ship.name", Ships.shipMst(s) //$NON-NLS-1$
-                                .map(ShipMst::getName)
-                                .orElse(""), s.getLv()))
+                        .map(Ships::toName)
                         .orElse("未所持"))
                 .toString();
     }

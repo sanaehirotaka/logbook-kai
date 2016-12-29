@@ -19,11 +19,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import logbook.Messages;
 import logbook.bean.Ndock;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
-import logbook.bean.ShipMst;
 import logbook.internal.Ships;
 import logbook.internal.Time;
 import logbook.plugin.PluginContainer;
@@ -84,10 +82,7 @@ public class NdockPane extends HBox {
             // 艦娘画像
             this.ship.setImage(Ships.shipWithItemImage(ship));
             // 名前
-            String name = Ships.shipMst(ship)
-                    .map(ShipMst::getName)
-                    .orElse("");
-            this.name.setText(Messages.getString("ship.name", name, ship.getLv())); //$NON-NLS-1$
+            this.name.setText(Ships.toName(ship));
             this.update();
 
         } catch (Exception e) {

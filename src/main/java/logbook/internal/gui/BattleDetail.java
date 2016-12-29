@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import logbook.Messages;
 import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.CombinedType;
@@ -28,7 +27,6 @@ import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.BattleTypes.Stage2;
 import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.Ship;
-import logbook.bean.ShipMst;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
@@ -194,10 +192,7 @@ public class BattleDetail extends WindowController {
                     } else {
                         ship = ps.getAfterFriendCombined().get(idx - 6);
                     }
-                    this.tykuCI.setText(
-                            Messages.getString("ship.name", Ships.shipMst(ship)
-                                    .map(ShipMst::getName)
-                                    .orElse(""), ship.getLv()));
+                    this.tykuCI.setText(Ships.toName(ship));
                 }
             }
         }
