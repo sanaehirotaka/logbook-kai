@@ -118,7 +118,7 @@ public class QuestPane extends HBox {
                 break;
             }
             this.name.setText(quest.getTitle());
-            this.detail.setText(quest.getDetail());
+            this.detail.setText(quest.getDetail().replaceAll("<br>", ""));
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }

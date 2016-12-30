@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
@@ -21,8 +22,12 @@
                   </StackPane>
                   <Hyperlink fx:id="name" onAction="#expand" styleClass="name" />
                   <Pane HBox.hgrow="ALWAYS" />
-                  <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
-                  <Hyperlink onAction="#search" styleClass="search" text="検索" underline="true" />
+                  <Group>
+                     <children>
+                        <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
+                        <Hyperlink layoutX="32.0" onAction="#search" styleClass="search" text="検索" underline="true" />
+                     </children>
+                  </Group>
                </children>
             </HBox>
             <VBox fx:id="detailView">
