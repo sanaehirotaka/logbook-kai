@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -38,6 +39,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -164,6 +166,7 @@ public class ResourceChartController extends WindowController {
 
     @FXML
     void initialize() {
+        TableTool.setVisible(this.table, this.getClass().toString() + "#" + "table");
         // 資材ログのテーブル列をバインド
         this.date.setCellValueFactory(new PropertyValueFactory<>("date"));
         this.fuelGap.setCellValueFactory(new PropertyValueFactory<>("fuel"));
@@ -354,9 +357,43 @@ public class ResourceChartController extends WindowController {
                 before = log;
             }
             Collections.reverse(tableBody);
-            this.table.setItems(tableBody);
+
+            SortedList<ResourceTable> sortedList = new SortedList<>(tableBody);
+            this.table.setItems(sortedList);
+            sortedList.comparatorProperty().bind(this.table.comparatorProperty());
+            this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
         } catch (Exception e) {
             LoggerHolder.LOG.warn("資材ログの読込中に例外", e);
+        }
+    }
+
+    /**
+     * クリップボードにコピー
+     */
+    @FXML
+    void copy() {
+        TableTool.selectionCopy(this.table);
+    }
+
+    /**
+     * すべてを選択
+     */
+    @FXML
+    void selectAll() {
+        TableTool.selectAll(this.table);
+    }
+
+    /**
+     * テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisible() {
+        try {
+            TableTool.showVisibleSetting(this.table, this.getClass().toString() + "#" + "table",
+                    this.getWindow());
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
     }
 
