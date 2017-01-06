@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -54,7 +55,7 @@ public class RequireNdockController extends WindowController {
     @FXML
     private TableColumn<RequireNdock, Integer> metal;
 
-    ObservableList<RequireNdock> ndocks = FXCollections.observableArrayList();
+    private ObservableList<RequireNdock> ndocks = FXCollections.observableArrayList();
 
     @FXML
     void initialize() {
@@ -71,7 +72,9 @@ public class RequireNdockController extends WindowController {
         this.fuel.setCellValueFactory(new PropertyValueFactory<>("fuel"));
         this.metal.setCellValueFactory(new PropertyValueFactory<>("metal"));
 
-        this.table.setItems(this.ndocks);
+        SortedList<RequireNdock> sortedList = new SortedList<>(this.ndocks);
+        this.table.setItems(sortedList);
+        sortedList.comparatorProperty().bind(this.table.comparatorProperty());
         this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
 
