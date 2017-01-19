@@ -140,7 +140,7 @@ public class MainController extends WindowController {
             Plugin.getContent(MainExtMenu.class)
                     .forEach(this.ext.getItems()::add);
 
-            Timeline timeline = new Timeline();
+            Timeline timeline = new Timeline(1);
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.getKeyFrames().add(new KeyFrame(
                     javafx.util.Duration.seconds(1),
