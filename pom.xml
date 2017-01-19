@@ -18,6 +18,11 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
+                        <manifestEntries>
+                            <Bundle-License>The MIT License (MIT)</Bundle-License>
+                            <Implementation-Title>航海日誌</Implementation-Title>
+                            <Implementation-Vendor>sanaehirotaka</Implementation-Vendor>
+                        </manifestEntries>
                         <manifest>
                             <mainClass>logbook.internal.Launcher</mainClass>
                             <addClasspath>true</addClasspath>
