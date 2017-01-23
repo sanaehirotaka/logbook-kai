@@ -20,6 +20,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -29,6 +30,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
+import javafx.stage.StageStyle;
 import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
@@ -317,6 +320,30 @@ public class MainController extends WindowController {
     void config(ActionEvent e) {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/config.fxml", this.getWindow(), "設定");
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
+     * バージョン情報
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void version(ActionEvent e) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/version.fxml", this.getWindow(), "バージョン情報",
+                    root -> new Scene(root, Color.TRANSPARENT),
+                    null,
+                    stage -> {
+                        stage.initStyle(StageStyle.TRANSPARENT);
+                        stage.focusedProperty().addListener((ob, o, n) -> {
+                            if (!n) {
+                                stage.close();
+                            }
+                        });
+                    });
         } catch (Exception ex) {
             LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
         }

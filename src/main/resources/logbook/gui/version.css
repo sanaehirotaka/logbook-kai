@@ -1,0 +1,26 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root {
+    -fx-background-color: transparent;
+}
+.outside {
+    -fx-padding: 10px;
+}
+.inside {
+    -fx-background-color: rgba(255,255,255, 0.6);
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255, 0.6), 10, 0.6, 0, 0);
+}
+.appname {
+    -fx-font-size: 32pt;
+}
+.label, .hyperlink {
+    -fx-effect: dropshadow(gaussian, white, 10, 0.8, 0, 0);
+}
+.text-area, .text-area .scroll-pane, .text-area .scroll-pane .viewport, .text-area .scroll-pane .viewport * {
+    -fx-background-color: rgba(255,255,255, 0.6);
+}
+
+.text-area .scroll-pane, .text-area .scroll-pane .viewport, .text-area .scroll-pane .viewport * {
+    -fx-background-color: transparent;
+}
