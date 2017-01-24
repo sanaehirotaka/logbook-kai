@@ -140,6 +140,7 @@ public class FleetTabPane extends ScrollPane {
     @FXML
     void changeBranchCoefficient(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog(Double.toString(this.branchCoefficient));
+        dialog.getDialogPane().getStylesheets().add("logbook/gui/application.css");
         dialog.initOwner(this.getScene().getWindow());
         dialog.setTitle("分岐点係数を変更");
         dialog.setHeaderText("分岐点係数を数値で入力してください 例)\n"
