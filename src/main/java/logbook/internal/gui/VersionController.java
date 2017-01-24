@@ -14,8 +14,11 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import logbook.internal.Version;
 import logbook.plugin.PluginContainer;
 
@@ -36,6 +39,8 @@ public class VersionController extends WindowController {
 
     @FXML
     private TextArea licensetext;
+
+    private Point2D start;
 
     @FXML
     void initialize() {
@@ -83,6 +88,21 @@ public class VersionController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.LOG.warn("ブラウザの起動で例外", e);
         }
+    }
+
+    @Override
+    public void setWindow(Stage window) {
+        super.setWindow(window);
+
+        // ドラッグの開始
+        window.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
+            this.start = new Point2D(window.getX() - e.getScreenX(), window.getY() - e.getScreenY());
+        });
+        // ドラッグ中
+        window.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+            window.setX(e.getScreenX() + this.start.getX());
+            window.setY(e.getScreenY() + this.start.getY());
+        });
     }
 
     private static class LoggerHolder {
