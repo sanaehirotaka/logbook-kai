@@ -251,7 +251,7 @@ public class FleetTabPane extends ScrollPane {
             long end = cut + (-Math.floorDiv(49 - minCond, -3) * 180);
 
             // 現在時刻
-            ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
+            ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
             // 現在時刻(エポック秒)
             long nowepoch = now.toEpochSecond();
 
