@@ -166,9 +166,14 @@ public class BattleLogs {
             // ログ読み込み制限
             ZonedDateTime limit = now.minusMonths(2);
 
+            Stream<String> tmp;
             if (Files.exists(path)) {
-                List<SimpleBattleLog> all = Files.lines(path, LogWriter.DEFAULT_CHARSET)
-                        .skip(1)
+                tmp = Files.lines(path, LogWriter.DEFAULT_CHARSET);
+            } else {
+                tmp = Stream.empty();
+            }
+            try (Stream<String> lines = tmp) {
+                List<SimpleBattleLog> all = lines.skip(1)
                         .filter(l -> !l.isEmpty())
                         .map(mapper)
                         .filter(Objects::nonNull)
