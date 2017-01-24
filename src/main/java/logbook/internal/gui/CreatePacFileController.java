@@ -4,16 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import logbook.bean.AppConfig;
@@ -55,31 +51,17 @@ public class CreatePacFileController extends WindowController {
 
                 this.addr.setText("file:///" + file.toURI().toString().replaceFirst("file:/", ""));
 
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.initOwner(this.getWindow());
-
-                alert.setTitle("キャプチャが保存されました");
-                alert.setContentText("自動プロキシ構成スクリプトファイルを生成しました。\r\n"
-                        + "次にブラウザの設定を行って下さい。");
-                alert.show();
+                Tools.Conrtols.alert(AlertType.INFORMATION,
+                        "自動プロキシ構成スクリプトファイル",
+                        "自動プロキシ構成スクリプトファイルを生成しました。\n" + "次にブラウザの設定を行って下さい。",
+                        this.getWindow());
             }
         } catch (IOException e) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.initOwner(this.getWindow());
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            pw.flush();
-            String stackTrace = sw.toString();
-
-            TextArea textArea = new TextArea(stackTrace);
-            alert.getDialogPane().setExpandableContent(textArea);
-
-            alert.setTitle("自動プロキシ構成スクリプトファイルの生成に失敗しました");
-            alert.setHeaderText("自動プロキシ構成スクリプトファイルの生成に失敗しました");
-            alert.setContentText(e.getMessage());
-            alert.show();
+            Tools.Conrtols.alert(AlertType.ERROR,
+                    "自動プロキシ構成スクリプトファイル",
+                    "自動プロキシ構成スクリプトファイルの生成に失敗しました",
+                    e,
+                    this.getWindow());
         }
     }
 

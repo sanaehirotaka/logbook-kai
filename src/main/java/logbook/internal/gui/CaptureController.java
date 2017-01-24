@@ -6,6 +6,7 @@ import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Optional;
 
 import javax.imageio.ImageIO;
 
@@ -249,12 +250,11 @@ public class CaptureController extends WindowController {
                 this.end = new Point2D(e.getX(), e.getY());
                 if (!this.start.equals(this.end)) {
 
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.initOwner(stage);
-                    alert.setTitle("矩形選択");
-                    alert.setHeaderText("");
-                    alert.setContentText("この範囲でよろしいですか？");
-                    if (alert.showAndWait().orElse(null) == ButtonType.OK) {
+                    Optional<ButtonType> buttonType = Tools.Conrtols.alert(Alert.AlertType.CONFIRMATION,
+                            "矩形選択",
+                            "この範囲でよろしいですか？",
+                            stage);
+                    if (buttonType.orElse(null) == ButtonType.OK) {
                         int x = (int) Math.min(this.start.getX(), this.end.getX());
                         int y = (int) Math.min(this.start.getY(), this.end.getY());
                         int w = (int) Math.abs(this.start.getX() - this.end.getX());

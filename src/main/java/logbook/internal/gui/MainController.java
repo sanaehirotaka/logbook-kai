@@ -21,7 +21,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -201,12 +200,7 @@ public class MainController extends WindowController {
                             ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
                         }, null);
             } else {
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.initOwner(this.getWindow());
-                alert.setTitle("直近の戦闘");
-                alert.setHeaderText("直近の戦闘");
-                alert.setContentText("戦闘中ではありません");
-                alert.show();
+                Tools.Conrtols.alert(AlertType.INFORMATION, "直近の戦闘", "戦闘中ではありません", this.getWindow());
             }
         } catch (Exception ex) {
             LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);

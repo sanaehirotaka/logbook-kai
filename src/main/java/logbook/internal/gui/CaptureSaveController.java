@@ -5,8 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -24,12 +22,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -133,12 +129,10 @@ public class CaptureSaveController extends WindowController {
                     protected void succeeded() {
                         super.succeeded();
 
-                        Alert alert = new Alert(AlertType.INFORMATION);
-                        alert.initOwner(CaptureSaveController.this.getWindow());
-
-                        alert.setTitle("キャプチャが保存されました");
-                        alert.setContentText("キャプチャが保存されました");
-                        alert.show();
+                        Tools.Conrtols.alert(AlertType.INFORMATION,
+                                "キャプチャが保存されました",
+                                "キャプチャが保存されました",
+                                CaptureSaveController.this.getWindow());
                     }
 
                     @Override
@@ -146,22 +140,11 @@ public class CaptureSaveController extends WindowController {
                         super.failed();
                         Throwable t = this.getException();
 
-                        Alert alert = new Alert(AlertType.ERROR);
-                        alert.initOwner(CaptureSaveController.this.getWindow());
-
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        t.printStackTrace(pw);
-                        pw.flush();
-                        String stackTrace = sw.toString();
-
-                        TextArea textArea = new TextArea(stackTrace);
-                        alert.getDialogPane().setExpandableContent(textArea);
-
-                        alert.setTitle("キャプチャの保存先に失敗しました");
-                        alert.setHeaderText("キャプチャの保存先に失敗しました");
-                        alert.setContentText(t.getMessage());
-                        alert.show();
+                        Tools.Conrtols.alert(AlertType.ERROR,
+                                "キャプチャの保存先に失敗しました",
+                                "キャプチャの保存先に失敗しました",
+                                t,
+                                CaptureSaveController.this.getWindow());
                     }
                 };
                 ThreadManager.getExecutorService().execute(task);

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -149,9 +151,10 @@ public class Tools {
          * @param title メッセージタイトル
          * @param message タイトル
          * @param own 親ウインドウ
+         * @return ボタンタイプ
          */
-        public static void alert(AlertType type, String title, String message, Window own) {
-            alert(type, title, message, (Node) null, own);
+        public static Optional<ButtonType> alert(AlertType type, String title, String message, Window own) {
+            return alert(type, title, message, (Node) null, own);
         }
 
         /**
@@ -162,14 +165,16 @@ public class Tools {
          * @param message タイトル
          * @param t 例外
          * @param own 親ウインドウ
+         * @return ボタンタイプ
          */
-        public static void alert(AlertType type, String title, String message, Throwable t, Window own) {
+        public static Optional<ButtonType> alert(AlertType type, String title, String message, Throwable t,
+                Window own) {
             StringWriter w = new StringWriter();
             t.printStackTrace(new PrintWriter(w));
             String stackTrace = w.toString();
             TextArea textArea = new TextArea(stackTrace);
 
-            alert(type, title, message, textArea, own);
+            return alert(type, title, message, textArea, own);
         }
 
         /**
@@ -180,16 +185,17 @@ public class Tools {
          * @param message タイトル
          * @param content コンテンツ
          * @param own 親ウインドウ
+         * @return ボタンタイプ
          */
-        public static void alert(AlertType type, String title, String message, Node content, Window own) {
+        public static Optional<ButtonType> alert(AlertType type, String title, String message, Node content,
+                Window own) {
             Alert alert = new Alert(type);
             alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
             alert.initOwner(own);
             alert.setTitle(title);
-            alert.setHeaderText(title);
             alert.setContentText(message);
             alert.getDialogPane().setExpandableContent(content);
-            alert.showAndWait();
+            return alert.showAndWait();
         }
 
         /**
