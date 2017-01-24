@@ -232,7 +232,7 @@ public class FleetTabPane extends ScrollPane {
                 .anyMatch(ship -> !ship.getFuel().equals(Ships.shipMst(ship).map(ShipMst::getFuelMax).orElse(0)) ||
                         !ship.getBull().equals(Ships.shipMst(ship).map(ShipMst::getBullMax).orElse(0)))) {
             // 未補給時
-            this.tabCssClass = "warn";
+            this.tabCssClass = "shortage";
         } else if (this.port.getId() > 1 && this.port.getMission().get(0) == 0L) {
             // 遠征未出撃
             this.tabCssClass = "empty";

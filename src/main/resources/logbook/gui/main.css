@@ -30,6 +30,11 @@ TabPane .tab.warn {
 }
 TabPane .tab.warn .tab-label {
 }
+TabPane .tab.shortage {
+    -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #FFF030, transparent);
+}
+TabPane .tab.shortage .tab-label {
+}
 TabPane .tab.empty {
     -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, #87CEFA, transparent);
 }
