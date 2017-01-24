@@ -119,6 +119,9 @@ public final class AppConfig implements Serializable {
     /** テーブル列の表示・非表示 */
     private Map<String, Set<String>> columnVisibleMap = new HashMap<>();
 
+    /** テーブル列の幅 */
+    private Map<String, Map<String, Double>> columnWidthMap = new HashMap<>();
+
     /** キャプチャの保存先 */
     private String captureDir;
 

@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -180,7 +182,8 @@ public class Tools {
          * @param own 親ウインドウ
          */
         public static void alert(AlertType type, String title, String message, Node content, Window own) {
-            Alert alert = new Alert(AlertType.WARNING);
+            Alert alert = new Alert(type);
+            alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
             alert.initOwner(own);
             alert.setTitle(title);
             alert.setHeaderText(title);
@@ -360,6 +363,35 @@ public class Tools {
                     }
                 });
             }
+        }
+
+        /**
+         * テーブル列の幅の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         */
+        public static void setWidth(TableView<?> table, String key) {
+            Map<String, Double> setting = AppConfig.get()
+                    .getColumnWidthMap()
+                    .get(key);
+            if (setting != null) {
+                // 初期設定
+                table.getColumns().forEach(column -> {
+                    Double width = setting.get(column.getText());
+                    if (width != null) {
+                        column.setPrefWidth(width);
+                    }
+                });
+            }
+            // 幅が変更された時に設定を保存する
+            table.getColumns().forEach(column -> {
+                column.widthProperty().addListener((ob, o, n) -> {
+                    Map<String, Double> map = AppConfig.get()
+                            .getColumnWidthMap()
+                            .computeIfAbsent(key, e -> new HashMap<>());
+                    map.put(column.getText(), n.doubleValue());
+                });
+            });
         }
 
         private static String tableHeader(TableView<?> table, String separator) {

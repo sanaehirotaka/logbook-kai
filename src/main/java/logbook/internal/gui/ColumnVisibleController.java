@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,6 +18,9 @@ import logbook.bean.AppConfig;
  *
  */
 public class ColumnVisibleController extends WindowController {
+
+    /** テーブルのキー名 */
+    private String key;
 
     /** リスト */
     @FXML
@@ -56,12 +60,25 @@ public class ColumnVisibleController extends WindowController {
     }
 
     /**
+     * 幅をリセット
+     */
+    @FXML
+    void resetWidth() {
+        AppConfig.get()
+                .getColumnWidthMap()
+                .remove(this.key);
+        Tools.Conrtols.alert(AlertType.INFORMATION, "列幅をリセット", "列幅がリセットされました。\n再度ウインドウを開いたときに反映されます。",
+                this.getWindow());
+    }
+
+    /**
      * リストにアイテムを設定する
      *
      * @param table テーブル
      * @param key テーブルのキー名
      */
     public void setData(TableView<?> table, String key) {
+        this.key = key;
         this.listView.getItems().addAll(table.getColumns());
         // 閉じるときに設定を保存する
         this.getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
