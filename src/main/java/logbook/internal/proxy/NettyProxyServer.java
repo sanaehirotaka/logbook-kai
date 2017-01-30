@@ -24,7 +24,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.littleshoot.proxy.ChainedProxy;
@@ -183,6 +182,8 @@ public class NettyProxyServer implements ProxyServerSpi {
 
     static class CaptureFilters extends HttpFiltersAdapter {
 
+        private static final int BUFFER_SIZE = 4096;
+
         private Interceptor interceptor;
 
         private boolean released;
@@ -289,7 +290,11 @@ public class NettyProxyServer implements ProxyServerSpi {
                     } else {
                         wrap = in;
                     }
-                    IOUtils.copy(wrap, out);
+                    byte[] buffer = new byte[BUFFER_SIZE];
+                    int n;
+                    while (-1 != (n = wrap.read(buffer))) {
+                        out.write(buffer, 0, n);
+                    }
                 }
             }
             return out.toByteArray();
