@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -147,22 +148,22 @@ public class CalcExpController extends WindowController {
         // イベントリスナー
         this.shipList.getSelectionModel()
                 .selectedItemProperty()
-                .addListener(this::changeShip);
+                .addListener((ChangeListener<ShipWrapper>) this::changeShip);
         this.nowLv.getValueFactory()
                 .valueProperty()
-                .addListener(this::changeNowLv);
+                .addListener((ChangeListener<Integer>) this::changeNowLv);
         this.goalLv.getValueFactory()
                 .valueProperty()
-                .addListener(this::changeGoalLv);
+                .addListener((ChangeListener<Integer>) this::changeGoalLv);
         this.sea.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((ov, o, n) -> this.update());
+                .addListener((ChangeListener<SeaArea>) (ov, o, n) -> this.update());
         this.rank.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((ov, o, n) -> this.update());
+                .addListener((ChangeListener<Rank>) (ov, o, n) -> this.update());
         this.shortageShip.getSelectionModel()
                 .selectedItemProperty()
-                .addListener(this::changeShip);
+                .addListener((ChangeListener<ShortageShipItem>) this::changeShip);
 
         // 旗艦ID
         Integer flagShipId = DeckPortCollection.get()
