@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -14,6 +13,7 @@ import logbook.bean.QuestList.Quest;
 import logbook.internal.Config;
 import logbook.internal.Logs;
 import lombok.Data;
+import lombok.val;
 
 /**
  * 任務のコレクション
@@ -21,10 +21,10 @@ import lombok.Data;
 @Data
 public class AppQuestCollection implements Serializable {
 
-    private static final long serialVersionUID = 1439562010375402524L;
+    private static final long serialVersionUID = 9151098623774557766L;
 
     /** 任務 */
-    private Map<Integer, AppQuest> quest = new ConcurrentSkipListMap<>();
+    private ConcurrentSkipListMap<Integer, AppQuest> quest = new ConcurrentSkipListMap<>();
 
     /**
      * 任務を更新します
@@ -32,7 +32,7 @@ public class AppQuestCollection implements Serializable {
     public void update() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"));
 
-        Map<Integer, AppQuest> copyMap = new ConcurrentSkipListMap<>(this.quest);
+        val copyMap = new ConcurrentSkipListMap<>(this.quest);
         for (Iterator<Entry<Integer, AppQuest>> iterator = copyMap.entrySet().iterator(); iterator.hasNext();) {
             Entry<Integer, AppQuest> entry = iterator.next();
 
@@ -57,7 +57,7 @@ public class AppQuestCollection implements Serializable {
     public void update(QuestList questList) {
         this.update();
 
-        Map<Integer, AppQuest> copyMap = new ConcurrentSkipListMap<>(this.quest);
+        val copyMap = new ConcurrentSkipListMap<>(this.quest);
         for (Quest quest : questList.getList()) {
             if (quest != null) {
                 copyMap.remove(quest.getNo());
