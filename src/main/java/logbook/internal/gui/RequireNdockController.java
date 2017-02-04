@@ -6,9 +6,12 @@ import java.util.Comparator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -16,12 +19,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Ships;
 import logbook.internal.Time;
 
+/**
+ * お風呂に入りたい艦娘のコントローラー
+ *
+ */
 public class RequireNdockController extends WindowController {
 
     @FXML
@@ -57,6 +66,8 @@ public class RequireNdockController extends WindowController {
 
     private ObservableList<RequireNdock> ndocks = FXCollections.observableArrayList();
 
+    private Timeline timeline;
+
     @FXML
     void initialize() {
         TableTool.setVisible(this.table, this.getClass().toString() + "#" + "table");
@@ -78,6 +89,23 @@ public class RequireNdockController extends WindowController {
         this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
 
+        this.timeline = new Timeline();
+        this.timeline.setCycleCount(Timeline.INDEFINITE);
+        this.timeline.getKeyFrames().add(new KeyFrame(
+                javafx.util.Duration.seconds(1),
+                this::update));
+        this.timeline.play();
+
+        this.update(null);
+    }
+
+    /**
+     * 画面の更新
+     *
+     * @param e ActionEvent
+     */
+    void update(ActionEvent e) {
+        this.ndocks.clear();
         ShipCollection.get()
                 .getShipMap()
                 .values()
@@ -153,6 +181,12 @@ public class RequireNdockController extends WindowController {
                 this.setText(null);
             }
         }
+    }
+
+    @Override
+    public void setWindow(Stage window) {
+        super.setWindow(window);
+        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
     }
 
     private static class LoggerHolder {
