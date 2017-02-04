@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import logbook.internal.JsonHelper;
 import lombok.Data;
 
@@ -20,6 +22,7 @@ public class BattleTypes {
     /**
      * 戦闘を表します
      */
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     public interface IBattle extends Serializable {
 
         /**

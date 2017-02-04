@@ -1,12 +1,11 @@
 package logbook.internal;
 
 import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -33,6 +32,8 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
 import logbook.internal.gui.BattleLogCollect;
@@ -51,44 +52,38 @@ public class BattleLogs {
      * @param log 戦闘ログ
      */
     public static void write(BattleLog log) {
-        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
-        // yyyy-MM-dd hh:mm:ss -> yyyy-MM-dd hh-mm-ss
-        String name = toName(log.getTime());
-        Path path = dir.resolve(name);
-
         // 書き込み
-        write(path, log);
-        // 期限切れの削除
-        deleteExpiration(dir);
-    }
-
-    private static void write(Path path, BattleLog log) {
         try {
+            Path path = jsonPath(log.getTime());
+
             Path parent = path.getParent();
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
-            try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(path))) {
-                try (XMLEncoder encoder = new XMLEncoder(out)) {
-                    encoder.writeObject(log);
-                }
+            try (Writer writer = Files.newBufferedWriter(path)) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.writeValue(writer, log);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LoggerHolder.LOG.warn("戦闘ログの書き込み中に例外", e);
         }
+        // 期限切れの削除
+        deleteExpiration();
     }
 
-    private static void deleteExpiration(Path dir) {
+    private static void deleteExpiration() {
         try {
+            Path dir = Paths.get(AppConfig.get().getBattleLogDir());
+
             // 期限(自身を含まない)
             ZonedDateTime exp = unitToday()
                     .minusDays(AppConfig.get().getBattleLogExpires())
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
-            // 比較するためのファイル名
-            String expName = toName(Logs.DATE_FORMAT.format(exp));
+            // 比較するためのファイル名(拡張子を含まない)
+            String expName = fileNameSafeDateString(Logs.DATE_FORMAT.format(exp));
 
             PathMatcher xmlFilter = dir.getFileSystem()
-                    .getPathMatcher("glob:*.xml");
+                    .getPathMatcher("glob:*.{xml,json}");
 
             Consumer<Path> deleteAction = p -> {
                 try {
@@ -97,13 +92,21 @@ public class BattleLogs {
                     LoggerHolder.LOG.warn("戦闘ログの削除中に例外", e);
                 }
             };
+            Predicate<Path> compareAction = p -> {
+                String fname = p.getFileName().toString();
+                int idx = fname.lastIndexOf('.');
+                if (idx != -1) {
+                    return fname.substring(0, idx).compareTo(expName) < 0;
+                }
+                return false;
+            };
 
             try (Stream<Path> ds = Files.list(dir)) {
                 ds.filter(p -> xmlFilter.matches(p.getFileName()))
-                        .filter(p -> p.getFileName().toString().compareTo(expName) < 0)
+                        .filter(compareAction)
                         .forEach(deleteAction);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LoggerHolder.LOG.warn("戦闘ログの削除中に例外", e);
         }
     }
@@ -115,13 +118,15 @@ public class BattleLogs {
      * @return 戦闘ログ、存在しない又は入出力例外の場合null
      */
     public static BattleLog read(String dateString) {
-        String name = toName(dateString);
-        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
-        return read(dir.resolve(name));
-    }
-
-    private static BattleLog read(Path path) {
         try {
+            Path path = jsonPath(dateString);
+            if (Files.isReadable(path)) {
+                try (Reader reader = Files.newBufferedReader(path)) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    return mapper.readValue(reader, BattleLog.class);
+                }
+            }
+            path = xmlPath(dateString);
             if (Files.isReadable(path)) {
                 try (InputStream in = new BufferedInputStream(Files.newInputStream(path))) {
                     try (XMLDecoder decoder = new XMLDecoder(in)) {
@@ -133,14 +138,24 @@ public class BattleLogs {
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LoggerHolder.LOG.warn("戦闘ログの読み込み中に例外", e);
         }
         return null;
     }
 
-    private static String toName(String dateTimeString) {
-        return dateTimeString.replace(':', '-') + ".xml";
+    private static Path xmlPath(String dateString) {
+        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
+        return dir.resolve(fileNameSafeDateString(dateString) + ".xml");
+    }
+
+    private static Path jsonPath(String dateString) {
+        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
+        return dir.resolve(fileNameSafeDateString(dateString) + ".json");
+    }
+
+    private static String fileNameSafeDateString(String dateString) {
+        return dateString.replace(':', '-');
     }
 
     /**
