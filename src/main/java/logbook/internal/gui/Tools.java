@@ -67,9 +67,13 @@ public class Tools {
          */
         public static void setIcon(Stage stage) throws IOException {
             // アイコン
-            String[] uris = { "logbook/gui/icon_256x256.png", "logbook/gui/icon_128x128.png",
+            String[] uris = {
+                    "logbook/gui/icon_256x256.png",
+                    "logbook/gui/icon_128x128.png",
                     "logbook/gui/icon_64x64.png",
-                    "logbook/gui/icon_32x32.png" };
+                    "logbook/gui/icon_48x48.png",
+                    "logbook/gui/icon_32x32.png",
+                    "logbook/gui/icon_16x16.png" };
 
             for (String uri : uris) {
                 try (InputStream is = PluginContainer.getInstance()
