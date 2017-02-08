@@ -222,6 +222,20 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 遠征ログ
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void missionlog(ActionEvent e) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/missionlog.fxml", this.getWindow(), "遠征ログ");
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("遠征ログの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 所有装備
      *
      * @param e ActionEvent

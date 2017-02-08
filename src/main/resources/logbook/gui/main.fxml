@@ -27,6 +27,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
+              <MenuItem mnemonicParsing="false" onAction="#missionlog" text="遠征ログ" />
               <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧">
                      <accelerator>
