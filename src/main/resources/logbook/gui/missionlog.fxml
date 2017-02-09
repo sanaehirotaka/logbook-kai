@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
@@ -10,15 +11,15 @@
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MissionLogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MissionLogController">
    <children>
-      <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.3" VBox.vgrow="ALWAYS">
          <items>
             <VBox>
                <children>
                   <TreeTableView fx:id="collect" VBox.vgrow="ALWAYS">
                      <columns>
-                        <TreeTableColumn fx:id="unit" prefWidth="135.0" text="集計" />
+                        <TreeTableColumn fx:id="unit" prefWidth="145.0" text="集計" />
                         <TreeTableColumn fx:id="successGood" prefWidth="45.0" text="大成功" />
                         <TreeTableColumn fx:id="success" prefWidth="45.0" text="成功" />
                         <TreeTableColumn fx:id="fail" prefWidth="45.0" text="失敗" />
@@ -28,8 +29,30 @@
             </VBox>
             <VBox>
                <children>
-                  <SplitPane dividerPositions="0.65" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+                  <SplitPane dividerPositions="0.7" orientation="VERTICAL" VBox.vgrow="ALWAYS">
                      <items>
+                        <SplitPane dividerPositions="0.45">
+                           <items>
+                              <TableView fx:id="aggregate" prefHeight="200.0" prefWidth="200.0">
+                                 <columns>
+                                    <TableColumn fx:id="resource" prefWidth="100.0" text="資材" />
+                                    <TableColumn fx:id="count" prefWidth="75.0" text="合計" />
+                                    <TableColumn fx:id="average" prefWidth="75.0" text="平均" />
+                                 </columns>
+                                 <contextMenu>
+                                    <ContextMenu>
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" onAction="#copyAggregate" text="クリップボードにコピー" />
+                                          <MenuItem mnemonicParsing="false" onAction="#selectAllAggregate" text="すべてを選択" />
+                                          <SeparatorMenuItem mnemonicParsing="false" />
+                                          <MenuItem mnemonicParsing="false" onAction="#columnVisibleAggregate" text="列の表示・非表示" />
+                                       </items>
+                                    </ContextMenu>
+                                 </contextMenu>
+                              </TableView>
+                              <PieChart fx:id="chart" />
+                           </items>
+                        </SplitPane>
                         <TableView fx:id="detail">
                            <columns>
                               <TableColumn fx:id="date" prefWidth="150.0" text="日付" />
@@ -51,23 +74,6 @@
                                     <MenuItem mnemonicParsing="false" onAction="#selectAllDetail" text="すべてを選択" />
                                     <SeparatorMenuItem mnemonicParsing="false" />
                                     <MenuItem mnemonicParsing="false" onAction="#columnVisibleDetail" text="列の表示・非表示" />
-                                 </items>
-                              </ContextMenu>
-                           </contextMenu>
-                        </TableView>
-                        <TableView fx:id="aggregate" prefHeight="200.0" prefWidth="200.0">
-                           <columns>
-                              <TableColumn fx:id="resource" prefWidth="100.0" text="資材" />
-                              <TableColumn fx:id="count" prefWidth="75.0" text="個数" />
-                              <TableColumn fx:id="average" prefWidth="75.0" text="平均" />
-                           </columns>
-                           <contextMenu>
-                              <ContextMenu>
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#copyAggregate" text="クリップボードにコピー" />
-                                    <MenuItem mnemonicParsing="false" onAction="#selectAllAggregate" text="すべてを選択" />
-                                    <SeparatorMenuItem mnemonicParsing="false" />
-                                    <MenuItem mnemonicParsing="false" onAction="#columnVisibleAggregate" text="列の表示・非表示" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>

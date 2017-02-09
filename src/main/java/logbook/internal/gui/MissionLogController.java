@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,6 +45,7 @@ import logbook.internal.BattleLogs.Unit;
 import logbook.internal.Logs;
 import logbook.internal.log.LogWriter;
 import logbook.internal.log.MissionResultLogFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -136,6 +138,9 @@ public class MissionLogController extends WindowController {
     @FXML
     private TableColumn<MissionAggregate, Double> average;
 
+    @FXML
+    private PieChart chart;
+
     /** ログ */
     private Map<Unit, List<SimpleMissionLog>> logMap = new EnumMap<>(Unit.class);
 
@@ -194,6 +199,9 @@ public class MissionLogController extends WindowController {
         this.collect.getSelectionModel()
                 .selectedItemProperty()
                 .addListener(this::detail);
+        this.aggregate.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(this::chart);
     }
 
     @FXML
@@ -248,7 +256,11 @@ public class MissionLogController extends WindowController {
         this.details.clear();
         this.aggregates.clear();
 
+        this.chart.getData().clear();
+
         if (value != null) {
+            this.chart.setTitle("取得資材");
+
             MissionLogCollect collect = value.getValue();
 
             List<SimpleMissionLog> subLog = this.logMap.get(collect.getCollectUnit())
@@ -260,50 +272,17 @@ public class MissionLogController extends WindowController {
                     .map(MissionLogDetail::toMissionLogDetail)
                     .collect(Collectors.toList()));
 
-            List<MissionAggregate> aggregates = new ArrayList<>();
-            {
-                MissionAggregate agg = new MissionAggregate();
-                agg.setResource("燃料");
-                agg.setCount(subLog.stream().mapToInt(SimpleMissionLog::getFuel).sum());
-                agg.setAverage(subLog.stream().mapToInt(SimpleMissionLog::getFuel).average().orElse(0));
-                aggregates.add(agg);
-            }
-            {
-                MissionAggregate agg = new MissionAggregate();
-                agg.setResource("弾薬");
-                agg.setCount(subLog.stream().mapToInt(SimpleMissionLog::getAmmo).sum());
-                agg.setAverage(subLog.stream().mapToInt(SimpleMissionLog::getAmmo).average().orElse(0));
-                aggregates.add(agg);
-            }
-            {
-                MissionAggregate agg = new MissionAggregate();
-                agg.setResource("鋼材");
-                agg.setCount(subLog.stream().mapToInt(SimpleMissionLog::getMetal).sum());
-                agg.setAverage(subLog.stream().mapToInt(SimpleMissionLog::getMetal).average().orElse(0));
-                aggregates.add(agg);
-            }
-            {
-                MissionAggregate agg = new MissionAggregate();
-                agg.setResource("ボーキ");
-                agg.setCount(subLog.stream().mapToInt(SimpleMissionLog::getBauxite).sum());
-                agg.setAverage(subLog.stream().mapToInt(SimpleMissionLog::getBauxite).average().orElse(0));
-                aggregates.add(agg);
-            }
-            // アイテム1-2
-            BiConsumer<Map<String, Integer>, SimpleMissionLog> accumulator = (map, log) -> {
-                if (!log.getItem1name().isEmpty()) {
-                    map.merge(log.getItem1name(), log.getItem1count(), Integer::sum);
-                }
-                if (!log.getItem2name().isEmpty()) {
-                    map.merge(log.getItem2name(), log.getItem2count(), Integer::sum);
-                }
+            List<Pair> aggregateBase = this.aggregateBase(subLog);
+
+            BiConsumer<Map<String, Integer>, Pair> accumulator = (map, pair) -> {
+                map.merge(pair.getName(), pair.getValue(), Integer::sum);
             };
             BiConsumer<Map<String, Integer>, Map<String, Integer>> combiner = (map1, map2) -> {
                 for (Entry<String, Integer> entry : map2.entrySet()) {
                     map1.merge(entry.getKey(), entry.getValue(), Integer::sum);
                 }
             };
-            Map<String, Integer> resources = subLog.stream()
+            Map<String, Integer> resources = aggregateBase.stream()
                     .collect(LinkedHashMap<String, Integer>::new, accumulator, combiner);
 
             for (Entry<String, Integer> entry : resources.entrySet()) {
@@ -311,9 +290,52 @@ public class MissionLogController extends WindowController {
                 agg.setResource(entry.getKey());
                 agg.setCount(entry.getValue());
                 agg.setAverage(((double) entry.getValue()) / subLog.size());
-                aggregates.add(agg);
+
+                // 資材別の合計を表示する
+                this.aggregates.add(agg);
+
+                // 右ペインのチャートに資材別の取得割合を表示する
+                if (entry.getValue() > 0) {
+                    this.chart.getData().add(new PieChart.Data(entry.getKey(), entry.getValue()));
+                }
             }
-            this.aggregates.addAll(aggregates);
+        }
+    }
+
+    /**
+     * 右ペインのチャートに遠征・資材別の取得割合を表示する
+     *
+     * @param observable 値が変更されたObservableValue
+     * @param oldValue 古い値
+     * @param value 新しい値
+     */
+    private void chart(ObservableValue<? extends MissionAggregate> observable,
+            MissionAggregate oldValue, MissionAggregate value) {
+        this.chart.getData().clear();
+
+        if (value != null) {
+            TreeItem<MissionLogCollect> ti = this.collect.getSelectionModel()
+                    .getSelectedItem();
+
+            if (ti != null) {
+                this.chart.setTitle(value.resourceProperty().get() + " の取得元");
+
+                MissionLogCollect collect = ti.getValue();
+                Map<String, List<SimpleMissionLog>> subLog = this.logMap.get(collect.getCollectUnit())
+                        .stream()
+                        .filter(e -> collect.getName() == null || e.getName().equals(collect.getName()))
+                        .collect(Collectors.groupingBy(SimpleMissionLog::getName));
+
+                for (Entry<String, List<SimpleMissionLog>> entry : subLog.entrySet()) {
+                    int sum = this.aggregateBase(entry.getValue()).stream()
+                            .filter(p -> p.getName().equals(value.resourceProperty().get()))
+                            .mapToInt(Pair::getValue)
+                            .sum();
+                    if (sum > 0) {
+                        this.chart.getData().add(new PieChart.Data(entry.getKey(), sum));
+                    }
+                }
+            }
         }
     }
 
@@ -431,6 +453,25 @@ public class MissionLogController extends WindowController {
         return row;
     }
 
+    private List<Pair> aggregateBase(List<SimpleMissionLog> log) {
+        return log.stream()
+                .flatMap(e -> {
+                    List<Pair> pairs = new ArrayList<>();
+                    pairs.add(new Pair("燃料", e.getFuel()));
+                    pairs.add(new Pair("弾薬", e.getAmmo()));
+                    pairs.add(new Pair("鋼材", e.getMetal()));
+                    pairs.add(new Pair("ボーキ", e.getBauxite()));
+                    if (!e.getItem1name().isEmpty()) {
+                        pairs.add(new Pair(e.getItem1name(), e.getItem1count()));
+                    }
+                    if (!e.getItem2name().isEmpty()) {
+                        pairs.add(new Pair(e.getItem2name(), e.getItem2count()));
+                    }
+                    return pairs.stream();
+                })
+                .collect(Collectors.toList());
+    }
+
     /**
      * 遠征統計のベース
      *
@@ -497,6 +538,18 @@ public class MissionLogController extends WindowController {
             if (columns.length > 12)
                 this.setExp(columns[12].isEmpty() ? 0 : Integer.parseInt(columns[12]));
         }
+    }
+
+    /**
+     * 名前と値のペア
+     */
+    @Data
+    @AllArgsConstructor
+    private static class Pair {
+
+        private String name;
+
+        private int value;
     }
 
     private static class LoggerHolder {
