@@ -31,13 +31,13 @@
                <children>
                   <SplitPane dividerPositions="0.7" orientation="VERTICAL" VBox.vgrow="ALWAYS">
                      <items>
-                        <SplitPane dividerPositions="0.45">
+                        <SplitPane dividerPositions="0.43">
                            <items>
-                              <TableView fx:id="aggregate" prefHeight="200.0" prefWidth="200.0">
+                              <TableView fx:id="aggregate">
                                  <columns>
                                     <TableColumn fx:id="resource" prefWidth="100.0" text="資材" />
                                     <TableColumn fx:id="count" prefWidth="75.0" text="合計" />
-                                    <TableColumn fx:id="average" prefWidth="75.0" text="平均" />
+                                    <TableColumn fx:id="average" prefWidth="45.0" text="平均" />
                                  </columns>
                                  <contextMenu>
                                     <ContextMenu>

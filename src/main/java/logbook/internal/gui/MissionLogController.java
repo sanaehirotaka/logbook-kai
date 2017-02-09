@@ -318,7 +318,7 @@ public class MissionLogController extends WindowController {
                     .getSelectedItem();
 
             if (ti != null) {
-                this.chart.setTitle(value.resourceProperty().get() + " の取得元");
+                this.chart.setTitle(value.resourceProperty().get() + " の入手元");
 
                 MissionLogCollect collect = ti.getValue();
                 Map<String, List<SimpleMissionLog>> subLog = this.logMap.get(collect.getCollectUnit())
