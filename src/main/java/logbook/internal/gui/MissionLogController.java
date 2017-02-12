@@ -259,7 +259,7 @@ public class MissionLogController extends WindowController {
         this.chart.getData().clear();
 
         if (value != null) {
-            this.chart.setTitle("取得資材");
+            this.chart.setTitle("入手資材");
 
             MissionLogCollect collect = value.getValue();
 
