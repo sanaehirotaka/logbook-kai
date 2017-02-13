@@ -15,9 +15,12 @@ import org.apache.logging.log4j.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.Skinnable;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logbook.internal.Version;
 import logbook.plugin.PluginContainer;
@@ -96,12 +99,24 @@ public class VersionController extends WindowController {
 
         // ドラッグの開始
         window.addEventHandler(MouseEvent.MOUSE_PRESSED, e -> {
-            this.start = new Point2D(window.getX() - e.getScreenX(), window.getY() - e.getScreenY());
+            if (e.getTarget() instanceof Pane) {
+                Parent parent = ((Pane) e.getTarget()).getParent();
+                if (parent == null || !(parent instanceof Skinnable)) {
+                    this.start = new Point2D(window.getX() - e.getScreenX(), window.getY() - e.getScreenY());
+                    e.consume();
+                }
+            }
         });
         // ドラッグ中
         window.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
-            window.setX(e.getScreenX() + this.start.getX());
-            window.setY(e.getScreenY() + this.start.getY());
+            if (e.getTarget() instanceof Pane) {
+                Parent parent = ((Pane) e.getTarget()).getParent();
+                if (parent == null || !(parent instanceof Skinnable)) {
+                    window.setX(e.getScreenX() + this.start.getX());
+                    window.setY(e.getScreenY() + this.start.getY());
+                    e.consume();
+                }
+            }
         });
     }
 
