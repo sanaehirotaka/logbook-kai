@@ -209,6 +209,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> lv;
 
+    /** 経験値 */
+    @FXML
+    private TableColumn<ShipItem, Integer> exp;
+
     /** cond */
     @FXML
     private TableColumn<ShipItem, Integer> cond;
@@ -407,6 +411,7 @@ public class ShipTablePane extends VBox {
             this.ship.setCellFactory(p -> new ShipImageCell());
             this.type.setCellValueFactory(new PropertyValueFactory<>("type"));
             this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));
+            this.exp.setCellValueFactory(new PropertyValueFactory<>("exp"));
             this.cond.setCellFactory(p -> new CondCell());
             this.cond.setCellValueFactory(new PropertyValueFactory<>("cond"));
             this.label.setCellValueFactory(new PropertyValueFactory<>("label"));

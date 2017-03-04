@@ -111,6 +111,7 @@
           <TableColumn fx:id="ship" prefWidth="260.0" text="艦娘" />
           <TableColumn fx:id="type" prefWidth="75.0" text="艦種" />
           <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
+          <TableColumn fx:id="exp" prefWidth="60.0" text="exp" />
           <TableColumn fx:id="cond" prefWidth="50.0" text="cond" />
           <TableColumn fx:id="label" prefWidth="100.0" text="ラベル" />
           <TableColumn fx:id="seiku" prefWidth="50.0" text="制空" />

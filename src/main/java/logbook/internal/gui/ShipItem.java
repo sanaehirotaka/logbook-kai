@@ -44,6 +44,9 @@ public class ShipItem {
     /** Lv */
     private IntegerProperty lv;
 
+    /** 経験値 */
+    private IntegerProperty exp;
+
     /** cond */
     private IntegerProperty cond;
 
@@ -177,6 +180,30 @@ public class ShipItem {
      */
     public void setLv(int lv) {
         this.lv = new SimpleIntegerProperty(lv);
+    }
+
+    /**
+     * Expを取得します。
+     * @return Exp
+     */
+    public IntegerProperty expProperty() {
+        return this.exp;
+    }
+
+    /**
+     * Expを取得します。
+     * @return Exp
+     */
+    public int getExp() {
+        return this.exp.get();
+    }
+
+    /**
+     * Expを設定します。
+     * @param exp Exp
+     */
+    public void setExp(int exp) {
+        this.exp = new SimpleIntegerProperty(exp);
     }
 
     /**
@@ -553,6 +580,7 @@ public class ShipItem {
         shipItem.setShip(ship);
         shipItem.setType(type);
         shipItem.setLv(ship.getLv());
+        shipItem.setExp(ship.getExp().get(0));
         shipItem.setCond(ship.getCond());
         Set<String> label = new LinkedHashSet<>();
         SeaArea area = SeaArea.fromArea(ship.getSallyArea());
