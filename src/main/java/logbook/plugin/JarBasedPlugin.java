@@ -2,6 +2,7 @@ package logbook.plugin;
 
 import java.beans.ExceptionListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -139,9 +140,16 @@ public class JarBasedPlugin {
         try {
             digest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
+            throw new IOException(e);
         }
-        return digest.digest(Files.readAllBytes(path));
+        try (InputStream in = Files.newInputStream(path)) {
+            byte[] buffer = new byte[1024 * 4];
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                digest.update(buffer, 0, len);
+            }
+        }
+        return digest.digest();
     }
 
     private static char[] encodeHex(byte[] data) {
