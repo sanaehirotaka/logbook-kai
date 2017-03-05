@@ -76,13 +76,13 @@ public class MainController extends WindowController {
     private String shipFormat;
 
     /** 艦隊コレクションのハッシュ・コード */
-    private int portHashCode;
+    private long portHashCode;
 
     /** 入渠ドックコレクションのハッシュ・コード */
-    private int ndockHashCode;
+    private long ndockHashCode;
 
     /** 任務コレクションのハッシュ・コード */
-    private int questHashCode;
+    private long questHashCode;
 
     /** 遠征通知のタイムスタンプ */
     private Map<Integer, Long> timeStampMission = new HashMap<>();
@@ -432,8 +432,9 @@ public class MainController extends WindowController {
     private void checkPort() {
         Map<Integer, DeckPort> ports = DeckPortCollection.get()
                 .getDeckPortMap();
-        boolean change = this.portHashCode != ports.hashCode();
-        this.portHashCode = ports.hashCode();
+        long newHashCode = hashCode(ports);
+        boolean change = this.portHashCode != newHashCode;
+        this.portHashCode = newHashCode;
 
         this.fleetTab(change);
         this.mission(change);
@@ -542,7 +543,8 @@ public class MainController extends WindowController {
         Map<Integer, Ndock> ndockMap = NdockCollection.get()
                 .getNdockMap();
         ObservableList<Node> ndock = this.ndockbox.getChildren();
-        if (this.ndockHashCode != ndockMap.hashCode()) {
+        long newHashCode = hashCode(ndockMap);
+        if (this.ndockHashCode != newHashCode) {
             // ハッシュ・コードが変わっている場合入渠ドックの更新
             ndock.clear();
             ndockMap.values()
@@ -551,7 +553,7 @@ public class MainController extends WindowController {
                     .map(NdockPane::new)
                     .forEach(ndock::add);
             // ハッシュ・コードの更新
-            this.ndockHashCode = ndockMap.hashCode();
+            this.ndockHashCode = newHashCode;
         } else {
             // ハッシュ・コードが変わっていない場合updateメソッドを呼ぶ
             for (Node node : ndock) {
@@ -568,8 +570,8 @@ public class MainController extends WindowController {
     private void quest() {
         Map<Integer, AppQuest> questMap = AppQuestCollection.get()
                 .getQuest();
-
-        if (this.questHashCode != questMap.hashCode()) {
+        long newHashCode = hashCode(questMap);
+        if (this.questHashCode != newHashCode) {
             // ハッシュ・コードが変わっている場合任務の更新
             ObservableList<Node> quest = this.questbox.getChildren();
             quest.clear();
@@ -577,9 +579,8 @@ public class MainController extends WindowController {
                     .stream()
                     .map(QuestPane::new)
                     .forEach(quest::add);
-
             // ハッシュ・コードの更新
-            this.questHashCode = questMap.hashCode();
+            this.questHashCode = newHashCode;
         }
     }
 
@@ -714,6 +715,14 @@ public class MainController extends WindowController {
                 LoggerHolder.LOG.warn("サウンド通知に失敗しました", e);
             }
         }
+    }
+
+    private static long hashCode(Map<?, ?> map) {
+        long h = 0;
+        Iterator<?> i = map.entrySet().iterator();
+        while (i.hasNext())
+            h += i.next().hashCode();
+        return h;
     }
 
     private static class LoggerHolder {
