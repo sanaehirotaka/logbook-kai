@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.time.ZoneId;
+import java.util.StringJoiner;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -222,6 +223,23 @@ public class MissionLogDetail {
      */
     public StringProperty item2countProperty() {
         return this.item2count;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner("\t")
+                .add(this.date.get())
+                .add(this.name.get())
+                .add(this.result.get())
+                .add(Integer.toString(this.fuel.get()))
+                .add(Integer.toString(this.ammo.get()))
+                .add(Integer.toString(this.metal.get()))
+                .add(Integer.toString(this.bauxite.get()))
+                .add(this.item1name.get())
+                .add(this.item1count.get())
+                .add(this.item2name.get())
+                .add(this.item2count.get())
+                .toString();
     }
 
     /**

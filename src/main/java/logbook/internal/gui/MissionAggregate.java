@@ -1,5 +1,7 @@
 package logbook.internal.gui;
 
+import java.util.StringJoiner;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -68,5 +70,14 @@ public class MissionAggregate {
      */
     public DoubleProperty averageProperty() {
         return this.average;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner("\t")
+                .add(this.resource.get())
+                .add(Integer.toString(this.count.get()))
+                .add(Double.toString(this.average.get()))
+                .toString();
     }
 }
