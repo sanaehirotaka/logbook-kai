@@ -1,6 +1,7 @@
 logbook.api.ApiGetMemberBasic
 logbook.api.ApiGetMemberDeck
 logbook.api.ApiGetMemberKdock
+logbook.api.ApiGetMemberMapinfo
 logbook.api.ApiGetMemberMaterial
 logbook.api.ApiGetMemberNdock
 logbook.api.ApiGetMemberPresetDeck
@@ -11,15 +12,18 @@ logbook.api.ApiGetMemberShip3
 logbook.api.ApiGetMemberShipDeck
 logbook.api.ApiGetMemberSlotItem
 logbook.api.ApiPortPort
+logbook.api.ApiReqAirCorpsSetAction
+logbook.api.ApiReqAirCorpsSetPlane
+logbook.api.ApiReqAirCorpsSupply
 logbook.api.ApiReqBattleMidnightBattle
 logbook.api.ApiReqBattleMidnightSpMidnight
 logbook.api.ApiReqCombinedBattleAirbattle
 logbook.api.ApiReqCombinedBattleBattle
 logbook.api.ApiReqCombinedBattleBattleWater
+logbook.api.ApiReqCombinedBattleBattleresult
 logbook.api.ApiReqCombinedBattleEachBattle
 logbook.api.ApiReqCombinedBattleEcBattle
 logbook.api.ApiReqCombinedBattleEcMidnightBattle
-logbook.api.ApiReqCombinedBattleBattleresult
 logbook.api.ApiReqCombinedBattleGobackPort
 logbook.api.ApiReqCombinedBattleLdAirbattle
 logbook.api.ApiReqCombinedBattleMidnightBattle

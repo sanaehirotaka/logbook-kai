@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
-import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -376,62 +375,6 @@ public class Ships {
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
                 .getSlotitemMap();
         // 参考 http://wikiwiki.jp/kancolle/?%B4%CF%BA%DC%B5%A1%BD%CF%CE%FD%C5%D9
-        // 内部熟練度
-        ToIntFunction<Integer> skillLevel = e -> {
-            switch (e) {
-            case 1:
-                return 10;
-            case 2:
-                return 25;
-            case 3:
-                return 40;
-            case 4:
-                return 55;
-            case 5:
-                return 70;
-            case 6:
-                return 85;
-            case 7:
-                return 100;
-            }
-            return 0;
-        };
-        // 制空ボーナス(艦戦)
-        ToIntFunction<Integer> bonusF = e -> {
-            switch (e) {
-            case 2:
-                return 2;
-            case 3:
-                return 5;
-            case 4:
-                return 9;
-            case 5:
-                return 14;
-            case 6:
-                return 14;
-            case 7:
-                return 22;
-            }
-            return 0;
-        };
-        // 制空ボーナス(水爆)
-        ToIntFunction<Integer> bonusS = e -> {
-            switch (e) {
-            case 2:
-                return 1;
-            case 3:
-                return 1;
-            case 4:
-                return 1;
-            case 5:
-                return 3;
-            case 6:
-                return 3;
-            case 7:
-                return 6;
-            }
-            return 0;
-        };
 
         // 艦娘制空値
         int value = 0;
@@ -466,26 +409,39 @@ public class Ships {
 
                 // 制空値
                 local += tyku * Math.sqrt(onslot);
-
-                if (item.getAlv() != null) {
-                    // 上昇制空値＝内部熟練ボーナス＋制空ボーナス(艦戦/水爆)
-                    // 内部熟練ボーナス＝√(内部熟練度/10)
-
-                    // 熟練ボーナス
-                    local += Math.sqrt(skillLevel.applyAsInt(item.getAlv()) / 10D);
-                    // 制空ボーナス
-                    if (SlotItemType.艦上戦闘機.equals(itemMst)
-                            || SlotItemType.水上戦闘機.equals(itemMst)
-                            || SlotItemType.噴式戦闘爆撃機.equals(itemMst)) {
-                        local += bonusF.applyAsInt(item.getAlv());
-                    } else if (SlotItemType.水上爆撃機.equals(itemMst)) {
-                        local += bonusS.applyAsInt(item.getAlv());
-                    }
-                }
+                // 制空ボーナス値
+                local += airSuperiorityBonus(itemMst, item);
             }
             value += local;
         }
         return value;
+    }
+
+    /**
+     * 制空ボーナス値
+     *
+     * @param itemMst 装備定義
+     * @param item 装備
+     * @return 制空ボーナス値
+     */
+    public static double airSuperiorityBonus(SlotitemMst itemMst, SlotItem item) {
+        if (item.getAlv() != null) {
+            // 上昇制空値＝内部熟練ボーナス＋制空ボーナス(艦戦/水爆)
+            // 内部熟練ボーナス＝√(内部熟練度/10)
+
+            // 熟練ボーナス
+            double bonus = Math.sqrt(skillLevel(item.getAlv()) / 10D);
+            // 制空ボーナス
+            if (SlotItemType.艦上戦闘機.equals(itemMst)
+                    || SlotItemType.水上戦闘機.equals(itemMst)
+                    || SlotItemType.局地戦闘機.equals(itemMst)) {
+                bonus += skillBonus1(item.getAlv());
+            } else if (SlotItemType.水上爆撃機.equals(itemMst)) {
+                bonus += skillBonus2(item.getAlv());
+            }
+            return bonus;
+        }
+        return 0D;
     }
 
     /**
@@ -715,6 +671,80 @@ public class Ships {
                     })
                     .orElse(""), chara.getLv());
         }
+    }
+
+    /**
+     * 内部熟練度を取得します
+     *
+     * @param level 熟練度
+     * @return 内部熟練度
+     */
+    private static int skillLevel(int level) {
+        switch (level) {
+        case 1:
+            return 10;
+        case 2:
+            return 25;
+        case 3:
+            return 40;
+        case 4:
+            return 55;
+        case 5:
+            return 70;
+        case 6:
+            return 85;
+        case 7:
+            return 100;
+        }
+        return 0;
+    }
+
+    /**
+     * 熟練度ボーナス(艦戦)
+     *
+     * @param skill 熟練度
+     * @return 熟練度ボーナス
+     */
+    private static int skillBonus1(int skill) {
+        switch (skill) {
+        case 2:
+            return 2;
+        case 3:
+            return 5;
+        case 4:
+            return 9;
+        case 5:
+            return 14;
+        case 6:
+            return 14;
+        case 7:
+            return 22;
+        }
+        return 0;
+    }
+
+    /**
+     * 熟練度ボーナス(水爆)
+     *
+     * @param skill 熟練度
+     * @return 熟練度ボーナス
+     */
+    private static int skillBonus2(int skill) {
+        switch (skill) {
+        case 2:
+            return 1;
+        case 3:
+            return 1;
+        case 4:
+            return 1;
+        case 5:
+            return 3;
+        case 6:
+            return 3;
+        case 7:
+            return 6;
+        }
+        return 0;
     }
 
     /**

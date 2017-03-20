@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.AirBaseController">
+   <children>
+      <SplitPane dividerPositions="0.46" VBox.vgrow="ALWAYS">
+         <items>
+            <TreeTableView fx:id="areaTable" prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TreeTableColumn fx:id="airBase" prefWidth="150.0" text="基地航空隊" />
+                  <TreeTableColumn fx:id="actionKind" prefWidth="55.0" text="行動" />
+                  <TreeTableColumn fx:id="seiku" prefWidth="50.0" text="制空" />
+                  <TreeTableColumn fx:id="distance" prefWidth="50.0" text="半径" />
+              </columns>
+            </TreeTableView>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <HBox alignment="CENTER_LEFT" styleClass="detail">
+                           <children>
+                              <Label text="制空値" />
+                              <Label fx:id="seikuTotal" style="-fx-font-weight: bold;" text="0" />
+                              <Pane HBox.hgrow="ALWAYS" />
+                              <HBox fx:id="info" styleClass="info" />
+                           </children>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label text="(敵制空値)劣勢" />
+                              <Label fx:id="lesser" style="-fx-font-weight: bold;" text="0" />
+                              <Label text="未満" />
+                              <Pane prefWidth="2.0" />
+                              <Label text="均衡" />
+                              <Label fx:id="equal" text="0" />
+                              <Label text="未満" />
+                              <Pane prefWidth="2.0" />
+                              <Label text="優勢" />
+                              <Label fx:id="superior" text="0" />
+                              <Label text="以下" />
+                              <Pane prefWidth="2.0" />
+                              <Label text="確保" />
+                              <Label fx:id="greater" text="0" />
+                              <Label text="未満" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <TableView fx:id="planeTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="slot" prefWidth="200.0" text="中隊" />
+                      <TableColumn fx:id="count" prefWidth="50.0" text="稼働" />
+                        <TableColumn fx:id="maxCount" prefWidth="50.0" text="定数" />
+                        <TableColumn fx:id="cond" prefWidth="50.0" text="疲労" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@airbase.css" />
+   </stylesheets>
+</VBox>

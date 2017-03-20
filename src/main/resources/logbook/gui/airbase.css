@@ -1,0 +1,36 @@
+.detail {
+    -fx-font-size: 1.1em;
+}
+.info .button {
+    -fx-background-color: #FFD700;
+}
+
+.table-row-cell .change {
+    -fx-background-color: lightgray;
+}
+.table-row-cell:selected .change {
+    -fx-background-color: none;
+}
+
+.table-row-cell .cond2 {
+    -fx-background-color: #FFD700;
+    -fx-text-fill: rgb(255, 140, 0);
+}
+.table-row-cell:selected .cond2 {
+    -fx-background-color: none;
+}
+
+.table-row-cell .cond3 {
+    -fx-background-color: #FFD700;
+    -fx-text-fill: rgb(255, 16, 0);
+}
+.table-row-cell:selected .cond3 {
+    -fx-background-color: none;
+}
+
+.table-row-cell .lowsupply {
+    -fx-background-color: #FFD700;
+}
+.table-row-cell:selected .lowsupply {
+    -fx-background-color: none;
+}

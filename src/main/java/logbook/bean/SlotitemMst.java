@@ -29,62 +29,65 @@ public class SlotitemMst implements Serializable {
     /** api_type */
     private List<Integer> type;
 
-    /** api_taik */
+    /** api_taik(耐久) */
     private Integer taik;
 
-    /** api_souk */
+    /** api_souk(装甲) */
     private Integer souk;
 
-    /** api_houg */
+    /** api_houg(火力) */
     private Integer houg;
 
-    /** api_raig */
+    /** api_raig(雷装) */
     private Integer raig;
 
-    /** api_soku */
+    /** api_soku(速力) */
     private Integer soku;
 
-    /** api_baku */
+    /** api_baku(爆装) */
     private Integer baku;
 
-    /** api_tyku */
+    /** api_tyku(対空) */
     private Integer tyku;
 
-    /** api_tais */
+    /** api_tais(対潜) */
     private Integer tais;
 
-    /** api_atap */
+    /** api_atap(?) */
     private Integer atap;
 
-    /** api_houm */
+    /** api_houm(命中) */
     private Integer houm;
 
-    /** api_raim */
+    /** api_raim(雷撃命中) */
     private Integer raim;
 
-    /** api_houk */
+    /** api_houk(回避) */
     private Integer houk;
 
-    /** api_raik */
+    /** api_raik(雷撃回避) */
     private Integer raik;
 
-    /** api_bakk */
+    /** api_bakk(爆撃回避) */
     private Integer bakk;
 
-    /** api_saku */
+    /** api_saku(索敵) */
     private Integer saku;
 
-    /** api_sakb */
+    /** api_sakb(索敵妨害) */
     private Integer sakb;
 
-    /** api_luck */
+    /** api_luck(運) */
     private Integer luck;
 
-    /** api_leng */
+    /** api_leng(射程) */
     private Integer leng;
 
-    /** api_rare */
+    /** api_rare(レアリティ) */
     private Integer rare;
+
+    /** api_distance(航続距離) */
+    private Integer distance;
 
     @Override
     public String toString() {
@@ -122,7 +125,8 @@ public class SlotitemMst implements Serializable {
                 .setInteger("api_sakb", bean::setSakb)
                 .setInteger("api_luck", bean::setLuck)
                 .setInteger("api_leng", bean::setLeng)
-                .setInteger("api_rare", bean::setRare);
+                .setInteger("api_rare", bean::setRare)
+                .setInteger("api_distance", bean::setDistance);
         return bean;
     }
 }

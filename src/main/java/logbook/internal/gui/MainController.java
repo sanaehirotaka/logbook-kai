@@ -236,6 +236,20 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 基地航空隊
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void airBase(ActionEvent e) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/airbase.fxml", this.getWindow(), "基地航空隊");
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("基地航空隊の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 所有装備
      *
      * @param e ActionEvent
