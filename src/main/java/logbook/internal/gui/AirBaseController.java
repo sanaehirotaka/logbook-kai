@@ -1,8 +1,6 @@
 package logbook.internal.gui;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +43,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.Messages;
-import logbook.bean.AppConfig;
 import logbook.bean.Maparea;
 import logbook.bean.MapareaCollection;
 import logbook.bean.Mapinfo;
@@ -56,6 +53,7 @@ import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.AirBases;
 import logbook.internal.Items;
+import logbook.plugin.PluginContainer;
 
 /**
  * 基地航空隊
@@ -678,12 +676,6 @@ public class AirBaseController extends WindowController {
      */
     private static class CondImageCell extends TableCell<Plane, Integer> {
 
-        /** 疲労オレンジ顔 */
-        private static final String MC_BANNER_VITAL_MASK1 = "res.common.MCBannerVitalMask_1.png";
-
-        /** 疲労赤顔 */
-        private static final String MC_BANNER_VITAL_MASK3 = "res.common.MCBannerVitalMask_3.png";
-
         @Override
         protected void updateItem(Integer cond, boolean empty) {
             super.updateItem(cond, empty);
@@ -692,20 +684,18 @@ public class AirBaseController extends WindowController {
 
             if (!empty) {
                 if (cond != null) {
-                    Path dir = Paths.get(AppConfig.get().getResourcesDir());
-                    Path p;
+                    URL url = null;
                     if (cond == 2) {
-                        p = dir.resolve(Paths.get("common", MC_BANNER_VITAL_MASK1));
+                        url = PluginContainer.getInstance()
+                                .getClassLoader()
+                                .getResource("logbook/gui/cond_orange.png");
                     } else if (cond == 3) {
-                        p = dir.resolve(Paths.get("common", MC_BANNER_VITAL_MASK3));
-                    } else {
-                        p = null;
+                        url = PluginContainer.getInstance()
+                                .getClassLoader()
+                                .getResource("logbook/gui/cond_red.png");
                     }
-                    if (p != null) {
-                        if (Files.isReadable(p)) {
-                            Image img = new Image(p.toUri().toString());
-                            this.setGraphic(new ImageView(img));
-                        }
+                    if (url != null) {
+                        this.setGraphic(new ImageView(new Image(url.toString())));
                     }
                     this.setText(cond.toString());
                     this.getStyleClass().add("cond" + cond);

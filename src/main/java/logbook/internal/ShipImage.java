@@ -1,6 +1,7 @@
 package logbook.internal;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,6 +26,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
+import logbook.plugin.PluginContainer;
 
 class ShipImage {
 
@@ -67,18 +69,6 @@ class ShipImage {
     /** 大破汚れ */
     private static final String MC_BANNER_SMOKE_IMG2 = "res.common.MCBannerSmokeImg_2.png";
 
-    /** 疲労オレンジ背景 */
-    private static final String MC_BANNER_VITAL_MASK0 = "res.common.MCBannerVitalMask_0.png";
-
-    /** 疲労オレンジ顔 */
-    private static final String MC_BANNER_VITAL_MASK1 = "res.common.MCBannerVitalMask_1.png";
-
-    /** 疲労赤背景 */
-    private static final String MC_BANNER_VITAL_MASK2 = "res.common.MCBannerVitalMask_2.png";
-
-    /** 疲労赤顔 */
-    private static final String MC_BANNER_VITAL_MASK3 = "res.common.MCBannerVitalMask_3.png";
-
     /** 小破バッチ */
     private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON0));
 
@@ -110,16 +100,16 @@ class ShipImage {
     private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", MC_BANNER_SMOKE_IMG2));
 
     /** 疲労オレンジ背景 */
-    private static final Layer ORANGE_BACKGROUND = new Layer(100, 0, Paths.get("common", MC_BANNER_VITAL_MASK0));
+    private static final Layer ORANGE_BACKGROUND = new Layer(100, 0, "logbook/gui/cond_orange_bg.png");
 
     /** 疲労オレンジ顔 */
-    private static final Layer ORANGE_FACE = new Layer(143, 12, Paths.get("common", MC_BANNER_VITAL_MASK1));
+    private static final Layer ORANGE_FACE = new Layer(143, 12, "logbook/gui/cond_orange.png");
 
     /** 疲労赤背景 */
-    private static final Layer RED_BACKGROUND = new Layer(100, 0, Paths.get("common", MC_BANNER_VITAL_MASK2));
+    private static final Layer RED_BACKGROUND = new Layer(100, 0, "logbook/gui/cond_red_bg.png");
 
     /** 疲労赤顔 */
-    private static final Layer RED_FACE = new Layer(143, 12, Paths.get("common", MC_BANNER_VITAL_MASK3));
+    private static final Layer RED_FACE = new Layer(143, 12, "logbook/gui/cond_red.png");
 
     /** 装備アイコンのサイズ */
     private static final int ITEM_ICON_SIZE = 24;
@@ -386,6 +376,18 @@ class ShipImage {
 
         /** 画像 */
         private final Image img;
+
+        private Layer(double x, double y, String name) {
+            URL url = PluginContainer.getInstance()
+                    .getClassLoader()
+                    .getResource(name);
+            this.x = x;
+            this.y = y;
+            this.w = -1;
+            this.h = -1;
+            this.path = null;
+            this.img = new Image(url.toString());
+        }
 
         private Layer(double x, double y, Path path) {
             this.x = x;
