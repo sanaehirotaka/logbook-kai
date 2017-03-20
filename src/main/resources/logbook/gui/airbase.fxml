@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -63,6 +66,16 @@
                         <TableColumn fx:id="maxCount" prefWidth="50.0" text="定数" />
                         <TableColumn fx:id="cond" prefWidth="50.0" text="疲労" />
                     </columns>
+                     <contextMenu>
+                       <ContextMenu>
+                         <items>
+                           <MenuItem mnemonicParsing="false" onAction="#copy" text="クリップボードにコピー" />
+                           <MenuItem mnemonicParsing="false" onAction="#selectAll" text="すべてを選択" />
+                           <SeparatorMenuItem mnemonicParsing="false" />
+                           <MenuItem mnemonicParsing="false" onAction="#columnVisible" text="列の表示・非表示" />
+                         </items>
+                       </ContextMenu>
+                     </contextMenu>
                   </TableView>
                </children>
             </VBox>

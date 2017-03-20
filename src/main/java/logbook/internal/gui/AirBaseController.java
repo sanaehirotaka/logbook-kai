@@ -42,6 +42,8 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logbook.Messages;
 import logbook.bean.Maparea;
 import logbook.bean.MapareaCollection;
@@ -170,6 +172,35 @@ public class AirBaseController extends WindowController {
             this.timeline.play();
 
             this.setAirBase();
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
+     * クリップボードにコピー
+     */
+    @FXML
+    void copy() {
+        TableTool.selectionCopy(this.planeTable);
+    }
+
+    /**
+     * すべてを選択
+     */
+    @FXML
+    void selectAll() {
+        TableTool.selectAll(this.planeTable);
+    }
+
+    /**
+     * テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisible() {
+        try {
+            TableTool.showVisibleSetting(this.planeTable, this.getClass().toString() + "#" + "planeTable",
+                    this.getWindow());
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
@@ -344,6 +375,12 @@ public class AirBaseController extends WindowController {
             this.superior.setText("0");
             this.greater.setText("0");
         }
+    }
+
+    @Override
+    public void setWindow(Stage window) {
+        super.setWindow(window);
+        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
     }
 
     /**
@@ -573,11 +610,28 @@ public class AirBaseController extends WindowController {
 
         @Override
         public String toString() {
+            Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                    .getSlotitemMap();
+            SlotItem item = itemMap.get(this.slot.get());
+            Optional<SlotitemMst> mst = Items.slotitemMst(item);
+
+            String itemName = "";
+            if (mst.isPresent()) {
+                StringBuilder text = new StringBuilder(mst.get().getName());
+                text.append(Optional.ofNullable(item.getAlv())
+                        .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
+                        .orElse(""));
+                text.append(Optional.ofNullable(item.getLevel())
+                        .filter(lv -> lv > 0)
+                        .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
+                        .orElse(""));
+                itemName = text.toString();
+            }
             return new StringJoiner("\t")
-                    .add("")
-                    .add(Integer.toString(this.count.get()))
-                    .add(Integer.toString(this.maxCount.get()))
-                    .add(Integer.toString(this.cond.get()))
+                    .add(itemName)
+                    .add(Optional.ofNullable(this.count).map(IntegerProperty::get).map(String::valueOf).orElse(""))
+                    .add(Optional.ofNullable(this.maxCount).map(IntegerProperty::get).map(String::valueOf).orElse(""))
+                    .add(Optional.ofNullable(this.cond).map(IntegerProperty::get).map(String::valueOf).orElse(""))
                     .toString();
         }
     }
