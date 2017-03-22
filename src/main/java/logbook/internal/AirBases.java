@@ -59,7 +59,7 @@ public class AirBases {
                 // 出撃の場合
                 // [(対空 ＋ 迎撃 × 1.5) × √(搭載数) ＋ 熟練度補正]
 
-                double local = itemMst.getTyku();
+                double local = itemMst.getTyku() + Ships.airSuperiorityTykuAdditional(itemMst, item);
 
                 if (SlotItemType.局地戦闘機.equals(itemMst)) {
                     if (isIntercept) {

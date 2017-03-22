@@ -398,14 +398,7 @@ public class Ships {
                     || SlotItemType.噴式戦闘爆撃機.equals(itemMst)) {
                 // 対空値
                 double tyku = itemMst.getTyku();
-
-                if (item.getLevel() != null) {
-                    if (SlotItemType.艦上戦闘機.equals(itemMst)) {
-                        tyku += 0.2D * item.getLevel();
-                    } else if (SlotItemType.艦上爆撃機.equals(itemMst)) {
-                        tyku += 0.25D * item.getLevel();
-                    }
-                }
+                tyku += airSuperiorityTykuAdditional(itemMst, item);
 
                 // 制空値
                 local += tyku * Math.sqrt(onslot);
@@ -415,6 +408,27 @@ public class Ships {
             value += local;
         }
         return value;
+    }
+
+    /**
+     * 制空加算(改修効果)
+     *
+     * @param itemMst 装備定義
+     * @param item 装備
+     * @return 加算される制空値
+     */
+    public static double airSuperiorityTykuAdditional(SlotitemMst itemMst, SlotItem item) {
+        if (SlotItemType.艦上戦闘機.equals(itemMst) || SlotItemType.水上戦闘機.equals(itemMst)) {
+            return Optional.ofNullable(item.getLevel())
+                    .map(level -> 0.2D * level)
+                    .orElse(0D);
+        }
+        if (SlotItemType.艦上爆撃機.equals(itemMst)) {
+            return Optional.ofNullable(item.getLevel())
+                    .map(level -> 0.25D * level)
+                    .orElse(0D);
+        }
+        return 0D;
     }
 
     /**
