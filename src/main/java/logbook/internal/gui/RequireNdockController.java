@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -36,6 +37,11 @@ public class RequireNdockController extends WindowController {
     @FXML
     private TableView<RequireNdock> table;
 
+
+    /** 行番号 */
+    @FXML
+    private TableColumn<RequireNdock, Integer> row;
+    
     /** ID */
     @FXML
     private TableColumn<RequireNdock, Integer> id;
@@ -73,6 +79,17 @@ public class RequireNdockController extends WindowController {
         TableTool.setVisible(this.table, this.getClass().toString() + "#" + "table");
 
         // カラムとオブジェクトのバインド
+        this.row.setCellFactory(e -> {
+            TableCell<RequireNdock, Integer> cell = new TableCell<RequireNdock, Integer>() {
+                @Override
+                protected void updateItem(Integer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    TableRow<?> currentRow = getTableRow();
+                    setText(Integer.toString(currentRow.getIndex() + 1));
+                }
+            };
+            return cell;
+        });
         this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
         this.ship.setCellFactory(p -> new ShipImageCell());

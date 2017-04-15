@@ -40,6 +40,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -192,6 +193,10 @@ public class ShipTablePane extends VBox {
     /** テーブル */
     @FXML
     private TableView<ShipItem> table;
+
+    /** 行番号 */
+    @FXML
+    private TableColumn<ShipItem, Integer> row;
 
     /** ID */
     @FXML
@@ -406,6 +411,17 @@ public class ShipTablePane extends VBox {
             this.levelValue.setText("98");
 
             // カラムとオブジェクトのバインド
+            this.row.setCellFactory(e -> {
+                TableCell<ShipItem, Integer> cell = new TableCell<ShipItem, Integer>() {
+                    @Override
+                    protected void updateItem(Integer item, boolean empty) {
+                        super.updateItem(item, empty);
+                        TableRow<?> currentRow = getTableRow();
+                        setText(Integer.toString(currentRow.getIndex() + 1));
+                    }
+                };
+                return cell;
+            });
             this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
             this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
             this.ship.setCellFactory(p -> new ShipImageCell());
