@@ -22,6 +22,7 @@ import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.DefineSpriteTag;
 import com.jpexs.decompiler.flash.tags.base.CharacterTag;
 import com.jpexs.decompiler.flash.tags.base.ImageTag;
+import com.jpexs.helpers.Cache;
 
 import logbook.bean.AppConfig;
 import logbook.bean.ShipMst;
@@ -38,6 +39,10 @@ public class SWFListener implements ContentListenerSpi {
 
     /** shipgraph -> shipid */
     private Map<String, Integer> shipgraphCache = new HashMap<>();
+
+    public SWFListener() {
+        Cache.setStorageType(Cache.STORAGE_MEMORY);
+    }
 
     @Override
     public boolean test(RequestMetaData request) {
@@ -157,6 +162,7 @@ public class SWFListener implements ContentListenerSpi {
                 Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
+        Cache.clearAll();
     }
 
     /**
@@ -181,6 +187,7 @@ public class SWFListener implements ContentListenerSpi {
                 Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
+        Cache.clearAll();
     }
 
     /**
@@ -232,6 +239,7 @@ public class SWFListener implements ContentListenerSpi {
                 Files.copy(tag.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
+        Cache.clearAll();
     }
 
     /**
