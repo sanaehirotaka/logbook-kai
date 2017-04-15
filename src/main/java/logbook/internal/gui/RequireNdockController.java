@@ -37,11 +37,10 @@ public class RequireNdockController extends WindowController {
     @FXML
     private TableView<RequireNdock> table;
 
-
     /** 行番号 */
     @FXML
     private TableColumn<RequireNdock, Integer> row;
-    
+
     /** ID */
     @FXML
     private TableColumn<RequireNdock, Integer> id;
@@ -84,8 +83,12 @@ public class RequireNdockController extends WindowController {
                 @Override
                 protected void updateItem(Integer item, boolean empty) {
                     super.updateItem(item, empty);
-                    TableRow<?> currentRow = getTableRow();
-                    setText(Integer.toString(currentRow.getIndex() + 1));
+                    if (!empty) {
+                        TableRow<?> currentRow = this.getTableRow();
+                        this.setText(Integer.toString(currentRow.getIndex() + 1));
+                    } else {
+                        this.setText(null);
+                    }
                 }
             };
             return cell;

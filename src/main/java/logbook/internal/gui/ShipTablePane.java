@@ -416,8 +416,12 @@ public class ShipTablePane extends VBox {
                     @Override
                     protected void updateItem(Integer item, boolean empty) {
                         super.updateItem(item, empty);
-                        TableRow<?> currentRow = getTableRow();
-                        setText(Integer.toString(currentRow.getIndex() + 1));
+                        if (!empty) {
+                            TableRow<?> currentRow = this.getTableRow();
+                            this.setText(Integer.toString(currentRow.getIndex() + 1));
+                        } else {
+                            this.setText(null);
+                        }
                     }
                 };
                 return cell;
