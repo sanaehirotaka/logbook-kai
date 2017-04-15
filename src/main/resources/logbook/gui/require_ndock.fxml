@@ -9,7 +9,7 @@
    <children>
       <TableView fx:id="table" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="row" prefWidth="50.0" text="" />
+          <TableColumn fx:id="row" prefWidth="50.0" text="" sortable="false" />
           <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
           <TableColumn fx:id="ship" prefWidth="260.0" text="艦娘" />
           <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
