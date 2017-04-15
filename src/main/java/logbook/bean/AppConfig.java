@@ -3,6 +3,7 @@ package logbook.bean;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -121,6 +122,9 @@ public final class AppConfig implements Serializable {
 
     /** テーブル列の幅 */
     private Map<String, Map<String, Double>> columnWidthMap = new HashMap<>();
+
+    /** テーブル列のソート順 */
+    private Map<String, List<String>> columnSortOrderMap = new HashMap<>();
 
     /** キャプチャの保存先 */
     private String captureDir;

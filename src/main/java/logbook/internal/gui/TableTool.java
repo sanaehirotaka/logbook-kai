@@ -92,6 +92,7 @@ class TableTool {
     static void setVisible(TableView<?> table, String key) {
         Tools.Tables.setVisible(table, key);
         Tools.Tables.setWidth(table, key);
+        Tools.Tables.setSortOrder(table, key);
     }
 
 }
