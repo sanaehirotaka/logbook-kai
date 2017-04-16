@@ -68,6 +68,10 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField itemFullyThreshold;
 
+    /** 画像拡大縮小割合(%) */
+    @FXML
+    private TextField imageZoomRate;
+
     /** 最前面に表示する */
     @FXML
     private CheckBox onTop;
@@ -152,6 +156,7 @@ public class ConfigController extends WindowController {
         this.applyResult.setSelected(conf.isApplyResult());
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
+        this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
         this.onTop.setSelected(conf.isOnTop());
         this.checkDoit.setSelected(conf.isCheckDoit());
         this.checkUpdate.setSelected(conf.isCheckUpdate());
@@ -207,6 +212,7 @@ public class ConfigController extends WindowController {
         conf.setApplyResult(this.applyResult.isSelected());
         conf.setShipFullyThreshold(Integer.parseInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(Integer.parseInt(this.itemFullyThreshold.getText()));
+        conf.setImageZoomRate(Integer.parseInt(this.imageZoomRate.getText()));
         conf.setOnTop(this.onTop.isSelected());
         conf.setCheckDoit(this.checkDoit.isSelected());
         conf.setCheckUpdate(this.checkUpdate.isSelected());

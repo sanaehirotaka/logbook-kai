@@ -31,6 +31,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -234,6 +235,22 @@ public class Tools {
                 notifications.show();
             }
         }
+        
+        /**
+         * 画像の拡大・縮小を行う
+         * @param view 拡大・縮小を行う画像を保持した {@link ImageView}
+         * @return 設定に従った拡大・縮小を行った画像を保持した {@link ImageView}
+         */
+        public static ImageView zoomImage(ImageView view) {
+            int percent = AppConfig.get().getImageZoomRate();
+            if (percent != 100 && percent > 0) {
+                double rate = (double)percent/100;
+                view.setFitHeight(view.getImage().getHeight()*rate);
+                view.setFitWidth(view.getImage().getWidth()*rate);
+            }
+            return view;
+        }
+
     }
 
     /**
