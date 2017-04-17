@@ -272,7 +272,7 @@ public class ItemController extends WindowController {
                         .get(itemId);
 
                 if (mst != null) {
-                    this.setGraphic(new ImageView(Items.itemImage(mst)));
+                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(mst))));
                     this.setText(mst.getName());
                 }
             } else {
@@ -290,7 +290,7 @@ public class ItemController extends WindowController {
         protected void updateItem(Ship ship, boolean empty) {
             super.updateItem(ship, empty);
             if (!empty) {
-                this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
+                this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Ships.shipWithItemImage(ship))));
                 if (ship != null) {
                     this.setText(Ships.toName(ship));
                 } else {

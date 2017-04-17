@@ -458,6 +458,7 @@ public class ShipTablePane extends VBox {
             this.table.setItems(sortedList);
             sortedList.comparatorProperty().bind(this.table.comparatorProperty());
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
+            this.table.setStyle("-fx-cell-size: 16px;");
             this.update();
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
@@ -711,9 +712,9 @@ public class ShipTablePane extends VBox {
         @Override
         protected void updateItem(Ship ship, boolean empty) {
             super.updateItem(ship, empty);
-
+            
             if (!empty) {
-                this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
+                this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Ships.shipWithItemImage(ship))));
                 this.setText(Ships.shipMst(ship)
                         .map(ShipMst::getName)
                         .orElse(""));
@@ -786,7 +787,7 @@ public class ShipTablePane extends VBox {
                             .filter(lv -> lv > 0)
                             .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
                             .orElse(""));
-                    this.setGraphic(new ImageView(Items.itemImage(mst.get())));
+                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(mst.get()))));
                     this.setText(text.toString());
                 } else {
                     this.setGraphic(null);
