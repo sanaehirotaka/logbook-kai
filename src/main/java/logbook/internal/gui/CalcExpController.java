@@ -426,7 +426,7 @@ public class CalcExpController extends WindowController {
             super.updateItem(ship, empty);
 
             if (!empty) {
-                this.setGraphic(new ImageView(Ships.shipWithItemImage(ship)));
+                this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Ships.shipWithItemImage(ship))));
                 this.setText(Ships.shipMst(ship)
                         .map(ShipMst::getName)
                         .orElse(""));
