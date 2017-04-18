@@ -42,6 +42,9 @@ public final class AppConfig implements Serializable {
     /** 装備枠の空きがこれ以下でボタンを警告色に変える */
     private int itemFullyThreshold = 16;
 
+    /** 艦娘や装備の画像の拡大縮小割合(%) */
+    private int imageZoomRate = 100;
+
     /** 戦闘開始時に結果を反映 */
     private boolean applyBattle;
 

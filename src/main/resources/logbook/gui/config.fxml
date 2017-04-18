@@ -78,6 +78,9 @@
                               <TextField fx:id="itemFullyThreshold" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="以下でボタン色を変更" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                               <CheckBox fx:id="applyResult" mnemonicParsing="false" text="戦闘結果時に結果を反映" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                              <Label text="画像の拡大・縮小(%)" GridPane.rowIndex="5" />
+                              <TextField fx:id="imageZoomRate" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label text="(一部の一覧表示にのみ適用)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                      </children>
