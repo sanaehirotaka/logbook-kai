@@ -7,8 +7,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -407,40 +407,42 @@ public class Tools {
                 });
             });
         }
-        
+
         /**
          * テーブルソート列の設定を行う
          * @param table テーブル
          * @param key テーブルのキー名
          */
         public static <S> void setSortOrder(TableView<S> table, String key) {
-            List<String> setting = AppConfig.get()
+            Map<String, String> setting = AppConfig.get()
                     .getColumnSortOrderMap()
                     .get(key);
-            ObservableList<TableColumn<S,?>> sortOrder = table.getSortOrder();
+            ObservableList<TableColumn<S, ?>> sortOrder = table.getSortOrder();
             if (setting != null) {
                 // 初期設定
-                Map<String, TableColumn<S, ?>> columnsMap = table.getColumns().stream().collect(Collectors.toMap(c->c.getText(), c->c));
-                setting.forEach(order -> {
-                    String [] values = order.split(":");
-                    Optional.ofNullable(columnsMap.get(values[0])).ifPresent(col -> {
+                Map<String, TableColumn<S, ?>> columnsMap = table.getColumns().stream()
+                        .collect(Collectors.toMap(c -> c.getText(), c -> c));
+                setting.forEach((k, v) -> {
+                    Optional.ofNullable(columnsMap.get(k)).ifPresent(col -> {
                         sortOrder.add(col);
-                        col.setSortType(SortType.valueOf(values[1]));
+                        col.setSortType(SortType.valueOf(v));
                     });
                 });
             }
             // ソート列またはソートタイプが変更された時に設定を保存する
-            sortOrder.addListener((ListChangeListener<TableColumn<S, ?>>)e -> storeSortOrder(table, key));
-            table.getColumns().forEach(col -> col.sortTypeProperty().addListener((ob, o, n) -> storeSortOrder(table, key)));
+            sortOrder.addListener((ListChangeListener<TableColumn<S, ?>>) e -> storeSortOrder(table, key));
+            table.getColumns().forEach(col -> {
+                col.sortTypeProperty().addListener((ob, o, n) -> storeSortOrder(table, key));
+            });
         }
-        
+
         private static <S> void storeSortOrder(TableView<S> table, String key) {
-            ObservableList<TableColumn<S,?>> sortOrder = table.getSortOrder();
-            List<String> list = AppConfig.get()
+            ObservableList<TableColumn<S, ?>> sortOrder = table.getSortOrder();
+            Map<String, String> setting = AppConfig.get()
                     .getColumnSortOrderMap()
-                    .computeIfAbsent(key, e1 -> new ArrayList<>());
-            list.clear();
-            sortOrder.stream().map(col -> col.getText() + ":" + col.getSortType().name()).forEach(list::add);
+                    .computeIfAbsent(key, e1 -> new LinkedHashMap<>());
+            setting.clear();
+            sortOrder.stream().forEach(col -> setting.put(col.getText(), col.getSortType().name()));
         }
 
         private static String tableHeader(TableView<?> table, String separator) {
