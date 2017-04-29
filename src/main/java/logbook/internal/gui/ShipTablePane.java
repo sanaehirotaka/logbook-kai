@@ -218,6 +218,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> exp;
 
+    /** Next */
+    @FXML
+    private TableColumn<ShipItem, Integer> next;
+
     /** cond */
     @FXML
     private TableColumn<ShipItem, Integer> cond;
@@ -246,9 +250,37 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> tPower;
 
+    /** 火力(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> karyoku;
+
+    /** 雷装(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> raisou;
+
+    /** 対空(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> taiku;
+
+    /** 装甲(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> soukou;
+
+    /** 回避(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> kaihi;
+
     /** 対潜(素) */
     @FXML
     private TableColumn<ShipItem, Integer> tais;
+
+    /** 索敵(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> sakuteki;
+
+    /** 運(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> lucky;
 
     /** 装備1 */
     @FXML
@@ -432,6 +464,7 @@ public class ShipTablePane extends VBox {
             this.type.setCellValueFactory(new PropertyValueFactory<>("type"));
             this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));
             this.exp.setCellValueFactory(new PropertyValueFactory<>("exp"));
+            this.next.setCellValueFactory(new PropertyValueFactory<>("next"));
             this.cond.setCellFactory(p -> new CondCell());
             this.cond.setCellValueFactory(new PropertyValueFactory<>("cond"));
             this.label.setCellValueFactory(new PropertyValueFactory<>("label"));
@@ -441,7 +474,14 @@ public class ShipTablePane extends VBox {
             this.rPower.setCellValueFactory(new PropertyValueFactory<>("rPower"));
             this.yPower.setCellValueFactory(new PropertyValueFactory<>("yPower"));
             this.tPower.setCellValueFactory(new PropertyValueFactory<>("tPower"));
+            this.karyoku.setCellValueFactory(new PropertyValueFactory<>("karyoku"));
+            this.raisou.setCellValueFactory(new PropertyValueFactory<>("raisou"));
+            this.taiku.setCellValueFactory(new PropertyValueFactory<>("taiku"));
+            this.soukou.setCellValueFactory(new PropertyValueFactory<>("soukou"));
+            this.kaihi.setCellValueFactory(new PropertyValueFactory<>("kaihi"));
             this.tais.setCellValueFactory(new PropertyValueFactory<>("tais"));
+            this.sakuteki.setCellValueFactory(new PropertyValueFactory<>("sakuteki"));
+            this.lucky.setCellValueFactory(new PropertyValueFactory<>("lucky"));
             this.slot1.setCellValueFactory(new PropertyValueFactory<>("slot1"));
             this.slot1.setCellFactory(p -> new ItemImageCell());
             this.slot2.setCellValueFactory(new PropertyValueFactory<>("slot2"));
