@@ -466,6 +466,7 @@ public class Tools {
             return table.getColumns()
                     .stream()
                     .map(TableColumn::getText)
+                    .filter(name -> !name.equals("行番号"))
                     .collect(Collectors.joining(separator));
         }
     }
