@@ -549,6 +549,7 @@ public class ShipItem {
                         .orElse(""))
                 .add(this.type.get())
                 .add(Integer.toString(this.lv.get()))
+                .add(Integer.toString(this.exp.get()))
                 .add(Integer.toString(this.cond.get()))
                 .add(this.label.get().stream().collect(Collectors.joining(",")))
                 .add(Integer.toString(this.seiku.get()))
