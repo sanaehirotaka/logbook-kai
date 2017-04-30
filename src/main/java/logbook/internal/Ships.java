@@ -14,7 +14,10 @@ import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.Basic;
@@ -245,6 +248,24 @@ public class Ships {
      */
     public static Image shipWithItemWithoutStateBannerImage(Chara chara) throws IllegalStateException {
         return ShipImage.get(chara, true, false);
+    }
+
+    /**
+     * キャラクターの画像を取得します(装飾無し、バックグラウンドでのロード)
+     *
+     * @param chara キャラクター
+     * @return 艦娘の画像
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image getBackgroundLoading(Chara chara) throws IllegalStateException {
+        Image img = ShipImage.getBackgroundLoading(chara);
+        if (img != null) {
+            return img;
+        }
+        Canvas canvas = new Canvas(160, 40);
+        SnapshotParameters sp = new SnapshotParameters();
+        sp.setFill(Color.TRANSPARENT);
+        return canvas.snapshot(sp, null);
     }
 
     /**

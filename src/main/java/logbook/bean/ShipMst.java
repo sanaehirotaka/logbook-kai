@@ -3,6 +3,7 @@ package logbook.bean;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import javax.json.JsonObject;
 
@@ -21,7 +22,7 @@ public class ShipMst implements Serializable {
     /** id */
     private Integer id;
 
-    /** sortno */
+    /** 図鑑番号 */
     private Integer sortno;
 
     /** 名前 */
@@ -33,11 +34,20 @@ public class ShipMst implements Serializable {
     /** 艦種 */
     private Integer stype;
 
+    /** 艦型 */
+    private Integer ctype;
+
     /** 改レベル */
     private Integer afterlv;
 
     /** 改装後id */
     private Integer aftershipid;
+
+    /** スロット数 */
+    private Integer slotNum;
+
+    /** 搭載機数 */
+    private List<Integer> maxeq;
 
     /** 改装資材 燃料 */
     private Integer afterfuel;
@@ -86,7 +96,10 @@ public class ShipMst implements Serializable {
                 .setString("api_name", bean::setName)
                 .setString("api_yomi", bean::setYomi)
                 .setInteger("api_stype", bean::setStype)
+                .setInteger("api_ctype", bean::setCtype)
                 .setInteger("api_afterlv", bean::setAfterlv)
+                .setInteger("api_slot_num", bean::setSlotNum)
+                .set("api_maxeq", bean::setMaxeq, JsonHelper::toIntegerList)
                 .setInteger("api_aftershipid", bean::setAftershipid)
                 .setInteger("api_afterfuel", bean::setAfterfuel)
                 .setInteger("api_afterbull", bean::setAfterbull)

@@ -320,6 +320,20 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 編成記録
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void deck(ActionEvent event) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/deck.fxml", this.getWindow(), "編成記録");
+        } catch (Exception ex) {
+            LoggerHolder.LOG.error("編成記録の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 自動プロキシ構成スクリプトファイル生成
      *
      * @param e ActionEvent

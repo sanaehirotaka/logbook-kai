@@ -118,20 +118,64 @@ class ShipImage {
      * キャラクターの画像を作成します
      *
      * @param chara キャラクター
+     * @return 艦娘の画像
+     */
+    static Image get(Chara chara) {
+        if (chara != null) {
+            Path base = getBaseImagePath(chara);
+            if (base != null) {
+                return CACHE.get(base.toUri().toString(), Image::new);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * キャラクターの画像を作成します(バックグラウンドでのロード)
+     *
+     * @param chara キャラクター
+     * @return 艦娘の画像
+     */
+    static Image getBackgroundLoading(Chara chara) {
+        if (chara != null) {
+            Path base = getBaseImagePath(chara);
+            if (base != null) {
+                return new Image(base.toUri().toString(), true);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * キャラクターの画像を作成します
+     *
+     * @param chara キャラクター
      * @param addItem 装備画像を追加します
      * @param applyState 遠征や入渠、退避のバナーアイコンを追加する
      * @return 艦娘の画像
      */
     static Image get(Chara chara, boolean addItem, boolean applyState) {
+        return get(chara, addItem, applyState, true, true, true);
+    }
+
+    /**
+     * キャラクターの画像を作成します
+     *
+     * @param chara キャラクター
+     * @param addItem 装備画像を追加します
+     * @param applyState 遠征や入渠、退避のバナーアイコンを追加する
+     * @param banner バナーアイコンを追加する
+     * @param cond コンディションを反映する
+     * @param hpGauge HPゲージを反映する
+     * @return 艦娘の画像
+     */
+    static Image get(Chara chara, boolean addItem, boolean applyState, boolean banner, boolean cond, boolean hpGauge) {
         Canvas canvas = new Canvas(160, 40);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        gc.drawImage(get(chara), 0, 0);
+
         if (chara != null) {
-            Path base = getBaseImagePath(chara);
-            if (base != null) {
-                Image img = CACHE.get(base.toUri().toString(), Image::new);
-                gc.drawImage(img, 0, 0);
-            }
             List<Layer> layers = new ArrayList<>();
 
             // 艦娘
@@ -149,33 +193,37 @@ class ShipImage {
             boolean isEscape = applyState && isShip && Ships.isEscape((Ship) chara);
 
             // バッチ
-            if (isOnNdock) {
-                layers.add(NDOCK_BADGE);
-            } else if (isMission) {
-                layers.add(MISSION_BADGE);
-            } else if (isEscape) {
-                layers.add(ESCAPE_BADGE);
-                gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
-            } else if (Ships.isSlightDamage(chara)) {
-                layers.add(SLIGHT_DAMAGE_BADGE);
-                layers.add(SLIGHT_DAMAGE_BACKGROUND);
-            } else if (Ships.isHalfDamage(chara)) {
-                layers.add(HALF_DAMAGE_BADGE);
-                layers.add(HALF_DAMAGE_BACKGROUND);
-            } else if (Ships.isBadlyDamage(chara)) {
-                layers.add(BADLY_DAMAGE_BADGE);
-                layers.add(BADLY_DAMAGE_BACKGROUND);
-            } else if (Ships.isLost(chara)) {
-                layers.add(LOST_BADGE);
-                gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
+            if (banner) {
+                if (isOnNdock) {
+                    layers.add(NDOCK_BADGE);
+                } else if (isMission) {
+                    layers.add(MISSION_BADGE);
+                } else if (isEscape) {
+                    layers.add(ESCAPE_BADGE);
+                    gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
+                } else if (Ships.isSlightDamage(chara)) {
+                    layers.add(SLIGHT_DAMAGE_BADGE);
+                    layers.add(SLIGHT_DAMAGE_BACKGROUND);
+                } else if (Ships.isHalfDamage(chara)) {
+                    layers.add(HALF_DAMAGE_BADGE);
+                    layers.add(HALF_DAMAGE_BACKGROUND);
+                } else if (Ships.isBadlyDamage(chara)) {
+                    layers.add(BADLY_DAMAGE_BADGE);
+                    layers.add(BADLY_DAMAGE_BACKGROUND);
+                } else if (Ships.isLost(chara)) {
+                    layers.add(LOST_BADGE);
+                    gc.applyEffect(new ColorAdjust(0, -1, 0, 0));
+                }
             }
             // 疲労
-            if (isShip && Ships.isOrange((Ship) chara)) {
-                layers.add(ORANGE_BACKGROUND);
-                layers.add(ORANGE_FACE);
-            } else if (isShip && Ships.isRed((Ship) chara)) {
-                layers.add(RED_BACKGROUND);
-                layers.add(RED_FACE);
+            if (cond) {
+                if (isShip && Ships.isOrange((Ship) chara)) {
+                    layers.add(ORANGE_BACKGROUND);
+                    layers.add(ORANGE_FACE);
+                } else if (isShip && Ships.isRed((Ship) chara)) {
+                    layers.add(RED_BACKGROUND);
+                    layers.add(RED_FACE);
+                }
             }
             // 装備画像
             if (addItem) {
@@ -206,7 +254,9 @@ class ShipImage {
 
             applyLayers(gc, layers);
 
-            writeHpGauge(chara, canvas, gc);
+            if (hpGauge) {
+                writeHpGauge(chara, canvas, gc);
+            }
         }
         SnapshotParameters sp = new SnapshotParameters();
         sp.setFill(Color.TRANSPARENT);

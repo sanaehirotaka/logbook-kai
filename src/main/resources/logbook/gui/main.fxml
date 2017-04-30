@@ -63,6 +63,7 @@
           <Menu fx:id="ext" mnemonicParsing="false" text="その他">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#resourceChart" text="資材チャート" />
+                  <MenuItem mnemonicParsing="false" onAction="#deck" text="編成記録" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#createPacFile" text="自動プロキシ構成スクリプト" />
                   <MenuItem mnemonicParsing="false" onAction="#config" text="設定">

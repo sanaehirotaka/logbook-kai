@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root styleClass="fleetContainer" type="VBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="fleetName" promptText="艦隊名を入力..." styleClass="fleetName" />
+      <HBox styleClass="shipsContainer">
+         <children>
+            <TilePane fx:id="ships" prefColumns="2" prefRows="3" />
+         </children>
+      </HBox>
+      <TextArea fx:id="fleetDescription" promptText="メモ" styleClass="fleetDescription" />
+   </children>
+</fx:root>

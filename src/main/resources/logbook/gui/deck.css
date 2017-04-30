@@ -1,0 +1,137 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.left {
+    -fx-min-width: 22em;
+    -fx-pref-width: 22em;
+}
+.deckList HBox, .fleetList HBox {
+    -fx-alignment: center-left;
+}
+.fleetList {
+    -fx-pref-height: 15em;
+}
+.delete:hover {
+    -fx-color: red;
+}
+.right {
+
+}
+.save {
+    -fx-color: skyblue;
+    -fx-font-weight: bold;
+}
+.status {
+    -fx-font-weight: bold;
+}
+.deck {
+    -fx-padding: 0.25em;
+}
+.deckName {
+    -fx-font-size: 1.6em;
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #87ceeb;
+}
+.deckName:focused {
+    -fx-background-color: white;
+}
+/* deck_fleet */
+.fleetContainer {
+    -fx-padding: 0.25em;
+}
+.fleetName {
+    -fx-font-size: 1.3em;
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: #87ceeb;
+}
+.fleetName:focused {
+    -fx-background-color: white;
+}
+.shipsContainer {
+    -fx-padding: 0.25em;
+}
+.fleetDescription {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-width: 2px 0 0 0;
+    -fx-border-color: #87ceeb;
+    -fx-pref-height: 4em;
+    -fx-pref-width: 20em;
+}
+.fleetDescription .content {
+    -fx-background-color: transparent;
+}
+.fleetDescription:focused {
+    -fx-background-color: white;
+}
+.fleetDescription:focused .content {
+    -fx-background-color: white;
+}
+/* deck_ship */
+.ship {
+    -fx-padding: 1px;
+    -fx-border-width: 2px;
+    -fx-border-color: transparent;
+}
+.ship:hover {
+    -fx-opacity: 1;
+    -fx-border-color: #87ceeb;
+}
+.ship:hover .label {
+    -fx-underline: true;
+}
+.ship .combo-box {
+    -fx-background-insets: 0;
+    -fx-background-color: #87ceeb33;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+    -fx-border-width: 1px;
+    -fx-border-color: #87ceeb;
+}
+.ship .combo-box > .list-cell {
+    visibility: hidden;
+}
+.ship .combo-box > .arrow-button {
+    visibility: hidden;
+}
+.ship:hover .combo-box {
+    -fx-opacity: 1;
+}
+.ship .shipLv {
+    -fx-font-weight: bold;
+}
+.ship .shipList {
+    -fx-pref-width: 160px;
+    -fx-max-width: 160px;
+    -fx-pref-height: 40px;
+    -fx-max-height: 40px;
+}
+.ship .itemName {
+    -fx-pref-width: 156px;
+    -fx-max-width: 156px;
+}
+.ship .itemLv {
+    -fx-min-width: 3.4em;
+    -fx-text-fill: #339999;
+    -fx-font-weight: bold;
+}
+.ship .itemList {
+    -fx-max-width: 180px;
+    -fx-pref-width: 180px;
+}
+.ship .itemLvList {
+    -fx-max-width: 3.4em;
+}
+.ship .itemLvList .cell {
+    -fx-text-fill: #339999;
+    -fx-font-weight: bold;
+}
+.ship .itemLvList .cell:hover,
+.ship .itemLvList .cell:selected {
+    -fx-text-fill: #fff;
+}

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root styleClass="ship" type="VBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <StackPane>
+         <children>
+            <HBox alignment="BOTTOM_LEFT">
+               <children>
+                  <ImageView fx:id="shipImage" fitHeight="40.0" fitWidth="160.0" />
+                  <Label fx:id="shipLv" styleClass="shipLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="shipList" styleClass="shipList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="itemImage1" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="itemName1" styleClass="itemName" />
+                  <Label fx:id="itemLv1" styleClass="itemLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="itemList1" styleClass="itemList" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="itemLvList1" styleClass="itemLvList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="itemImage2" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="itemName2" styleClass="itemName" />
+                  <Label fx:id="itemLv2" styleClass="itemLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="itemList2" styleClass="itemList" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="itemLvList2" styleClass="itemLvList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="itemImage3" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="itemName3" styleClass="itemName" />
+                  <Label fx:id="itemLv3" styleClass="itemLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="itemList3" styleClass="itemList" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="itemLvList3" styleClass="itemLvList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="itemImage4" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="itemName4" styleClass="itemName" />
+                  <Label fx:id="itemLv4" styleClass="itemLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="itemList4" styleClass="itemList" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="itemLvList4" styleClass="itemLvList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="itemImage5" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="itemName5" styleClass="itemName" />
+                  <Label fx:id="itemLv5" styleClass="itemLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="itemList5" styleClass="itemList" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="itemLvList5" styleClass="itemLvList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+   </children>
+</fx:root>
