@@ -42,7 +42,7 @@ import logbook.internal.gui.ScreenCapture.ImageData;
 public class CaptureSaveController extends WindowController {
 
     /** ファイル名日付書式 */
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss.SSS");
+    static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss.SSS");
 
     private static final String JPEG = "jpg";
 

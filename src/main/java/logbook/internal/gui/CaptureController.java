@@ -5,7 +5,8 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.util.List;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import javax.imageio.ImageIO;
@@ -17,8 +18,10 @@ import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -32,6 +35,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -42,9 +46,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import logbook.bean.AppConfig;
 import logbook.internal.gui.ScreenCapture.ImageData;
 
 /**
@@ -74,6 +80,9 @@ public class CaptureController extends WindowController {
     private Button save;
 
     @FXML
+    private CheckBox direct;
+
+    @FXML
     private Label message;
 
     @FXML
@@ -85,18 +94,44 @@ public class CaptureController extends WindowController {
     /** 画像リスト */
     private ObservableList<ImageData> images = FXCollections.observableArrayList();
 
+    /** 画像プレビュー */
+    private ObjectProperty<ImageData> preview = new SimpleObjectProperty<>();
+
     /** スクリーンショット */
     private ScreenCapture sc;
 
     /** 周期キャプチャ */
     private Timeline timeline = new Timeline();
 
+    /** 直接保存先 */
+    private Path directPath;
+
     @FXML
     void initialize() {
         ImageIO.setUseCache(false);
         this.image.fitWidthProperty().bind(this.imageParent.widthProperty());
         this.image.fitHeightProperty().bind(this.imageParent.heightProperty());
-        this.images.addListener(this::viewImage);
+        this.preview.addListener(this::viewImage);
+        this.direct.selectedProperty().addListener((ov, o, n) -> {
+            if (n) {
+                DirectoryChooser dc = new DirectoryChooser();
+                dc.setTitle("キャプチャの保存先");
+                // 覚えた保存先をセット
+                File initDir = Optional.ofNullable(AppConfig.get().getCaptureDir())
+                        .map(File::new)
+                        .filter(File::isDirectory)
+                        .orElse(null);
+                if (initDir != null) {
+                    dc.setInitialDirectory(initDir);
+                }
+                File file = dc.showDialog(this.getWindow());
+                if (file != null) {
+                    this.directPath = file.toPath();
+                } else {
+                    this.direct.setSelected(false);
+                }
+            }
+        });
     }
 
     @FXML
@@ -299,7 +334,12 @@ public class CaptureController extends WindowController {
     private void captureAction(ActionEvent event) {
         try {
             if (this.sc != null) {
-                this.sc.capture();
+                boolean isDirect = this.direct.isSelected() && this.directPath != null;
+                if (isDirect) {
+                    this.sc.captureDirect(this.directPath);
+                } else {
+                    this.sc.capture();
+                }
             }
         } catch (Exception e) {
             LoggerHolder.LOG.error("キャプチャに失敗しました", e);
@@ -319,15 +359,14 @@ public class CaptureController extends WindowController {
     /**
      * キャプチャプレビュー
      *
-     * @param image 画像データ
+     * @param ov 値が変更されたObservableValue
+     * @param o 古い値
+     * @param n 新しい値
      */
-    private void viewImage(Change<? extends ImageData> change) {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                List<? extends ImageData> images = change.getAddedSubList();
-                byte[] data = images.get(images.size() - 1).getImage();
-                this.image.setImage(new Image(new ByteArrayInputStream(data)));
-            }
+    private void viewImage(ObservableValue<? extends ImageData> ov, ImageData o, ImageData n) {
+        ImageData image = this.preview.getValue();
+        if (image != null) {
+            this.image.setImage(new Image(new ByteArrayInputStream(image.getImage())));
         }
     }
 
@@ -412,6 +451,7 @@ public class CaptureController extends WindowController {
             this.config.setDisable(false);
             this.sc = new ScreenCapture(robot, fixed);
             this.sc.setItems(this.images);
+            this.sc.setCurrent(this.preview);
         } else {
             this.message.setText("座標未設定");
             this.capture.setDisable(true);

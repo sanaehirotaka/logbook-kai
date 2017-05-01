@@ -15,8 +15,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import logbook.internal.ThreadManager;
 
@@ -59,6 +61,8 @@ class ScreenCapture {
     private int size = 200;
 
     private ObservableList<ImageData> list;
+
+    private ObjectProperty<ImageData> current;
 
     /** 切り取り範囲 */
     enum CutType {
@@ -95,6 +99,10 @@ class ScreenCapture {
         this.list = list;
     }
 
+    void setCurrent(ObjectProperty<ImageData> current) {
+        this.current = current;
+    }
+
     /**
      * 切り取り範囲を取得します。
      * @return 切り取り範囲
@@ -120,24 +128,58 @@ class ScreenCapture {
                 .execute(this::execute);
     }
 
+    void captureDirect(Path dir) {
+        ThreadManager.getExecutorService()
+                .execute(() -> this.executeDirect(dir));
+    }
+
     private void execute() {
         try {
-            ImageData data = new ImageData();
-            data.setDateTime(ZonedDateTime.now(ZoneId.of("Asia/Tokyo")));
+            ImageData image = new ImageData();
+            image.setDateTime(ZonedDateTime.now());
 
-            byte[] image;
+            byte[] data;
             if (this.cutRect != null) {
-                image = encodeJpeg(this.robot.createScreenCapture(this.rectangle), this.cutRect);
+                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle), this.cutRect);
             } else {
-                image = encodeJpeg(this.robot.createScreenCapture(this.rectangle));
+                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle));
             }
-            data.setImage(image);
+            image.setImage(data);
 
             Platform.runLater(() -> {
-                this.list.add(data);
+                this.current.set(image);
+                this.list.add(image);
                 while (this.list.size() > this.size) {
                     this.list.remove(0);
                 }
+            });
+        } catch (IOException e) {
+            LoggerHolder.LOG.warn("キャプチャ処理で例外", e);
+        }
+    }
+
+    private void executeDirect(Path dir) {
+        try {
+            ImageData image = new ImageData();
+            image.setDateTime(ZonedDateTime.now());
+
+            byte[] data;
+            if (this.cutRect != null) {
+                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle), this.cutRect);
+            } else {
+                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle));
+            }
+            image.setImage(data);
+
+            if (data != null) {
+                Path to = dir.resolve(CaptureSaveController.DATE_FORMAT.format(ZonedDateTime.now()) + ".jpg");
+                try (OutputStream out = Files.newOutputStream(to)) {
+                    out.write(data);
+                }
+            }
+
+            Platform.runLater(() -> {
+                this.current.set(image);
             });
         } catch (IOException e) {
             LoggerHolder.LOG.warn("キャプチャ処理で例外", e);
