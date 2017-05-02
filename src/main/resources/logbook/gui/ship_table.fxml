@@ -113,6 +113,7 @@
           <TableColumn fx:id="type" prefWidth="75.0" text="艦種" />
           <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
           <TableColumn fx:id="exp" prefWidth="60.0" text="exp" />
+          <TableColumn fx:id="next" prefWidth="60.0" text="next" />
           <TableColumn fx:id="cond" prefWidth="50.0" text="cond" />
           <TableColumn fx:id="label" prefWidth="100.0" text="ラベル" />
           <TableColumn fx:id="seiku" prefWidth="50.0" text="制空" />
@@ -120,7 +121,14 @@
           <TableColumn fx:id="rPower" prefWidth="60.0" text="雷戦火力" />
           <TableColumn fx:id="yPower" prefWidth="60.0" text="夜戦火力" />
           <TableColumn fx:id="tPower" prefWidth="60.0" text="対潜火力" />
+          <TableColumn fx:id="karyoku" prefWidth="60.0" text="火力(素)" />
+          <TableColumn fx:id="raisou" prefWidth="60.0" text="雷装(素)" />
+          <TableColumn fx:id="taiku" prefWidth="60.0" text="対空(素)" />
+          <TableColumn fx:id="soukou" prefWidth="60.0" text="装甲(素)" />
+          <TableColumn fx:id="kaihi" prefWidth="60.0" text="回避(素)" />
           <TableColumn fx:id="tais" prefWidth="60.0" text="対潜(素)" />
+          <TableColumn fx:id="sakuteki" prefWidth="60.0" text="索敵(素)" />
+          <TableColumn fx:id="lucky" prefWidth="60.0" text="運(素)" />
           <TableColumn fx:id="slot1" prefWidth="200.0" text="装備1" />
           <TableColumn fx:id="slot2" prefWidth="200.0" text="装備2" />
           <TableColumn fx:id="slot3" prefWidth="200.0" text="装備3" />
