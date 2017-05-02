@@ -37,10 +37,10 @@ public enum SeaArea {
     グアノ環礁沖海域("6-3", "グアノ環礁沖海域"),
     中部北海域ピーコック島沖("6-4", "中部北海域ピーコック島沖"),
 
-    作戦部隊(null, "作戦部隊", -1, 1),
-    海上護衛部隊(null, "海上護衛部隊", -1, 2),
-    増派部隊(null, "増派部隊", -1, 3),
-    決戦部隊(null, "決戦部隊", -1, 4);
+    第五艦隊先遣隊(null, "第五艦隊先遣隊", -1, 1),
+    千歳方面根拠地隊(null, "千歳方面根拠地隊", -1, 2),
+    連合部隊(null, "連合部隊", -1, 3),
+    逆上陸部隊(null, "逆上陸部隊", -1, 4);
 
     /** 短い名前 */
     private String shortName;
@@ -119,13 +119,13 @@ public enum SeaArea {
     public static SeaArea fromArea(int area) {
         switch (area) {
         case 1:
-            return SeaArea.作戦部隊;
+            return SeaArea.第五艦隊先遣隊;
         case 2:
-            return SeaArea.海上護衛部隊;
+            return SeaArea.千歳方面根拠地隊;
         case 3:
-            return SeaArea.増派部隊;
+            return SeaArea.連合部隊;
         case 4:
-            return SeaArea.決戦部隊;
+            return SeaArea.逆上陸部隊;
         default:
             return null;
         }
