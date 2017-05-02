@@ -78,6 +78,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private ToggleSwitch typeFilter;
 
+    /** 海防艦 */
+    @FXML
+    private CheckBox escort;
+
     /** 駆逐艦 */
     @FXML
     private CheckBox destroyer;
@@ -373,6 +377,7 @@ public class ShipTablePane extends VBox {
 
             // フィルターのバインド
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.escort.setDisable(!nv);
                 this.destroyer.setDisable(!nv);
                 this.lightCruiser.setDisable(!nv);
                 this.torpedoCruiser.setDisable(!nv);
@@ -406,6 +411,7 @@ public class ShipTablePane extends VBox {
             });
 
             this.typeFilter.selectedProperty().addListener(this::filterAction);
+            this.escort.selectedProperty().addListener(this::filterAction);
             this.destroyer.selectedProperty().addListener(this::filterAction);
             this.lightCruiser.selectedProperty().addListener(this::filterAction);
             this.torpedoCruiser.selectedProperty().addListener(this::filterAction);
@@ -558,6 +564,7 @@ public class ShipTablePane extends VBox {
     void allTypeAction() {
         this.disableFilterUpdate = true;
         boolean selected = this.allTypes.isSelected();
+        this.escort.setSelected(selected);
         this.destroyer.setSelected(selected);
         this.lightCruiser.setSelected(selected);
         this.torpedoCruiser.setSelected(selected);
@@ -702,6 +709,7 @@ public class ShipTablePane extends VBox {
      */
     private ShipFilter createFilter() {
         Set<String> types = Arrays.asList(
+                this.escort,
                 this.destroyer,
                 this.lightCruiser,
                 this.torpedoCruiser,
@@ -752,7 +760,7 @@ public class ShipTablePane extends VBox {
         @Override
         protected void updateItem(Ship ship, boolean empty) {
             super.updateItem(ship, empty);
-            
+
             if (!empty) {
                 this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Ships.shipWithItemImage(ship))));
                 this.setText(Ships.shipMst(ship)
