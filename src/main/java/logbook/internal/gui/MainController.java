@@ -746,10 +746,12 @@ public class MainController extends WindowController {
     }
 
     private static long hashCode(Map<?, ?> map) {
-        long h = 0;
+        long h = 59;
         Iterator<?> i = map.entrySet().iterator();
-        while (i.hasNext())
+        while (i.hasNext()) {
+            h *= 63;
             h += i.next().hashCode();
+        }
         return h;
     }
 
