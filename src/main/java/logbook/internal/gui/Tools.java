@@ -239,7 +239,7 @@ public class Tools {
                 notifications.show();
             }
         }
-        
+
         /**
          * 画像の拡大・縮小を行う
          * @param view 拡大・縮小を行う画像を保持した {@link ImageView}
@@ -248,9 +248,9 @@ public class Tools {
         public static ImageView zoomImage(ImageView view) {
             int percent = AppConfig.get().getImageZoomRate();
             if (percent != 100 && percent > 0) {
-                double rate = (double)percent/100;
-                view.setFitHeight(view.getImage().getHeight()*rate);
-                view.setFitWidth(view.getImage().getWidth()*rate);
+                double rate = (double) percent / 100;
+                view.setFitHeight(view.getImage().getHeight() * rate);
+                view.setFitWidth(view.getImage().getWidth() * rate);
             }
             return view;
         }
@@ -438,7 +438,7 @@ public class Tools {
             if (setting != null) {
                 // 初期設定
                 Map<String, TableColumn<S, ?>> columnsMap = table.getColumns().stream()
-                        .collect(Collectors.toMap(c -> c.getText(), c -> c));
+                        .collect(Collectors.toMap(c -> c.getText(), c -> c, (c1, c2) -> c1));
                 setting.forEach((k, v) -> {
                     Optional.ofNullable(columnsMap.get(k)).ifPresent(col -> {
                         sortOrder.add(col);

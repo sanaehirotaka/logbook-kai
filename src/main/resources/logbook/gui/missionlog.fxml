@@ -11,7 +11,7 @@
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MissionLogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MissionLogController">
    <children>
       <SplitPane dividerPositions="0.3" VBox.vgrow="ALWAYS">
          <items>
@@ -63,9 +63,9 @@
                               <TableColumn fx:id="metal" prefWidth="40.0" text="鋼材" />
                               <TableColumn fx:id="bauxite" prefWidth="45.0" text="ボーキ" />
                               <TableColumn fx:id="item1name" prefWidth="100.0" text="アイテム1" />
-                              <TableColumn fx:id="item1count" prefWidth="40.0" text="個数" />
+                              <TableColumn fx:id="item1count" prefWidth="40.0" text="個数1" />
                               <TableColumn fx:id="item2name" prefWidth="100.0" text="アイテム2" />
-                              <TableColumn fx:id="item2count" prefWidth="40.0" text="個数" />
+                              <TableColumn fx:id="item2count" prefWidth="40.0" text="個数2" />
                            </columns>
                            <contextMenu>
                               <ContextMenu>
