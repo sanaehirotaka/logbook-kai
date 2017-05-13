@@ -28,3 +28,9 @@
 .captureWindow .capture {
     -fx-font-weight: bold;
 }
+.captureWindow .start {
+    -fx-text-fill: blue;
+}
+.captureWindow .stop {
+    -fx-text-fill: red;
+}

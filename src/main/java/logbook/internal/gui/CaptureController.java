@@ -64,6 +64,7 @@ import javafx.stage.WindowEvent;
 import logbook.bean.AppConfig;
 import logbook.internal.ThreadManager;
 import logbook.internal.gui.ScreenCapture.ImageData;
+import lombok.Getter;
 
 /**
  * キャプチャ
@@ -154,13 +155,13 @@ public class CaptureController extends WindowController {
 
                     if (this.movie.isSelected()) {
                         this.movie.setSelected(false);
-                        this.capture.setText("キャプチャ");
+                        this.setCatureButtonState(ButtonState.CAPTURE);
                     }
                 }
             } else {
                 if (this.movie.isSelected()) {
                     this.movie.setSelected(false);
-                    this.capture.setText("キャプチャ");
+                    this.setCatureButtonState(ButtonState.CAPTURE);
                 }
             }
         });
@@ -200,10 +201,10 @@ public class CaptureController extends WindowController {
 
         if (this.cyclic.isSelected()) {
             // キャプチャボタンテキストの変更
-            this.capture.setText("開始");
+            this.setCatureButtonState(ButtonState.START);
         } else {
             // キャプチャボタンテキストの変更
-            this.capture.setText("キャプチャ");
+            this.setCatureButtonState(ButtonState.CAPTURE);
         }
     }
 
@@ -223,12 +224,12 @@ public class CaptureController extends WindowController {
         }
         if (this.movie.isSelected()) {
             // キャプチャボタンテキストの変更
-            this.capture.setText("開始");
+            this.setCatureButtonState(ButtonState.START);
             // 直接保存に設定
             this.direct.setSelected(true);
         } else {
             // キャプチャボタンテキストの変更
-            this.capture.setText("キャプチャ");
+            this.setCatureButtonState(ButtonState.CAPTURE);
         }
     }
 
@@ -248,7 +249,7 @@ public class CaptureController extends WindowController {
             // 周期キャプチャの場合
             if (running) {
                 // キャプチャボタンテキストの変更
-                this.capture.setText("開始");
+                this.setCatureButtonState(ButtonState.START);
             } else {
                 // キャプチャ中で無ければ開始する
                 this.timeline.setCycleCount(Animation.INDEFINITE);
@@ -258,19 +259,19 @@ public class CaptureController extends WindowController {
                                 this::captureAction));
                 this.timeline.play();
                 // キャプチャボタンテキストの変更
-                this.capture.setText("停止");
+                this.setCatureButtonState(ButtonState.STOP);
             }
         } else if (this.movie.isSelected()) {
             if (this.processRunning) {
                 // キャプチャボタンテキストの変更
-                this.capture.setText("開始");
+                this.setCatureButtonState(ButtonState.START);
                 this.processRunning = false;
             } else {
                 // キャプチャ中で無ければ開始する
                 this.startProcess();
                 this.processRunning = true;
                 // キャプチャボタンテキストの変更
-                this.capture.setText("停止");
+                this.setCatureButtonState(ButtonState.STOP);
             }
         } else {
             // 動画撮影中ではない
@@ -491,7 +492,6 @@ public class CaptureController extends WindowController {
             ProcessBuilder pb = new ProcessBuilder(args);
             pb.redirectError(ProcessBuilder.Redirect.INHERIT);
             this.process = pb.start();
-            System.out.println(args);
         } catch (Exception e) {
             this.stopProcess();
             Tools.Conrtols.alert(AlertType.ERROR, "動画撮影に失敗しました", "設定が誤っている可能性があります。\n引数:" + args.toString(), e,
@@ -519,6 +519,14 @@ public class CaptureController extends WindowController {
                 }
             });
         }
+    }
+
+    private void setCatureButtonState(ButtonState state) {
+        for (ButtonState val : ButtonState.values()) {
+            this.capture.getStyleClass().remove(val.getClassName());
+        }
+        this.capture.setText(state.getName());
+        this.capture.getStyleClass().add(state.getClassName());
     }
 
     private static final int WHITE = java.awt.Color.WHITE.getRGB();
@@ -616,6 +624,24 @@ public class CaptureController extends WindowController {
         int x = (int) window.getX();
         int y = (int) window.getY();
         return ScreenCapture.detectScreenDevice(x, y);
+    }
+
+    private static enum ButtonState {
+
+        CAPTURE("キャプチャ", "start"),
+        START("開始", "start"),
+        STOP("停止", "stop");
+
+        @Getter
+        private String name;
+
+        @Getter
+        private String className;
+
+        private ButtonState(String name, String className) {
+            this.name = name;
+            this.className = className;
+        }
     }
 
     private static class LoggerHolder {
