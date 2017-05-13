@@ -1,18 +1,30 @@
 package logbook.internal.gui;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
 import logbook.internal.Config;
 import logbook.internal.ThreadManager;
@@ -112,6 +124,22 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField proxyHost;
 
+    /** FFmpeg 実行ファイル */
+    @FXML
+    private TextField ffmpegPath;
+
+    /** FFmpeg 引数テンプレート */
+    @FXML
+    private ChoiceBox<Map<?, ?>> ffmpegTemplate;
+
+    /** FFmpeg 引数 */
+    @FXML
+    private TextArea ffmpegArgs;
+
+    /** FFmpeg 拡張子 */
+    @FXML
+    private TextField ffmpegExt;
+
     /** プラグインを有効にする */
     @FXML
     private CheckBox usePlugin;
@@ -167,6 +195,10 @@ public class ConfigController extends WindowController {
         this.useProxy.setSelected(conf.isUseProxy());
         this.proxyPort.setText(Integer.toString(conf.getProxyPort()));
         this.proxyHost.setText(conf.getProxyHost());
+        this.ffmpegPath.setText(conf.getFfmpegPath());
+        this.setFFmpegTemplate();
+        this.ffmpegArgs.setText(conf.getFfmpegArgs());
+        this.ffmpegExt.setText(conf.getFfmpegExt());
         this.usePlugin.setSelected(conf.isUsePlugin());
 
         this.pluginName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -223,6 +255,9 @@ public class ConfigController extends WindowController {
         conf.setUseProxy(this.useProxy.isSelected());
         conf.setProxyPort(Integer.parseInt(this.proxyPort.getText()));
         conf.setProxyHost(this.proxyHost.getText());
+        conf.setFfmpegPath(this.ffmpegPath.getText());
+        conf.setFfmpegArgs(this.ffmpegArgs.getText());
+        conf.setFfmpegExt(this.ffmpegExt.getText());
         conf.setUsePlugin(this.usePlugin.isSelected());
 
         ThreadManager.getExecutorService()
@@ -239,5 +274,57 @@ public class ConfigController extends WindowController {
                 .filter(File::exists)
                 .map(File::getAbsolutePath)
                 .ifPresent(this.reportDir::setText);
+    }
+
+    @FXML
+    void selectFFmpegPath(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("FFmpegの選択");
+        Optional.ofNullable(fc.showOpenDialog(this.getWindow()))
+                .filter(File::exists)
+                .map(File::getAbsolutePath)
+                .ifPresent(this.ffmpegPath::setText);
+    }
+
+    private void setFFmpegTemplate() {
+        try {
+            ClassLoader classLoader = PluginContainer.getInstance().getClassLoader();
+            ObjectMapper mapper = new ObjectMapper();
+            List<?> list;
+            try (InputStream is = classLoader.getResourceAsStream("logbook/capture_options/list.json")) {
+                list = mapper.readValue(is, List.class);
+            }
+            for (Object path : list) {
+                Map<?, ?> option;
+                try (InputStream is = classLoader.getResourceAsStream(path.toString())) {
+                    option = mapper.readValue(is, Map.class);
+                }
+                this.ffmpegTemplate.getItems().add(option);
+            }
+            this.ffmpegTemplate.setConverter(new StringConverter<Map<?, ?>>() {
+                @Override
+                public String toString(Map<?, ?> object) {
+                    return object.get("name").toString();
+                }
+
+                @Override
+                public Map<?, ?> fromString(String string) {
+                    throw new UnsupportedOperationException();
+                }
+            });
+            this.ffmpegTemplate.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> {
+                if (nv != null) {
+                    this.ffmpegArgs.setText(nv.get("params").toString());
+                    this.ffmpegExt.setText(nv.get("ext").toString());
+                }
+            });
+        } catch (Exception e) {
+            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    private static class LoggerHolder {
+        /** ロガー */
+        private static final Logger LOG = LogManager.getLogger(ConfigController.class);
     }
 }

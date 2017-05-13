@@ -28,7 +28,3 @@
 .captureWindow .capture {
     -fx-font-weight: bold;
 }
-/* 設定 */
-.configWindow .configInner,.configWindow .footer {
-    -fx-padding: 10px;
-}

@@ -132,6 +132,15 @@ public final class AppConfig implements Serializable {
     /** キャプチャの保存先 */
     private String captureDir;
 
+    /** FFmpeg 実行ファイル */
+    private String ffmpegPath;
+
+    /** FFmpeg 引数 */
+    private String ffmpegArgs;
+
+    /** FFmpeg 拡張子 */
+    private String ffmpegExt;
+
     /**
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、
      * これは次の記述と同等です

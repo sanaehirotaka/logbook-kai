@@ -6,11 +6,21 @@ import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +43,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -51,6 +62,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import logbook.bean.AppConfig;
+import logbook.internal.ThreadManager;
 import logbook.internal.gui.ScreenCapture.ImageData;
 
 /**
@@ -66,6 +78,10 @@ public class CaptureController extends WindowController {
     /** 連写 */
     @FXML
     private CheckMenuItem cyclic;
+
+    /** 動画 */
+    @FXML
+    private CheckMenuItem movie;
 
     /** ラジオボタングループ */
     @FXML
@@ -103,6 +119,12 @@ public class CaptureController extends WindowController {
     /** 周期キャプチャ */
     private Timeline timeline = new Timeline();
 
+    /** 動画キャプチャ ステータス */
+    private boolean processRunning;
+
+    /** 動画キャプチャ */
+    private Process process;
+
     /** 直接保存先 */
     private Path directPath;
 
@@ -129,6 +151,16 @@ public class CaptureController extends WindowController {
                     this.directPath = file.toPath();
                 } else {
                     this.direct.setSelected(false);
+
+                    if (this.movie.isSelected()) {
+                        this.movie.setSelected(false);
+                        this.capture.setText("キャプチャ");
+                    }
+                }
+            } else {
+                if (this.movie.isSelected()) {
+                    this.movie.setSelected(false);
+                    this.capture.setText("キャプチャ");
                 }
             }
         });
@@ -161,10 +193,10 @@ public class CaptureController extends WindowController {
 
     @FXML
     void cyclic(ActionEvent event) {
-        if (this.timeline.getStatus() == Status.RUNNING) {
-            // キャプチャ中であれば止める
-            this.timeline.stop();
-        }
+        // キャプチャ中であれば止める
+        this.stopTimeLine();
+        // 動画モード解除
+        this.movie.setSelected(false);
 
         if (this.cyclic.isSelected()) {
             // キャプチャボタンテキストの変更
@@ -176,12 +208,45 @@ public class CaptureController extends WindowController {
     }
 
     @FXML
+    void movie(ActionEvent event) {
+        // キャプチャ中であれば止める
+        this.stopTimeLine();
+        // 連写モード解除
+        this.cyclic.setSelected(false);
+
+        if (StringUtils.isEmpty(AppConfig.get().getFfmpegPath())
+                || StringUtils.isEmpty(AppConfig.get().getFfmpegArgs())
+                || StringUtils.isEmpty(AppConfig.get().getFfmpegExt())) {
+            Tools.Conrtols.alert(AlertType.INFORMATION, "設定が必要です", "[設定]メニューの[キャプチャ]タブから"
+                    + "FFmpegパスおよび引数を設定してください。", this.getWindow());
+            this.movie.setSelected(false);
+        }
+        if (this.movie.isSelected()) {
+            // キャプチャボタンテキストの変更
+            this.capture.setText("開始");
+            // 直接保存に設定
+            this.direct.setSelected(true);
+        } else {
+            // キャプチャボタンテキストの変更
+            this.capture.setText("キャプチャ");
+        }
+    }
+
+    @FXML
     void capture(ActionEvent event) {
+        boolean running = this.timeline.getStatus() == Status.RUNNING;
+        if (running) {
+            this.stopTimeLine();
+        }
+        if (this.processRunning) {
+            this.stopProcess();
+        }
         if (this.cyclic.isSelected()) {
+            // 動画撮影中ではない
+            this.processRunning = false;
+
             // 周期キャプチャの場合
-            if (this.timeline.getStatus() == Status.RUNNING) {
-                // キャプチャ中であれば止める
-                this.timeline.stop();
+            if (running) {
                 // キャプチャボタンテキストの変更
                 this.capture.setText("開始");
             } else {
@@ -194,10 +259,23 @@ public class CaptureController extends WindowController {
                 this.timeline.play();
                 // キャプチャボタンテキストの変更
                 this.capture.setText("停止");
-                // 閉じる時に止める
-                this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onclose);
+            }
+        } else if (this.movie.isSelected()) {
+            if (this.processRunning) {
+                // キャプチャボタンテキストの変更
+                this.capture.setText("開始");
+                this.processRunning = false;
+            } else {
+                // キャプチャ中で無ければ開始する
+                this.startProcess();
+                this.processRunning = true;
+                // キャプチャボタンテキストの変更
+                this.capture.setText("停止");
             }
         } else {
+            // 動画撮影中ではない
+            this.processRunning = false;
+
             this.captureAction(event);
         }
     }
@@ -217,6 +295,8 @@ public class CaptureController extends WindowController {
     public void setWindow(Stage window) {
         super.setWindow(window);
         this.detectAction();
+        // 閉じる時に止める
+        this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onclose);
     }
 
     /**
@@ -354,6 +434,7 @@ public class CaptureController extends WindowController {
     private void onclose(WindowEvent event) {
         this.images.clear();
         this.timeline.stop();
+        this.stopProcess();
     }
 
     /**
@@ -367,6 +448,76 @@ public class CaptureController extends WindowController {
         ImageData image = this.preview.getValue();
         if (image != null) {
             this.image.setImage(new Image(new ByteArrayInputStream(image.getImage())));
+        }
+    }
+
+    /**
+     * タイムラインを停止
+     */
+    private void stopTimeLine() {
+        if (this.timeline.getStatus() == Status.RUNNING) {
+            this.timeline.stop();
+        }
+    }
+
+    /**
+     * プロセス開始
+     */
+    private void startProcess() {
+        Rectangle rectangle = this.sc.getRectangle();
+        Path to = this.directPath.resolve(CaptureSaveController.DATE_FORMAT.format(ZonedDateTime.now())
+                + "." + AppConfig.get().getFfmpegExt());
+
+        Map<String, String> param = new HashMap<>();
+        param.put("{x}", String.valueOf((int) rectangle.getX()));
+        param.put("{y}", String.valueOf((int) rectangle.getY()));
+        param.put("{width}", String.valueOf((int) rectangle.getWidth()));
+        param.put("{height}", String.valueOf((int) rectangle.getHeight()));
+        param.put("{path}", to.toAbsolutePath().toString());
+
+        List<String> args = new ArrayList<>();
+        args.add(AppConfig.get().getFfmpegPath());
+        Arrays.stream(AppConfig.get().getFfmpegArgs().split("\n"))
+                .flatMap(str -> Arrays.stream(str.split(" ")))
+                .map(str -> {
+                    String r = str;
+                    for (Entry<String, String> entry : param.entrySet()) {
+                        r = r.replace(entry.getKey(), entry.getValue());
+                    }
+                    return r;
+                })
+                .forEach(args::add);
+        try {
+            ProcessBuilder pb = new ProcessBuilder(args);
+            pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+            this.process = pb.start();
+            System.out.println(args);
+        } catch (Exception e) {
+            this.stopProcess();
+            Tools.Conrtols.alert(AlertType.ERROR, "動画撮影に失敗しました", "設定が誤っている可能性があります。\n引数:" + args.toString(), e,
+                    this.getWindow());
+        }
+    }
+
+    /**
+     * プロセスを停止
+     */
+    private void stopProcess() {
+        if (this.process != null) {
+            Process process = this.process;
+            ThreadManager.getExecutorService().execute(() -> {
+                if (process.isAlive()) {
+                    PrintWriter pw = new PrintWriter(process.getOutputStream(), true);
+                    pw.println("q");
+                    try {
+                        process.waitFor(2, TimeUnit.MINUTES);
+                    } catch (InterruptedException e) {
+                        // NOP
+                    } finally {
+                        process.destroy();
+                    }
+                }
+            });
         }
     }
 

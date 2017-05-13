@@ -38,6 +38,8 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
 import logbook.internal.ThreadManager;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * スクリーンショットに関係するメソッドを集めたクラス
@@ -53,9 +55,13 @@ class ScreenCapture {
     private Robot robot;
 
     /** キャプチャ範囲 */
+    @Setter
+    @Getter
     private Rectangle rectangle;
 
     /** 切り取り範囲 */
+    @Setter
+    @Getter
     private Rectangle cutRect;
 
     private int size = 200;
@@ -101,22 +107,6 @@ class ScreenCapture {
 
     void setCurrent(ObjectProperty<ImageData> current) {
         this.current = current;
-    }
-
-    /**
-     * 切り取り範囲を取得します。
-     * @return 切り取り範囲
-     */
-    Rectangle getCutRect() {
-        return this.cutRect;
-    }
-
-    /**
-     * 切り取り範囲を設定します。
-     * @param cutRect 切り取り範囲
-     */
-    void setCutRect(Rectangle cutRect) {
-        this.cutRect = cutRect;
     }
 
     void setSize(int size) {

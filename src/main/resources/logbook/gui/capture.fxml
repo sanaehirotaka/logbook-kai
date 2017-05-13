@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="320.0" styleClass="captureWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="320.0" styleClass="captureWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
    <children>
       <ToolBar>
          <items>
@@ -28,6 +28,7 @@
             <MenuButton fx:id="config" disable="true" mnemonicParsing="false" text="設定">
               <items>
                   <CheckMenuItem fx:id="cyclic" mnemonicParsing="false" onAction="#cyclic" text="連写" />
+                  <CheckMenuItem fx:id="movie" mnemonicParsing="false" onAction="#movie" text="動画" />
                   <Menu mnemonicParsing="false" text="切り取り">
                     <items>
                         <RadioMenuItem mnemonicParsing="false" onAction="#cutNone" selected="true" text="無し">

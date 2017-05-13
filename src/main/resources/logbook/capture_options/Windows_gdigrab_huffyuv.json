@@ -1,0 +1,5 @@
+{
+    "name" : "Windows (gdigrab/Huffyuv(Lossless))",
+    "params" : "-f gdigrab\r\n-show_region 1\r\n-draw_mouse 1\r\n-offset_x {x}\r\n-offset_y {y}\r\n-video_size {width}x{height}\r\n-i desktop\r\n-rtbufsize 100M\r\n-vcodec huffyuv\r\n-vsync passthrough\r\n-y\r\n\"{path}\"\r\n",
+    "ext" : "avi"
+}

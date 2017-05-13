@@ -1,0 +1,5 @@
+{
+    "name" : "Windows (gdigrab/H.264)",
+    "params" : "-f gdigrab\n-show_region 1\n-draw_mouse 1\n-offset_x {x}\n-offset_y {y}\n-video_size {width}x{height}\n-i desktop\n-rtbufsize 100M\n-r 24\n-vcodec libx264\n-crf 20\n-auto-alt-ref 0\n-y\n\"{path}\"",
+    "ext" : "mp4"
+}

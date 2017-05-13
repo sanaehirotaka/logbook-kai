@@ -1,0 +1,6 @@
+[
+    "logbook/capture_options/Windows_gdigrab_mpeg4.json",
+    "logbook/capture_options/Windows_gdigrab_h264.json",
+    "logbook/capture_options/Windows_gdigrab_h265.json",
+    "logbook/capture_options/Windows_gdigrab_huffyuv.json"
+]
