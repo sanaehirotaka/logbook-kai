@@ -58,12 +58,14 @@ public class AppQuestCollection implements Serializable {
         this.update();
 
         val copyMap = new ConcurrentSkipListMap<>(this.quest);
-        for (Quest quest : questList.getList()) {
-            if (quest != null) {
-                copyMap.remove(quest.getNo());
+        if (questList.getList() != null) {
+            for (Quest quest : questList.getList()) {
+                if (quest != null) {
+                    copyMap.remove(quest.getNo());
 
-                if (quest.getState() == 2) {
-                    copyMap.put(quest.getNo(), AppQuest.toAppQuest(quest));
+                    if (quest.getState() == 2) {
+                        copyMap.put(quest.getNo(), AppQuest.toAppQuest(quest));
+                    }
                 }
             }
         }
