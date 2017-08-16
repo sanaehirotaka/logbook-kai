@@ -4,7 +4,7 @@
     <name>logbook-kai</name>
     <artifactId>logbook-kai</artifactId>
     <groupId>logbook</groupId>
-    <version>17.5.2</version>
+    <version>17.8.2</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
@@ -33,6 +33,8 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
+                    <finalName>${project.artifactId}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
                     <execution>
