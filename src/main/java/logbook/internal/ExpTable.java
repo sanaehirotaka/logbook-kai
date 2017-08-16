@@ -171,6 +171,16 @@ public class ExpTable {
         EXP_TABLE.put(153, 4999000);
         EXP_TABLE.put(154, 5230000);
         EXP_TABLE.put(155, 5470000);
+        EXP_TABLE.put(156, 5720000);
+        EXP_TABLE.put(157, 5780000);
+        EXP_TABLE.put(158, 5860000);
+        EXP_TABLE.put(159, 5970000);
+        EXP_TABLE.put(160, 6120000);
+        EXP_TABLE.put(161, 6320000);
+        EXP_TABLE.put(162, 6580000);
+        EXP_TABLE.put(163, 6910000);
+        EXP_TABLE.put(164, 7320000);
+        EXP_TABLE.put(165, 7820000);
     }
 
     /**
@@ -188,6 +198,6 @@ public class ExpTable {
      * @return 最大Lv
      */
     public static int maxLv() {
-        return 155;
+        return 165;
     }
 }
