@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -22,7 +22,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#capture" text="キャプチャ" />
               <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#battleStatus" text="直近の戦闘" />
+              <MenuItem mnemonicParsing="false" onAction="#battleStatus" text="現在の戦闘" />
               <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />

@@ -180,7 +180,7 @@ public class MainController extends WindowController {
     }
 
     /**
-     * 直近の戦闘
+     * 現在の戦闘
      *
      * @param e ActionEvent
      */
@@ -198,11 +198,11 @@ public class MainController extends WindowController {
                 IMidnightBattle midnight = log.getMidnight();
 
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
-                        "直近の戦闘", c -> {
+                        "現在の戦闘", c -> {
                             ((BattleDetail) c).setData(last, combinedType, deckMap, battle, midnight);
                         }, null);
             } else {
-                Tools.Conrtols.alert(AlertType.INFORMATION, "直近の戦闘", "戦闘中ではありません", this.getWindow());
+                Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.getWindow());
             }
         } catch (Exception ex) {
             LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);
