@@ -26,6 +26,7 @@ import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.BattleTypes.Stage2;
 import logbook.bean.BattleTypes.SupportAiratack;
+import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
@@ -38,6 +39,9 @@ import logbook.internal.Ships;
  *
  */
 public class BattleDetail extends WindowController {
+
+    /** 出撃/進撃 */
+    private MapStartNext last;
 
     /** 連合艦隊 */
     private CombinedType combinedType;
@@ -54,6 +58,10 @@ public class BattleDetail extends WindowController {
     /** フェーズ */
     @FXML
     private VBox phase;
+
+    /** マス */
+    @FXML
+    private Label mapcell;
 
     /** 艦隊行動: */
     @FXML
@@ -97,13 +105,15 @@ public class BattleDetail extends WindowController {
 
     /**
      * 戦況表示
+     * @param last 出撃/進撃
      * @param combinedType 連合艦隊
      * @param deckMap 艦隊スナップショット
      * @param battle 戦闘
      * @param midnight 夜戦
      */
-    void setData(CombinedType combinedType, Map<Integer, List<Ship>> deckMap, IFormation battle,
+    void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap, IFormation battle,
             IMidnightBattle midnight) {
+        this.last = last;
         this.combinedType = combinedType;
         this.deckMap = deckMap;
         this.battle = battle;
@@ -128,6 +138,13 @@ public class BattleDetail extends WindowController {
 
     private void setInfo() {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap);
+
+        // マス
+        boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
+        this.mapcell.setText(this.last.getMapareaId()
+                + "-" + this.last.getMapinfoNo()
+                + "-" + this.last.getNo()
+                + (boss ? "(ボス)" : ""));
 
         // 艦隊行動
         this.intercept.setText(BattleTypes.Intercept.toIntercept(this.battle.getFormation().get(2)).toString());

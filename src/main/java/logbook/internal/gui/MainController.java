@@ -43,6 +43,7 @@ import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.MapStartNext;
 import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
@@ -190,6 +191,7 @@ public class MainController extends WindowController {
                     .getBattleResult();
 
             if (log != null && log.getBattle() != null) {
+                MapStartNext last = log.getNext().get(log.getNext().size() - 1);
                 CombinedType combinedType = log.getCombinedType();
                 Map<Integer, List<Ship>> deckMap = log.getDeckMap();
                 IFormation battle = log.getBattle();
@@ -197,7 +199,7 @@ public class MainController extends WindowController {
 
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                         "直近の戦闘", c -> {
-                            ((BattleDetail) c).setData(combinedType, deckMap, battle, midnight);
+                            ((BattleDetail) c).setData(last, combinedType, deckMap, battle, midnight);
                         }, null);
             } else {
                 Tools.Conrtols.alert(AlertType.INFORMATION, "直近の戦闘", "戦闘中ではありません", this.getWindow());

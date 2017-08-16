@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
+<ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
    <content>
       <VBox fx:id="phase">
          <children>
@@ -28,6 +28,7 @@
                         <ColumnConstraints hgrow="SOMETIMES" />
                     </columnConstraints>
                     <rowConstraints>
+                        <RowConstraints vgrow="SOMETIMES" />
                       <RowConstraints vgrow="SOMETIMES" />
                       <RowConstraints vgrow="SOMETIMES" />
                       <RowConstraints vgrow="SOMETIMES" />
@@ -37,62 +38,72 @@
                      <children>
                         <HBox>
                            <children>
-                              <Label text="艦隊行動:" />
+                              <Label text="マス:" />
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="1">
+                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3">
                            <children>
-                              <Label fx:id="intercept" />
+                              <Label fx:id="mapcell" />
                            </children>
                         </HBox>
                         <HBox GridPane.rowIndex="1">
                            <children>
-                              <Label text="味方陣形:" />
+                              <Label text="艦隊行動:" />
                            </children>
                         </HBox>
                         <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <Label fx:id="fFormation" />
-                           </children>
-                        </HBox>
-                        <HBox GridPane.columnIndex="2" GridPane.rowIndex="1">
-                           <children>
-                              <Pane prefWidth="3.0" />
-                              <Label text="敵陣形:" />
-                           </children>
-                        </HBox>
-                        <HBox GridPane.columnIndex="3" GridPane.rowIndex="1">
-                           <children>
-                              <Label fx:id="eFormation" />
+                              <Label fx:id="intercept" />
                            </children>
                         </HBox>
                         <HBox GridPane.rowIndex="2">
                            <children>
-                              <Label text="制空値計:" />
+                              <Label text="味方陣形:" />
                            </children>
                         </HBox>
                         <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
-                              <Label fx:id="seiku" />
+                              <Label fx:id="fFormation" />
                            </children>
                         </HBox>
                         <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
                            <children>
                               <Pane prefWidth="3.0" />
-                              <Label text="制空権:" />
+                              <Label text="敵陣形:" />
                            </children>
                         </HBox>
                         <HBox GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <children>
-                              <Label fx:id="dispSeiku" />
+                              <Label fx:id="eFormation" />
                            </children>
                         </HBox>
                         <HBox GridPane.rowIndex="3">
                            <children>
-                              <Label text="味方触接:" />
+                              <Label text="制空値計:" />
                            </children>
                         </HBox>
                         <HBox GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <children>
+                              <Label fx:id="seiku" />
+                           </children>
+                        </HBox>
+                        <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
+                           <children>
+                              <Pane prefWidth="3.0" />
+                              <Label text="制空権:" />
+                           </children>
+                        </HBox>
+                        <HBox GridPane.columnIndex="3" GridPane.rowIndex="3">
+                           <children>
+                              <Label fx:id="dispSeiku" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" GridPane.rowIndex="4">
+                           <children>
+                              <Label text="味方触接:" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <children>
                               <ImageView fx:id="fTouchPlaneImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                               <StackPane>
@@ -102,13 +113,13 @@
                               </StackPane>
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="4">
                            <children>
                               <Pane prefWidth="3.0" />
                               <Label text="敵触接:" />
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="3" GridPane.rowIndex="3">
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="3" GridPane.rowIndex="4">
                            <children>
                               <ImageView fx:id="eTouchPlaneImage" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
                               <StackPane>
@@ -118,12 +129,12 @@
                               </StackPane>
                            </children>
                         </HBox>
-                        <HBox GridPane.rowIndex="4">
+                        <HBox GridPane.rowIndex="5">
                            <children>
                               <Label text="対空CI:" />
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
                            <children>
                               <Label fx:id="tykuCI" />
                            </children>
