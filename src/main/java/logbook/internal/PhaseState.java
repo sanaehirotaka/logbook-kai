@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.AirBaseAttack;
@@ -29,6 +30,9 @@ import logbook.bean.BattleTypes.SupportInfo;
 import logbook.bean.Chara;
 import logbook.bean.Enemy;
 import logbook.bean.Ship;
+import logbook.bean.SlotItem;
+import logbook.bean.SlotItemCollection;
+import logbook.bean.SlotitemMst;
 import lombok.Getter;
 
 /**
@@ -431,12 +435,12 @@ public class PhaseState {
                     // 6以下は味方
                     Ship ship = friend.get(df - 1);
                     if (ship != null) {
-                        ship.setNowhp(ship.getNowhp() - damage);
+                        damage(ship, damage);
                     }
                 } else {
                     // 7以上は敵
                     Enemy ship = enemy.get(df - 1 - 6);
-                    ship.setNowhp(ship.getNowhp() - damage);
+                    damage(ship, damage);
                 }
             }
         } else {
@@ -484,7 +488,7 @@ public class PhaseState {
                 target = tl.get(df - 1 - 6);
             }
             if (target != null) {
-                target.setNowhp(target.getNowhp() - damage);
+                damage(target, damage);
             }
         }
     }
@@ -504,7 +508,7 @@ public class PhaseState {
                     ship = this.afterFriendCombined.get(i - (6 + 1));
                 }
                 if (ship != null) {
-                    ship.setNowhp(ship.getNowhp() - damage);
+                    damage(ship, damage);
                 }
             }
         }
@@ -521,7 +525,7 @@ public class PhaseState {
             if (damage != 0) {
                 Ship ship = friend.get(i - 1);
                 if (ship != null) {
-                    ship.setNowhp(ship.getNowhp() - damage);
+                    damage(ship, damage);
                 }
             }
         }
@@ -542,7 +546,7 @@ public class PhaseState {
                     enemy = this.afterEnemyCombined.get(i - (6 + 1));
                 }
                 if (enemy != null) {
-                    enemy.setNowhp(enemy.getNowhp() - damage);
+                    damage(enemy, damage);
                 }
             }
         }
@@ -559,7 +563,7 @@ public class PhaseState {
             if (damage != 0) {
                 Enemy enemy = enemies.get(i - 1);
                 if (enemy != null) {
-                    enemy.setNowhp(enemy.getNowhp() - damage);
+                    damage(enemy, damage);
                 }
             }
         }
@@ -622,6 +626,44 @@ public class PhaseState {
                 }
             }
         }
+    }
 
+    /**
+     * ダメージ計算
+     *
+     * @param chara 対象キャラクター
+     * @param damage ダメージ
+     */
+    private static void damage(Chara chara, int damage) {
+        int nowHp;
+        if (chara.getNowhp() - damage <= 0 && chara instanceof Ship) {
+            Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                    .getSlotitemMap();
+            Ship ship = (Ship) chara;
+            // 最初に消費される応急修理要員
+            Optional<SlotitemMst> mst = Stream.concat(Stream.of(ship.getSlotEx()), ship.getSlot().stream())
+                    .map(itemMap::get)
+                    .map(Items::slotitemMst)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .filter(SlotItemType.応急修理要員::equals)
+                    .findFirst();
+            if (mst.isPresent()) {
+                if (mst.get().getName().equals("応急修理女神")) {
+                    // 応急修理女神
+                    // 女神発動では、艦の最大HPに回復する
+                    nowHp = chara.getMaxhp();
+                } else {
+                    // 応急修理要員
+                    // 要員発動では、艦の最大HPの20%に回復する(小数点以下切り捨て)
+                    nowHp = (int) ((double) chara.getMaxhp() * 0.2D);
+                }
+            } else {
+                nowHp = chara.getNowhp() - damage;
+            }
+        } else {
+            nowHp = chara.getNowhp() - damage;
+        }
+        chara.setNowhp(nowHp);
     }
 }
