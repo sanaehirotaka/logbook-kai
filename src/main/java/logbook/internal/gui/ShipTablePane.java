@@ -1,7 +1,6 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,7 +34,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -170,15 +168,15 @@ public class ShipTablePane extends VBox {
     @FXML
     private ChoiceBox<Operator> conditionType;
 
-    /**　レベル */
+    /** レベル */
     @FXML
     private ToggleSwitch levelFilter;
 
-    /**　レベル */
+    /** レベル */
     @FXML
     private TextField levelValue;
 
-    /**　レベル条件 */
+    /** レベル条件 */
     @FXML
     private ChoiceBox<Operator> levelType;
 
@@ -189,10 +187,6 @@ public class ShipTablePane extends VBox {
     /** ラベル条件 */
     @FXML
     private ChoiceBox<String> labelValue;
-
-    /** メッセージ */
-    @FXML
-    private Label message;
 
     /** テーブル */
     @FXML
@@ -314,6 +308,9 @@ public class ShipTablePane extends VBox {
 
     /** フィルター */
     private final FilteredList<ShipItem> filteredShipItems = new FilteredList<>(this.shipItems);
+
+    /** 画面更新が有効 */
+    private boolean enable;
 
     /** フィルターの更新停止 */
     private boolean disableFilterUpdate;
@@ -505,10 +502,23 @@ public class ShipTablePane extends VBox {
             sortedList.comparatorProperty().bind(this.table.comparatorProperty());
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             this.table.setStyle("-fx-cell-size: 16px;");
-            this.update();
         } catch (Exception e) {
             LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * このノードが画面が表示される(タブが選択される)場合に呼び出される
+     */
+    public void enable() {
+        this.enable = true;
+    }
+
+    /**
+     * このノードが画面が表示されなくなる(タブが選択されなくなる)場合に呼び出される
+     */
+    public void disable() {
+        this.enable = false;
     }
 
     /**
@@ -517,6 +527,9 @@ public class ShipTablePane extends VBox {
      */
     public void update() {
         try {
+            if (!this.enable) {
+                return;
+            }
             List<Ship> ships = this.shipSupplier.get();
 
             if (this.shipsHashCode != ships.hashCode()) {
@@ -529,11 +542,6 @@ public class ShipTablePane extends VBox {
                         .collect(Collectors.toList()));
 
                 this.updateLabel();
-
-                this.message.setText("制空値計: " + ships.stream()
-                        .mapToInt(Ships::airSuperiority)
-                        .sum()
-                        + " 判定式(33): " + MessageFormat.format("{0,number,#.##}", Ships.decision33(ships)));
             }
         } catch (Exception e) {
             LoggerHolder.LOG.error("画面の更新に失敗しました", e);
@@ -705,7 +713,7 @@ public class ShipTablePane extends VBox {
 
     /**
      * 艦娘フィルターを作成する
-     * @return　艦娘フィルター
+     * @return 艦娘フィルター
      */
     private ShipFilter createFilter() {
         Set<String> types = Arrays.asList(

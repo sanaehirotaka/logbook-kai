@@ -103,7 +103,6 @@
                   </FlowPane>
                </content>
             </TitledPane>
-            <Label fx:id="message" styleClass="message" />
          </children>
       </VBox>
       <TableView fx:id="table" cacheShape="false" VBox.vgrow="ALWAYS">
