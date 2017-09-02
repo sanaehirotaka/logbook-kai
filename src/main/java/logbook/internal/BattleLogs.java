@@ -29,9 +29,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import logbook.bean.AppConfig;
@@ -66,7 +63,7 @@ public class BattleLogs {
                 mapper.writeValue(writer, log);
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("戦闘ログの書き込み中に例外", e);
+            LoggerHolder.get().warn("戦闘ログの書き込み中に例外", e);
         }
         // 期限切れの削除
         deleteExpiration();
@@ -90,7 +87,7 @@ public class BattleLogs {
                 try {
                     Files.deleteIfExists(p);
                 } catch (IOException e) {
-                    LoggerHolder.LOG.warn("戦闘ログの削除中に例外", e);
+                    LoggerHolder.get().warn("戦闘ログの削除中に例外", e);
                 }
             };
             Predicate<Path> compareAction = p -> {
@@ -108,7 +105,7 @@ public class BattleLogs {
                         .forEach(deleteAction);
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("戦闘ログの削除中に例外", e);
+            LoggerHolder.get().warn("戦闘ログの削除中に例外", e);
         }
     }
 
@@ -140,7 +137,7 @@ public class BattleLogs {
                 }
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("戦闘ログの読み込み中に例外", e);
+            LoggerHolder.get().warn("戦闘ログの読み込み中に例外", e);
         }
         return null;
     }
@@ -170,7 +167,7 @@ public class BattleLogs {
                 try {
                     return new SimpleBattleLog(line);
                 } catch (Exception e) {
-                    LoggerHolder.LOG.warn("海戦・ドロップ報告書の読み込み中に例外", e);
+                    LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
                 }
                 return null;
             };
@@ -205,7 +202,7 @@ public class BattleLogs {
                 return map;
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("海戦・ドロップ報告書の読み込み中に例外", e);
+            LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
         }
         return Collections.emptyMap();
     }
@@ -410,10 +407,5 @@ public class BattleLogs {
         public boolean accept(ZonedDateTime target, ZonedDateTime now) {
             throw new UnsupportedOperationException();
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(BattleLogs.class);
     }
 }

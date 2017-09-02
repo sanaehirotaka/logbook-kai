@@ -8,9 +8,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -24,6 +21,7 @@ import javafx.util.Duration;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipLabelCollection;
+import logbook.internal.LoggerHolder;
 import logbook.internal.SeaArea;
 
 /**
@@ -113,7 +111,7 @@ public class ShipController extends WindowController {
             this.timeline.play();
 
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -137,10 +135,5 @@ public class ShipController extends WindowController {
     public void setWindow(Stage window) {
         super.setWindow(window);
         window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ShipController.class);
     }
 }

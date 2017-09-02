@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
@@ -62,6 +60,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import logbook.bean.AppConfig;
+import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
 import logbook.internal.gui.ScreenCapture.ImageData;
 import lombok.Getter;
@@ -288,7 +287,7 @@ public class CaptureController extends WindowController {
                 ((CaptureSaveController) controller).setItems(this.images);
             }, null);
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("キャプチャの保存に失敗しました", ex);
+            LoggerHolder.get().error("キャプチャの保存に失敗しました", ex);
         }
     }
 
@@ -312,7 +311,7 @@ public class CaptureController extends WindowController {
             Rectangle screenBounds = gc.getBounds();
             this.setBounds(robot, relative, screenBounds);
         } catch (Exception e) {
-            LoggerHolder.LOG.error("座標取得に失敗しました", e);
+            LoggerHolder.get().error("座標取得に失敗しました", e);
         }
     }
 
@@ -405,7 +404,7 @@ public class CaptureController extends WindowController {
             stage.setAlwaysOnTop(true);
             stage.show();
         } catch (Exception e) {
-            LoggerHolder.LOG.error("座標取得に失敗しました", e);
+            LoggerHolder.get().error("座標取得に失敗しました", e);
         }
     }
 
@@ -423,7 +422,7 @@ public class CaptureController extends WindowController {
                 }
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.error("キャプチャに失敗しました", e);
+            LoggerHolder.get().error("キャプチャに失敗しました", e);
         }
     }
 
@@ -642,10 +641,5 @@ public class CaptureController extends WindowController {
             this.name = name;
             this.className = className;
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(CaptureController.class);
     }
 }

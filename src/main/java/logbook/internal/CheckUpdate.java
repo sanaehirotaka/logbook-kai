@@ -4,9 +4,6 @@ import java.awt.Desktop;
 import java.io.InputStream;
 import java.net.URI;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -45,7 +42,7 @@ public class CheckUpdate implements StartUp {
                 }
                 break;
             } catch (Exception e) {
-                LoggerHolder.LOG.warn("アップデートチェックで例外", e);
+                LoggerHolder.get().warn("アップデートチェックで例外", e);
             }
         }
     }
@@ -73,12 +70,7 @@ public class CheckUpdate implements StartUp {
             Desktop.getDesktop()
                     .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("アップデートチェックで例外", e);
+            LoggerHolder.get().warn("アップデートチェックで例外", e);
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(CheckUpdate.class);
     }
 }

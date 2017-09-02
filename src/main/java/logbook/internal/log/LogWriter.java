@@ -11,10 +11,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import logbook.bean.AppConfig;
+import logbook.internal.LoggerHolder;
 
 /**
  * ログ書き込みをサポートします
@@ -187,7 +185,7 @@ public class LogWriter<T> {
                 }
             }
         } catch (IOException e) {
-            LoggerHolder.LOG.warn(String.valueOf(this.filePath) + "に書き込めません", e);
+            LoggerHolder.get().warn(String.valueOf(this.filePath) + "に書き込めません", e);
         }
     }
 
@@ -216,10 +214,5 @@ public class LogWriter<T> {
             writer.write(line.getBytes(this.charset));
             writer.write(this.delimiter.getBytes(this.charset));
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(LogWriter.class);
     }
 }

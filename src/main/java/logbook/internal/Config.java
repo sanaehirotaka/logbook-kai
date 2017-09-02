@@ -17,9 +17,6 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import logbook.Messages;
@@ -181,7 +178,7 @@ public final class Config {
     }
 
     private ExceptionListener getListener() {
-        return e -> LoggerHolder.LOG.warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
+        return e -> LoggerHolder.get().warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
     }
 
     /**
@@ -191,10 +188,5 @@ public final class Config {
      */
     public static Config getDefault() {
         return DEFAULT;
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(Config.class);
     }
 }

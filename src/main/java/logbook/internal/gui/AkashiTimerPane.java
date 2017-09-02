@@ -3,14 +3,12 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.time.Duration;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import logbook.bean.AppCondition;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Time;
 
 /**
@@ -34,7 +32,7 @@ public class AkashiTimerPane extends AnchorPane {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -43,7 +41,7 @@ public class AkashiTimerPane extends AnchorPane {
         try {
             this.update();
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -57,10 +55,5 @@ public class AkashiTimerPane extends AnchorPane {
         } else {
             this.time.setText("");
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(AkashiTimerPane.class);
     }
 }

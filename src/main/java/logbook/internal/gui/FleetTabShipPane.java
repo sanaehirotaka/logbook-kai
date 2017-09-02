@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
@@ -17,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.plugin.PluginContainer;
 
@@ -61,7 +60,7 @@ public class FleetTabShipPane extends HBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -115,10 +114,5 @@ public class FleetTabShipPane extends HBox {
                 this.pop.hide();
             }
         });
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(FleetTabShipPane.class);
     }
 }

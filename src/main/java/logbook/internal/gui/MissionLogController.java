@@ -22,9 +22,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,6 +39,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import logbook.bean.AppConfig;
 import logbook.internal.BattleLogs.Unit;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Logs;
 import logbook.internal.log.LogWriter;
 import logbook.internal.log.MissionResultLogFormat;
@@ -220,7 +218,7 @@ public class MissionLogController extends WindowController {
             TableTool.showVisibleSetting(this.detail, this.getClass() + "#" + "detail",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -240,7 +238,7 @@ public class MissionLogController extends WindowController {
             TableTool.showVisibleSetting(this.aggregate, this.getClass() + "#" + "aggregate",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -347,7 +345,7 @@ public class MissionLogController extends WindowController {
             try {
                 return new SimpleMissionLog(line);
             } catch (Exception e) {
-                LoggerHolder.LOG.warn("遠征報告書の読み込み中に例外", e);
+                LoggerHolder.get().warn("遠征報告書の読み込み中に例外", e);
             }
             return null;
         };
@@ -550,10 +548,5 @@ public class MissionLogController extends WindowController {
         private String name;
 
         private int value;
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(MissionLogController.class);
     }
 }

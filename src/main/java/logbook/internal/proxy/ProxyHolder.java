@@ -3,9 +3,7 @@ package logbook.internal.proxy;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import logbook.internal.LoggerHolder;
 import logbook.plugin.PluginServices;
 import logbook.proxy.ProxyServerSpi;
 
@@ -32,7 +30,7 @@ public class ProxyHolder {
             thread = new Thread(impl);
             thread.setDaemon(true);
         } catch (Exception e) {
-            LoggerHolder.LOG.error("プロキシサーバーの初期化中に例外", e);
+            LoggerHolder.get().error("プロキシサーバーの初期化中に例外", e);
         }
         SERVER = thread;
     }
@@ -43,10 +41,5 @@ public class ProxyHolder {
      */
     public static Thread getInstance() {
         return SERVER;
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ProxyHolder.class);
     }
 }

@@ -3,9 +3,6 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,6 +10,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 import logbook.bean.Enemy;
 import logbook.bean.Ship;
+import logbook.internal.LoggerHolder;
 import logbook.internal.PhaseState;
 
 /**
@@ -71,7 +69,7 @@ public class BattleDetailPhase extends TitledPane {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -102,10 +100,5 @@ public class BattleDetailPhase extends TitledPane {
                 this.afterEnemy.getChildren().add(new BattleDetailPhaseShip(enemy));
             }
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(BattleDetailPhase.class);
     }
 }

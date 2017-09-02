@@ -12,9 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +30,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Items;
+import logbook.internal.LoggerHolder;
 import logbook.internal.SeaArea;
 import logbook.internal.Ships;
 import lombok.val;
@@ -122,7 +120,7 @@ public class FleetTabPane extends ScrollPane {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -297,10 +295,5 @@ public class FleetTabPane extends ScrollPane {
         if (path != null) {
             this.lvsumImg.setImage(new Image(path.toUri().toString()));
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(FleetTabPane.class);
     }
 }

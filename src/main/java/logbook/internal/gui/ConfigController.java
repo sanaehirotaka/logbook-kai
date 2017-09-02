@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.collections.FXCollections;
@@ -27,6 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
 import logbook.internal.Config;
+import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
 import logbook.plugin.PluginContainer;
 
@@ -319,12 +317,7 @@ public class ConfigController extends WindowController {
                 }
             });
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ConfigController.class);
     }
 }

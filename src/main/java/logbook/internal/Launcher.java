@@ -16,9 +16,6 @@ import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.internal.gui.Main;
@@ -44,7 +41,7 @@ public final class Launcher {
             launcher.initPlugin(args);
             launcher.initLocal(args);
         } catch (Exception | Error e) {
-            LoggerHolder.LOG.warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
+            LoggerHolder.get().warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
         } finally {
             try {
                 try {
@@ -53,7 +50,7 @@ public final class Launcher {
                     launcher.exitPlugin();
                 }
             } catch (Exception | Error e) {
-                LoggerHolder.LOG.warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
+                LoggerHolder.get().warn(Messages.getString("Launcher.0"), e); //$NON-NLS-1$
             }
         }
     }
@@ -73,7 +70,7 @@ public final class Launcher {
      * @param args アプリケーション引数
      */
     void initPlugin(String[] args) {
-        ExceptionListener listener = e -> LoggerHolder.LOG.warn("プラグインの初期化中に例外が発生", e); //$NON-NLS-1$
+        ExceptionListener listener = e -> LoggerHolder.get().warn("プラグインの初期化中に例外が発生", e); //$NON-NLS-1$
 
         Set<String> blackList = this.getBlackList(listener);
 
@@ -117,7 +114,7 @@ public final class Launcher {
      * プラグインの初期化処理
      */
     void exitPlugin() {
-        ExceptionListener listener = e -> LoggerHolder.LOG.warn("プラグインのクローズ中に例外が発生", e); //$NON-NLS-1$
+        ExceptionListener listener = e -> LoggerHolder.get().warn("プラグインのクローズ中に例外が発生", e); //$NON-NLS-1$
         try {
             PluginContainer container = PluginContainer.getInstance();
             container.close();
@@ -147,10 +144,5 @@ public final class Launcher {
             }
         }
         return blackList;
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(Launcher.class);
     }
 }

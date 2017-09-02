@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
@@ -28,6 +25,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Audios;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.internal.gui.Tools;
 import logbook.proxy.RequestMetaData;
@@ -89,7 +87,7 @@ public class ApiReqMapNext implements APIListenerSpi {
                 clip.play();
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("サウンド通知に失敗しました", e);
+            LoggerHolder.get().warn("サウンド通知に失敗しました", e);
         }
         for (Ship ship : badlyShips) {
             ImageView node = new ImageView(Ships.shipWithItemImage(ship));
@@ -118,10 +116,5 @@ public class ApiReqMapNext implements APIListenerSpi {
                 .filter(Ships::isBadlyDamage)
                 .filter(s -> !Ships.isEscape(s))
                 .collect(Collectors.toList());
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ApiReqMapNext.class);
     }
 }

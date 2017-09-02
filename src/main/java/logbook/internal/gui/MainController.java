@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -51,6 +48,7 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.internal.proxy.ProxyHolder;
 import logbook.plugin.PluginServices;
@@ -161,7 +159,7 @@ public class MainController extends WindowController {
                     .peek(t -> t.setDaemon(true))
                     .forEach(Thread::start);
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -175,7 +173,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/capture.fxml", this.getWindow(), "キャプチャ");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("キャプチャの初期化に失敗しました", ex);
+            LoggerHolder.get().error("キャプチャの初期化に失敗しました", ex);
         }
     }
 
@@ -205,7 +203,7 @@ public class MainController extends WindowController {
                 Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.getWindow());
             }
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);
+            LoggerHolder.get().error("詳細の表示に失敗しました", ex);
         }
     }
 
@@ -219,7 +217,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/battlelog.fxml", this.getWindow(), "戦闘ログ");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("戦闘ログの初期化に失敗しました", ex);
+            LoggerHolder.get().error("戦闘ログの初期化に失敗しました", ex);
         }
     }
 
@@ -233,7 +231,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/missionlog.fxml", this.getWindow(), "遠征ログ");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("遠征ログの初期化に失敗しました", ex);
+            LoggerHolder.get().error("遠征ログの初期化に失敗しました", ex);
         }
     }
 
@@ -247,7 +245,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/airbase.fxml", this.getWindow(), "基地航空隊");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("基地航空隊の初期化に失敗しました", ex);
+            LoggerHolder.get().error("基地航空隊の初期化に失敗しました", ex);
         }
     }
 
@@ -261,7 +259,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/item.fxml", this.getWindow(), "所有装備一覧");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("所有装備一覧の初期化に失敗しました", ex);
+            LoggerHolder.get().error("所有装備一覧の初期化に失敗しました", ex);
         }
     }
 
@@ -275,7 +273,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/ship.fxml", this.getWindow(), "所有艦娘一覧");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("所有艦娘一覧の初期化に失敗しました", ex);
+            LoggerHolder.get().error("所有艦娘一覧の初期化に失敗しました", ex);
         }
     }
 
@@ -289,7 +287,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/require_ndock.fxml", this.getWindow(), "お風呂に入りたい艦娘");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("お風呂に入りたい艦娘の初期化に失敗しました", ex);
+            LoggerHolder.get().error("お風呂に入りたい艦娘の初期化に失敗しました", ex);
         }
     }
 
@@ -303,7 +301,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/calc_exp.fxml", this.getWindow(), "経験値計算機");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("経験値計算機の初期化に失敗しました", ex);
+            LoggerHolder.get().error("経験値計算機の初期化に失敗しました", ex);
         }
     }
 
@@ -317,7 +315,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/resource_chart.fxml", this.getWindow(), "資材チャート");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("資材チャートの初期化に失敗しました", ex);
+            LoggerHolder.get().error("資材チャートの初期化に失敗しました", ex);
         }
     }
 
@@ -331,7 +329,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/deck.fxml", this.getWindow(), "編成記録");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("編成記録の初期化に失敗しました", ex);
+            LoggerHolder.get().error("編成記録の初期化に失敗しました", ex);
         }
     }
 
@@ -345,7 +343,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/create_pac_file.fxml", this.getWindow(), "自動プロキシ構成スクリプトファイル生成");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("自動プロキシ構成スクリプトファイル生成の初期化に失敗しました", ex);
+            LoggerHolder.get().error("自動プロキシ構成スクリプトファイル生成の初期化に失敗しました", ex);
         }
     }
 
@@ -359,7 +357,7 @@ public class MainController extends WindowController {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/config.fxml", this.getWindow(), "設定");
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
+            LoggerHolder.get().error("設定の初期化に失敗しました", ex);
         }
     }
 
@@ -383,7 +381,7 @@ public class MainController extends WindowController {
                         });
                     });
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
+            LoggerHolder.get().error("設定の初期化に失敗しました", ex);
         }
     }
 
@@ -413,7 +411,7 @@ public class MainController extends WindowController {
                 this.checkNotifyNdock();
             }
         } catch (Exception ex) {
-            LoggerHolder.LOG.error("設定の初期化に失敗しました", ex);
+            LoggerHolder.get().error("設定の初期化に失敗しました", ex);
         }
     }
 
@@ -742,7 +740,7 @@ public class MainController extends WindowController {
                     this.clip.play();
                 }
             } catch (Exception e) {
-                LoggerHolder.LOG.warn("サウンド通知に失敗しました", e);
+                LoggerHolder.get().warn("サウンド通知に失敗しました", e);
             }
         }
     }
@@ -755,10 +753,5 @@ public class MainController extends WindowController {
             h += i.next().hashCode();
         }
         return h;
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(MainController.class);
     }
 }

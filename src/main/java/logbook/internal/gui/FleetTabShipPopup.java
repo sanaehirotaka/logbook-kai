@@ -3,9 +3,6 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -17,6 +14,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
+import logbook.internal.LoggerHolder;
 
 /**
  * 艦隊タブポップアップ
@@ -90,7 +88,7 @@ public class FleetTabShipPopup extends VBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -139,10 +137,5 @@ public class FleetTabShipPopup extends VBox {
                 this.item6.setText(name);
             }
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(FleetTabShipPopup.class);
     }
 }

@@ -25,9 +25,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -45,6 +42,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Logs;
 import logbook.internal.log.LogWriter;
 import logbook.internal.log.MaterialLogFormat;
@@ -293,7 +291,7 @@ public class ResourceChartController extends WindowController {
                             series.getImprove()));
 
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("資材ログの読込中に例外", e);
+            LoggerHolder.get().warn("資材ログの読込中に例外", e);
         }
     }
 
@@ -364,7 +362,7 @@ public class ResourceChartController extends WindowController {
             this.table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("資材ログの読込中に例外", e);
+            LoggerHolder.get().warn("資材ログの読込中に例外", e);
         }
     }
 
@@ -393,7 +391,7 @@ public class ResourceChartController extends WindowController {
             TableTool.showVisibleSetting(this.table, this.getClass().toString() + "#" + "table",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -541,7 +539,7 @@ public class ResourceChartController extends WindowController {
                 if (columns.length > 8)
                     this.setImprove(Integer.parseInt(columns[8]));
             } catch (Exception e) {
-                LoggerHolder.LOG.info("資材ログの読み込みに失敗しました", e);
+                LoggerHolder.get().info("資材ログの読み込みに失敗しました", e);
             }
         }
 
@@ -933,10 +931,5 @@ public class ResourceChartController extends WindowController {
         public void setImprove(Collection<XYChart.Data<Number, Number>> improve) {
             this.improve.getData().addAll(improve);
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(FleetTabPane.class);
     }
 }

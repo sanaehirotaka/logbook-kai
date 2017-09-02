@@ -31,12 +31,10 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.ObservableList;
+import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -144,7 +142,7 @@ class ScreenCapture {
                 }
             });
         } catch (IOException e) {
-            LoggerHolder.LOG.warn("キャプチャ処理で例外", e);
+            LoggerHolder.get().warn("キャプチャ処理で例外", e);
         }
     }
 
@@ -172,7 +170,7 @@ class ScreenCapture {
                 this.current.set(image);
             });
         } catch (IOException e) {
-            LoggerHolder.LOG.warn("キャプチャ処理で例外", e);
+            LoggerHolder.get().warn("キャプチャ処理で例外", e);
         }
     }
 
@@ -453,10 +451,5 @@ class ScreenCapture {
         public String toString() {
             return DATE_FORMAT.format(this.dateTime);
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ScreenCapture.class);
     }
 }

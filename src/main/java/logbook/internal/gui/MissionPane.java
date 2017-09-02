@@ -9,8 +9,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
@@ -23,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import logbook.bean.DeckPort;
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Time;
 import logbook.plugin.PluginContainer;
 
@@ -71,7 +70,7 @@ public class MissionPane extends AnchorPane {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -80,7 +79,7 @@ public class MissionPane extends AnchorPane {
         try {
             this.update();
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -183,10 +182,5 @@ public class MissionPane extends AnchorPane {
                 this.pop.hide();
             }
         });
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(MissionPane.class);
     }
 }

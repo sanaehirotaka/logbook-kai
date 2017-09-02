@@ -15,9 +15,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.DefineSpriteTag;
 import com.jpexs.decompiler.flash.tags.base.CharacterTag;
@@ -63,7 +60,7 @@ public class SWFListener implements ContentListenerSpi {
                 this.common(request, response);
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("SWF処理中に例外が発生しました", e);
+            LoggerHolder.get().warn("SWF処理中に例外が発生しました", e);
         }
     }
 
@@ -259,10 +256,5 @@ public class SWFListener implements ContentListenerSpi {
             break;
         }
         return ext;
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(SWFListener.class);
     }
 }

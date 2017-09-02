@@ -8,8 +8,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.PopOver.ArrowLocation;
 
@@ -22,6 +20,7 @@ import javafx.scene.layout.HBox;
 import logbook.bean.Ndock;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.internal.Time;
 import logbook.plugin.PluginContainer;
@@ -68,7 +67,7 @@ public class NdockPane extends HBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -86,7 +85,7 @@ public class NdockPane extends HBox {
             this.update();
 
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -146,10 +145,5 @@ public class NdockPane extends HBox {
                 this.pop.hide();
             }
         });
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(NdockPane.class);
     }
 }

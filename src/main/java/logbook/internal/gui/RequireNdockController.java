@@ -3,9 +3,6 @@ package logbook.internal.gui;
 import java.time.Duration;
 import java.util.Comparator;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -25,6 +22,7 @@ import javafx.stage.WindowEvent;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.internal.Time;
 
@@ -161,7 +159,7 @@ public class RequireNdockController extends WindowController {
             TableTool.showVisibleSetting(this.table, this.getClass().toString() + "#" + "table",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -207,10 +205,5 @@ public class RequireNdockController extends WindowController {
     public void setWindow(Stage window) {
         super.setWindow(window);
         window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(RequireNdockController.class);
     }
 }

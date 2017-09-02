@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +16,7 @@ import javafx.scene.shape.Arc;
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCollection;
 import logbook.bean.QuestList.Quest;
+import logbook.internal.LoggerHolder;
 
 /**
  * 任務
@@ -56,7 +54,7 @@ public class QuestPane extends HBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -120,7 +118,7 @@ public class QuestPane extends HBox {
             this.name.setText(quest.getTitle());
             this.detail.setText(quest.getDetail().replaceAll("<br>", ""));
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -138,7 +136,7 @@ public class QuestPane extends HBox {
                     .browse(URI.create("https://www.google.co.jp/search?q="
                             + URLEncoder.encode(this.quest.getQuest().getTitle(), "UTF-8")));
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("ブラウザを開けませんでした", e);
+            LoggerHolder.get().warn("ブラウザを開けませんでした", e);
         }
     }
 
@@ -151,10 +149,5 @@ public class QuestPane extends HBox {
         } else {
             this.getStyleClass().remove("expanded");
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(QuestPane.class);
     }
 }

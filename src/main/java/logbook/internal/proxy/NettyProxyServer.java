@@ -24,8 +24,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.littleshoot.proxy.ChainedProxy;
 import org.littleshoot.proxy.ChainedProxyAdapter;
 import org.littleshoot.proxy.HttpFilters;
@@ -53,6 +51,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import logbook.Messages;
 import logbook.bean.AppConfig;
+import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
 import logbook.plugin.PluginServices;
 import logbook.proxy.ContentListenerSpi;
@@ -158,14 +157,14 @@ public class NettyProxyServer implements ProxyServerSpi {
                                 listener.accept(requestMetaData, responseMetaData);
 
                             } catch (Exception e) {
-                                LoggerHolder.LOG.warn("リバースプロキシ サーブレットで例外が発生", e);
+                                LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生", e);
                             }
                         };
                         ThreadManager.getExecutorService().submit(task);
                     }
                 }
             } catch (Exception e) {
-                LoggerHolder.LOG.warn("リバースプロキシ サーブレットで例外が発生", e);
+                LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生", e);
             }
         }
     }
@@ -249,7 +248,7 @@ public class NettyProxyServer implements ProxyServerSpi {
                         this.interceptor.intercept(this.response, resbody, this.request, reqbody);
                     }
                 } catch (Exception e) {
-                    LoggerHolder.LOG.error("リバースプロキシ サーブレットで例外が発生", e);
+                    LoggerHolder.get().error("リバースプロキシ サーブレットで例外が発生", e);
                 } finally {
                     this.release();
                 }
@@ -497,10 +496,5 @@ public class NettyProxyServer implements ProxyServerSpi {
 
             return meta;
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(NettyProxyServer.class);
     }
 }

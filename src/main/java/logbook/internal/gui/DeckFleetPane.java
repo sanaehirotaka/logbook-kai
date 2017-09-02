@@ -2,9 +2,6 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import logbook.bean.AppDeck.AppDeckFleet;
+import logbook.internal.LoggerHolder;
 import lombok.Getter;
 
 /**
@@ -57,7 +55,7 @@ public class DeckFleetPane extends VBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -103,10 +101,5 @@ public class DeckFleetPane extends VBox {
      */
     public void setNameListener(ChangeListener<? super String> listener) {
         this.fleetName.textProperty().addListener(listener);
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(DeckFleetPane.class);
     }
 }

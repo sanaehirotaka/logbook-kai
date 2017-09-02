@@ -11,9 +11,6 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.IntegerProperty;
@@ -55,6 +52,7 @@ import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.AirBases;
 import logbook.internal.Items;
+import logbook.internal.LoggerHolder;
 import logbook.plugin.PluginContainer;
 
 /**
@@ -173,7 +171,7 @@ public class AirBaseController extends WindowController {
 
             this.setAirBase();
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -202,7 +200,7 @@ public class AirBaseController extends WindowController {
             TableTool.showVisibleSetting(this.planeTable, this.getClass().toString() + "#" + "planeTable",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -762,10 +760,5 @@ public class AirBaseController extends WindowController {
                 this.setText(null);
             }
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(AirBaseController.class);
     }
 }

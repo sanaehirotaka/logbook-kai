@@ -6,9 +6,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +28,7 @@ import logbook.bean.Ship;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
+import logbook.internal.LoggerHolder;
 
 /**
  * 戦闘ログのUIコントローラー
@@ -183,7 +181,7 @@ public class BattleLogController extends WindowController {
                                             ((BattleDetail) c).setData(last, combinedType, deckMap, battle, midnight);
                                         }, null);
                             } catch (Exception ex) {
-                                LoggerHolder.LOG.error("詳細の表示に失敗しました", ex);
+                                LoggerHolder.get().error("詳細の表示に失敗しました", ex);
                             }
                         }
                     }
@@ -268,7 +266,7 @@ public class BattleLogController extends WindowController {
 
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -296,7 +294,7 @@ public class BattleLogController extends WindowController {
         try {
             TableTool.showVisibleSetting(this.detail, this.getClass().toString() + "#" + "detail", this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -329,10 +327,5 @@ public class BattleLogController extends WindowController {
                     .sorted(Comparator.comparing(BattleLogDetail::getDate).reversed())
                     .collect(Collectors.toList()));
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(BattleLogController.class);
     }
 }

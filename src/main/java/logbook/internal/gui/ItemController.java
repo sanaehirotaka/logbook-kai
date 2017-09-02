@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.ToggleSwitch;
 
 import javafx.beans.property.StringProperty;
@@ -31,6 +29,7 @@ import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.ItemFilter;
 import logbook.internal.Items;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 
 /**
@@ -209,7 +208,7 @@ public class ItemController extends WindowController {
                     .selectedItemProperty()
                     .addListener(this::detail);
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -327,7 +326,7 @@ public class ItemController extends WindowController {
         try {
             TableTool.store(this.typeTable, "所有装備一覧", this.getWindow());
         } catch (IOException e) {
-            LoggerHolder.LOG.error("CSVファイルとして保存に失敗しました", e);
+            LoggerHolder.get().error("CSVファイルとして保存に失敗しました", e);
         }
     }
 
@@ -340,7 +339,7 @@ public class ItemController extends WindowController {
             TableTool.showVisibleSetting(this.typeTable, this.getClass().toString() + "#" + "typeTable",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -369,12 +368,7 @@ public class ItemController extends WindowController {
             TableTool.showVisibleSetting(this.detailTable, this.getClass().toString() + "#" + "detailTable",
                     this.getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ItemController.class);
     }
 }

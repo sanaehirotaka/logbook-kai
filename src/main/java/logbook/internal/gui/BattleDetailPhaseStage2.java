@@ -2,14 +2,12 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import logbook.bean.BattleTypes.Stage2;
+import logbook.internal.LoggerHolder;
 
 /**
  * Stage2 詳細
@@ -59,7 +57,7 @@ public class BattleDetailPhaseStage2 extends VBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -79,10 +77,5 @@ public class BattleDetailPhaseStage2 extends VBox {
                 this.eLostcount.setText(Integer.toString(this.stage2.getELostcount()));
             }
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(BattleDetailPhaseStage2.class);
     }
 }

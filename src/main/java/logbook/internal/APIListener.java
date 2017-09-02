@@ -17,9 +17,6 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import logbook.Messages;
 import logbook.api.API;
 import logbook.api.APIListenerSpi;
@@ -82,7 +79,7 @@ public final class APIListener implements ContentListenerSpi {
                 this.send(requestMetaData, responseMetaData, json);
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
+            LoggerHolder.get().warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
         }
     }
 
@@ -103,15 +100,15 @@ public final class APIListener implements ContentListenerSpi {
 
     private void createTask(Pair pair, JsonObject json, RequestMetaData req, ResponseMetaData res) {
         try {
-            if (LoggerHolder.LOG.isDebugEnabled()) {
+            if (LoggerHolder.get().isDebugEnabled()) {
                 String className = pair.getValue().getClass().getName();
-                LoggerHolder.LOG.debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
+                LoggerHolder.get().debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
                         className, req.getRequestURI());
             }
             pair.getValue().accept(json, req, res);
         } catch (Exception e) {
-            LoggerHolder.LOG.warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
-            LoggerHolder.LOG.warn(json);
+            LoggerHolder.get().warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
+            LoggerHolder.get().warn(json);
         }
     }
 
@@ -123,10 +120,5 @@ public final class APIListener implements ContentListenerSpi {
         public Pair(String key, APIListenerSpi value) {
             super(key, value);
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(APIListener.class);
     }
 }

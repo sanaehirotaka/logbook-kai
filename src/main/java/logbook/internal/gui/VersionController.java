@@ -9,9 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -22,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Version;
 import logbook.plugin.PluginContainer;
 
@@ -64,7 +62,7 @@ public class VersionController extends WindowController {
                 }
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -79,7 +77,7 @@ public class VersionController extends WindowController {
             Desktop.getDesktop()
                     .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("ブラウザの起動で例外", e);
+            LoggerHolder.get().warn("ブラウザの起動で例外", e);
         }
     }
 
@@ -89,7 +87,7 @@ public class VersionController extends WindowController {
             Desktop.getDesktop()
                     .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/issues"));
         } catch (Exception e) {
-            LoggerHolder.LOG.warn("ブラウザの起動で例外", e);
+            LoggerHolder.get().warn("ブラウザの起動で例外", e);
         }
     }
 
@@ -118,10 +116,5 @@ public class VersionController extends WindowController {
                 }
             }
         });
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(VersionController.class);
     }
 }

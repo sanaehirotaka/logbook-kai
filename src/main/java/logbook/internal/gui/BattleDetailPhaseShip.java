@@ -2,15 +2,13 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.bean.Chara;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 
 /**
@@ -47,7 +45,7 @@ public class BattleDetailPhaseShip extends HBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -56,10 +54,5 @@ public class BattleDetailPhaseShip extends HBox {
         this.img.setImage(Ships.shipWithItemWithoutStateBannerImage(this.chara));
         this.name.setText(Ships.toName(this.chara));
         this.hp.setText(this.chara.getNowhp() + "/" + this.chara.getMaxhp());
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(BattleDetailPhase.class);
     }
 }

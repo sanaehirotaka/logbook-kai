@@ -16,8 +16,6 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
@@ -61,6 +59,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Operator;
 import logbook.internal.ShipFilter;
 import logbook.internal.Ships;
@@ -357,7 +356,7 @@ public class ShipTablePane extends VBox {
             loader.setController(this);
             loader.load();
         } catch (IOException e) {
-            LoggerHolder.LOG.error("FXMLのロードに失敗しました", e);
+            LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }
     }
 
@@ -503,7 +502,7 @@ public class ShipTablePane extends VBox {
             this.table.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
             this.table.setStyle("-fx-cell-size: 16px;");
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -544,7 +543,7 @@ public class ShipTablePane extends VBox {
                 this.updateLabel();
             }
         } catch (Exception e) {
-            LoggerHolder.LOG.error("画面の更新に失敗しました", e);
+            LoggerHolder.get().error("画面の更新に失敗しました", e);
         }
     }
 
@@ -618,7 +617,7 @@ public class ShipTablePane extends VBox {
         try {
             TableTool.store(this.table, "所有艦娘一覧(" + this.fleetName + ")", this.getScene().getWindow());
         } catch (IOException e) {
-            LoggerHolder.LOG.error("CSVファイルとして保存に失敗しました", e);
+            LoggerHolder.get().error("CSVファイルとして保存に失敗しました", e);
         }
     }
 
@@ -697,7 +696,7 @@ public class ShipTablePane extends VBox {
             TableTool.showVisibleSetting(this.table, this.getClass().toString() + "#" + "table",
                     (Stage) this.getScene().getWindow());
         } catch (Exception e) {
-            LoggerHolder.LOG.error("FXMLの初期化に失敗しました", e);
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
@@ -937,10 +936,5 @@ public class ShipTablePane extends VBox {
             String hex = Long.toString(n & 0xFFFFFF, 16);
             return "#" + ("000000" + hex).substring(hex.length());
         }
-    }
-
-    private static class LoggerHolder {
-        /** ロガー */
-        private static final Logger LOG = LogManager.getLogger(ShipTablePane.class);
     }
 }
