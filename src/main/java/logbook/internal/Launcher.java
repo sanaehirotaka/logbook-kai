@@ -78,7 +78,7 @@ public final class Launcher {
         PluginContainer container = PluginContainer.getInstance();
 
         List<JarBasedPlugin> plugins = Collections.emptyList();
-        if (Files.isDirectory(dir)) {
+        if (AppConfig.get().isUsePlugin() && Files.isDirectory(dir)) {
             try {
                 plugins = Files.list(dir)
                         .filter(Files::isRegularFile)
