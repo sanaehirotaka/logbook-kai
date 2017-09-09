@@ -14,15 +14,19 @@ import lombok.Builder;
 public interface ShipFilter extends Predicate<ShipItem> {
 
     @Builder
-    public static class DefaultFilter implements ShipFilter {
-        /** 艦種 */
-        private boolean typeFilter;
+    public static class TypeFilter implements ShipFilter {
 
         /** 艦種 */
         private Set<String> types;
 
-        /** コンディション */
-        private boolean condFilter;
+        @Override
+        public boolean test(ShipItem ship) {
+            return this.types.contains(ship.getType());
+        }
+    }
+
+    @Builder
+    public static class CondFilter implements ShipFilter {
 
         /** コンディション */
         private int conditionValue;
@@ -30,41 +34,12 @@ public interface ShipFilter extends Predicate<ShipItem> {
         /** コンディション条件 */
         private Operator conditionType;
 
-        /**　レベル */
-        private boolean levelFilter;
-
-        /**　レベル */
-        private int levelValue;
-
-        /**　レベル条件 */
-        private Operator levelType;
-
-        /** ラベル */
-        private boolean labelFilter;
-
-        /** ラベル */
-        private String labelValue;
-
         @Override
         public boolean test(ShipItem ship) {
-            boolean result = true;
-
-            if (result && this.typeFilter) {
-                result = this.types.contains(ship.getType());
-            }
-            if (result && this.condFilter) {
-                result = eval(ship.getCond(), this.conditionValue, this.conditionType);
-            }
-            if (result && this.levelFilter) {
-                result = eval(ship.getLv(), this.levelValue, this.levelType);
-            }
-            if (result && this.labelFilter) {
-                result = ship.getLabel().contains(labelValue);
-            }
-            return result;
+            return eval(ship.getCond(), this.conditionValue, this.conditionType);
         }
 
-        private boolean eval(int v1, int v2, Operator ope) {
+        static boolean eval(int v1, int v2, Operator ope) {
             switch (ope) {
             case EQ:
                 return v1 == v2;
@@ -80,6 +55,45 @@ public interface ShipFilter extends Predicate<ShipItem> {
                 return v1 != v2;
             }
             return false;
+        }
+    }
+
+    @Builder
+    public static class LevelFilter implements ShipFilter {
+
+        /** レベル */
+        private int levelValue;
+
+        /** レベル条件 */
+        private Operator levelType;
+
+        @Override
+        public boolean test(ShipItem ship) {
+            return CondFilter.eval(ship.getLv(), this.levelValue, this.levelType);
+        }
+    }
+
+    @Builder
+    public static class LabelFilter implements ShipFilter {
+
+        /** ラベル */
+        private String labelValue;
+
+        @Override
+        public boolean test(ShipItem ship) {
+            return ship.getLabel().contains(this.labelValue);
+        }
+    }
+
+    @Builder
+    public static class SlotExFilter implements ShipFilter {
+
+        /** 補強増設 */
+        private boolean slotEx;
+
+        @Override
+        public boolean test(ShipItem ship) {
+            return slotEx == (ship.getSlotEx() != 0);
         }
     }
 }

@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -186,6 +187,14 @@ public class ShipTablePane extends VBox {
     /** ラベル条件 */
     @FXML
     private ChoiceBox<String> labelValue;
+
+    /** 補強増設 */
+    @FXML
+    private ToggleSwitch slotExFilter;
+
+    /** 補強増設 */
+    @FXML
+    private CheckBox slotExValue;
 
     /** テーブル */
     @FXML
@@ -405,6 +414,9 @@ public class ShipTablePane extends VBox {
             this.labelFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.labelValue.setDisable(!nv);
             });
+            this.slotExFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.slotExValue.setDisable(!nv);
+            });
 
             this.typeFilter.selectedProperty().addListener(this::filterAction);
             this.escort.selectedProperty().addListener(this::filterAction);
@@ -433,6 +445,8 @@ public class ShipTablePane extends VBox {
             this.levelValue.textProperty().addListener(this::filterAction);
             this.levelType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
             this.labelFilter.selectedProperty().addListener(this::filterAction);
+            this.slotExFilter.selectedProperty().addListener(this::filterAction);
+            this.slotExValue.selectedProperty().addListener(this::filterAction);
             this.labelValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
 
             this.conditionValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
@@ -705,7 +719,7 @@ public class ShipTablePane extends VBox {
      */
     private void filterAction(ObservableValue<?> observable, Object oldValue, Object newValue) {
         if (!this.disableFilterUpdate) {
-            ShipFilter filter = this.createFilter();
+            Predicate<ShipItem> filter = this.createFilter();
             this.filteredShipItems.setPredicate(filter);
         }
     }
@@ -714,49 +728,74 @@ public class ShipTablePane extends VBox {
      * 艦娘フィルターを作成する
      * @return 艦娘フィルター
      */
-    private ShipFilter createFilter() {
-        Set<String> types = Arrays.asList(
-                this.escort,
-                this.destroyer,
-                this.lightCruiser,
-                this.torpedoCruiser,
-                this.heavyCruiser,
-                this.flyingDeckCruiser,
-                this.seaplaneTender,
-                this.escortCarrier,
-                this.carrier,
-                this.armoredcarrier,
-                this.battleship,
-                this.flyingDeckBattleship,
-                this.submarine,
-                this.carrierSubmarine,
-                this.landingship,
-                this.repairship,
-                this.submarineTender,
-                this.trainingShip,
-                this.supply)
-                .stream()
-                .filter(CheckBox::isSelected)
-                .map(CheckBox::getText)
-                .collect(Collectors.toSet());
+    private Predicate<ShipItem> createFilter() {
+        Predicate<ShipItem> filter = null;
 
-        int condition = Integer.parseInt(this.conditionValue.getText().isEmpty() ? "0"
-                : this.conditionValue.getText());
-        int level = Integer.parseInt(this.levelValue.getText().isEmpty() ? "0"
-                : this.levelValue.getText());
+        if (this.typeFilter.isSelected()) {
+            Set<String> types = Arrays.asList(
+                    this.escort,
+                    this.destroyer,
+                    this.lightCruiser,
+                    this.torpedoCruiser,
+                    this.heavyCruiser,
+                    this.flyingDeckCruiser,
+                    this.seaplaneTender,
+                    this.escortCarrier,
+                    this.carrier,
+                    this.armoredcarrier,
+                    this.battleship,
+                    this.flyingDeckBattleship,
+                    this.submarine,
+                    this.carrierSubmarine,
+                    this.landingship,
+                    this.repairship,
+                    this.submarineTender,
+                    this.trainingShip,
+                    this.supply)
+                    .stream()
+                    .filter(CheckBox::isSelected)
+                    .map(CheckBox::getText)
+                    .collect(Collectors.toSet());
 
-        return ShipFilter.DefaultFilter.builder()
-                .typeFilter(this.typeFilter.isSelected())
-                .types(types)
-                .condFilter(this.condFilter.isSelected())
-                .conditionValue(condition)
-                .conditionType(this.conditionType.getValue())
-                .levelFilter(this.levelFilter.isSelected())
-                .levelValue(level)
-                .levelType(this.levelType.getValue())
-                .labelFilter(this.labelFilter.isSelected())
-                .labelValue(this.labelValue.getValue() == null ? "" : this.labelValue.getValue())
-                .build();
+            filter = ShipFilter.TypeFilter.builder()
+                    .types(types)
+                    .build();
+        }
+        if (this.condFilter.isSelected()) {
+            int condition = Integer.parseInt(this.conditionValue.getText().isEmpty() ? "0"
+                    : this.conditionValue.getText());
+            filter = this.filterAnd(filter, ShipFilter.CondFilter.builder()
+                    .conditionValue(condition)
+                    .conditionType(this.conditionType.getValue())
+                    .build());
+        }
+        if (this.levelFilter.isSelected()) {
+            int level = Integer.parseInt(this.levelValue.getText().isEmpty() ? "0"
+                    : this.levelValue.getText());
+
+            filter = this.filterAnd(filter, ShipFilter.LevelFilter.builder()
+                    .levelValue(level)
+                    .levelType(this.levelType.getValue())
+                    .build());
+        }
+        if (this.labelFilter.isSelected()) {
+            filter = this.filterAnd(filter, ShipFilter.LabelFilter.builder()
+                    .labelValue(this.labelValue.getValue() == null ? "" : this.labelValue.getValue())
+                    .build());
+        }
+        if (this.slotExFilter.isSelected()) {
+            filter = this.filterAnd(filter, ShipFilter.SlotExFilter.builder()
+                    .slotEx(this.slotExValue.isSelected())
+                    .build());
+        }
+        return filter;
+    }
+
+    private Predicate<ShipItem> filterAnd(Predicate<ShipItem> base, Predicate<ShipItem> add) {
+        if (base != null) {
+            return base.and(add);
+        }
+        return add;
     }
 
     /**

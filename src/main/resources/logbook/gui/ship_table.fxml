@@ -3,7 +3,6 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
@@ -92,11 +91,17 @@
                                     <ToggleSwitch fx:id="labelFilter" text="ラベル" />
                                  </children>
                               </FlowPane>
+                              <ChoiceBox fx:id="labelValue" disable="true" prefWidth="120.0" />
+                           </children>
+                        </VBox>
+                        <VBox prefWidth="80.0">
+                           <children>
                               <FlowPane>
                                  <children>
-                                    <ChoiceBox fx:id="labelValue" disable="true" prefWidth="120.0" />
+                                    <ToggleSwitch fx:id="slotExFilter" text="補強増設" />
                                  </children>
                               </FlowPane>
+                              <CheckBox fx:id="slotExValue" disable="true" mnemonicParsing="false" selected="true" text="有り" />
                            </children>
                         </VBox>
                      </children>
