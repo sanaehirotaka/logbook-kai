@@ -159,7 +159,9 @@ public class SWFListener implements ContentListenerSpi {
                 Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }
-        Cache.clearAll();
+        synchronized (Cache.class) {
+            Cache.clearAll();
+        }
     }
 
     /**
