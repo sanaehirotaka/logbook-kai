@@ -391,20 +391,26 @@ public final class JsonHelper {
     }
 
     /**
-     * JsonArrayをCollectionに変換します
+     * JsonArrayまたはJsonObjectをCollectionに変換します<br>
+     * JsonObjectの場合は単一のオブジェクトだけを格納しているCollectionを返します
      *
      * @param <T> JsonArrayの内容の型
      * @param <R> functionの戻り値の型
-     * @param array 変換するJsonArray
+     * @param value 変換するJsonArrayまたはJsonObject
      * @param function JsonValueを受け取って変換するFunction
      * @param supplier Collectionインスタンスを供給するSupplier
      * @return 変換後のCollection
      */
     @SuppressWarnings("unchecked")
-    public static <T extends JsonValue, C extends Collection<R>, R> C toCollection(JsonArray array, Function<T, R> function, Supplier<C> supplier) {
+    public static <T extends JsonValue, C extends Collection<R>, R> C toCollection(JsonValue value,
+            Function<T, R> function, Supplier<C> supplier) {
         C collection = supplier.get();
-        for (JsonValue val : array) {
-            collection.add(function.apply((T) val));
+        if (value instanceof JsonArray) {
+            for (JsonValue val : (JsonArray) value) {
+                collection.add(function.apply((T) val));
+            }
+        } else {
+            collection.add(function.apply((T) value));
         }
         return collection;
     }
@@ -414,12 +420,12 @@ public final class JsonHelper {
      *
      * @param <T> JsonArrayの内容の型
      * @param <R> functionの戻り値の型
-     * @param array 変換するJsonArray
+     * @param value 変換するJsonArrayまたはJsonObject
      * @param function JsonValueを受け取って変換するFunction
      * @return 変換後のList
      */
-    public static <T extends JsonValue, R> List<R> toList(JsonArray array, Function<T, R> function) {
-        return toCollection(array, function, ArrayList::new);
+    public static <T extends JsonValue, R> List<R> toList(JsonValue value, Function<T, R> function) {
+        return toCollection(value, function, ArrayList::new);
     }
 
     /**
@@ -430,7 +436,7 @@ public final class JsonHelper {
      * @param function JsonValueを受け取って変換するFunction
      * @return Listに変換する関数
      */
-    public static <T extends JsonValue, R> Function<JsonArray, List<R>> toList(Function<T, R> function) {
+    public static <T extends JsonValue, R> Function<JsonValue, List<R>> toList(Function<T, R> function) {
         return val -> JsonHelper.toList(val, function);
     }
 
@@ -439,12 +445,12 @@ public final class JsonHelper {
      *
      * @param <T> JsonArrayの内容の型
      * @param <R> functionの戻り値の型
-     * @param array 変換するJsonArray
+     * @param value 変換するJsonArrayまたはJsonObject
      * @param function JsonValueを受け取って変換するFunction
      * @return 変換後のSet
      */
-    public static <T extends JsonValue, R> Set<R> toSet(JsonArray array, Function<T, R> function) {
-        return toCollection(array, function, LinkedHashSet::new);
+    public static <T extends JsonValue, R> Set<R> toSet(JsonValue value, Function<T, R> function) {
+        return toCollection(value, function, LinkedHashSet::new);
     }
 
     /**
@@ -455,7 +461,7 @@ public final class JsonHelper {
      * @param function JsonValueを受け取って変換するFunction
      * @return Setに変換する関数
      */
-    public static <T extends JsonValue, R> Function<JsonArray, Set<R>> toSet(Function<T, R> function) {
+    public static <T extends JsonValue, R> Function<JsonValue, Set<R>> toSet(Function<T, R> function) {
         return val -> JsonHelper.toSet(val, function);
     }
 
