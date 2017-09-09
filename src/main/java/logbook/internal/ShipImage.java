@@ -23,7 +23,6 @@ import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
-import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.plugin.PluginContainer;
@@ -152,10 +151,11 @@ class ShipImage {
      * @param chara キャラクター
      * @param addItem 装備画像を追加します
      * @param applyState 遠征や入渠、退避のバナーアイコンを追加する
+     * @param itemMap 装備Map
      * @return 艦娘の画像
      */
-    static Image get(Chara chara, boolean addItem, boolean applyState) {
-        return get(chara, addItem, applyState, true, true, true);
+    static Image get(Chara chara, boolean addItem, boolean applyState, Map<Integer, SlotItem> itemMap) {
+        return get(chara, addItem, applyState, true, true, true, itemMap);
     }
 
     /**
@@ -167,9 +167,11 @@ class ShipImage {
      * @param banner バナーアイコンを追加する
      * @param cond コンディションを反映する
      * @param hpGauge HPゲージを反映する
+     * @param itemMap 装備Map
      * @return 艦娘の画像
      */
-    static Image get(Chara chara, boolean addItem, boolean applyState, boolean banner, boolean cond, boolean hpGauge) {
+    static Image get(Chara chara, boolean addItem, boolean applyState, boolean banner, boolean cond, boolean hpGauge,
+            Map<Integer, SlotItem> itemMap) {
         Canvas canvas = new Canvas(160, 40);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -233,12 +235,13 @@ class ShipImage {
                     Ship ship = (Ship) chara;
                     for (Integer itemId : ship.getSlot()) {
                         // 装備アイコン
-                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId)));
+                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId, itemMap)));
                         x += ITEM_ICON_SIZE;
                     }
                     if (((Ship) chara).getSlotEx() != 0) {
                         // 補強増設は0(未開放)以外の場合
-                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(ship.getSlotEx())));
+                        layers.add(
+                                new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(ship.getSlotEx(), itemMap)));
                     }
                 } else {
                     Map<Integer, SlotitemMst> map = SlotitemMstCollection.get()
@@ -380,13 +383,11 @@ class ShipImage {
      * 装備アイコンを返します
      *
      * @param itemId 装備ID
+     * @param itemMap 装備Map
      * @throws IOException
      */
-    private static Image itemIcon(Integer itemId) {
-        SlotItem item = SlotItemCollection.get()
-                .getSlotitemMap()
-                .get(itemId);
-        return Items.borderedItemImage(item);
+    private static Image itemIcon(Integer itemId, Map<Integer, SlotItem> itemMap) {
+        return Items.borderedItemImage(itemMap.get(itemId));
     }
 
     /**

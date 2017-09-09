@@ -46,6 +46,7 @@ import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
+import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
 import logbook.internal.LoggerHolder;
@@ -192,12 +193,13 @@ public class MainController extends WindowController {
                 MapStartNext last = log.getNext().get(log.getNext().size() - 1);
                 CombinedType combinedType = log.getCombinedType();
                 Map<Integer, List<Ship>> deckMap = log.getDeckMap();
+                Map<Integer, SlotItem> itemMap = log.getItemMap();
                 IFormation battle = log.getBattle();
                 IMidnightBattle midnight = log.getMidnight();
 
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                         "現在の戦闘", c -> {
-                            ((BattleDetail) c).setData(last, combinedType, deckMap, battle, midnight);
+                            ((BattleDetail) c).setData(last, combinedType, deckMap, itemMap, battle, midnight);
                         }, null);
             } else {
                 Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.getWindow());

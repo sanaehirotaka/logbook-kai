@@ -82,22 +82,22 @@ public class BattleDetailPhase extends TitledPane {
 
         for (Ship ship : this.phase.getAfterFriend()) {
             if (ship != null) {
-                this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship));
+                this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship, this.phase.getItemMap()));
             }
         }
         for (Ship ship : this.phase.getAfterFriendCombined()) {
             if (ship != null) {
-                this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship));
+                this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship, this.phase.getItemMap()));
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemyCombined()) {
             if (enemy != null) {
-                this.afterEnemyCombined.getChildren().add(new BattleDetailPhaseShip(enemy));
+                this.afterEnemyCombined.getChildren().add(new BattleDetailPhaseShip(enemy, null));
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemy()) {
             if (enemy != null) {
-                this.afterEnemy.getChildren().add(new BattleDetailPhaseShip(enemy));
+                this.afterEnemy.getChildren().add(new BattleDetailPhaseShip(enemy, null));
             }
         }
     }

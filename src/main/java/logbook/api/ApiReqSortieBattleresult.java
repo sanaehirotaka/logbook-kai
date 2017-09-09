@@ -47,7 +47,7 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                         .map(IFormation::getDockId)
                         .orElse(1);
                 // 艦隊スナップショットを作る
-                log.setDeckMap(BattleLog.deckMap(dockId));
+                BattleLog.snapshot(log, dockId);
                 // 戦闘ログの保存
                 BattleLogs.write(log);
 

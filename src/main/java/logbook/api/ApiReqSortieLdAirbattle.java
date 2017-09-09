@@ -37,7 +37,7 @@ public class ApiReqSortieLdAirbattle implements APIListenerSpi {
                         .map(IFormation::getDockId)
                         .orElse(1);
                 // 艦隊スナップショットを作る
-                log.setDeckMap(BattleLog.deckMap(dockId));
+                BattleLog.snapshot(log, dockId);
                 if (AppConfig.get().isApplyBattle()) {
                     // 艦隊を更新
                     PhaseState p = new PhaseState(log);

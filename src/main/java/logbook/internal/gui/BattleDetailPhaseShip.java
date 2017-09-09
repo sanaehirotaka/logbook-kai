@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import logbook.bean.Chara;
+import logbook.bean.SlotItem;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 
@@ -19,6 +21,9 @@ public class BattleDetailPhaseShip extends HBox {
 
     /** キャラクター */
     private Chara chara;
+
+    /** 装備Map */
+    private Map<Integer, SlotItem> itemMap;
 
     /** キャラクター画像 */
     @FXML
@@ -37,8 +42,9 @@ public class BattleDetailPhaseShip extends HBox {
     *
     * @param chara キャラクター
     */
-    public BattleDetailPhaseShip(Chara chara) {
+    public BattleDetailPhaseShip(Chara chara, Map<Integer, SlotItem> itemMap) {
         this.chara = chara;
+        this.itemMap = itemMap;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battle_detail_phase_ship.fxml");
             loader.setRoot(this);
@@ -51,7 +57,7 @@ public class BattleDetailPhaseShip extends HBox {
 
     @FXML
     void initialize() {
-        this.img.setImage(Ships.shipWithItemWithoutStateBannerImage(this.chara));
+        this.img.setImage(Ships.shipWithItemWithoutStateBannerImage(this.chara, this.itemMap));
         this.name.setText(Ships.toName(this.chara));
         this.hp.setText(this.chara.getNowhp() + "/" + this.chara.getMaxhp());
     }

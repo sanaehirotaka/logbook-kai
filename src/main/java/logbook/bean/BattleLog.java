@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IFormation;
@@ -39,28 +38,56 @@ public class BattleLog implements Serializable {
     /** 艦隊スナップショット */
     private Map<Integer, List<Ship>> deckMap;
 
+    /** 装備スナップショット */
+    private Map<Integer, SlotItem> itemMap;
+
     /** 日時(戦闘結果の取得日時) */
     private String time;
 
     /**
      * 艦隊スナップショットを作成します
+     * @param log 戦闘ログ
      * @param dockIds 艦隊ID
      * @return 艦隊スナップショット
      */
-    public static Map<Integer, List<Ship>> deckMap(Integer... dockIds) {
+    public static void snapshot(BattleLog log, Integer... dockIds) {
         Map<Integer, Ship> shipMap = ShipCollection.get()
                 .getShipMap();
+        Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+
         Map<Integer, List<Ship>> deckMap = new HashMap<>();
+        Map<Integer, SlotItem> cloneItem = new HashMap<>();
+
         for (Integer dockId : dockIds) {
-            deckMap.put(dockId, DeckPortCollection.get()
+            List<Ship> ships = new ArrayList<>();
+            for (Integer shipId : DeckPortCollection.get()
                     .getDeckPortMap()
                     .get(dockId)
-                    .getShip()
-                    .stream()
-                    .map(shipMap::get)
-                    .map(ship -> ship != null ? ship.clone() : null)
-                    .collect(Collectors.toList()));
+                    .getShip()) {
+                Ship ship = shipMap.get(shipId);
+                if (ship != null) {
+                    ship = ship.clone();
+                    if (ship.getSlot() != null) {
+                        for (Integer itemId : ship.getSlot()) {
+                            SlotItem item = itemMap.get(itemId);
+                            if (item != null) {
+                                cloneItem.put(itemId, item);
+                            }
+                        }
+                        {
+                            SlotItem item = itemMap.get(ship.getSlotEx());
+                            if (item != null) {
+                                cloneItem.put(ship.getSlotEx(), item);
+                            }
+                        }
+                    }
+                }
+                ships.add(ship);
+            }
+            deckMap.put(dockId, ships);
         }
-        return deckMap;
+        log.setDeckMap(deckMap);
+        log.setItemMap(cloneItem);
     }
 }

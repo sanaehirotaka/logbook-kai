@@ -225,7 +225,7 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipImage(Chara chara) throws IllegalStateException {
-        return ShipImage.get(chara, false, true);
+        return ShipImage.get(chara, false, true, null);
     }
 
     /**
@@ -236,7 +236,19 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipWithItemImage(Chara chara) throws IllegalStateException {
-        return ShipImage.get(chara, true, true);
+        return shipWithItemImage(chara, SlotItemCollection.get().getSlotitemMap());
+    }
+
+    /**
+     * キャラクターの画像を取得します(装備画像付き)
+     *
+     * @param chara キャラクター
+     * @param itemMap 装備Map
+     * @return 艦娘の画像
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image shipWithItemImage(Chara chara, Map<Integer, SlotItem> itemMap) throws IllegalStateException {
+        return ShipImage.get(chara, true, true, itemMap);
     }
 
     /**
@@ -247,7 +259,20 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipWithItemWithoutStateBannerImage(Chara chara) throws IllegalStateException {
-        return ShipImage.get(chara, true, false);
+        return shipWithItemWithoutStateBannerImage(chara, SlotItemCollection.get().getSlotitemMap());
+    }
+
+    /**
+     * キャラクターの画像を取得します(装備画像付き、状態バナー無し)
+     *
+     * @param chara キャラクター
+     * @param itemMap 装備Map
+     * @return 艦娘の画像
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image shipWithItemWithoutStateBannerImage(Chara chara,
+            Map<Integer, SlotItem> itemMap) throws IllegalStateException {
+        return ShipImage.get(chara, true, false, itemMap);
     }
 
     /**

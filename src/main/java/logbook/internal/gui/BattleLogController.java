@@ -25,6 +25,7 @@ import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
+import logbook.bean.SlotItem;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
@@ -173,12 +174,14 @@ public class BattleLogController extends WindowController {
                                 MapStartNext last = log.getNext().get(log.getNext().size() - 1);
                                 CombinedType combinedType = log.getCombinedType();
                                 Map<Integer, List<Ship>> deckMap = log.getDeckMap();
+                                Map<Integer, SlotItem> itemMap = log.getItemMap();
                                 IFormation battle = log.getBattle();
                                 IMidnightBattle midnight = log.getMidnight();
 
                                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                                         "戦闘ログ", c -> {
-                                            ((BattleDetail) c).setData(last, combinedType, deckMap, battle, midnight);
+                                            ((BattleDetail) c).setData(last, combinedType, deckMap, itemMap,
+                                                    battle, midnight);
                                         }, null);
                             } catch (Exception ex) {
                                 LoggerHolder.get().error("詳細の表示に失敗しました", ex);

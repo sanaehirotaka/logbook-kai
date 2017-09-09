@@ -43,7 +43,7 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 log.setResult(BattleResult.toBattleResult(data));
                 log.setTime(Logs.nowString());
                 // 艦隊スナップショットを作る
-                log.setDeckMap(BattleLog.deckMap(1, 2));
+                BattleLog.snapshot(log, 1, 2);
                 // 戦闘ログの保存
                 BattleLogs.write(log);
 

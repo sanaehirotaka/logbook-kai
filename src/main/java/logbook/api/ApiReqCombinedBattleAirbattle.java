@@ -33,7 +33,7 @@ public class ApiReqCombinedBattleAirbattle implements APIListenerSpi {
             if (log != null) {
                 log.setBattle(CombinedBattleAirbattle.toBattle(data));
                 // 艦隊スナップショットを作る
-                log.setDeckMap(BattleLog.deckMap(1, 2));
+                BattleLog.snapshot(log, 1, 2);
                 if (AppConfig.get().isApplyBattle()) {
                     // 艦隊を更新
                     PhaseState p = new PhaseState(log);

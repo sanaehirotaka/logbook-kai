@@ -28,6 +28,7 @@ import logbook.bean.BattleTypes.Stage2;
 import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
+import logbook.bean.SlotItem;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
@@ -48,6 +49,9 @@ public class BattleDetail extends WindowController {
 
     /** 艦隊スナップショット */
     private Map<Integer, List<Ship>> deckMap;
+
+    /** 装備 */
+    private Map<Integer, SlotItem> itemMap;
 
     /** 戦闘 */
     private IFormation battle;
@@ -108,14 +112,16 @@ public class BattleDetail extends WindowController {
      * @param last 出撃/進撃
      * @param combinedType 連合艦隊
      * @param deckMap 艦隊スナップショット
+     * @param itemMap 装備
      * @param battle 戦闘
      * @param midnight 夜戦
      */
-    void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap, IFormation battle,
-            IMidnightBattle midnight) {
+    void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap,
+            Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight) {
         this.last = last;
         this.combinedType = combinedType;
         this.deckMap = deckMap;
+        this.itemMap = itemMap;
         this.battle = battle;
         this.midnight = midnight;
         this.update();
@@ -137,7 +143,7 @@ public class BattleDetail extends WindowController {
     }
 
     private void setInfo() {
-        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap);
+        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap);
 
         // マス
         boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
@@ -216,7 +222,7 @@ public class BattleDetail extends WindowController {
     }
 
     private void setPhase() {
-        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap);
+        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap);
 
         List<Node> phases = this.phase.getChildren();
 
@@ -388,7 +394,7 @@ public class BattleDetail extends WindowController {
         }
         // 夜戦
         if (this.midnight != null) {
-            PhaseState phaseMidnight = new PhaseState(this.combinedType, this.midnight, this.deckMap);
+            PhaseState phaseMidnight = new PhaseState(this.combinedType, this.midnight, this.deckMap, this.itemMap);
             // 夜戦適用
             phaseMidnight.applyMidnightBattle(this.midnight);
 

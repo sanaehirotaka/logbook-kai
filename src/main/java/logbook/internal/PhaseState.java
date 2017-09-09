@@ -59,12 +59,15 @@ public class PhaseState {
     /** フェイズ後敵(第2艦隊) */
     private List<Enemy> afterEnemyCombined = new ArrayList<>();
 
+    /** 装備 */
+    private Map<Integer, SlotItem> itemMap;
+
     /**
      * 戦闘から新規フェイズを作成します
      * @param log 戦闘ログ
      */
     public PhaseState(BattleLog log) {
-        this(log.getCombinedType(), log.getBattle(), log.getDeckMap());
+        this(log.getCombinedType(), log.getBattle(), log.getDeckMap(), log.getItemMap());
     }
 
     /**
@@ -73,7 +76,10 @@ public class PhaseState {
      * @param b 戦闘
      * @param deckMap 艦隊スナップショット
      */
-    public PhaseState(CombinedType combinedType, IBattle b, Map<Integer, List<Ship>> deckMap) {
+    public PhaseState(CombinedType combinedType, IBattle b,
+            Map<Integer, List<Ship>> deckMap, Map<Integer, SlotItem> itemMap) {
+        this.itemMap = itemMap != null ? itemMap : SlotItemCollection.get().getSlotitemMap();
+
         // 連合艦隊
         this.combinedType = combinedType;
         this.combined = combinedType != CombinedType.未結成 &&
@@ -135,6 +141,7 @@ public class PhaseState {
      * @param ps フェイズ
      */
     public PhaseState(PhaseState ps) {
+        this.itemMap = ps.itemMap;
         this.combinedType = ps.combinedType;
         this.combined = ps.combined;
 
@@ -435,12 +442,12 @@ public class PhaseState {
                     // 6以下は味方
                     Ship ship = friend.get(df - 1);
                     if (ship != null) {
-                        damage(ship, damage);
+                        this.damage(ship, damage);
                     }
                 } else {
                     // 7以上は敵
                     Enemy ship = enemy.get(df - 1 - 6);
-                    damage(ship, damage);
+                    this.damage(ship, damage);
                 }
             }
         } else {
@@ -488,7 +495,7 @@ public class PhaseState {
                 target = tl.get(df - 1 - 6);
             }
             if (target != null) {
-                damage(target, damage);
+                this.damage(target, damage);
             }
         }
     }
@@ -508,7 +515,7 @@ public class PhaseState {
                     ship = this.afterFriendCombined.get(i - (6 + 1));
                 }
                 if (ship != null) {
-                    damage(ship, damage);
+                    this.damage(ship, damage);
                 }
             }
         }
@@ -525,7 +532,7 @@ public class PhaseState {
             if (damage != 0) {
                 Ship ship = friend.get(i - 1);
                 if (ship != null) {
-                    damage(ship, damage);
+                    this.damage(ship, damage);
                 }
             }
         }
@@ -546,7 +553,7 @@ public class PhaseState {
                     enemy = this.afterEnemyCombined.get(i - (6 + 1));
                 }
                 if (enemy != null) {
-                    damage(enemy, damage);
+                    this.damage(enemy, damage);
                 }
             }
         }
@@ -563,7 +570,7 @@ public class PhaseState {
             if (damage != 0) {
                 Enemy enemy = enemies.get(i - 1);
                 if (enemy != null) {
-                    damage(enemy, damage);
+                    this.damage(enemy, damage);
                 }
             }
         }
@@ -634,15 +641,13 @@ public class PhaseState {
      * @param chara 対象キャラクター
      * @param damage ダメージ
      */
-    private static void damage(Chara chara, int damage) {
+    private void damage(Chara chara, int damage) {
         int nowHp;
         if (chara.getNowhp() - damage <= 0 && chara instanceof Ship) {
-            Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
-                    .getSlotitemMap();
             Ship ship = (Ship) chara;
             // 最初に消費される応急修理要員
             Optional<SlotitemMst> mst = Stream.concat(Stream.of(ship.getSlotEx()), ship.getSlot().stream())
-                    .map(itemMap::get)
+                    .map(this.itemMap::get)
                     .map(Items::slotitemMst)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
