@@ -51,6 +51,12 @@ public final class AppConfig implements Serializable {
     /** 戦闘結果時に結果を反映 */
     private boolean applyResult = true;
 
+    /** 艦隊タブに艦隊単位のタブを追加 */
+    private boolean deckTabs = false;
+
+    /** 艦隊タブにラベル単位のタブを追加 */
+    private boolean labelTabs = true;
+
     /** 音量 */
     private int soundLevel = 85;
 

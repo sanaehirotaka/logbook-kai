@@ -82,6 +82,14 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField imageZoomRate;
 
+    /** 艦隊タブに艦隊単位のタブを追加 */
+    @FXML
+    private CheckBox deckTabs;
+
+    /** 艦隊タブにラベル単位のタブを追加 */
+    @FXML
+    private CheckBox labelTabs;
+
     /** 最前面に表示する */
     @FXML
     private CheckBox onTop;
@@ -183,6 +191,8 @@ public class ConfigController extends WindowController {
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
+        this.deckTabs.setSelected(conf.isDeckTabs());
+        this.labelTabs.setSelected(conf.isLabelTabs());
         this.onTop.setSelected(conf.isOnTop());
         this.checkDoit.setSelected(conf.isCheckDoit());
         this.checkUpdate.setSelected(conf.isCheckUpdate());
@@ -243,6 +253,8 @@ public class ConfigController extends WindowController {
         conf.setShipFullyThreshold(Integer.parseInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(Integer.parseInt(this.itemFullyThreshold.getText()));
         conf.setImageZoomRate(Integer.parseInt(this.imageZoomRate.getText()));
+        conf.setDeckTabs(this.deckTabs.isSelected());
+        conf.setLabelTabs(this.labelTabs.isSelected());
         conf.setOnTop(this.onTop.isSelected());
         conf.setCheckDoit(this.checkDoit.isSelected());
         conf.setCheckUpdate(this.checkUpdate.isSelected());

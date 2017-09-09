@@ -18,6 +18,9 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import logbook.bean.AppConfig;
+import logbook.bean.DeckPort;
+import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipLabelCollection;
@@ -65,43 +68,14 @@ public class ShipController extends WindowController {
 
             this.tab.getTabs().add(new Tab("全員", allPane));
 
-            Map<Integer, Set<String>> labelMap = ShipLabelCollection.get().getLabels();
-            ShipCollection.get().getShipMap().values().stream()
-                    .flatMap(ship -> {
-                        List<String> label = new ArrayList<>();
-                        SeaArea area = SeaArea.fromArea(ship.getSallyArea());
-                        if (area != null) {
-                            label.add(area.toString());
-                        }
-                        Set<String> labels = labelMap.get(ship.getId());
-                        if (labels != null) {
-                            label.addAll(labels);
-                        }
-                        return label.stream();
-                    })
-                    .filter(Objects::nonNull)
-                    .distinct()
-                    .sorted()
-                    .forEach(label -> {
-                        ShipTablePane labelPane = new ShipTablePane(() -> {
-                            Map<Integer, Ship> shipMap = ShipCollection.get()
-                                    .getShipMap();
-                            return shipMap.values().stream()
-                                    .filter(ship -> {
-                                        SeaArea area = SeaArea.fromArea(ship.getSallyArea());
-                                        if (area != null && label.equals(area.toString()))
-                                            return true;
-                                        Set<String> labels = ShipLabelCollection.get().getLabels().get(ship.getId());
-                                        if (labels != null && labels.contains(label))
-                                            return true;
-                                        return false;
-                                    })
-                                    .sorted(Comparator.comparing(Ship::getLv).reversed()
-                                            .thenComparing(Comparator.comparing(Ship::getShipId)))
-                                    .collect(Collectors.toList());
-                        }, label);
-                        this.tab.getTabs().add(new Tab(label, labelPane));
-                    });
+            // 艦隊単位のタブ
+            if (AppConfig.get().isDeckTabs()) {
+                this.addDeckTabs();
+            }
+            // ラベル単位のタブ
+            if (AppConfig.get().isLabelTabs()) {
+                this.addLabelTabs();
+            }
 
             this.timeline = new Timeline();
             this.timeline.setCycleCount(Timeline.INDEFINITE);
@@ -113,6 +87,59 @@ public class ShipController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * 艦隊単位のタブ
+     */
+    private void addDeckTabs() {
+        for (DeckPort deck : DeckPortCollection.get().getDeckPortMap().values()) {
+            ShipTablePane deckPane = new ShipTablePane(deck);
+            this.tab.getTabs().add(new Tab(deck.getName(), deckPane));
+        }
+    }
+
+    /**
+     * ラベル単位のタブ
+     */
+    private void addLabelTabs() {
+        Map<Integer, Set<String>> labelMap = ShipLabelCollection.get().getLabels();
+        ShipCollection.get().getShipMap().values().stream()
+                .flatMap(ship -> {
+                    List<String> label = new ArrayList<>();
+                    SeaArea area = SeaArea.fromArea(ship.getSallyArea());
+                    if (area != null) {
+                        label.add(area.toString());
+                    }
+                    Set<String> labels = labelMap.get(ship.getId());
+                    if (labels != null) {
+                        label.addAll(labels);
+                    }
+                    return label.stream();
+                })
+                .filter(Objects::nonNull)
+                .distinct()
+                .sorted()
+                .forEach(label -> {
+                    ShipTablePane labelPane = new ShipTablePane(() -> {
+                        Map<Integer, Ship> shipMap = ShipCollection.get()
+                                .getShipMap();
+                        return shipMap.values().stream()
+                                .filter(ship -> {
+                                    SeaArea area = SeaArea.fromArea(ship.getSallyArea());
+                                    if (area != null && label.equals(area.toString()))
+                                        return true;
+                                    Set<String> labels = ShipLabelCollection.get().getLabels().get(ship.getId());
+                                    if (labels != null && labels.contains(label))
+                                        return true;
+                                    return false;
+                                })
+                                .sorted(Comparator.comparing(Ship::getLv).reversed()
+                                        .thenComparing(Comparator.comparing(Ship::getShipId)))
+                                .collect(Collectors.toList());
+                    }, label);
+                    this.tab.getTabs().add(new Tab(label, labelPane));
+                });
     }
 
     /**

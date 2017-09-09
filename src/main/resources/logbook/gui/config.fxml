@@ -84,6 +84,8 @@
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
                               <CheckBox fx:id="applyBattle" mnemonicParsing="false" text="戦闘開始時に結果を反映" GridPane.columnSpan="2147483647" />
@@ -97,6 +99,8 @@
                               <Label text="画像の拡大・縮小(%)" GridPane.rowIndex="5" />
                               <TextField fx:id="imageZoomRate" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <Label text="(一部の一覧表示にのみ適用)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="deckTabs" mnemonicParsing="false" text="艦隊タブに艦隊単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                              <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="艦隊タブにラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
                            </children>
                         </GridPane>
                      </children>
