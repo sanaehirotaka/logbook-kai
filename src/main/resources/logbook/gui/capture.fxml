@@ -24,6 +24,7 @@
               <items>
                   <MenuItem mnemonicParsing="false" onAction="#detect" text="自動" />
                   <MenuItem mnemonicParsing="false" onAction="#detectManual" text="手動" />
+                  <MenuItem mnemonicParsing="false" onAction="#input" text="範囲を編集" />
               </items>
             </MenuButton>
             <MenuButton fx:id="config" disable="true" mnemonicParsing="false" text="設定">

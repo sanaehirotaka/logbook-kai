@@ -63,6 +63,8 @@ import logbook.bean.AppConfig;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
 import logbook.internal.gui.ScreenCapture.ImageData;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -189,6 +191,22 @@ public class CaptureController extends WindowController {
     @FXML
     void detectManual(ActionEvent event) {
         this.detectManualAction();
+    }
+
+    @FXML
+    void input(ActionEvent event) {
+        if (this.sc != null) {
+            Rectangle rectangle = this.sc.getRectangle();
+            RectangleBean bean = new RectangleBean(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            new PropertyDialog<>(this.getWindow(), bean, "範囲を編集").showAndWait();
+            rectangle.x = bean.getX();
+            rectangle.y = bean.getY();
+            rectangle.width = bean.getWidth();
+            rectangle.height = bean.getHeight();
+            this.setBounds(this.sc.getRobot(), rectangle);
+        } else {
+            Tools.Conrtols.alert(AlertType.INFORMATION, "範囲を編集", "範囲を編集するには自動または手動で範囲を設定してください", this.getWindow());
+        }
     }
 
     @FXML
@@ -602,20 +620,23 @@ public class CaptureController extends WindowController {
         if (relative != null) {
             Rectangle fixed = new Rectangle(relative.x + screenBounds.x, relative.y + screenBounds.y,
                     relative.width, relative.height);
-
-            String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
-            this.message.setText(text);
-            this.capture.setDisable(false);
-            this.config.setDisable(false);
-            this.sc = new ScreenCapture(robot, fixed);
-            this.sc.setItems(this.images);
-            this.sc.setCurrent(this.preview);
+            this.setBounds(robot, fixed);
         } else {
             this.message.setText("座標未設定");
             this.capture.setDisable(true);
             this.config.setDisable(true);
             this.sc = null;
         }
+    }
+
+    private void setBounds(Robot robot, Rectangle fixed) {
+        String text = "(" + (int) fixed.getMinX() + "," + (int) fixed.getMinY() + ")";
+        this.message.setText(text);
+        this.capture.setDisable(false);
+        this.config.setDisable(false);
+        this.sc = new ScreenCapture(robot, fixed);
+        this.sc.setItems(this.images);
+        this.sc.setCurrent(this.preview);
     }
 
     private GraphicsConfiguration currentGraphicsConfiguration() {
@@ -641,5 +662,18 @@ public class CaptureController extends WindowController {
             this.name = name;
             this.className = className;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class RectangleBean {
+
+        private int x;
+
+        private int y;
+
+        private int width;
+
+        private int height;
     }
 }

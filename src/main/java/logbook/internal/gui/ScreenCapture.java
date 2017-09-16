@@ -50,6 +50,8 @@ class ScreenCapture {
 
     private static final int WHITE = Color.WHITE.getRGB();
 
+    @Setter
+    @Getter
     private Robot robot;
 
     /** キャプチャ範囲 */
