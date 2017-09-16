@@ -1,0 +1,32 @@
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "レベル", "value": 200},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 50, "order": 1}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦隊", "count_type": "装備", "item": "ドラム缶(輸送用)", "value": 4},
+                {"type": "艦娘", "item": "ドラム缶(輸送用)"},
+                {"type": "艦娘", "item": "ドラム缶(輸送用)"},
+                {"type": "艦娘", "item": "ドラム缶(輸送用)"}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]}
+            ]
+        }
+    ]
+}

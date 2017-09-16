@@ -1,0 +1,7 @@
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦娘", "ship_type" :["潜水艦", "潜水空母"]},
+        {"type": "艦娘", "ship_type" :["潜水艦", "潜水空母"]}
+    ]
+}

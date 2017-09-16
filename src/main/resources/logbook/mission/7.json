@@ -1,0 +1,11 @@
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦娘", "level": 5, "order": 1},
+        {"type": "艦娘"},
+        {"type": "艦娘"},
+        {"type": "艦娘"},
+        {"type": "艦娘"},
+        {"type": "艦娘"}
+    ]
+}

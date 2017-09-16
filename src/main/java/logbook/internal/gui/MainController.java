@@ -308,6 +308,20 @@ public class MainController extends WindowController {
     }
 
     /**
+     * 遠征条件確認
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void missionCheck(ActionEvent event) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/missioncheck.fxml", this.getWindow(), "遠征条件確認");
+        } catch (Exception ex) {
+            LoggerHolder.get().error("遠征条件確認の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 資材チャート
      *
      * @param e ActionEvent
