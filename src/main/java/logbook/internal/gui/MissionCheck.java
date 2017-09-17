@@ -12,6 +12,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +48,7 @@ public class MissionCheck extends WindowController {
 
     @FXML
     void initialize() {
-        this.fleet.getSelectionModel().selectedItemProperty().addListener(this::buildTree);
+        this.fleet.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DeckPort>) this::buildTree);
         this.fleet.getItems().addAll(DeckPortCollection.get().getDeckPortMap().values());
         this.fleet.getSelectionModel().select(1);
         this.fleet.setConverter(new StringConverter<DeckPort>() {
