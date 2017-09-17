@@ -13,6 +13,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TreeItem;
@@ -62,12 +63,21 @@ public class MissionCheck extends WindowController {
         });
     }
 
+    @FXML
+    void update(ActionEvent event) {
+        this.buildTree(this.fleet.getSelectionModel().getSelectedItem());
+    }
+
     private void buildTree(ObservableValue<? extends DeckPort> observable, DeckPort oldValue, DeckPort newValue) {
+        this.buildTree(newValue);
+    }
+
+    private void buildTree(DeckPort deck) {
         TreeItem<String> root = new TreeItem<>();
-        if (newValue != null) {
+        if (deck != null) {
             Map<Integer, Ship> shipMap = ShipCollection.get()
                     .getShipMap();
-            List<Ship> fleet = newValue.getShip()
+            List<Ship> fleet = DeckPortCollection.get().getDeckPortMap().get(deck.getId()).getShip()
                     .stream()
                     .map(shipMap::get)
                     .filter(Objects::nonNull)
