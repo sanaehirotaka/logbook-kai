@@ -332,6 +332,12 @@ public class BattleTypes {
         List<Integer> getAtList();
 
         /**
+         * api_at_typeを取得します。
+         * @return api_at_type
+         */
+        List<Integer> getAtType();
+
+        /**
          * api_df_listを取得します。
          * @return api_df_list
          */
@@ -828,6 +834,9 @@ public class BattleTypes {
         /** api_at_list */
         private List<Integer> atList;
 
+        /** api_at_type */
+        private List<Integer> atType;
+
         /** api_df_list */
         private List<List<Integer>> dfList;
 
@@ -856,6 +865,7 @@ public class BattleTypes {
             MidnightHougeki bean = new MidnightHougeki();
             JsonHelper.bind(json)
                     .set("api_at_list", bean::setAtList, JsonHelper::toIntegerList)
+                    .set("api_at_type", bean::setAtType, JsonHelper::toIntegerList)
                     .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
@@ -1065,6 +1075,94 @@ public class BattleTypes {
                 return 輸送部隊;
             default:
                 return 未結成;
+            }
+        }
+    }
+
+    /**
+     * 攻撃種別
+     *
+     */
+    public interface AtType {
+    }
+
+    /**
+     * 攻撃種別
+     *
+     */
+    public enum SortieAtType implements AtType {
+        通常攻撃,
+        レーザー攻撃,
+        連撃,
+        主砲副砲CI,
+        主砲電探CI,
+        主砲徹甲弾CI,
+        主砲主砲CI,
+        戦爆連合CI;
+
+        public static SortieAtType toSortieAtType(int i) {
+            switch (i) {
+            case 0:
+                return 通常攻撃;
+            case 1:
+                return レーザー攻撃;
+            case 2:
+                return 連撃;
+            case 3:
+                return 主砲副砲CI;
+            case 4:
+                return 主砲電探CI;
+            case 5:
+                return 主砲徹甲弾CI;
+            case 6:
+                return 主砲主砲CI;
+            case 7:
+                return 戦爆連合CI;
+            default:
+                return 通常攻撃;
+            }
+        }
+    }
+
+    /**
+     * 攻撃種別
+     *
+     */
+    public enum SortieAtTypeRaigeki implements AtType {
+        通常雷撃;
+    }
+
+    /**
+     * 攻撃種別
+     *
+     */
+    public enum MidnightSpList implements AtType {
+        通常攻撃,
+        連撃,
+        主砲魚雷CI,
+        魚雷魚雷CI,
+        主砲副砲CI,
+        主砲主砲CI,
+        戦爆連合CI;
+
+        public static MidnightSpList toMidnightSpList(int i) {
+            switch (i) {
+            case 0:
+                return 通常攻撃;
+            case 1:
+                return 連撃;
+            case 2:
+                return 主砲魚雷CI;
+            case 3:
+                return 魚雷魚雷CI;
+            case 4:
+                return 主砲副砲CI;
+            case 5:
+                return 主砲主砲CI;
+            case 6:
+                return 戦爆連合CI;
+            default:
+                return 通常攻撃;
             }
         }
     }

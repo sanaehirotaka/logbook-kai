@@ -5,10 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.AirBaseAttack;
+import logbook.bean.BattleTypes.AtType;
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
@@ -22,7 +24,11 @@ import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.BattleTypes.ISortieHougeki;
 import logbook.bean.BattleTypes.ISupport;
 import logbook.bean.BattleTypes.Kouku;
+import logbook.bean.BattleTypes.MidnightHougeki;
+import logbook.bean.BattleTypes.MidnightSpList;
 import logbook.bean.BattleTypes.Raigeki;
+import logbook.bean.BattleTypes.SortieAtType;
+import logbook.bean.BattleTypes.SortieAtTypeRaigeki;
 import logbook.bean.BattleTypes.Stage3;
 import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.BattleTypes.SupportHourai;
@@ -33,6 +39,8 @@ import logbook.bean.Ship;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -58,6 +66,9 @@ public class PhaseState {
 
     /** フェイズ後敵(第2艦隊) */
     private List<Enemy> afterEnemyCombined = new ArrayList<>();
+
+    /** 攻撃/ダメージ詳細 */
+    private List<AttackDetail> attackDetails = new ArrayList<>();
 
     /** 装備 */
     private Map<Integer, SlotItem> itemMap;
@@ -222,7 +233,8 @@ public class PhaseState {
      */
     public void applySortieHougeki(ISortieHougeki battle) {
         // 先制対潜攻撃
-        this.applyHougeki(battle.getOpeningTaisen(), this.afterFriend, this.afterEnemy);
+        this.applyHougeki(battle.getOpeningTaisen(), this.combined ? this.afterFriendCombined : this.afterFriend,
+                this.afterEnemy);
         // 開幕雷撃
         this.applyRaigeki(battle.getOpeningAtack());
         if (battle instanceof ICombinedEcBattle) {
@@ -404,6 +416,8 @@ public class PhaseState {
             return;
         }
 
+        this.addDetailRaigeki(raigeki);
+
         if (raigeki.getFdam().size() > 12) {
             // 新API
             this.applyFriendDamage(raigeki.getFdam());
@@ -431,24 +445,43 @@ public class PhaseState {
 
         if (hougeki.getAtEflag() == null) {
             for (int i = 1, s = hougeki.getDamage().size(); i < s; i++) {
+                int index = i;
                 // 防御側インデックス(1-6,7-12)
                 int df = hougeki.getDfList().get(i).get(0);
+                // 攻撃側インデックス
+                int at = hougeki.getAtList().get(i);
+                // 攻撃種別
+                AtType atType;
+                if (hougeki instanceof MidnightHougeki) {
+                    atType = Optional.ofNullable(((MidnightHougeki) hougeki).getSpList())
+                            .map(l -> l.get(index))
+                            .map(MidnightSpList::toMidnightSpList)
+                            .orElse(MidnightSpList.toMidnightSpList(0));
+                } else {
+                    atType = Optional.ofNullable(hougeki.getAtType())
+                            .map(l -> l.get(index))
+                            .map(SortieAtType::toSortieAtType)
+                            .orElse(SortieAtType.toSortieAtType(0));
+                }
+                // ダメージ
                 int damage = hougeki.getDamage().get(i)
                         .stream()
                         .mapToInt(Double::intValue)
                         .filter(d -> d > 0)
                         .sum();
+                Chara attacker = null;
+                Chara defender = null;
                 if (df <= 6) {
                     // 6以下は味方
-                    Ship ship = friend.get(df - 1);
-                    if (ship != null) {
-                        this.damage(ship, damage);
-                    }
+                    defender = friend.get(df - 1);
+                    attacker = enemy.get(at - 1 - 6);
                 } else {
                     // 7以上は敵
-                    Enemy ship = enemy.get(df - 1 - 6);
-                    this.damage(ship, damage);
+                    defender = enemy.get(df - 1 - 6);
+                    attacker = friend.get(at - 1);
                 }
+                this.damage(defender, damage);
+                this.addDetail(attacker, defender, damage, atType);
             }
         } else {
             this.applyHougeki(hougeki);
@@ -465,8 +498,25 @@ public class PhaseState {
         }
 
         for (int i = 1, s = hougeki.getDamage().size(); i < s; i++) {
+            int index = i;
             // 防御側インデックス(1-6,7-12)
             int df = hougeki.getDfList().get(i).get(0);
+            // 攻撃側インデックス
+            int at = hougeki.getAtList().get(i);
+            // 攻撃種別
+            AtType atType;
+            if (hougeki instanceof MidnightHougeki) {
+                atType = Optional.ofNullable(((MidnightHougeki) hougeki).getSpList())
+                        .map(l -> l.get(index))
+                        .map(MidnightSpList::toMidnightSpList)
+                        .orElse(MidnightSpList.toMidnightSpList(0));
+            } else {
+                atType = Optional.ofNullable(hougeki.getAtType())
+                        .map(l -> l.get(index))
+                        .map(SortieAtType::toSortieAtType)
+                        .orElse(SortieAtType.toSortieAtType(0));
+            }
+            // ダメージ
             int damage = hougeki.getDamage().get(i)
                     .stream()
                     .mapToInt(Double::intValue)
@@ -474,7 +524,9 @@ public class PhaseState {
                     .sum();
             // 攻撃側が味方の場合true
             boolean atkfriend = hougeki.getAtEflag().get(i) == 0;
-            Chara target;
+            Chara attacker = null;
+            Chara defender = null;
+            // 防御側
             if (df <= 6) {
                 // 6以下は第1艦隊
                 List<? extends Chara> tl;
@@ -483,7 +535,7 @@ public class PhaseState {
                 } else {
                     tl = this.afterFriend;
                 }
-                target = tl.get(df - 1);
+                defender = tl.get(df - 1);
             } else {
                 // 7以上は第2艦隊
                 List<? extends Chara> tl;
@@ -492,11 +544,30 @@ public class PhaseState {
                 } else {
                     tl = this.afterFriendCombined;
                 }
-                target = tl.get(df - 1 - 6);
+                defender = tl.get(df - 1 - 6);
             }
-            if (target != null) {
-                this.damage(target, damage);
+            // 攻撃側
+            if (at <= 6) {
+                // 6以下は第1艦隊
+                List<? extends Chara> tl;
+                if (!atkfriend) {
+                    tl = this.afterEnemy;
+                } else {
+                    tl = this.afterFriend;
+                }
+                attacker = tl.get(at - 1);
+            } else {
+                // 7以上は第2艦隊
+                List<? extends Chara> tl;
+                if (!atkfriend) {
+                    tl = this.afterEnemyCombined;
+                } else {
+                    tl = this.afterFriendCombined;
+                }
+                attacker = tl.get(at - 1 - 6);
             }
+            this.damage(defender, damage);
+            this.addDetail(attacker, defender, damage, atType);
         }
     }
 
@@ -638,13 +709,13 @@ public class PhaseState {
     /**
      * ダメージ計算
      *
-     * @param chara 対象キャラクター
+     * @param defender 防御側
      * @param damage ダメージ
      */
-    private void damage(Chara chara, int damage) {
+    private void damage(Chara defender, int damage) {
         int nowHp;
-        if (chara.getNowhp() - damage <= 0 && chara instanceof Ship) {
-            Ship ship = (Ship) chara;
+        if (defender.getNowhp() - damage <= 0 && defender instanceof Ship) {
+            Ship ship = (Ship) defender;
             // 最初に消費される応急修理要員
             Optional<SlotitemMst> mst = Stream.concat(Stream.of(ship.getSlotEx()), ship.getSlot().stream())
                     .map(this.itemMap::get)
@@ -657,18 +728,118 @@ public class PhaseState {
                 if (mst.get().getName().equals("応急修理女神")) {
                     // 応急修理女神
                     // 女神発動では、艦の最大HPに回復する
-                    nowHp = chara.getMaxhp();
+                    nowHp = defender.getMaxhp();
                 } else {
                     // 応急修理要員
                     // 要員発動では、艦の最大HPの20%に回復する(小数点以下切り捨て)
-                    nowHp = (int) ((double) chara.getMaxhp() * 0.2D);
+                    nowHp = (int) ((double) defender.getMaxhp() * 0.2D);
                 }
             } else {
-                nowHp = chara.getNowhp() - damage;
+                nowHp = defender.getNowhp() - damage;
             }
         } else {
-            nowHp = chara.getNowhp() - damage;
+            nowHp = defender.getNowhp() - damage;
         }
-        chara.setNowhp(nowHp);
+        defender.setNowhp(nowHp);
+    }
+
+    /**
+     * ダメージ詳細(雷撃)
+     *
+     * @param raigeki
+     */
+    private void addDetailRaigeki(Raigeki raigeki) {
+        // 敵→味方
+        if (raigeki.getErai().size() > 12 || !this.combined) {
+            // 連合vs連合 or 通常vs連合 or 通常vs通常
+            this.addDetailRaigeki0(this.afterEnemy, this.afterEnemyCombined, this.afterFriend,
+                    this.afterFriendCombined,
+                    raigeki.getErai(), raigeki.getEydam());
+            // 味方→敵
+            this.addDetailRaigeki0(this.afterFriend, this.afterFriendCombined, this.afterEnemy, this.afterEnemyCombined,
+                    raigeki.getFrai(), raigeki.getFydam());
+        } else {
+            // 連合vs通常
+            this.addDetailRaigeki0(this.afterEnemy, this.afterEnemyCombined, this.afterFriendCombined, null,
+                    raigeki.getErai(), raigeki.getEydam());
+            // 味方→敵
+            this.addDetailRaigeki0(this.afterFriendCombined, null, this.afterEnemy, this.afterEnemyCombined,
+                    raigeki.getFrai(), raigeki.getFydam());
+        }
+    }
+
+    /**
+     * ダメージ詳細(雷撃)
+     *
+     * @param attackerFleet 攻撃側艦隊
+     * @param attackerFleetCombined 攻撃側艦隊(第2艦隊)
+     * @param defenderFleet 防御側艦隊
+     * @param defenderFleetCombined 防御側艦隊(第2艦隊)
+     * @param index 攻撃対象インデックス
+     * @param ydam 与ダメージ
+     */
+    private void addDetailRaigeki0(List<? extends Chara> attackerFleet, List<? extends Chara> attackerFleetCombined,
+            List<? extends Chara> defenderFleet, List<? extends Chara> defenderFleetCombined,
+            List<Integer> index, List<Double> ydam) {
+
+        if (defenderFleet != null)
+            defenderFleet = defenderFleet.stream()
+                    .map(c -> c != null ? c.clone() : null)
+                    .collect(Collectors.toList());
+        if (defenderFleetCombined != null)
+            defenderFleetCombined = defenderFleetCombined.stream()
+                    .map(c -> c != null ? c.clone() : null)
+                    .collect(Collectors.toList());
+        for (int i = 1; i < index.size(); i++) {
+            if (index.get(i) > 0) {
+                Chara attacker;
+                Chara defender;
+                int damage = (int) ydam.get(i).doubleValue();
+                if (i <= 6) {
+                    attacker = attackerFleet.get(i - 1);
+                } else {
+                    attacker = attackerFleetCombined.get(i - (6 + 1));
+                }
+                if (index.get(i) <= 6) {
+                    defender = defenderFleet.get(index.get(i) - 1);
+                } else {
+                    defender = defenderFleetCombined.get(index.get(i) - (6 + 1));
+                }
+                defender.setNowhp(defender.getNowhp() - damage);
+
+                this.addDetail(attacker, defender, damage, SortieAtTypeRaigeki.通常雷撃);
+            }
+        }
+    }
+
+    /**
+     * ダメージ詳細を追加する
+     *
+     * @param atakker 攻撃側
+     * @param defender 防御側
+     * @param damage ダメージ
+     * @param atType 攻撃種別
+     */
+    private void addDetail(Chara attacker, Chara defender, int damage, AtType atType) {
+        this.attackDetails.add(new AttackDetail(
+                Optional.ofNullable(attacker).map(Chara::clone).orElse(null),
+                Optional.ofNullable(defender).map(Chara::clone).orElse(null), damage, atType));
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class AttackDetail {
+
+        /** 攻撃側 */
+        private Chara attacker;
+
+        /** 防御側 */
+        private Chara defender;
+
+        /** ダメージ */
+        private int damage;
+
+        /** 攻撃種別 */
+        private AtType atType;
     }
 }

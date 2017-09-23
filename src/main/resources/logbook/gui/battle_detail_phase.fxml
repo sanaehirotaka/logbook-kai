@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root animated="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox>
          <children>
@@ -28,6 +28,7 @@
                   <VBox fx:id="afterEnemy" GridPane.columnIndex="3" />
                </children>
             </GridPane>
+            <VBox fx:id="detail" />
          </children>
       </VBox>
    </content>

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 艦娘・敵などのキャラクターを表す
  */
-public interface Chara {
+public interface Chara extends Cloneable {
 
     /**
      * 艦船IDを取得します。
@@ -48,4 +48,10 @@ public interface Chara {
      * @return 装備
      */
     List<Integer> getSlot();
+
+    /**
+     * このオブジェクトの複製を返します
+     * @return キャラクター
+     */
+    Chara clone();
 }
