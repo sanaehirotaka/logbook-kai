@@ -20,7 +20,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/main.fxml"); //$NON-NLS-1$
+        String fxmlName = "main";
+        if (AppConfig.get().getWindowStyle() != null) {
+            fxmlName = AppConfig.get().getWindowStyle();
+        }
+        FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/" + fxmlName + ".fxml"); //$NON-NLS-1$
         Parent root = loader.load();
         stage.setScene(new Scene(root));
 

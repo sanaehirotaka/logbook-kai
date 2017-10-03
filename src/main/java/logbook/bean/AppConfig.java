@@ -21,6 +21,9 @@ public final class AppConfig implements Serializable {
 
     private static final long serialVersionUID = 1609207862902171553L;
 
+    /** ウインドウスタイル */
+    private String windowStyle = "main";
+
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
 

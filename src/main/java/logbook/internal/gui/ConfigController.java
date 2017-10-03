@@ -14,10 +14,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -33,6 +35,17 @@ import logbook.plugin.PluginContainer;
  *
  */
 public class ConfigController extends WindowController {
+
+    @FXML
+    private ToggleGroup windowStyle;
+
+    /** メイン画面のスタイル-スマート */
+    @FXML
+    private RadioButton windowStyleSmart;
+
+    /** メイン画面のスタイル-ワイド */
+    @FXML
+    private RadioButton windowStyleWide;
 
     /** 遠征・入渠完了時に通知をする */
     @FXML
@@ -179,6 +192,8 @@ public class ConfigController extends WindowController {
     @FXML
     void initialize() {
         AppConfig conf = AppConfig.get();
+        this.windowStyleSmart.setSelected("main".equals(conf.getWindowStyle()));
+        this.windowStyleWide.setSelected("main_wide".equals(conf.getWindowStyle()));
         this.useNotification.setSelected(conf.isUseNotification());
         this.useSound.setSelected(conf.isUseSound());
         this.useToast.setSelected(conf.isUseToast());
@@ -241,6 +256,12 @@ public class ConfigController extends WindowController {
     @FXML
     void ok(ActionEvent event) {
         AppConfig conf = AppConfig.get();
+        String windowStyle = "main";
+        if (this.windowStyleSmart.isSelected())
+            windowStyle = "main";
+        if (this.windowStyleWide.isSelected())
+            windowStyle = "main_wide";
+        conf.setWindowStyle(windowStyle);
         conf.setUseNotification(this.useNotification.isSelected());
         conf.setUseSound(this.useSound.isSelected());
         conf.setUseToast(this.useToast.isSelected());

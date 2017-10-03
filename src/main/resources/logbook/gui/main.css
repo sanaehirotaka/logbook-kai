@@ -40,25 +40,25 @@ TabPane .tab.empty {
 }
 TabPane .tab.empty .tab-label {
 }
-TabPane .message {
+.message {
     -fx-font-size: 10pt;
 }
-TabPane .hp {
+.hp {
     -fx-min-width: 4.25em;
 }
-TabPane .deepgreen {
+.deepgreen {
     -fx-text-fill: rgb(0, 60, 0);
 }
-TabPane .green {
+.green {
     -fx-text-fill: rgb(0, 128, 0);
 }
-TabPane .orange {
+.orange {
     -fx-text-fill: rgb(255, 140, 0);
 }
-TabPane .red {
+.red {
     -fx-text-fill: rgb(255, 16, 0);
 }
-TabPane .value {
+.value {
     -fx-font-size: 1.1em;
     -fx-font-weight: bold;
 }
