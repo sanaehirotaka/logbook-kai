@@ -494,10 +494,12 @@ public class MainController extends WindowController {
                 .getDeckPortMap();
         ObservableList<Tab> tabs = this.fleetTab.getTabs();
         if (change) {
-            if (ports.size() != tabs.size() - 1) {
-                for (int i = tabs.size() - 1; i > 0; i--) {
-                    tabs.remove(i);
-                }
+            int tabsize = (int) tabs.stream()
+                    .map(Tab::getContent)
+                    .filter(e -> e instanceof FleetTabPane)
+                    .count();
+            if (ports.size() != tabsize) {
+                tabs.removeIf(e -> e.getContent() instanceof FleetTabPane);
                 for (DeckPort port : ports.values()) {
                     FleetTabPane pane = new FleetTabPane(port);
                     Tab tab = new Tab(port.getName(), pane);
@@ -508,14 +510,19 @@ public class MainController extends WindowController {
                     tabs.add(tab);
                 }
             } else {
-                Iterator<DeckPort> ite = ports.values().iterator();
-                for (int i = 0; ite.hasNext(); i++) {
-                    DeckPort port = ite.next();
-                    Tab tab = tabs.get(i + 1);
-                    tab.setText(port.getName());
-                    Node node = tab.getContent();
-                    if (node instanceof FleetTabPane) {
-                        FleetTabPane pane = (FleetTabPane) node;
+                Iterator<DeckPort> portIte = ports.values().iterator();
+                Iterator<Tab> tabIte = tabs.iterator();
+                while (portIte.hasNext()) {
+                    DeckPort port = portIte.next();
+                    Tab tab = null;
+                    while (tabIte.hasNext()) {
+                        tab = tabIte.next();
+                        if (tab.getContent() instanceof FleetTabPane)
+                            break;
+                    }
+                    if (tab != null) {
+                        tab.setText(port.getName());
+                        FleetTabPane pane = (FleetTabPane) tab.getContent();
                         pane.update(port);
                         tab.getStyleClass().removeIf(s -> !s.equals("tab"));
                         Optional.ofNullable(pane.tabCssClass())

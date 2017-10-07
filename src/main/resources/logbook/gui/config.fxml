@@ -49,7 +49,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="メイン画面のスタイル" />
+                              <Label text="メイン画面のスタイル*" />
                               <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
                                  <children>
                                     <RadioButton fx:id="windowStyleSmart" mnemonicParsing="false" selected="true" text="スマート">
