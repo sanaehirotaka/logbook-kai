@@ -17,9 +17,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import logbook.Messages;
 
 /**
  * アプリケーションの設定を読み書きします
@@ -35,7 +34,7 @@ public final class Config {
 
     private final Map<Class<?>, Object> map = new ConcurrentHashMap<>();
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
 
     /**
      * アプリケーション設定の読み書きを指定のディレクトリで行います
@@ -43,6 +42,8 @@ public final class Config {
      * @param dir アプリケーション設定ディレクトリ
      */
     public Config(Path dir) {
+        this.mapper = new ObjectMapper();
+        this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.dir = dir;
     }
 
@@ -178,7 +179,7 @@ public final class Config {
     }
 
     private ExceptionListener getListener() {
-        return e -> LoggerHolder.get().warn(Messages.getString("ConfigReader.1"), e); //$NON-NLS-1$
+        return e -> LoggerHolder.get().warn("アプリケーションの設定を読み込み中に例外が発生", e); //$NON-NLS-1$
     }
 
     /**
