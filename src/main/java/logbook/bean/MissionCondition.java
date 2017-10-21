@@ -118,7 +118,9 @@ public class MissionCondition implements Predicate<List<Ship>> {
             String stype = Ships.stype(ship)
                     .map(Stype::getName)
                     .orElse(null);
-            result &= this.shipType.contains(stype);
+            result &= this.shipType.contains(stype)
+                    || (this.shipType.contains("護衛空母")
+                            && Ships.shipMst(ship).map(ShipMst::getTais).orElse(null) != null);
         }
         // レベル条件
         if (result && this.level != null) {

@@ -43,6 +43,33 @@ public class ShipMst implements Serializable {
     /** 改装後id */
     private Integer aftershipid;
 
+    /** api_taik */
+    private List<Integer> taik;
+
+    /** api_souk */
+    private List<Integer> souk;
+
+    /** api_houg */
+    private List<Integer> houg;
+
+    /** api_raig */
+    private List<Integer> raig;
+
+    /** api_tyku */
+    private List<Integer> tyku;
+
+    /** api_tais */
+    private List<Integer> tais;
+
+    /** api_luck */
+    private List<Integer> luck;
+
+    /** api_soku */
+    private Integer soku;
+
+    /** api_leng */
+    private Integer leng;
+
     /** スロット数 */
     private Integer slotNum;
 
@@ -101,6 +128,15 @@ public class ShipMst implements Serializable {
                 .setInteger("api_slot_num", bean::setSlotNum)
                 .set("api_maxeq", bean::setMaxeq, JsonHelper::toIntegerList)
                 .setInteger("api_aftershipid", bean::setAftershipid)
+                .set("api_taik", bean::setTaik, JsonHelper::toIntegerList)
+                .set("api_souk", bean::setSouk, JsonHelper::toIntegerList)
+                .set("api_houg", bean::setHoug, JsonHelper::toIntegerList)
+                .set("api_raig", bean::setRaig, JsonHelper::toIntegerList)
+                .set("api_tyku", bean::setTyku, JsonHelper::toIntegerList)
+                .set("api_tais", bean::setTais, JsonHelper::toIntegerList)
+                .set("api_luck", bean::setLuck, JsonHelper::toIntegerList)
+                .setInteger("api_soku", bean::setSoku)
+                .setInteger("api_leng", bean::setLeng)
                 .setInteger("api_afterfuel", bean::setAfterfuel)
                 .setInteger("api_afterbull", bean::setAfterbull)
                 .setInteger("api_fuel_max", bean::setFuelMax)

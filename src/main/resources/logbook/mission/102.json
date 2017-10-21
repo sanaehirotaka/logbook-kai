@@ -41,6 +41,33 @@
                         {"type": "艦娘", "ship_type" :["海防艦"]},
                         {"type": "艦娘", "ship_type" :["海防艦"]}
                     ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["護衛空母"]},
+                        {
+                            "operator": "OR",
+                            "conditions": [
+                                {
+                                    "operator": "AND",
+                                    "conditions": [
+                                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                                        {"type": "艦娘", "ship_type" :["海防艦"]}
+                                    ]
+                                },
+                                {
+                                    "operator": "AND",
+                                    "conditions": [
+                                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                                        {"type": "艦娘", "ship_type" :["駆逐艦"]}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]}
+                    ]
                 }
             ]
         }
