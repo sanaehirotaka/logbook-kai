@@ -1,0 +1,47 @@
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "レベル", "value": 185},
+        {"type": "艦隊", "count_type": "対潜", "value": 280},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 35, "order": 1}
+            ]
+        },
+        {
+            "operator": "OR",
+            "conditions": [
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["軽巡洋艦", "練習巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]}
+                    ]
+                }
+            ]
+        }
+    ]
+}

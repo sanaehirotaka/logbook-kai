@@ -1,9 +1,11 @@
 package logbook.internal.gui;
 
 import java.io.InputStream;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.controlsfx.glyphfont.FontAwesome;
@@ -24,6 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.Maparea;
+import logbook.bean.MapareaCollection;
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.bean.MissionCondition;
@@ -83,12 +87,15 @@ public class MissionCheck extends WindowController {
                     .map(shipMap::get)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
-            for (Mission mission : MissionCollection.get().getMissionMap().values()) {
-                TreeItem<String> sub = this.buildTree0(mission, fleet);
-                if (sub != null) {
-                    root.getChildren().add(sub);
-                }
-            }
+            MissionCollection.get().getMissionMap().values().stream()
+                    .sorted(Comparator.comparing(Mission::getMapareaId, Comparator.nullsLast(Comparator.naturalOrder()))
+                            .thenComparing(Mission::getId, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .forEach(mission -> {
+                        TreeItem<String> sub = this.buildTree0(mission, fleet);
+                        if (sub != null) {
+                            root.getChildren().add(sub);
+                        }
+                    });
         }
         this.conditionTree.setRoot(root);
     }
@@ -106,7 +113,10 @@ public class MissionCheck extends WindowController {
                 condition = this.mapper.readValue(is, MissionCondition.class);
                 condition.test(fleet);
                 item = this.buildLeaf(condition);
-                item.setValue(mission.getName());
+                String area = Optional.ofNullable(MapareaCollection.get().getMaparea().get(mission.getMapareaId()))
+                        .map(Maparea::getName)
+                        .map(s -> s + " : ").orElse("");
+                item.setValue(area + mission.getName());
             } finally {
                 is.close();
             }

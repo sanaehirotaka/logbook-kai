@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -146,10 +147,16 @@ public class MissionCondition implements Predicate<List<Ship>> {
      */
     private boolean testFleet(List<Ship> ships) {
         if ("レベル".equals(this.countType)) {
-            return ships.stream()
-                    .filter(Objects::nonNull)
-                    .mapToInt(Ship::getLv)
-                    .sum() >= this.value;
+            return this.fleetStatus(ships, Ship::getLv) >= this.value;
+        }
+        if ("対潜".equals(this.countType)) {
+            return this.fleetStatus(ships, ship -> ship.getTaisen().get(0)) >= this.value;
+        }
+        if ("対空".equals(this.countType)) {
+            return this.fleetStatus(ships, ship -> ship.getTaiku().get(0)) >= this.value;
+        }
+        if ("索敵".equals(this.countType)) {
+            return this.fleetStatus(ships, ship -> ship.getSakuteki().get(0)) >= this.value;
         }
         if ("装備".equals(this.countType)) {
             Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
@@ -167,6 +174,20 @@ public class MissionCondition implements Predicate<List<Ship>> {
                     .count() >= this.value;
         }
         return false;
+    }
+
+    /**
+     * ステータス合計
+     *
+     * @param ships 艦隊
+     * @param function ステータス取得関数
+     * @return ステータス合計
+     */
+    private int fleetStatus(List<Ship> ships, ToIntFunction<Ship> function) {
+        return ships.stream()
+                .filter(Objects::nonNull)
+                .mapToInt(function)
+                .sum();
     }
 
     /**
@@ -218,11 +239,10 @@ public class MissionCondition implements Predicate<List<Ship>> {
 
     private String toStringFleet() {
         StringBuilder sb = new StringBuilder();
-        if ("レベル".equals(this.countType)) {
-            sb.append("艦隊合計レベル");
-        }
         if ("装備".equals(this.countType)) {
             sb.append(this.item);
+        } else {
+            sb.append("艦隊" + this.countType + "合計");
         }
         sb.append(this.value);
         sb.append("以上");

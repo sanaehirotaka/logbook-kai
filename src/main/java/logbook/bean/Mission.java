@@ -19,6 +19,9 @@ public class Mission implements Serializable {
     /** api_id */
     private Integer id;
 
+    /** api_maparea_id */
+    private Integer mapareaId;
+
     /** api_name */
     private String name;
 
@@ -43,6 +46,7 @@ public class Mission implements Serializable {
         Mission bean = new Mission();
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
+                .setInteger("api_maparea_id", bean::setMapareaId)
                 .setString("api_name", bean::setName)
                 .setString("api_details", bean::setDetails)
                 .setInteger("api_time", bean::setTime);
