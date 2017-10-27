@@ -1,0 +1,26 @@
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "レベル", "value": 250},
+        {"type": "艦隊", "count_type": "対空", "value": 200},
+        {"type": "艦隊", "count_type": "対潜", "value": 200},
+        {"type": "艦隊", "count_type": "索敵", "value": 140},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 40, "order": 1}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                {"type": "艦娘", "ship_type" :["水上機母艦"]},
+                {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
+                {"type": "艦娘"},
+                {"type": "艦娘"}
+            ]
+        }
+    ]
+}
