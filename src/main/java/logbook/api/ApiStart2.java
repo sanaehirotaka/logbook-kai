@@ -8,6 +8,8 @@ import javax.json.JsonValue;
 
 import logbook.bean.Maparea;
 import logbook.bean.MapareaCollection;
+import logbook.bean.MapinfoMst;
+import logbook.bean.MapinfoMstCollection;
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.bean.ShipMst;
@@ -44,6 +46,7 @@ public class ApiStart2 implements APIListenerSpi {
             this.apiMstUseitem(data.getJsonArray("api_mst_useitem"));
             this.apiMstMission(data.getJsonArray("api_mst_mission"));
             this.apiMstMaparea(data.getJsonArray("api_mst_maparea"));
+            this.apiMstMapinfo(data.getJsonArray("api_mst_mapinfo"));
         }
         Config.getDefault().store();
     }
@@ -135,5 +138,15 @@ public class ApiStart2 implements APIListenerSpi {
     private void apiMstMaparea(JsonArray array) {
         MapareaCollection.get()
                 .setMaparea(JsonHelper.toMap(array, Maparea::getId, Maparea::toMaparea));
+    }
+
+    /**
+     * api_data.api_mst_mapinfo
+     *
+     * @param array api_mst_mapinfo
+     */
+    private void apiMstMapinfo(JsonArray array) {
+        MapinfoMstCollection.get()
+                .setMapinfo(JsonHelper.toMap(array, MapinfoMst::getId, MapinfoMst::toMapinfoMst));
     }
 }
