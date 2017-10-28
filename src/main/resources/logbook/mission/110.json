@@ -1,7 +1,7 @@
 {
     "operator": "AND",
     "conditions": [
-        {"type": "艦隊", "count_type": "レベル", "value": 175},
+        {"type": "艦隊", "count_type": "レベル", "value": 150},
         {"type": "艦隊", "count_type": "対空", "value": 200},
         {"type": "艦隊", "count_type": "対潜", "value": 200},
         {"type": "艦隊", "count_type": "索敵", "value": 140},
