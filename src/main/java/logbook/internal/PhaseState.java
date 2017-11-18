@@ -533,12 +533,9 @@ public class PhaseState {
         for (int i = 0, s = damages.size(); i < s; i++) {
             int damage = damages.get(i).intValue();
             if (damage != 0) {
-                Ship ship;
-                if (i <= 6) {
-                    ship = this.afterFriend.get(i);
-                } else {
-                    ship = this.afterFriendCombined.get(i - 6);
-                }
+                Ship ship = this.afterFriend.size() > i
+                        ? this.afterFriend.get(i)
+                        : this.afterFriendCombined.get(i - this.afterFriend.size());
                 if (ship != null) {
                     this.damage(ship, damage);
                 }
@@ -571,12 +568,9 @@ public class PhaseState {
         for (int i = 0, s = damages.size(); i < s; i++) {
             int damage = damages.get(i).intValue();
             if (damage != 0) {
-                Enemy enemy;
-                if (i <= 6) {
-                    enemy = this.afterEnemy.get(i);
-                } else {
-                    enemy = this.afterEnemyCombined.get(i - 6);
-                }
+                Enemy enemy = this.afterEnemy.size() > i
+                        ? this.afterEnemy.get(i)
+                        : this.afterEnemyCombined.get(i - this.afterEnemy.size());
                 if (enemy != null) {
                     this.damage(enemy, damage);
                 }
