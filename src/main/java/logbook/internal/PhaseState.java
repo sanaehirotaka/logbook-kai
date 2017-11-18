@@ -21,6 +21,7 @@ import logbook.bean.BattleTypes.ICombinedEcMidnightBattle;
 import logbook.bean.BattleTypes.IHougeki;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.IMidnightBattle;
+import logbook.bean.BattleTypes.INSupport;
 import logbook.bean.BattleTypes.ISortieHougeki;
 import logbook.bean.BattleTypes.ISupport;
 import logbook.bean.BattleTypes.Kouku;
@@ -211,20 +212,7 @@ public class PhaseState {
      * @param battle 支援フェイズ
      */
     public void applySupport(ISupport battle) {
-        SupportInfo support = battle.getSupportInfo();
-        if (support != null) {
-            SupportAiratack air = support.getSupportAiratack();
-            if (air != null) {
-                Stage3 stage3 = air.getStage3();
-                if (stage3 != null) {
-                    this.applyEnemyDamage(stage3.getEdam());
-                }
-            }
-            SupportHourai hou = support.getSupportHourai();
-            if (hou != null) {
-                this.applyEnemyDamage(hou.getDamage());
-            }
-        }
+        this.applySupport(battle.getSupportInfo());
     }
 
     /**
@@ -283,6 +271,14 @@ public class PhaseState {
      */
     public void applyAirbattle(IAirbattle battle) {
         this.applyKouku(battle.getKouku2());
+    }
+
+    /**
+     * 支援フェイズを適用します
+     * @param battle 支援フェイズ
+     */
+    public void applySupport(INSupport battle) {
+        this.applySupport(battle.getNSupportInfo());
     }
 
     /**
@@ -352,6 +348,10 @@ public class PhaseState {
         if (battle instanceof IAirbattle) {
             this.applyAirbattle((IAirbattle) battle);
         }
+        // 夜戦支援
+        if (battle instanceof INSupport) {
+            this.applySupport((INSupport) battle);
+        }
         // 夜戦
         if (battle instanceof IMidnightBattle) {
             this.applyMidnightBattle((IMidnightBattle) battle);
@@ -410,6 +410,26 @@ public class PhaseState {
     }
 
     /**
+     * 支援フェイズを適用します
+     * @param support 支援
+     */
+    private void applySupport(SupportInfo support) {
+        if (support != null) {
+            SupportAiratack air = support.getSupportAiratack();
+            if (air != null) {
+                Stage3 stage3 = air.getStage3();
+                if (stage3 != null) {
+                    this.applyEnemyDamage(stage3.getEdam());
+                }
+            }
+            SupportHourai hou = support.getSupportHourai();
+            if (hou != null) {
+                this.applyEnemyDamage(hou.getDamage());
+            }
+        }
+    }
+
+    /**
      * 雷撃戦フェイズを適用します
      * @param raigeki 雷撃戦フェイズ
      */
@@ -444,50 +464,7 @@ public class PhaseState {
         if (hougeki == null) {
             return;
         }
-
-        if (hougeki.getAtEflag() == null) {
-            for (int i = 0, s = hougeki.getDamage().size(); i < s; i++) {
-                int index = i;
-                // 防御側インデックス(1-6,7-12)
-                int df = hougeki.getDfList().get(i).get(0);
-                // 攻撃側インデックス
-                int at = hougeki.getAtList().get(i);
-                // 攻撃種別
-                AtType atType;
-                if (hougeki instanceof MidnightHougeki) {
-                    atType = Optional.ofNullable(((MidnightHougeki) hougeki).getSpList())
-                            .map(l -> l.get(index))
-                            .map(MidnightSpList::toMidnightSpList)
-                            .orElse(MidnightSpList.toMidnightSpList(0));
-                } else {
-                    atType = Optional.ofNullable(hougeki.getAtType())
-                            .map(l -> l.get(index))
-                            .map(SortieAtType::toSortieAtType)
-                            .orElse(SortieAtType.toSortieAtType(0));
-                }
-                // ダメージ
-                int damage = hougeki.getDamage().get(i)
-                        .stream()
-                        .mapToInt(Double::intValue)
-                        .filter(d -> d > 0)
-                        .sum();
-                Chara attacker = null;
-                Chara defender = null;
-                // 攻撃側が味方の場合true
-                boolean atkfriend = hougeki.getAtEflag().get(i) == 0;
-                if (atkfriend) {
-                    // api_at_eflag=0 で味方
-                    defender = friend.get(df);
-                    attacker = enemy.get(at);
-                } else {
-                    // api_at_eflag=1 で敵
-                    defender = enemy.get(df);
-                    attacker = friend.get(at);
-                }
-                this.damage(defender, damage);
-                this.addDetail(attacker, defender, damage, atType);
-            }
-        } else {
+        if (hougeki.getAtEflag() != null) {
             this.applyHougeki(hougeki);
         }
     }

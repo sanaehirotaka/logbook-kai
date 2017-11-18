@@ -323,13 +323,31 @@ public class BattleTypes {
          * api_support_flagを取得します。
          * @return api_support_flag
          */
-        Boolean getSupportFlag();
+        Integer getSupportFlag();
 
         /**
          * api_support_infoを取得します。
          * @return api_support_info
          */
         BattleTypes.SupportInfo getSupportInfo();
+    }
+
+    /**
+     * 支援フェイズ(夜戦)
+     */
+    public interface INSupport extends IBattle {
+
+        /**
+         * api_n_support_flagを取得します。
+         * @return api_n_support_flag
+         */
+        Integer getNSupportFlag();
+
+        /**
+         * api_n_support_infoを取得します。
+         * @return api_n_support_info
+         */
+        BattleTypes.SupportInfo getNSupportInfo();
     }
 
     /**

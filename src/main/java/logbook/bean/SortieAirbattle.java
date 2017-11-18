@@ -77,7 +77,7 @@ public class SortieAirbattle implements ISortieBattle, IFormation, IAirbattle, I
     private BattleTypes.Kouku kouku;
 
     /** api_support_flag */
-    private Boolean supportFlag;
+    private Integer supportFlag;
 
     /** api_support_info */
     private BattleTypes.SupportInfo supportInfo;
@@ -118,7 +118,7 @@ public class SortieAirbattle implements ISortieBattle, IFormation, IAirbattle, I
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
                 .set("api_injection_kouku", bean::setInjectionKouku, BattleTypes.Kouku::toKouku)
                 .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku)
-                .setBoolean("api_support_flag", bean::setSupportFlag)
+                .setInteger("api_support_flag", bean::setSupportFlag)
                 .set("api_support_info", bean::setSupportInfo, BattleTypes.SupportInfo::toSupportInfo)
                 .set("api_stage_flag2", bean::setStageFlag2, JsonHelper::toIntegerList)
                 .set("api_kouku2", bean::setKouku2, BattleTypes.Kouku::toKouku);

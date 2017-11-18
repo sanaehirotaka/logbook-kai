@@ -20,12 +20,14 @@ import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.IMidnightBattle;
+import logbook.bean.BattleTypes.INSupport;
 import logbook.bean.BattleTypes.ISortieHougeki;
 import logbook.bean.BattleTypes.ISupport;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.BattleTypes.Stage2;
 import logbook.bean.BattleTypes.SupportAiratack;
+import logbook.bean.BattleTypes.SupportInfo;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
@@ -324,29 +326,11 @@ public class BattleDetail extends WindowController {
         }
         // 支援フェイズ
         if (this.battle instanceof ISupport) {
-            if (((ISupport) this.battle).getSupportInfo() != null) {
+            SupportInfo support = ((ISupport) this.battle).getSupportInfo();
+            if (support != null) {
                 // 支援フェイズ適用
                 ps.applySupport((ISupport) this.battle);
-
-                SupportAiratack supportAir = ((ISupport) this.battle).getSupportInfo()
-                        .getSupportAiratack();
-
-                List<Node> stage = new ArrayList<>();
-
-                if (supportAir != null) {
-                    if (supportAir.getStage1() != null) {
-                        Stage1 stage1 = supportAir.getStage1();
-                        stage.add(new BattleDetailPhaseStage1(stage1, "支援艦隊"));
-                    }
-                    if (supportAir.getStage2() != null) {
-                        Stage2 stage2 = supportAir.getStage2();
-                        stage.add(new BattleDetailPhaseStage2(stage2, "支援艦隊"));
-                    }
-                }
-                BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
-                phasePane.setText("支援フェイズ");
-                phasePane.setExpanded(false);
-                phases.add(phasePane);
+                this.setSupportPhase(ps, phases, support);
             }
         }
         // 砲雷撃戦フェイズ
@@ -382,6 +366,15 @@ public class BattleDetail extends WindowController {
                 phases.add(phasePane);
             }
         }
+        // 夜戦支援
+        if (this.battle instanceof INSupport) {
+            SupportInfo support = ((INSupport) this.battle).getNSupportInfo();
+            if (support != null) {
+                // 支援フェイズ適用
+                ps.applySupport((INSupport) this.battle);
+                this.setSupportPhase(ps, phases, support);
+            }
+        }
         // 特殊夜戦
         if (this.battle instanceof IMidnightBattle) {
             // 特殊夜戦適用
@@ -405,5 +398,30 @@ public class BattleDetail extends WindowController {
         }
 
         ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
+    }
+
+    /**
+     * 支援共通
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     * @param support 支援
+     */
+    private void setSupportPhase(PhaseState ps, List<Node> phases, SupportInfo support) {
+        SupportAiratack supportAir = support.getSupportAiratack();
+        List<Node> stage = new ArrayList<>();
+        if (supportAir != null) {
+            if (supportAir.getStage1() != null) {
+                Stage1 stage1 = supportAir.getStage1();
+                stage.add(new BattleDetailPhaseStage1(stage1, "支援艦隊"));
+            }
+            if (supportAir.getStage2() != null) {
+                Stage2 stage2 = supportAir.getStage2();
+                stage.add(new BattleDetailPhaseStage2(stage2, "支援艦隊"));
+            }
+        }
+        BattleDetailPhase phasePane = new BattleDetailPhase(ps, stage);
+        phasePane.setText("支援フェイズ");
+        phasePane.setExpanded(false);
+        phases.add(phasePane);
     }
 }

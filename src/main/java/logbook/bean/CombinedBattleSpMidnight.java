@@ -8,6 +8,7 @@ import javax.json.JsonObject;
 import logbook.bean.BattleTypes.ICombinedBattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IMidnightBattle;
+import logbook.bean.BattleTypes.INSupport;
 import logbook.internal.JsonHelper;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ import lombok.Data;
  *
  */
 @Data
-public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattle, IFormation, Serializable {
+public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattle, IFormation, INSupport, Serializable {
 
     private static final long serialVersionUID = -364877629377359534L;
 
@@ -71,6 +72,12 @@ public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattl
     /** api_hougeki */
     private BattleTypes.MidnightHougeki hougeki;
 
+    /** api_n_support_flag */
+    private Integer nSupportFlag;
+
+    /** api_n_support_info */
+    private BattleTypes.SupportInfo nSupportInfo;
+
     /**
      * JsonObjectから{@link CombinedBattleSpMidnight}を構築します
      *
@@ -97,7 +104,9 @@ public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattl
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
                 .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
                 .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
-                .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki);
+                .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki)
+                .setInteger("api_n_support_flag", bean::setNSupportFlag)
+                .set("api_n_support_info", bean::setNSupportInfo, BattleTypes.SupportInfo::toSupportInfo);
         return bean;
     }
 }

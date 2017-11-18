@@ -89,7 +89,7 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
     private BattleTypes.Kouku kouku;
 
     /** api_support_flag */
-    private Boolean supportFlag;
+    private Integer supportFlag;
 
     /** api_support_info */
     private BattleTypes.SupportInfo supportInfo;
@@ -154,7 +154,7 @@ public class CombinedBattleBattle implements ICombinedBattle, ISortieBattle, ISo
                 .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
                 .set("api_injection_kouku", bean::setInjectionKouku, BattleTypes.Kouku::toKouku)
                 .set("api_kouku", bean::setKouku, BattleTypes.Kouku::toKouku)
-                .setBoolean("api_support_flag", bean::setSupportFlag)
+                .setInteger("api_support_flag", bean::setSupportFlag)
                 .set("api_support_info", bean::setSupportInfo, BattleTypes.SupportInfo::toSupportInfo)
                 .setBoolean("api_opening_flag", bean::setOpeningFlag)
                 .set("api_opening_atack", bean::setOpeningAtack, BattleTypes.Raigeki::toRaigeki)
