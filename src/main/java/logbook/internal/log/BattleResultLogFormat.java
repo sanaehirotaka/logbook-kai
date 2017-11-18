@@ -151,7 +151,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 // 名前
                 joiner.add(Ships.toName(ship));
                 // HP
-                joiner.add(battle.getNowhps().get(i + 1) + "/" + battle.getMaxhps().get(i + 1));
+                joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
             } else {
                 joiner.add("");
                 joiner.add("");
@@ -159,7 +159,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         }
         // 敵艦
         List<Integer> enemyFleet = battle.getShipKe();
-        for (int i = 1; i < enemyFleet.size(); i++) {
+        for (int i = 0; i < enemyFleet.size(); i++) {
             ShipMst shipMst = ShipMstCollection.get()
                     .getShipMap()
                     .get(enemyFleet.get(i));
@@ -171,7 +171,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 } else {
                     joiner.add(shipMst.getName() + "(" + flagship + ")");
                 }
-                joiner.add(battle.getNowhps().get(i + 6) + "/" + battle.getMaxhps().get(i + 6));
+                joiner.add(battle.getENowhps().get(i) + "/" + battle.getEMaxhps().get(i));
             } else {
                 joiner.add("");
                 joiner.add("");

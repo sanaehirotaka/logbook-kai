@@ -44,16 +44,28 @@ public class BattleTypes {
         List<Integer> getShipLv();
 
         /**
-         * api_nowhpsを取得します。
-         * @return api_nowhps
+         * api_f_nowhpsを取得します。
+         * @return api_f_nowhps
          */
-        List<Integer> getNowhps();
+        List<Integer> getFNowhps();
 
         /**
-         * api_maxhpsを取得します。
-         * @return api_maxhps
+         * api_f_maxhpsを取得します。
+         * @return api_f_maxhps
          */
-        List<Integer> getMaxhps();
+        List<Integer> getFMaxhps();
+
+        /**
+         * api_e_nowhpsを取得します。
+         * @return api_e_nowhps
+         */
+        List<Integer> getENowhps();
+
+        /**
+         * api_e_maxhpsを取得します。
+         * @return api_e_maxhps
+         */
+        List<Integer> getEMaxhps();
 
         /**
          * api_eSlotを取得します。
@@ -80,16 +92,16 @@ public class BattleTypes {
     public interface ICombinedBattle extends IBattle {
 
         /**
-         * api_nowhps_combinedを取得します。
-         * @return api_nowhps_combined
+         * api_f_nowhps_combinedを取得します。
+         * @return api_f_nowhps_combined
          */
-        List<Integer> getNowhpsCombined();
+        List<Integer> getFNowhpsCombined();
 
         /**
-         * api_maxhps_combinedを取得します。
-         * @return api_maxhps_combined
+         * api_f_maxhps_combinedを取得します。
+         * @return api_f_maxhps_combined
          */
-        List<Integer> getMaxhpsCombined();
+        List<Integer> getFMaxhpsCombined();
 
         /**
          * api_fParam_combinedを取得します。
@@ -104,6 +116,18 @@ public class BattleTypes {
     public interface ICombinedEcBattle extends IBattle {
 
         /**
+         * api_e_nowhps_combinedを取得します。
+         * @return api_e_nowhps_combined
+         */
+        List<Integer> getENowhpsCombined();
+
+        /**
+         * api_e_maxhps_combinedを取得します。
+         * @return api_e_maxhps_combined
+         */
+        List<Integer> getEMaxhpsCombined();
+
+        /**
          * api_ship_ke_combinedを取得します。
          * @return api_ship_ke_combined
          */
@@ -114,18 +138,6 @@ public class BattleTypes {
          * @return api_ship_lv_combined
          */
         List<Integer> getShipLvCombined();
-
-        /**
-         * api_nowhps_combinedを取得します。
-         * @return api_nowhps_combined
-         */
-        List<Integer> getNowhpsCombined();
-
-        /**
-         * api_maxhps_combinedを取得します。
-         * @return api_maxhps_combined
-         */
-        List<Integer> getMaxhpsCombined();
 
         /**
          * api_eSlot_combinedを取得します。
@@ -965,7 +977,16 @@ public class BattleTypes {
      * 陣形
      */
     public enum Formation {
-        単縦陣, 複縦陣, 輪形陣, 梯形陣, 単横陣, 第一警戒航行序列, 第二警戒航行序列, 第三警戒航行序列, 第四警戒航行序列;
+        単縦陣,
+        複縦陣,
+        輪形陣,
+        梯形陣,
+        単横陣,
+        警戒陣,
+        第一警戒航行序列,
+        第二警戒航行序列,
+        第三警戒航行序列,
+        第四警戒航行序列;
 
         /**
          * 陣形を取得します
@@ -984,6 +1005,8 @@ public class BattleTypes {
                 return 梯形陣;
             case 5:
                 return 単横陣;
+            case 6:
+                return 警戒陣;
             case 11:
                 return 第一警戒航行序列;
             case 12:

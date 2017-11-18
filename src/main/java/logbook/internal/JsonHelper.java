@@ -407,7 +407,11 @@ public final class JsonHelper {
         C collection = supplier.get();
         if (value instanceof JsonArray) {
             for (JsonValue val : (JsonArray) value) {
-                collection.add(function.apply((T) val));
+                if (val == null || val == JsonValue.NULL) {
+                    collection.add(null);
+                } else {
+                    collection.add(function.apply((T) val));
+                }
             }
         } else {
             collection.add(function.apply((T) value));

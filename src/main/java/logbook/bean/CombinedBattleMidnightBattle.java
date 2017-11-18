@@ -28,17 +28,23 @@ public class CombinedBattleMidnightBattle implements ICombinedBattle, IMidnightB
     /** api_ship_lv */
     private List<Integer> shipLv;
 
-    /** api_nowhps */
-    private List<Integer> nowhps;
+    /** api_f_nowhps */
+    private List<Integer> fNowhps;
 
-    /** api_maxhps */
-    private List<Integer> maxhps;
+    /** api_f_maxhps */
+    private List<Integer> fMaxhps;
 
-    /** api_nowhps_combined */
-    private List<Integer> nowhpsCombined;
+    /** api_e_nowhps */
+    private List<Integer> eNowhps;
 
-    /** api_maxhps_combined */
-    private List<Integer> maxhpsCombined;
+    /** api_e_maxhps */
+    private List<Integer> eMaxhps;
+
+    /** api_f_nowhps_combined */
+    private List<Integer> fNowhpsCombined;
+
+    /** api_f_maxhps_combined */
+    private List<Integer> fMaxhpsCombined;
 
     /** api_eSlot */
     private List<List<Integer>> eSlot;
@@ -74,10 +80,12 @@ public class CombinedBattleMidnightBattle implements ICombinedBattle, IMidnightB
                 .setInteger("api_deck_id", bean::setDockId)
                 .set("api_ship_ke", bean::setShipKe, JsonHelper::toIntegerList)
                 .set("api_ship_lv", bean::setShipLv, JsonHelper::toIntegerList)
-                .set("api_nowhps", bean::setNowhps, JsonHelper::toIntegerList)
-                .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
-                .set("api_nowhps_combined", bean::setNowhpsCombined, JsonHelper::toIntegerList)
-                .set("api_maxhps_combined", bean::setMaxhpsCombined, JsonHelper::toIntegerList)
+                .set("api_f_nowhps", bean::setFNowhps, JsonHelper::toIntegerList)
+                .set("api_f_maxhps", bean::setFMaxhps, JsonHelper::toIntegerList)
+                .set("api_e_nowhps", bean::setENowhps, JsonHelper::toIntegerList)
+                .set("api_e_maxhps", bean::setEMaxhps, JsonHelper::toIntegerList)
+                .set("api_f_nowhps_combined", bean::setFNowhpsCombined, JsonHelper::toIntegerList)
+                .set("api_f_maxhps_combined", bean::setFMaxhpsCombined, JsonHelper::toIntegerList)
                 .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
