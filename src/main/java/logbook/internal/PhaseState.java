@@ -370,14 +370,14 @@ public class PhaseState {
                 if (stage3 != null) {
                     List<Double> edam = stage3.getEdam();
                     if (edam != null) {
-                        this.applyEnemyDamage(edam, this.afterEnemy);
+                        this.applyEnemyDamage(edam);
                     }
                 }
                 Stage3 stage3Combined = attack.getStage3Combined();
                 if (stage3Combined != null) {
                     List<Double> edam = stage3Combined.getEdam();
                     if (edam != null) {
-                        this.applyEnemyDamage(edam, this.afterEnemyCombined);
+                        this.applyEnemyDamage(edam);
                     }
                 }
             }
@@ -395,16 +395,16 @@ public class PhaseState {
 
         Stage3 stage3 = kouku.getStage3();
         if (stage3 != null) {
-            this.applyFriendDamage(stage3.getFdam(), this.afterFriend);
-            this.applyEnemyDamage(stage3.getEdam(), this.afterEnemy);
+            this.applyFriendDamage(stage3.getFdam());
+            this.applyEnemyDamage(stage3.getEdam());
         }
         Stage3 stage3Combined = kouku.getStage3Combined();
         if (stage3Combined != null) {
             if (stage3Combined.getFdam() != null) {
-                this.applyFriendDamage(stage3Combined.getFdam(), this.afterFriendCombined);
+                this.applyFriendDamage(stage3Combined.getFdam());
             }
             if (stage3Combined.getEdam() != null) {
-                this.applyEnemyDamage(stage3Combined.getEdam(), this.afterEnemyCombined);
+                this.applyEnemyDamage(stage3Combined.getEdam());
             }
         }
     }
@@ -437,19 +437,9 @@ public class PhaseState {
         if (raigeki == null) {
             return;
         }
-
         this.addDetailRaigeki(raigeki);
-
-        if (raigeki.getFdam().size() > 12) {
-            // 新API
-            this.applyFriendDamage(raigeki.getFdam());
-        } else if (this.combined) {
-            // 連合艦隊の場合、第2艦隊にダメージを適用
-            this.applyFriendDamage(raigeki.getFdam(), this.afterFriendCombined);
-        } else {
-            // 連合艦隊以外の場合
-            this.applyFriendDamage(raigeki.getFdam(), this.afterFriend);
-        }
+        // 新API
+        this.applyFriendDamage(raigeki.getFdam());
         // 敵
         this.applyEnemyDamage(raigeki.getEdam());
     }
@@ -509,15 +499,15 @@ public class PhaseState {
             Chara defender = null;
 
             if (atkfriend) {
-                attacker = this.afterFriend.size() > at
-                        ? this.afterFriend.get(at) : this.afterFriendCombined.get(at - this.afterFriend.size());
-                defender = this.afterEnemy.size() > df
-                        ? this.afterEnemy.get(df) : this.afterEnemyCombined.get(df - this.afterEnemy.size());
+                attacker = Math.max(this.afterFriend.size(), 6) > at
+                        ? this.afterFriend.get(at) : this.afterFriendCombined.get(at - 6);
+                defender = Math.max(this.afterEnemy.size(), 6) > df
+                        ? this.afterEnemy.get(df) : this.afterEnemyCombined.get(df - 6);
             } else {
-                attacker = this.afterEnemy.size() > at
-                        ? this.afterEnemy.get(at) : this.afterEnemyCombined.get(at - this.afterEnemy.size());
-                defender = this.afterFriend.size() > df
-                        ? this.afterFriend.get(df) : this.afterFriendCombined.get(df - this.afterFriend.size());
+                attacker = Math.max(this.afterEnemy.size(), 6) > at
+                        ? this.afterEnemy.get(at) : this.afterEnemyCombined.get(at - 6);
+                defender = Math.max(this.afterFriend.size(), 6) > df
+                        ? this.afterFriend.get(df) : this.afterFriendCombined.get(df - 6);
             }
 
             this.damage(defender, damage);
@@ -533,26 +523,9 @@ public class PhaseState {
         for (int i = 0, s = damages.size(); i < s; i++) {
             int damage = damages.get(i).intValue();
             if (damage != 0) {
-                Ship ship = this.afterFriend.size() > i
+                Ship ship = Math.max(this.afterFriend.size(), 6) > i
                         ? this.afterFriend.get(i)
-                        : this.afterFriendCombined.get(i - this.afterFriend.size());
-                if (ship != null) {
-                    this.damage(ship, damage);
-                }
-            }
-        }
-    }
-
-    /**
-     * ダメージを適用します
-     * @param damage ダメージ(zero-based)
-     * @param friend 味方
-     */
-    private void applyFriendDamage(List<Double> damages, List<Ship> friend) {
-        for (int i = 0, s = damages.size(); i < s; i++) {
-            int damage = damages.get(i).intValue();
-            if (damage != 0) {
-                Ship ship = friend.get(i);
+                        : this.afterFriendCombined.get(i - 6);
                 if (ship != null) {
                     this.damage(ship, damage);
                 }
@@ -568,26 +541,9 @@ public class PhaseState {
         for (int i = 0, s = damages.size(); i < s; i++) {
             int damage = damages.get(i).intValue();
             if (damage != 0) {
-                Enemy enemy = this.afterEnemy.size() > i
+                Enemy enemy = Math.max(this.afterEnemy.size(), 6) > i
                         ? this.afterEnemy.get(i)
-                        : this.afterEnemyCombined.get(i - this.afterEnemy.size());
-                if (enemy != null) {
-                    this.damage(enemy, damage);
-                }
-            }
-        }
-    }
-
-    /**
-     * ダメージを適用します(敵艦隊指定の場合に使用)
-     * @param damage ダメージ(zero-based)
-     * @param enemies 敵
-     */
-    private void applyEnemyDamage(List<Double> damages, List<Enemy> enemies) {
-        for (int i = 0, s = damages.size(); i < s; i++) {
-            int damage = damages.get(i).intValue();
-            if (damage != 0) {
-                Enemy enemy = enemies.get(i);
+                        : this.afterEnemyCombined.get(i - 6);
                 if (enemy != null) {
                     this.damage(enemy, damage);
                 }
@@ -694,22 +650,12 @@ public class PhaseState {
      */
     private void addDetailRaigeki(Raigeki raigeki) {
         // 敵→味方
-        if (raigeki.getErai().size() > 12 || !this.combined) {
-            // 連合vs連合 or 通常vs連合 or 通常vs通常
-            this.addDetailRaigeki0(this.afterEnemy, this.afterEnemyCombined, this.afterFriend,
-                    this.afterFriendCombined,
-                    raigeki.getErai(), raigeki.getEydam());
-            // 味方→敵
-            this.addDetailRaigeki0(this.afterFriend, this.afterFriendCombined, this.afterEnemy, this.afterEnemyCombined,
-                    raigeki.getFrai(), raigeki.getFydam());
-        } else {
-            // 連合vs通常
-            this.addDetailRaigeki0(this.afterEnemy, this.afterEnemyCombined, this.afterFriendCombined, null,
-                    raigeki.getErai(), raigeki.getEydam());
-            // 味方→敵
-            this.addDetailRaigeki0(this.afterFriendCombined, null, this.afterEnemy, this.afterEnemyCombined,
-                    raigeki.getFrai(), raigeki.getFydam());
-        }
+        this.addDetailRaigeki0(this.afterEnemy, this.afterEnemyCombined, this.afterFriend,
+                this.afterFriendCombined,
+                raigeki.getErai(), raigeki.getEydam());
+        // 味方→敵
+        this.addDetailRaigeki0(this.afterFriend, this.afterFriendCombined, this.afterEnemy, this.afterEnemyCombined,
+                raigeki.getFrai(), raigeki.getFydam());
     }
 
     /**
@@ -736,12 +682,12 @@ public class PhaseState {
                     .collect(Collectors.toList());
         for (int i = 0; i < index.size(); i++) {
             if (index.get(i) >= 0) {
-                Chara attacker = attackerFleet.size() > i
+                Chara attacker = Math.max(attackerFleet.size(), 6) > i
                         ? attackerFleet.get(i)
-                        : attackerFleetCombined.get(i - attackerFleet.size());
-                Chara defender = defenderFleet.size() > index.get(i)
+                        : attackerFleetCombined.get(i - 6);
+                Chara defender = Math.max(defenderFleet.size(), 6) > index.get(i)
                         ? defenderFleet.get(index.get(i))
-                        : defenderFleetCombined.get(index.get(i) - defenderFleet.size());
+                        : defenderFleetCombined.get(index.get(i) - 6);
                 int damage = (int) ydam.get(i).doubleValue();
 
                 defender.setNowhp(defender.getNowhp() - damage);
