@@ -387,7 +387,7 @@ public class BattleDetail extends WindowController {
         }
         // 夜戦
         if (this.midnight != null) {
-            PhaseState phaseMidnight = new PhaseState(this.combinedType, this.midnight, this.deckMap, this.itemMap);
+            PhaseState phaseMidnight = new PhaseState(ps);
             // 夜戦適用
             phaseMidnight.applyMidnightBattle(this.midnight);
 

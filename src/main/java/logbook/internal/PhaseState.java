@@ -225,7 +225,7 @@ public class PhaseState {
                 this.afterEnemy);
         // 開幕雷撃
         this.applyRaigeki(battle.getOpeningAtack());
-        if (battle instanceof ICombinedEcBattle) {
+        if (!this.combined && battle instanceof ICombinedEcBattle) {
             // 1巡目
             this.applyHougeki(battle.getHougeki1());
             // 雷撃
@@ -377,7 +377,7 @@ public class PhaseState {
                 if (stage3Combined != null) {
                     List<Double> edam = stage3Combined.getEdam();
                     if (edam != null) {
-                        this.applyEnemyDamage(edam);
+                        this.applyEnemyDamageCombined(edam);
                     }
                 }
             }
@@ -401,10 +401,10 @@ public class PhaseState {
         Stage3 stage3Combined = kouku.getStage3Combined();
         if (stage3Combined != null) {
             if (stage3Combined.getFdam() != null) {
-                this.applyFriendDamage(stage3Combined.getFdam());
+                this.applyFriendDamageCombined(stage3Combined.getFdam());
             }
             if (stage3Combined.getEdam() != null) {
-                this.applyEnemyDamage(stage3Combined.getEdam());
+                this.applyEnemyDamageCombined(stage3Combined.getEdam());
             }
         }
     }
@@ -516,7 +516,7 @@ public class PhaseState {
     }
 
     /**
-     * ダメージを適用します(敵第1艦隊(+第2艦隊)固定の場合に使用)
+     * ダメージを適用します(味方第1,2艦隊)
      * @param damage ダメージ(zero-based)
      */
     private void applyFriendDamage(List<Double> damages) {
@@ -534,8 +534,24 @@ public class PhaseState {
     }
 
     /**
-     * ダメージを適用します(敵第1艦隊(+第2艦隊)固定の場合に使用)
+     * ダメージを適用します(味方第2艦隊)
      * @param damage ダメージ(zero-based)
+     */
+    private void applyFriendDamageCombined(List<Double> damages) {
+        for (int i = 0, s = damages.size(); i < s; i++) {
+            int damage = damages.get(i).intValue();
+            if (damage != 0) {
+                Ship ship = this.afterFriendCombined.get(i);
+                if (ship != null) {
+                    this.damage(ship, damage);
+                }
+            }
+        }
+    }
+
+    /**
+     * ダメージを適用します(敵第1,2艦隊)
+     * @param damage ダメージ
      */
     private void applyEnemyDamage(List<Double> damages) {
         for (int i = 0, s = damages.size(); i < s; i++) {
@@ -544,6 +560,22 @@ public class PhaseState {
                 Enemy enemy = Math.max(this.afterEnemy.size(), 6) > i
                         ? this.afterEnemy.get(i)
                         : this.afterEnemyCombined.get(i - 6);
+                if (enemy != null) {
+                    this.damage(enemy, damage);
+                }
+            }
+        }
+    }
+
+    /**
+     * ダメージを適用します(敵第2艦隊)
+     * @param damage ダメージ
+     */
+    private void applyEnemyDamageCombined(List<Double> damages) {
+        for (int i = 0, s = damages.size(); i < s; i++) {
+            int damage = damages.get(i).intValue();
+            if (damage != 0) {
+                Enemy enemy = this.afterEnemyCombined.get(i);
                 if (enemy != null) {
                     this.damage(enemy, damage);
                 }
