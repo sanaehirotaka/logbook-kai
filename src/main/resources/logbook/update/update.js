@@ -1,10 +1,10 @@
-'use strict';
 /*
  * 航海日誌 更新スクリプト
  */
 load("fx:base.js");
 load("fx:controls.js");
 load("fx:graphics.js");
+load("fx:web.js");
 // import
 var System = java.lang.System;
 var BufferedReader = java.io.BufferedReader;
@@ -47,12 +47,10 @@ UpdateTask.prototype.cancel = function() {
         t.interrupt();
     });
 }
-UpdateTask.prototype.updatecheck = function() {
+UpdateTask.prototype.getReleaseJson = function() {
     var _this = this;
     var task = new Task() {
         call: function() {
-            task.updateMessage(releaseURL + " からリリース情報をダウンロードしています");
-
             var is = URI.create(releaseURL).toURL().openStream();
             var jsonText;
             try {
@@ -67,7 +65,6 @@ UpdateTask.prototype.updatecheck = function() {
             if (release["assets"]) {
                 if (release["prerelease"] || release["draft"]) {
                     var msg = release["name"] + "は試験的なバージョンであるため更新されませんでした。手動での更新をお願いします。";
-                    task.updateMessage(msg);
                     throw msg;
                 }
                 for (var i = 0; i < release["assets"].length; i++) {
@@ -79,10 +76,16 @@ UpdateTask.prototype.updatecheck = function() {
                 }
             }
             if (!asset) {
-                task.updateMessage("リリース情報はありません");
                 throw "リリース情報はありません";
             }
-
+        }
+    }
+    return task;
+}
+UpdateTask.prototype.updatecheck = function() {
+    var _this = this;
+    var task = new Task() {
+        call: function() {
             var tempDir = Files.createTempDirectory("logbook-kai");
             var tempZip = tempDir.resolve(asset["name"]);
 
@@ -125,10 +128,10 @@ UpdateTask.prototype.updatecheck = function() {
                     });
             } finally {
                 zipFile.close();
+                task.updateMessage("一時ファイルを削除しています");
+                Files.deleteIfExists(tempZip);
+                Files.deleteIfExists(tempDir);
             }
-            task.updateMessage("一時ファイルを削除しています");
-            Files.deleteIfExists(tempZip);
-            Files.deleteIfExists(tempDir);
             return "更新が完了しました";
         }
     }
@@ -168,18 +171,29 @@ UpdateUI.prototype.startup = function() {
     var _this = this;
 
     var pane = new StackPane();
-    pane.setPrefHeight(200);
+    pane.setPrefHeight(600);
     pane.setPrefWidth(700);
     pane.setPadding(new Insets(6));
     var vbox = new VBox();
+    var label = new TextFlow(new Text("航海日誌 v" + version + "への更新を行います。\n"),
+            new Text("必ず更新の前に航海日誌を終了させてください。 \n"),
+            new Text("更新の準備が出来ましたら[更新]を押して更新を行ってください。"));
+    label.setStyle("-fx-font-weight: bold");
+    vbox.getChildren().add(label);
     var stackPane1 = new StackPane();
     VBox.setVgrow(stackPane1, Priority.ALWAYS);
-    var label = new Label("航海日誌 v" + version + "への更新を行います。\n"
-            + "必ず更新の前に航海日誌を終了させてください。 \n"
-            + "更新の準備が出来ましたら[更新]を押して更新を行ってください。");
-    label.setWrapText(true);
-    label.setStyle("-fx-font-weight: bold");
-    stackPane1.getChildren().add(label);
+
+    var webView = new WebView();
+    var webEngine = webView.engine;
+    webEngine.loadContent("<html>"
+            + "<head>"
+            + "<script src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js'></script>"
+            + "<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'>"
+            + "<style>body { font-family: 'Meiryo UI',Meiryo,'Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif; }</style>"
+            + "</head>"
+            + "<body class='container'></body>"
+            + "</html>");
+    stackPane1.getChildren().add(webView);
 
     var stackPane2 = new StackPane();
     var vbox2 = new VBox();
@@ -202,6 +216,41 @@ UpdateUI.prototype.startup = function() {
 
     vbox.getChildren().addAll(stackPane1, stackPane2);
     pane.getChildren().add(vbox);
+
+    var releaseNote = function() {
+        if (webEngine.executeScript("window.marked") && release.body) {
+            var body = webEngine.executeScript("document.body");
+            var window = webEngine.executeScript("window");
+            body.setMember("innerHTML", window.call("marked", release.body));
+        }
+    }
+
+    webEngine.getLoadWorker().stateProperty().addListener(
+        new ChangeListener() {
+            changed: function (ov, oldState, newState) {
+                if (newState === Worker.State.SUCCEEDED) {
+                    releaseNote();
+                }
+            }
+        }
+    );
+    // task
+    {
+        var task = this.task.getReleaseJson();
+        task.onFailed = function() {
+            var alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initOwner(_this.stage);
+            alert.setTitle("更新情報を取得できませんでした");
+            alert.setContentText(task.exception.message);
+            alert.showAndWait();
+
+           _this.failed();
+       }
+       task.onSucceeded = function() {
+           releaseNote();
+       }
+       this.task.start(task);
+    }
 
     this.display(pane);
 }
