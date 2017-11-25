@@ -19,9 +19,10 @@ import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
 /**
- * api_req_combined_battle/ec_night_to_day
+ * /kcsapi/api_req_combined_battle/ec_night_to_day
  *
  */
+@API("/kcsapi/api_req_combined_battle/ec_night_to_day")
 public class ApiReqCombinedBattleEcNightToDay implements APIListenerSpi {
 
     @Override
