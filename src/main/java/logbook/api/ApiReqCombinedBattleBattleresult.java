@@ -11,6 +11,7 @@ import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.BattleLogs;
@@ -43,7 +44,11 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 log.setResult(BattleResult.toBattleResult(data));
                 log.setTime(Logs.nowString());
                 // 艦隊スナップショットを作る
-                BattleLog.snapshot(log, 1, 2);
+                if (log.getCombinedType() != CombinedType.未結成 && AppCondition.get().getDeckId() == 1) {
+                    BattleLog.snapshot(log, 1, 2);
+                } else {
+                    BattleLog.snapshot(log, AppCondition.get().getDeckId());
+                }
                 // 戦闘ログの保存
                 BattleLogs.write(log);
 

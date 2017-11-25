@@ -169,56 +169,58 @@ public class BattleDetail extends WindowController {
 
         if (this.battle instanceof IKouku) {
             Kouku kouku = ((IKouku) this.battle).getKouku();
-            Stage1 stage1 = kouku.getStage1();
-            Stage2 stage2 = kouku.getStage2();
+            if (kouku != null) {
+                Stage1 stage1 = kouku.getStage1();
+                Stage2 stage2 = kouku.getStage2();
 
-            if (stage1 != null) {
-                Map<Integer, SlotitemMst> slotitemMst = SlotitemMstCollection.get()
-                        .getSlotitemMap();
-                // 制空権
-                this.dispSeiku.setText(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString());
-                this.dispSeiku.getStyleClass().add("dispseiku" + stage1.getDispSeiku());
-                // 味方触接
-                SlotitemMst fTouchPlaneItem = slotitemMst.get(stage1.getTouchPlane().get(0));
-                if (fTouchPlaneItem != null) {
-                    Image image = Items.itemImage(fTouchPlaneItem);
-                    if (image != null) {
-                        this.fTouchPlaneImage.setImage(image);
-                    }
-                    this.fTouchPlane.setText(fTouchPlaneItem.getName()
-                            + "(+" + (int) (Ships.touchPlaneAttackCompensation(fTouchPlaneItem) * 100) + "%)");
-                } else {
-                    this.fTouchPlaneImage.setFitWidth(0);
-                    this.fTouchPlaneImage.setFitHeight(0);
-                    this.fTouchPlane.setText("なし");
-                }
-                // 敵触接
-                SlotitemMst eTouchPlaneItem = slotitemMst.get(stage1.getTouchPlane().get(1));
-                if (eTouchPlaneItem != null) {
-                    Image image = Items.itemImage(eTouchPlaneItem);
-                    if (image != null) {
-                        this.eTouchPlaneImage.setImage(image);
-                    }
-                    this.eTouchPlane.setText(eTouchPlaneItem.getName()
-                            + "(+" + (int) (Ships.touchPlaneAttackCompensation(eTouchPlaneItem) * 100) + "%)");
-                } else {
-                    this.eTouchPlaneImage.setFitWidth(0);
-                    this.eTouchPlaneImage.setFitHeight(0);
-                    this.eTouchPlane.setText("なし");
-                }
-            }
-            if (stage2 != null) {
-                // 対空CI
-                if (stage2.getAirFire() != null && stage2.getAirFire().getIdx() != null) {
-                    // インデックスは0始まり
-                    int idx = stage2.getAirFire().getIdx();
-                    Ship ship;
-                    if (idx < 6) {
-                        ship = ps.getAfterFriend().get(idx);
+                if (stage1 != null) {
+                    Map<Integer, SlotitemMst> slotitemMst = SlotitemMstCollection.get()
+                            .getSlotitemMap();
+                    // 制空権
+                    this.dispSeiku.setText(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString());
+                    this.dispSeiku.getStyleClass().add("dispseiku" + stage1.getDispSeiku());
+                    // 味方触接
+                    SlotitemMst fTouchPlaneItem = slotitemMst.get(stage1.getTouchPlane().get(0));
+                    if (fTouchPlaneItem != null) {
+                        Image image = Items.itemImage(fTouchPlaneItem);
+                        if (image != null) {
+                            this.fTouchPlaneImage.setImage(image);
+                        }
+                        this.fTouchPlane.setText(fTouchPlaneItem.getName()
+                                + "(+" + (int) (Ships.touchPlaneAttackCompensation(fTouchPlaneItem) * 100) + "%)");
                     } else {
-                        ship = ps.getAfterFriendCombined().get(idx - 6);
+                        this.fTouchPlaneImage.setFitWidth(0);
+                        this.fTouchPlaneImage.setFitHeight(0);
+                        this.fTouchPlane.setText("なし");
                     }
-                    this.tykuCI.setText(Ships.toName(ship));
+                    // 敵触接
+                    SlotitemMst eTouchPlaneItem = slotitemMst.get(stage1.getTouchPlane().get(1));
+                    if (eTouchPlaneItem != null) {
+                        Image image = Items.itemImage(eTouchPlaneItem);
+                        if (image != null) {
+                            this.eTouchPlaneImage.setImage(image);
+                        }
+                        this.eTouchPlane.setText(eTouchPlaneItem.getName()
+                                + "(+" + (int) (Ships.touchPlaneAttackCompensation(eTouchPlaneItem) * 100) + "%)");
+                    } else {
+                        this.eTouchPlaneImage.setFitWidth(0);
+                        this.eTouchPlaneImage.setFitHeight(0);
+                        this.eTouchPlane.setText("なし");
+                    }
+                }
+                if (stage2 != null) {
+                    // 対空CI
+                    if (stage2.getAirFire() != null && stage2.getAirFire().getIdx() != null) {
+                        // インデックスは0始まり
+                        int idx = stage2.getAirFire().getIdx();
+                        Ship ship;
+                        if (idx < 6) {
+                            ship = ps.getAfterFriend().get(idx);
+                        } else {
+                            ship = ps.getAfterFriendCombined().get(idx - 6);
+                        }
+                        this.tykuCI.setText(Ships.toName(ship));
+                    }
                 }
             }
         }
@@ -508,7 +510,7 @@ public class BattleDetail extends WindowController {
         }
         if (this.battle instanceof INightToDayBattle) {
             // 特殊夜戦適用
-            ps.applyMidnightBattle((IMidnightBattle) this.battle);
+            ps.applyMidnightBattle((INightToDayBattle) this.battle);
 
             BattleDetailPhase phasePane = new BattleDetailPhase(ps);
             phasePane.setText("特殊夜戦");

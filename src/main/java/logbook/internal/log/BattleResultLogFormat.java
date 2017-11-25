@@ -105,9 +105,9 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
 
         if (battle instanceof IKouku) {
             Kouku kouku = ((IKouku) battle).getKouku();
-            Stage1 stage1 = kouku.getStage1();
 
-            if (stage1 != null) {
+            if (kouku != null && kouku.getStage1() != null) {
+                Stage1 stage1 = kouku.getStage1();
                 Map<Integer, SlotitemMst> slotitemMst = SlotitemMstCollection.get()
                         .getSlotitemMap();
                 // 制空権
