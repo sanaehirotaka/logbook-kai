@@ -24,6 +24,7 @@ logbook.api.ApiReqCombinedBattleBattleresult
 logbook.api.ApiReqCombinedBattleEachBattle
 logbook.api.ApiReqCombinedBattleEcBattle
 logbook.api.ApiReqCombinedBattleEcMidnightBattle
+logbook.api.ApiReqCombinedBattleEcNightToDay
 logbook.api.ApiReqCombinedBattleGobackPort
 logbook.api.ApiReqCombinedBattleLdAirbattle
 logbook.api.ApiReqCombinedBattleMidnightBattle
@@ -53,5 +54,4 @@ logbook.api.ApiReqSortieAirbattle
 logbook.api.ApiReqSortieBattle
 logbook.api.ApiReqSortieBattleresult
 logbook.api.ApiReqSortieLdAirbattle
-logbook.api.ApiReqSortieNightToDay
 logbook.api.ApiStart2

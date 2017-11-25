@@ -273,6 +273,42 @@ public class BattleTypes {
     }
 
     /**
+     * 夜戦→昼戦を表します
+     */
+    public interface INightToDayBattle extends IBattle, ISortieBattle {
+
+        /**
+         * api_touch_planeを取得します。
+         * @return api_touch_plane
+         */
+        List<Integer> getTouchPlane();
+
+        /**
+         * api_flare_posを取得します。
+         * @return api_flare_pos
+         */
+        List<Integer> getFlarePos();
+
+        /**
+         * api_n_hougeki1を取得します。
+         * @return api_n_hougeki1
+         */
+        BattleTypes.MidnightHougeki getNHougeki1();
+
+        /**
+         * api_n_hougeki2を取得します。
+         * @return api_n_hougeki2
+         */
+        BattleTypes.MidnightHougeki getNHougeki2();
+
+        /**
+         * api_day_flagを取得します。
+         * @return api_day_flag
+         */
+        Boolean getDayFlag();
+    }
+
+    /**
      * 陣形を表します
      */
     public interface IFormation extends IBattle {
@@ -867,6 +903,9 @@ public class BattleTypes {
         /** api_at_type */
         private List<Integer> atType;
 
+        /** api_n_mother_list */
+        private List<Integer> nMotherList;
+
         /** api_df_list */
         private List<List<Integer>> dfList;
 
@@ -896,6 +935,7 @@ public class BattleTypes {
             JsonHelper.bind(json)
                     .set("api_at_list", bean::setAtList, JsonHelper::toIntegerList)
                     .set("api_at_type", bean::setAtType, JsonHelper::toIntegerList)
+                    .set("api_n_mother_list", bean::setNMotherList, JsonHelper::toIntegerList)
                     .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))

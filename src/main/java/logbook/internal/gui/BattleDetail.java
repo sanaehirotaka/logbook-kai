@@ -21,6 +21,7 @@ import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.BattleTypes.INSupport;
+import logbook.bean.BattleTypes.INightToDayBattle;
 import logbook.bean.BattleTypes.ISortieHougeki;
 import logbook.bean.BattleTypes.ISupport;
 import logbook.bean.BattleTypes.Kouku;
@@ -223,6 +224,9 @@ public class BattleDetail extends WindowController {
         }
     }
 
+    /**
+     * 各フェイズの表示
+     */
     private void setPhase() {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap);
 
@@ -232,6 +236,59 @@ public class BattleDetail extends WindowController {
         phaseBeforePane.setText("戦闘前");
         phases.add(phaseBeforePane);
 
+        if (!(this.battle instanceof INightToDayBattle)) {
+            // 夜戦→昼戦以外
+
+            // 基地航空隊戦フェイズ(噴式強襲)
+            this.airBaseInjectionAttack(ps, phases);
+            // 航空戦フェイズ(噴式強襲)
+            this.injectionKouku(ps, phases);
+            // 基地航空隊戦フェイズ
+            this.airBaseAttack(ps, phases);
+            // 航空戦フェイズ
+            this.kouku(ps, phases);
+            // 支援フェイズ
+            this.support(ps, phases);
+            // 砲雷撃戦フェイズ
+            this.sortieHougeki(ps, phases);
+            // 航空戦
+            this.airbattle(ps, phases);
+            // 夜戦支援
+            this.nSupport(ps, phases);
+            // 特殊夜戦
+            this.midnightBattle(ps, phases);
+            // 夜戦
+            this.midnight(ps, phases);
+        } else {
+            // 夜戦→昼戦以外
+
+            // 夜戦支援
+            this.nSupport(ps, phases);
+            // 特殊夜戦
+            this.midnightBattle(ps, phases);
+            // 基地航空隊戦フェイズ(噴式強襲)
+            this.airBaseInjectionAttack(ps, phases);
+            // 航空戦フェイズ(噴式強襲)
+            this.injectionKouku(ps, phases);
+            // 基地航空隊戦フェイズ
+            this.airBaseAttack(ps, phases);
+            // 航空戦フェイズ
+            this.kouku(ps, phases);
+            // 支援フェイズ
+            this.support(ps, phases);
+            // 砲雷撃戦フェイズ
+            this.sortieHougeki(ps, phases);
+        }
+
+        ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
+    }
+
+    /**
+     * 基地航空隊戦フェイズ(噴式強襲)
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void airBaseInjectionAttack(PhaseState ps, List<Node> phases) {
         // 基地航空隊戦フェイズ(噴式強襲)
         if (this.battle instanceof IAirBaseAttack) {
             if (((IAirBaseAttack) this.battle).getAirBaseInjection() != null) {
@@ -255,6 +312,14 @@ public class BattleDetail extends WindowController {
                 phases.add(phasePane);
             }
         }
+    }
+
+    /**
+     * 航空戦フェイズ(噴式強襲)
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void injectionKouku(PhaseState ps, List<Node> phases) {
         // 航空戦フェイズ(噴式強襲)
         if (this.battle instanceof IKouku) {
             if (((IKouku) this.battle).getInjectionKouku() != null) {
@@ -279,6 +344,14 @@ public class BattleDetail extends WindowController {
                 phases.add(phasePane);
             }
         }
+    }
+
+    /**
+     * 基地航空隊戦フェイズ
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void airBaseAttack(PhaseState ps, List<Node> phases) {
         // 基地航空隊戦フェイズ
         if (this.battle instanceof IAirBaseAttack) {
             if (((IAirBaseAttack) this.battle).getAirBaseAttack() != null) {
@@ -301,6 +374,14 @@ public class BattleDetail extends WindowController {
                 phases.add(phasePane);
             }
         }
+    }
+
+    /**
+     * 航空戦フェイズ
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void kouku(PhaseState ps, List<Node> phases) {
         // 航空戦フェイズ
         if (this.battle instanceof IKouku) {
             if (((IKouku) this.battle).getKouku() != null) {
@@ -324,6 +405,14 @@ public class BattleDetail extends WindowController {
                 phases.add(phasePane);
             }
         }
+    }
+
+    /**
+     * 支援フェイズ
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void support(PhaseState ps, List<Node> phases) {
         // 支援フェイズ
         if (this.battle instanceof ISupport) {
             SupportInfo support = ((ISupport) this.battle).getSupportInfo();
@@ -333,6 +422,14 @@ public class BattleDetail extends WindowController {
                 this.setSupportPhase(ps, phases, support);
             }
         }
+    }
+
+    /**
+     * 砲雷撃戦フェイズ
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void sortieHougeki(PhaseState ps, List<Node> phases) {
         // 砲雷撃戦フェイズ
         if (this.battle instanceof ISortieHougeki) {
             // 砲雷撃戦フェイズ適用
@@ -343,6 +440,14 @@ public class BattleDetail extends WindowController {
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
+    }
+
+    /**
+     * 航空戦
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void airbattle(PhaseState ps, List<Node> phases) {
         // 航空戦
         if (this.battle instanceof IAirbattle) {
             if (((IAirbattle) this.battle).getKouku2() != null) {
@@ -366,6 +471,14 @@ public class BattleDetail extends WindowController {
                 phases.add(phasePane);
             }
         }
+    }
+
+    /**
+     * 夜戦支援
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void nSupport(PhaseState ps, List<Node> phases) {
         // 夜戦支援
         if (this.battle instanceof INSupport) {
             SupportInfo support = ((INSupport) this.battle).getNSupportInfo();
@@ -375,6 +488,14 @@ public class BattleDetail extends WindowController {
                 this.setSupportPhase(ps, phases, support);
             }
         }
+    }
+
+    /**
+     * 特殊夜戦
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void midnightBattle(PhaseState ps, List<Node> phases) {
         // 特殊夜戦
         if (this.battle instanceof IMidnightBattle) {
             // 特殊夜戦適用
@@ -385,6 +506,23 @@ public class BattleDetail extends WindowController {
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
+        if (this.battle instanceof INightToDayBattle) {
+            // 特殊夜戦適用
+            ps.applyMidnightBattle((IMidnightBattle) this.battle);
+
+            BattleDetailPhase phasePane = new BattleDetailPhase(ps);
+            phasePane.setText("特殊夜戦");
+            phasePane.setExpanded(false);
+            phases.add(phasePane);
+        }
+    }
+
+    /**
+     * 夜戦
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void midnight(PhaseState ps, List<Node> phases) {
         // 夜戦
         if (this.midnight != null) {
             PhaseState phaseMidnight = new PhaseState(ps);
@@ -396,8 +534,6 @@ public class BattleDetail extends WindowController {
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
-
-        ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
     }
 
     /**

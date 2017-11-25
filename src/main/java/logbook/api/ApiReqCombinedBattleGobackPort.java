@@ -1,5 +1,7 @@
 package logbook.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -10,16 +12,16 @@ import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleResult;
 import logbook.bean.BattleResult.Escape;
-import logbook.bean.DeckPort;
-import logbook.bean.DeckPortCollection;
+import logbook.bean.Ship;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
 /**
+ * /kcsapi/api_req_sortie/goback_port
  * /kcsapi/api_req_combined_battle/goback_port
  *
  */
-@API("/kcsapi/api_req_combined_battle/goback_port")
+@API({ "/kcsapi/api_req_sortie/goback_port", "/kcsapi/api_req_combined_battle/goback_port" })
 public class ApiReqCombinedBattleGobackPort implements APIListenerSpi {
 
     @Override
@@ -36,12 +38,12 @@ public class ApiReqCombinedBattleGobackPort implements APIListenerSpi {
             // 退避
             Optional.of(escape.getEscapeIdx())
                     .map(e -> e.get(0))
-                    .map(this::getShipId)
+                    .map(i -> this.getShipId(log.getDeckMap(), i))
                     .ifPresent(escapeSet::add);
             // 護衛
             Optional.of(escape.getTowIdx())
                     .map(e -> e.get(0))
-                    .map(this::getShipId)
+                    .map(i -> this.getShipId(log.getDeckMap(), i))
                     .ifPresent(escapeSet::add);
         }
     }
@@ -49,18 +51,20 @@ public class ApiReqCombinedBattleGobackPort implements APIListenerSpi {
     /**
      * 退避した艦娘のIDを返します
      *
-     * @param index 第1艦隊が1～6、第2艦隊が7～12
+     * @param deckMap 艦隊スナップショット
+     * @param index 艦隊インデックス
      * @return 退避した艦娘のID
      */
-    private Integer getShipId(Integer index) {
-        Map<Integer, DeckPort> deckMap = DeckPortCollection.get()
-                .getDeckPortMap();
-        DeckPort deck;
-        if (index <= 6) {
-            deck = deckMap.get(1);
+    private Integer getShipId(Map<Integer, List<Ship>> deckMap, Integer index) {
+        List<Integer> decks = new ArrayList<>(deckMap.keySet());
+        decks.sort(Integer::compareTo);
+
+        Ship ship;
+        if ((index - 1) < Math.max(deckMap.get(decks.get(0)).size(), 6)) {
+            ship = deckMap.get(decks.get(0)).get(index - 1);
         } else {
-            deck = deckMap.get(2);
+            ship = deckMap.get(decks.get(1)).get(index - 6 - 1);
         }
-        return deck.getShip().get((index - 1) % 6);
+        return ship.getId();
     }
 }
