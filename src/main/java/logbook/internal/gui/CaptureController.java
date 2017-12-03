@@ -546,8 +546,6 @@ public class CaptureController extends WindowController {
         this.capture.getStyleClass().add(state.getClassName());
     }
 
-    private static final int WHITE = java.awt.Color.WHITE.getRGB();
-
     /**
      * トリムサイズを返します
      *
@@ -566,44 +564,46 @@ public class CaptureController extends WindowController {
         int w = 0;
         int h = 0;
 
+        int color = image.getRGB(0, 0);
+
         // 左トリム(上)
         for (int i = 0; i < width; i++) {
-            if (image.getRGB(i, startheightTop) != WHITE) {
+            if (image.getRGB(i, startheightTop) != color) {
                 x = i;
                 break;
             }
         }
         // 左トリム(下)
         for (int i = 0; i < width; i++) {
-            if (image.getRGB(i, startheightButton) != WHITE) {
+            if (image.getRGB(i, startheightButton) != color) {
                 x = Math.min(x, i);
                 break;
             }
         }
         // 上トリム
         for (int i = 0; i < height; i++) {
-            if (image.getRGB(startwidth, i) != WHITE) {
+            if (image.getRGB(startwidth, i) != color) {
                 y = i;
                 break;
             }
         }
         // 右トリム(上)
         for (int i = width - 1; i >= 0; i--) {
-            if (image.getRGB(i, startheightTop) != WHITE) {
+            if (image.getRGB(i, startheightTop) != color) {
                 w = (i - x) + 1;
                 break;
             }
         }
         // 右トリム(下)
         for (int i = width - 1; i >= 0; i--) {
-            if (image.getRGB(i, startheightButton) != WHITE) {
+            if (image.getRGB(i, startheightButton) != color) {
                 w = Math.max(w, (i - x) + 1);
                 break;
             }
         }
         // 下トリム
         for (int i = height - 1; i >= 0; i--) {
-            if (image.getRGB(startwidth, i) != WHITE) {
+            if (image.getRGB(startwidth, i) != color) {
                 h = (i - y) + 1;
                 break;
             }
