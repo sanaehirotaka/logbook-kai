@@ -202,18 +202,22 @@ public class FleetTabPane extends ScrollPane {
     private void updateShips() {
         this.message.setText(this.port.getName());
 
+        List<Ship> withoutEscape = this.shipList.stream()
+                .filter(s -> !Ships.isEscape(s))
+                .collect(Collectors.toList());
+
         // 制空値
         this.airSuperiority
-                .setText(Integer.toString(this.shipList.stream()
+                .setText(Integer.toString(withoutEscape.stream()
                         .mapToInt(Ships::airSuperiority)
                         .sum()));
         // 触接開始率
         this.touchPlaneStartProbability
-                .setText((int) Math.floor(Ships.touchPlaneStartProbability(this.shipList) * 100) + "%");
+                .setText((int) Math.floor(Ships.touchPlaneStartProbability(withoutEscape) * 100) + "%");
         // 判定式(33)
         this.setDecision33();
         // 艦娘レベル計
-        this.lvsum.setText(Integer.toString(this.shipList.stream().mapToInt(Ship::getLv).sum()));
+        this.lvsum.setText(Integer.toString(withoutEscape.stream().mapToInt(Ship::getLv).sum()));
 
         ObservableList<Node> childs = this.ships.getChildren();
         childs.clear();
