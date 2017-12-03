@@ -696,6 +696,7 @@ public class Ships {
                 case 2:
                     return 1.17D;
                 case 3:
+                case 4:
                     return 1.2D;
                 }
             }
