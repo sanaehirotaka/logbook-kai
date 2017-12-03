@@ -268,18 +268,20 @@ public class BattleDetail extends WindowController {
             this.nSupport(ps, phases);
             // 特殊夜戦
             this.midnightBattle(ps, phases);
+
+            PhaseState phaseSortie = new PhaseState(ps);
             // 基地航空隊戦フェイズ(噴式強襲)
-            this.airBaseInjectionAttack(ps, phases);
+            this.airBaseInjectionAttack(phaseSortie, phases);
             // 航空戦フェイズ(噴式強襲)
-            this.injectionKouku(ps, phases);
+            this.injectionKouku(phaseSortie, phases);
             // 基地航空隊戦フェイズ
-            this.airBaseAttack(ps, phases);
+            this.airBaseAttack(phaseSortie, phases);
             // 航空戦フェイズ
-            this.kouku(ps, phases);
+            this.kouku(phaseSortie, phases);
             // 支援フェイズ
-            this.support(ps, phases);
+            this.support(phaseSortie, phases);
             // 砲雷撃戦フェイズ
-            this.sortieHougeki(ps, phases);
+            this.sortieHougeki(phaseSortie, phases);
         }
 
         ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
