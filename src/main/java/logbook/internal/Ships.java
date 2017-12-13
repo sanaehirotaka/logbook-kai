@@ -464,7 +464,8 @@ public class Ships {
      * @return 加算される制空値
      */
     public static double airSuperiorityTykuAdditional(SlotitemMst itemMst, SlotItem item) {
-        if (SlotItemType.艦上戦闘機.equals(itemMst) || SlotItemType.水上戦闘機.equals(itemMst)) {
+        if (SlotItemType.艦上戦闘機.equals(itemMst) || SlotItemType.水上戦闘機.equals(itemMst)
+                || SlotItemType.局地戦闘機.equals(itemMst)) {
             return Optional.ofNullable(item.getLevel())
                     .map(level -> 0.2D * level)
                     .orElse(0D);
