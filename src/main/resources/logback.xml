@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-       <encoder>
-           <pattern>%date{ISO8601} %-5level %logger{12} [%thread] %msg%n</pattern>
-       </encoder>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level %logger{12} [%thread] %msg%n</pattern>
+        </encoder>
     </appender>
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-       <file>logs/app.log</file>
-       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-           <fileNamePattern>logs/%d{yyyy-MM,aux}/app-%d{yyyy-MM-dd}.log</fileNamePattern>
-       </rollingPolicy>
-       <encoder>
-           <pattern>%date{ISO8601} %-5level %logger{12} [%thread] %msg%n</pattern>
-       </encoder>
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/%d{yyyy-MM,aux}/app-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level %logger{12} [%thread] %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
     </appender>
-
-    <logger name="logbook" level="INFO">
-        <appender-ref ref="ROLLING" />
-    </logger>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="ROLLING" />
     </root>
 </configuration>
