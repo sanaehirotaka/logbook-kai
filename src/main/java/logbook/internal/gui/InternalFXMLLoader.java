@@ -11,15 +11,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import logbook.plugin.PluginContainer;
 
-final class InternalFXMLLoader {
+public final class InternalFXMLLoader {
 
-    static FXMLLoader load(String name) throws IOException {
+    public static FXMLLoader load(String name) throws IOException {
         URL url = PluginContainer.getInstance().getClassLoader().getResource(name);
         return load(url);
     }
 
-    static FXMLLoader load(URL url) throws IOException {
+    public static FXMLLoader load(URL url) throws IOException {
         FXMLLoader loader = new FXMLLoader(url);
+        loader.setClassLoader(PluginContainer.getInstance().getClassLoader());
         return loader;
     }
 
