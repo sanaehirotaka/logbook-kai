@@ -6,7 +6,6 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,18 +34,13 @@ import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCollection;
 import logbook.bean.Basic;
 import logbook.bean.BattleLog;
-import logbook.bean.BattleTypes.CombinedType;
-import logbook.bean.BattleTypes.IFormation;
-import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
-import logbook.bean.MapStartNext;
 import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
-import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
 import logbook.internal.LoggerHolder;
@@ -190,16 +184,9 @@ public class MainController extends WindowController {
                     .getBattleResult();
 
             if (log != null && log.getBattle() != null) {
-                MapStartNext last = log.getNext().get(log.getNext().size() - 1);
-                CombinedType combinedType = log.getCombinedType();
-                Map<Integer, List<Ship>> deckMap = log.getDeckMap();
-                Map<Integer, SlotItem> itemMap = log.getItemMap();
-                IFormation battle = log.getBattle();
-                IMidnightBattle midnight = log.getMidnight();
-
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                         "現在の戦闘", c -> {
-                            ((BattleDetail) c).setData(last, combinedType, deckMap, itemMap, battle, midnight);
+                            ((BattleDetail) c).setInterval(() -> AppCondition.get().getBattleResult());
                         }, null);
             } else {
                 Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.getWindow());

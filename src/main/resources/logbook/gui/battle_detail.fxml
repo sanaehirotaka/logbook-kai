@@ -16,7 +16,7 @@
 
 <ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
    <content>
-      <VBox fx:id="phase">
+      <VBox fx:id="detail">
          <children>
             <HBox>
                <children>
@@ -150,6 +150,7 @@
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </VBox.margin>
             </HBox>
+            <VBox fx:id="phase" />
          </children>
       </VBox>
    </content>

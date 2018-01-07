@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,6 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.CombinedType;
@@ -62,6 +69,10 @@ public class BattleDetail extends WindowController {
     /** 夜戦 */
     private IMidnightBattle midnight;
 
+    /** ルート要素 */
+    @FXML
+    private VBox detail;
+
     /** フェーズ */
     @FXML
     private VBox phase;
@@ -110,6 +121,48 @@ public class BattleDetail extends WindowController {
     @FXML
     private Label tykuCI;
 
+    /** 周期タイマー */
+    private Timeline timeline = new Timeline();
+
+    /** ハッシュ・コード */
+    private int hashCode;
+
+    /**
+     * 戦況表示を定期的に更新して表示します。
+     *
+     * @param supplier 戦闘ログのサプライヤー
+     */
+    void setInterval(Supplier<BattleLog> supplier) {
+        this.timeline.setCycleCount(Animation.INDEFINITE);
+        this.timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.millis(1000),
+                e -> this.setData(supplier.get())));
+        this.timeline.play();
+        this.setData(supplier.get());
+    }
+
+    /**
+     * 戦況表示
+     *
+     * @param log 戦闘ログ
+     */
+    void setData(BattleLog log) {
+        if (log != null && log.getBattle() != null) {
+            int hashCode = log.hashCode();
+            if (this.hashCode == hashCode) {
+                return;
+            }
+            this.hashCode = hashCode;
+
+            MapStartNext last = log.getNext().get(log.getNext().size() - 1);
+            CombinedType combinedType = log.getCombinedType();
+            Map<Integer, List<Ship>> deckMap = log.getDeckMap();
+            Map<Integer, SlotItem> itemMap = log.getItemMap();
+            IFormation battle = log.getBattle();
+            IMidnightBattle midnight = log.getMidnight();
+            this.setData(last, combinedType, deckMap, itemMap, battle, midnight);
+        }
+    }
+
     /**
      * 戦況表示
      * @param last 出撃/進撃
@@ -137,7 +190,7 @@ public class BattleDetail extends WindowController {
      */
     @FXML
     void storeImageAction(ActionEvent event) {
-        Tools.Conrtols.storeSnapshot(this.phase, "戦闘ログのスナップショット", this.getWindow());
+        Tools.Conrtols.storeSnapshot(this.detail, "戦闘ログのスナップショット", this.getWindow());
     }
 
     private void update() {
@@ -166,6 +219,16 @@ public class BattleDetail extends WindowController {
                 .filter(Objects::nonNull)
                 .mapToInt(Ships::airSuperiority)
                 .sum()));
+
+        // 初期化
+        this.dispSeiku.setText("");
+        this.fTouchPlaneImage.setFitWidth(0);
+        this.fTouchPlaneImage.setFitHeight(0);
+        this.fTouchPlane.setText("");
+        this.eTouchPlaneImage.setFitWidth(0);
+        this.eTouchPlaneImage.setFitHeight(0);
+        this.eTouchPlane.setText("");
+        this.tykuCI.setText("");
 
         if (this.battle instanceof IKouku) {
             Kouku kouku = ((IKouku) this.battle).getKouku();
@@ -233,6 +296,7 @@ public class BattleDetail extends WindowController {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap);
 
         List<Node> phases = this.phase.getChildren();
+        phases.clear();
 
         BattleDetailPhase phaseBeforePane = new BattleDetailPhase(ps);
         phaseBeforePane.setText("戦闘前");
@@ -563,5 +627,20 @@ public class BattleDetail extends WindowController {
         phasePane.setText("支援フェイズ");
         phasePane.setExpanded(false);
         phases.add(phasePane);
+    }
+
+    @Override
+    public void setWindow(Stage window) {
+        super.setWindow(window);
+        this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onClose);
+    }
+
+    /**
+     * ウインドウを閉じる時のアクション
+     *
+     * @param event WindowEvent
+     */
+    private void onClose(WindowEvent event) {
+        this.timeline.stop();
     }
 }
