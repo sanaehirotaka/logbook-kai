@@ -222,9 +222,12 @@ public class BattleDetail extends WindowController {
 
         // 初期化
         this.dispSeiku.setText("");
+        this.dispSeiku.getStyleClass().removeIf(n -> n.startsWith("dispseiku"));
+        this.fTouchPlaneImage.setImage(null);
         this.fTouchPlaneImage.setFitWidth(0);
         this.fTouchPlaneImage.setFitHeight(0);
         this.fTouchPlane.setText("");
+        this.eTouchPlaneImage.setImage(null);
         this.eTouchPlaneImage.setFitWidth(0);
         this.eTouchPlaneImage.setFitHeight(0);
         this.eTouchPlane.setText("");
