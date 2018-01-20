@@ -1,0 +1,24 @@
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "レベル", "value": 150},
+        {"type": "艦隊", "count_type": "火力", "value": 360},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 50, "order": 1}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["重巡洋艦"]},
+                {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘"}
+            ]
+        }
+    ]
+}

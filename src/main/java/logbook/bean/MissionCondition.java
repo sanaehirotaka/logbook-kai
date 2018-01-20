@@ -151,6 +151,9 @@ public class MissionCondition implements Predicate<List<Ship>> {
         if ("レベル".equals(this.countType)) {
             return this.fleetStatus(ships, Ship::getLv) >= this.value;
         }
+        if ("火力".equals(this.countType)) {
+            return this.fleetStatus(ships, ship -> ship.getKaryoku().get(0)) >= this.value;
+        }
         if ("対潜".equals(this.countType)) {
             return this.fleetStatus(ships, ship -> ship.getTaisen().get(0)) >= this.value;
         }
