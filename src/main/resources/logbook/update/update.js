@@ -19,6 +19,7 @@ var StandardOpenOption = java.nio.file.StandardOpenOption;
 var StandardCharsets = java.nio.charset.StandardCharsets;
 var Collectors = java.util.stream.Collectors;
 var ZipFile = java.util.zip.ZipFile;
+var EventListener = org.w3c.dom.events.EventListener;
 
 // 更新スクリプト
 var scriptFile = System.getProperty("update_script");
@@ -217,11 +218,23 @@ UpdateUI.prototype.startup = function() {
     vbox.getChildren().addAll(stackPane1, stackPane2);
     pane.getChildren().add(vbox);
 
+    var linkListener = new EventListener() {
+        handleEvent: function (e) {
+            java.awt.Desktop.getDesktop()
+                    .browse(URI.create(e.getTarget().getAttribute("href")));
+            e.preventDefault();
+        }
+    }
     var releaseNote = function() {
         if (webEngine.executeScript("window.marked") && release.body) {
             var body = webEngine.executeScript("document.body");
             var window = webEngine.executeScript("window");
             body.setMember("innerHTML", window.call("marked", release.body));
+
+            var nodes = webEngine.executeScript("document.getElementsByTagName('a')");
+            for (var i = 0; i < nodes.length; i++) {
+                nodes[i].addEventListener("click", linkListener, false);
+            }
         }
     }
 
