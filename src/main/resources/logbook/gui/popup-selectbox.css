@@ -1,0 +1,30 @@
+.popup-selectbox {
+    -fx-font-family: "Meiryo UI";
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-color, -17%),
+        derive(-fx-color, -30%)), -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 0;
+    -fx-alignment: CENTER; /* VBox */
+    -fx-spacing: 0; /* VBox */
+    -fx-padding: 0.083333em; /* 1 1 1 1 */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 12, 0.0, 0, 8);
+}
+
+.popup-selectbox .popup-selectbox-menu {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-alignment: center-left;
+    -fx-max-width: infinity;
+}
+
+.popup-selectbox .popup-selectbox-menu:focused,
+.popup-selectbox .popup-selectbox-menu:hover {
+    -fx-background: -fx-selection-bar;
+    -fx-background-color: -fx-background;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+.popup-selectbox .pagination .pagination-control {
+    /*-fx-font-size: 1.1em;*/
+}
