@@ -29,6 +29,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -663,10 +664,28 @@ public class ShipTablePane extends VBox {
 
     @FXML
     void addLabel() {
+        if (this.table.getSelectionModel()
+                .getSelectedItems()
+                .isEmpty()) {
+            Tools.Conrtols.alert(AlertType.INFORMATION,
+                    "艦娘が選ばれていません",
+                    "ラベルを追加する艦娘を選択してください",
+                    this.getScene().getWindow());
+            return;
+        }
+        String shipNames = this.table.getSelectionModel()
+                .getSelectedItems()
+                .stream()
+                .map(ship -> Ships.shipMst(ship.getShip()).map(ShipMst::getName).orElse(""))
+                .collect(Collectors.joining(","));
+        if (shipNames.length() > 50) {
+            shipNames = shipNames.substring(0, 50) + "...";
+        }
+
         TextInputDialog dialog = new TextInputDialog("");
         dialog.initOwner(this.getScene().getWindow());
         dialog.setTitle("艦娘にラベルを追加");
-        dialog.setHeaderText("ラベルを追加");
+        dialog.setHeaderText(shipNames + "にラベルを追加します");
 
         TextFields.bindAutoCompletion(dialog.getEditor(), new SuggestSupport(this.labelValue.getItems()));
 
@@ -692,6 +711,24 @@ public class ShipTablePane extends VBox {
 
     @FXML
     void removeLabel() {
+        if (this.table.getSelectionModel()
+                .getSelectedItems()
+                .isEmpty()) {
+            Tools.Conrtols.alert(AlertType.INFORMATION,
+                    "艦娘が選ばれていません",
+                    "ラベルを除去する艦娘を選択してください",
+                    this.getScene().getWindow());
+            return;
+        }
+        String shipNames = this.table.getSelectionModel()
+                .getSelectedItems()
+                .stream()
+                .map(ship -> Ships.shipMst(ship.getShip()).map(ShipMst::getName).orElse(""))
+                .collect(Collectors.joining(","));
+        if (shipNames.length() > 50) {
+            shipNames = shipNames.substring(0, 50) + "...";
+        }
+
         Set<String> labels = new TreeSet<>();
         val selections = this.table.getSelectionModel()
                 .getSelectedItems();
@@ -703,7 +740,7 @@ public class ShipTablePane extends VBox {
         dialog.initOwner(this.getScene().getWindow());
         dialog.getItems().addAll(labels);
         dialog.setTitle("艦娘からラベルを除去");
-        dialog.setHeaderText("ラベルを除去");
+        dialog.setHeaderText(shipNames + "からラベルを除去");
 
         val result = dialog.showAndWait();
         if (result.isPresent()) {
