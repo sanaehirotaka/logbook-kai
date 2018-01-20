@@ -35,82 +35,82 @@ import logbook.internal.Ships;
 public class ShipItem {
 
     /** ID */
-    private IntegerProperty id;
+    private IntegerProperty id = new SimpleIntegerProperty();
 
     /** 艦娘 */
-    private ObjectProperty<Ship> ship;
+    private ObjectProperty<Ship> ship = new SimpleObjectProperty<>();
 
     /** 艦種 */
-    private StringProperty type;
+    private StringProperty type = new SimpleStringProperty();
 
     /** Lv */
-    private IntegerProperty lv;
+    private IntegerProperty lv = new SimpleIntegerProperty();
 
     /** 経験値 */
-    private IntegerProperty exp;
-    
+    private IntegerProperty exp = new SimpleIntegerProperty();
+
     /** Next */
-    private IntegerProperty next;
+    private IntegerProperty next = new SimpleIntegerProperty();
 
     /** cond */
-    private IntegerProperty cond;
+    private IntegerProperty cond = new SimpleIntegerProperty();
 
     /** ラベル */
-    private ObjectProperty<Set<String>> label;
+    private ObjectProperty<Set<String>> label = new SimpleObjectProperty<>();
 
     /** 制空 */
-    private IntegerProperty seiku;
+    private IntegerProperty seiku = new SimpleIntegerProperty();
 
     /** 砲戦火力 */
-    private IntegerProperty hPower;
+    private IntegerProperty hPower = new SimpleIntegerProperty();
 
     /** 雷戦火力 */
-    private IntegerProperty rPower;
+    private IntegerProperty rPower = new SimpleIntegerProperty();
 
     /** 夜戦火力 */
-    private IntegerProperty yPower;
+    private IntegerProperty yPower = new SimpleIntegerProperty();
 
     /** 対潜火力 */
-    private IntegerProperty tPower;
+    private IntegerProperty tPower = new SimpleIntegerProperty();
 
     /** 火力 */
-    private IntegerProperty karyoku;
-    
+    private IntegerProperty karyoku = new SimpleIntegerProperty();
+
     /** 雷装 */
-    private IntegerProperty raisou;
-    
+    private IntegerProperty raisou = new SimpleIntegerProperty();
+
     /** 対空 */
-    private IntegerProperty taiku;
-    
+    private IntegerProperty taiku = new SimpleIntegerProperty();
+
     /** 装甲 */
-    private IntegerProperty soukou;
-    
+    private IntegerProperty soukou = new SimpleIntegerProperty();
+
     /** 回避 */
-    private IntegerProperty kaihi;
-    
+    private IntegerProperty kaihi = new SimpleIntegerProperty();
+
     /** 対潜(素) */
-    private IntegerProperty tais;
+    private IntegerProperty tais = new SimpleIntegerProperty();
 
     /** 索敵 */
-    private IntegerProperty sakuteki;
-    
+    private IntegerProperty sakuteki = new SimpleIntegerProperty();
+
     /** 運 */
-    private IntegerProperty lucky;
+    private IntegerProperty lucky = new SimpleIntegerProperty();
 
     /** 装備1 */
-    private IntegerProperty slot1;
+    private IntegerProperty slot1 = new SimpleIntegerProperty();
 
     /** 装備2 */
-    private IntegerProperty slot2;
+    private IntegerProperty slot2 = new SimpleIntegerProperty();
 
     /** 装備3 */
-    private IntegerProperty slot3;
+    private IntegerProperty slot3 = new SimpleIntegerProperty();
 
     /** 装備4 */
-    private IntegerProperty slot4;
+    private IntegerProperty slot4 = new SimpleIntegerProperty();
 
     /** 補強 */
-    private IntegerProperty slotEx;
+    private IntegerProperty slotEx = new SimpleIntegerProperty();
 
     /**
      * IDを取得します。
@@ -133,7 +133,7 @@ public class ShipItem {
      * @param id ID
      */
     public void setId(int id) {
-        this.id = new SimpleIntegerProperty(id);
+        this.id.setValue(id);
     }
 
     /**
@@ -157,7 +157,7 @@ public class ShipItem {
      * @param ship 艦娘
      */
     public void setShip(Ship ship) {
-        this.ship = new SimpleObjectProperty<>(ship);
+        this.ship.setValue(ship);
     }
 
     /**
@@ -181,7 +181,7 @@ public class ShipItem {
      * @param type 艦種
      */
     public void setType(String type) {
-        this.type = new SimpleStringProperty(type);
+        this.type.setValue(type);
     }
 
     /**
@@ -205,7 +205,7 @@ public class ShipItem {
      * @param lv Lv
      */
     public void setLv(int lv) {
-        this.lv = new SimpleIntegerProperty(lv);
+        this.lv.setValue(lv);
     }
 
     /**
@@ -229,9 +229,9 @@ public class ShipItem {
      * @param exp Exp
      */
     public void setExp(int exp) {
-        this.exp = new SimpleIntegerProperty(exp);
+        this.exp.setValue(exp);
     }
-    
+
     /**
      * Nextを取得します。
      * @return Next
@@ -253,7 +253,7 @@ public class ShipItem {
      * @param next Next
      */
     public void setNext(int next) {
-        this.next = new SimpleIntegerProperty(next);
+        this.next.setValue(next);
     }
 
     /**
@@ -277,7 +277,7 @@ public class ShipItem {
      * @param cond cond
      */
     public void setCond(int cond) {
-        this.cond = new SimpleIntegerProperty(cond);
+        this.cond.setValue(cond);
     }
 
     /**
@@ -301,7 +301,7 @@ public class ShipItem {
      * @param area ラベル
      */
     public void setLabel(Set<String> label) {
-        this.label = new SimpleObjectProperty<>(label);
+        this.label.setValue(label);
     }
 
     /**
@@ -325,7 +325,7 @@ public class ShipItem {
      * @param seiku 制空
      */
     public void setSeiku(int seiku) {
-        this.seiku = new SimpleIntegerProperty(seiku);
+        this.seiku.setValue(seiku);
     }
 
     /**
@@ -349,7 +349,7 @@ public class ShipItem {
      * @param hPower 砲戦火力
      */
     public void sethPower(int hPower) {
-        this.hPower = new SimpleIntegerProperty(hPower);
+        this.hPower.setValue(hPower);
     }
 
     /**
@@ -373,7 +373,7 @@ public class ShipItem {
      * @param rPower 雷戦火力
      */
     public void setrPower(int rPower) {
-        this.rPower = new SimpleIntegerProperty(rPower);
+        this.rPower.setValue(rPower);
     }
 
     /**
@@ -397,7 +397,7 @@ public class ShipItem {
      * @param yPower 夜戦火力
      */
     public void setyPower(int yPower) {
-        this.yPower = new SimpleIntegerProperty(yPower);
+        this.yPower.setValue(yPower);
     }
 
     /**
@@ -421,7 +421,7 @@ public class ShipItem {
      * @param tPower 対潜火力
      */
     public void settPower(int tPower) {
-        this.tPower = new SimpleIntegerProperty(tPower);
+        this.tPower.setValue(tPower);
     }
 
     /**
@@ -445,9 +445,9 @@ public class ShipItem {
      * @param karyoku 火力(素)
      */
     public void setKaryoku(int karyoku) {
-        this.karyoku = new SimpleIntegerProperty(karyoku);
+        this.karyoku.setValue(karyoku);
     }
-    
+
     /**
      * 雷装(素)を取得します。
      * @return 雷装(素)
@@ -469,7 +469,7 @@ public class ShipItem {
      * @param raisou 雷装(素)
      */
     public void setRaisou(int raisou) {
-        this.raisou = new SimpleIntegerProperty(raisou);
+        this.raisou.setValue(raisou);
     }
 
     /**
@@ -493,7 +493,7 @@ public class ShipItem {
      * @param taiku 対空(素)
      */
     public void setTaiku(int taiku) {
-        this.taiku = new SimpleIntegerProperty(taiku);
+        this.taiku.setValue(taiku);
     }
 
     /**
@@ -517,7 +517,7 @@ public class ShipItem {
      * @param soukou 装甲(素)
      */
     public void setSoukou(int soukou) {
-        this.soukou = new SimpleIntegerProperty(soukou);
+        this.soukou.setValue(soukou);
     }
 
     /**
@@ -541,7 +541,7 @@ public class ShipItem {
      * @param kaihi 回避(素)
      */
     public void setKaihi(int kaihi) {
-        this.kaihi = new SimpleIntegerProperty(kaihi);
+        this.kaihi.setValue(kaihi);
     }
 
     /**
@@ -565,7 +565,7 @@ public class ShipItem {
      * @param tPower 対潜(素)
      */
     public void setTais(int tais) {
-        this.tais = new SimpleIntegerProperty(tais);
+        this.tais.setValue(tais);
     }
 
     /**
@@ -589,7 +589,7 @@ public class ShipItem {
      * @param sakuteki 索敵(素)
      */
     public void setSakuteki(int sakuteki) {
-        this.sakuteki = new SimpleIntegerProperty(sakuteki);
+        this.sakuteki.setValue(sakuteki);
     }
 
     /**
@@ -613,7 +613,7 @@ public class ShipItem {
      * @param lucky 運(素)
      */
     public void setLucky(int luckey) {
-        this.lucky = new SimpleIntegerProperty(luckey);
+        this.lucky.setValue(luckey);
     }
 
     /**
@@ -637,7 +637,7 @@ public class ShipItem {
      * @param slot1 装備1
      */
     public void setSlot1(int slot1) {
-        this.slot1 = new SimpleIntegerProperty(slot1);
+        this.slot1.setValue(slot1);
     }
 
     /**
@@ -661,7 +661,7 @@ public class ShipItem {
      * @param slot2 装備2
      */
     public void setSlot2(int slot2) {
-        this.slot2 = new SimpleIntegerProperty(slot2);
+        this.slot2.setValue(slot2);
     }
 
     /**
@@ -685,7 +685,7 @@ public class ShipItem {
      * @param slot3 装備3
      */
     public void setSlot3(int slot3) {
-        this.slot3 = new SimpleIntegerProperty(slot3);
+        this.slot3.setValue(slot3);
     }
 
     /**
@@ -709,7 +709,7 @@ public class ShipItem {
      * @param slot4 装備4
      */
     public void setSlot4(int slot4) {
-        this.slot4 = new SimpleIntegerProperty(slot4);
+        this.slot4.setValue(slot4);
     }
 
     /**
@@ -733,7 +733,7 @@ public class ShipItem {
      * @param slotEx 補強
      */
     public void setSlotEx(int slotEx) {
-        this.slotEx = new SimpleIntegerProperty(slotEx);
+        this.slotEx.setValue(slotEx);
     }
 
     @Override
@@ -847,7 +847,7 @@ public class ShipItem {
 
         return shipItem;
     }
-    
+
     /**
      * 装備のパラメータを合計する
      * @param ship 艦娘
@@ -857,9 +857,9 @@ public class ShipItem {
     private static int sumItemParam(Ship ship, Function<? super SlotitemMst, Integer> mapper) {
         Map<Integer, SlotItem> items = SlotItemCollection.get().getSlotitemMap();
         return Stream.concat(ship.getSlot().stream(), Stream.of(ship.getSlotEx()))
-        .map(items::get)
-        .map(Items::slotitemMst)
-        .mapToInt(e -> e.map(mapper).orElse(0))
-        .sum();
+                .map(items::get)
+                .map(Items::slotitemMst)
+                .mapToInt(e -> e.map(mapper).orElse(0))
+                .sum();
     }
 }

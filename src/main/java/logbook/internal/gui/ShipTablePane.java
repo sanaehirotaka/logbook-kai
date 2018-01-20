@@ -72,6 +72,14 @@ import lombok.val;
  */
 public class ShipTablePane extends VBox {
 
+    /** テキスト */
+    @FXML
+    private ToggleSwitch textFilter;
+
+    /** テキスト */
+    @FXML
+    private TextField textValue;
+
     /** 艦種 */
     @FXML
     private ToggleSwitch typeFilter;
@@ -195,6 +203,14 @@ public class ShipTablePane extends VBox {
     /** 補強増設 */
     @FXML
     private CheckBox slotExValue;
+
+    /** 遠征 */
+    @FXML
+    private ToggleSwitch missionFilter;
+
+    /** 遠征 */
+    @FXML
+    private CheckBox missionValue;
 
     /** テーブル */
     @FXML
@@ -381,6 +397,9 @@ public class ShipTablePane extends VBox {
             this.levelType.getSelectionModel().select(Operator.GE);
 
             // フィルターのバインド
+            this.textFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.textValue.setDisable(!nv);
+            });
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.escort.setDisable(!nv);
                 this.destroyer.setDisable(!nv);
@@ -417,7 +436,12 @@ public class ShipTablePane extends VBox {
             this.slotExFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.slotExValue.setDisable(!nv);
             });
+            this.missionFilter.selectedProperty().addListener((ob, ov, nv) -> {
+                this.missionValue.setDisable(!nv);
+            });
 
+            this.textFilter.selectedProperty().addListener(this::filterAction);
+            this.textValue.textProperty().addListener(this::filterAction);
             this.typeFilter.selectedProperty().addListener(this::filterAction);
             this.escort.selectedProperty().addListener(this::filterAction);
             this.destroyer.selectedProperty().addListener(this::filterAction);
@@ -445,9 +469,11 @@ public class ShipTablePane extends VBox {
             this.levelValue.textProperty().addListener(this::filterAction);
             this.levelType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
             this.labelFilter.selectedProperty().addListener(this::filterAction);
+            this.labelValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
             this.slotExFilter.selectedProperty().addListener(this::filterAction);
             this.slotExValue.selectedProperty().addListener(this::filterAction);
-            this.labelValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+            this.missionFilter.selectedProperty().addListener(this::filterAction);
+            this.missionValue.selectedProperty().addListener(this::filterAction);
 
             this.conditionValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
             TextFields.bindAutoCompletion(this.conditionValue, new SuggestSupport("53", "50", "49", "33", "30", "20"));
@@ -731,6 +757,11 @@ public class ShipTablePane extends VBox {
     private Predicate<ShipItem> createFilter() {
         Predicate<ShipItem> filter = null;
 
+        if (this.textFilter.isSelected()) {
+            filter = ShipFilter.TextFilter.builder()
+                    .text(this.textValue.getText())
+                    .build();
+        }
         if (this.typeFilter.isSelected()) {
             Set<String> types = Arrays.asList(
                     this.escort,
@@ -757,9 +788,9 @@ public class ShipTablePane extends VBox {
                     .map(CheckBox::getText)
                     .collect(Collectors.toSet());
 
-            filter = ShipFilter.TypeFilter.builder()
+            filter = this.filterAnd(filter, ShipFilter.TypeFilter.builder()
                     .types(types)
-                    .build();
+                    .build());
         }
         if (this.condFilter.isSelected()) {
             int condition = Integer.parseInt(this.conditionValue.getText().isEmpty() ? "0"
@@ -786,6 +817,11 @@ public class ShipTablePane extends VBox {
         if (this.slotExFilter.isSelected()) {
             filter = this.filterAnd(filter, ShipFilter.SlotExFilter.builder()
                     .slotEx(this.slotExValue.isSelected())
+                    .build());
+        }
+        if (this.missionFilter.isSelected()) {
+            filter = this.filterAnd(filter, ShipFilter.MissionFilter.builder()
+                    .mission(this.missionValue.isSelected())
                     .build());
         }
         return filter;
