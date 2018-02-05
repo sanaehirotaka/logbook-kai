@@ -1,5 +1,8 @@
 package logbook.internal;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -14,6 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 
 import com.jpexs.decompiler.flash.SWF;
 import com.jpexs.decompiler.flash.tags.DefineSpriteTag;
@@ -98,7 +107,7 @@ public class SWFListener implements ContentListenerSpi {
                     synchronized (shipMst) {
                         // ./resources/ships/[name]
                         Path dir = ShipMst.getResourcePathDir(shipMst);
-                        this.storeImages(dir, in);
+                        this.storeShipImages(dir, in);
                     }
                 }
             }
@@ -144,7 +153,7 @@ public class SWFListener implements ContentListenerSpi {
      * @throws IOException 入出力例外またはSWFファイルの解析に失敗した場合
      * @throws InterruptedException SWFファイルの解析に失敗した場合
      */
-    void storeImages(Path dir, InputStream in) throws IOException, InterruptedException {
+    void storeShipImages(Path dir, InputStream in) throws IOException, InterruptedException {
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
@@ -153,10 +162,26 @@ public class SWFListener implements ContentListenerSpi {
             if (e.getValue() instanceof ImageTag) {
                 ImageTag img = (ImageTag) e.getValue();
                 String ext = this.imageExt(img);
+                String name = img.getCharacterId() + "." + ext;
 
-                Path file = dir.resolve(img.getCharacterId() + "." + ext);
+                // 艦娘画像キャッシュ設定
+                ShipImageCacheStrategy strategy = AppConfig.get().getShipImageCacheStrategy();
 
-                Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
+                InputStream imageData = img.getImageData();
+                if (strategy == null || strategy.getFileNames() == null || strategy.getFileNames().contains(name)) {
+                    // 画像ファイルを再圧縮するオプション
+                    if (AppConfig.get().isShipImageCompress()) {
+                        InputStream compressedImageData = this.compressImage(imageData);
+                        if (compressedImageData != null) {
+                            imageData = compressedImageData;
+                            name = img.getCharacterId() + ".jpg";
+                        } else {
+                            imageData.reset();
+                        }
+                    }
+                    Path file = dir.resolve(name);
+                    Files.copy(imageData, file, StandardCopyOption.REPLACE_EXISTING);
+                }
             }
         }
         synchronized (Cache.class) {
@@ -258,5 +283,36 @@ public class SWFListener implements ContentListenerSpi {
             break;
         }
         return ext;
+    }
+
+    /**
+     * 画像をjpeg形式で再圧縮します。
+     *
+     * @param in InputStream
+     * @return InputStream
+     */
+    InputStream compressImage(InputStream in) {
+        try {
+            BufferedImage image = ImageIO.read(in);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
+                ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+                try {
+                    ImageWriteParam iwp = writer.getDefaultWriteParam();
+                    if (iwp.canWriteCompressed()) {
+                        iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                        iwp.setCompressionQuality(0.9f);
+                    }
+                    writer.setOutput(ios);
+                    writer.write(null, new IIOImage(image, null, null), iwp);
+                } finally {
+                    writer.dispose();
+                }
+            }
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

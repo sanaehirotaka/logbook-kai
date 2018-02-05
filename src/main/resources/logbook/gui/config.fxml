@@ -19,8 +19,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
    <children>
       <TabPane VBox.vgrow="ALWAYS">
          <tabs>
@@ -117,6 +118,27 @@
                               <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="所有艦娘一覧にラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
                            </children>
                         </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab closable="false" text="画像">
+               <content>
+                  <VBox styleClass="configInner">
+                     <children>
+                        <Label text="艦娘画像キャッシュ設定" />
+                        <TextFlow>
+                           <children>
+                              <RadioButton fx:id="shipImageCacheStrategyAll" mnemonicParsing="false" selected="true" text="全て">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="shipImage" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="shipImageCacheStrategyUsed" mnemonicParsing="false" text="使用される画像のみ" toggleGroup="$shipImage" />
+                              <RadioButton fx:id="shipImageCacheStrategyLimit" mnemonicParsing="false" text="制限(中破画像を小破以下で代替)" toggleGroup="$shipImage" />
+                           </children>
+                        </TextFlow>
+                        <CheckBox fx:id="shipImageCompress" mnemonicParsing="false" text="画像ファイルを再圧縮" />
                      </children>
                   </VBox>
                </content>

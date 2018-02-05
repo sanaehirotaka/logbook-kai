@@ -27,6 +27,7 @@ import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
 import logbook.internal.Config;
 import logbook.internal.LoggerHolder;
+import logbook.internal.ShipImageCacheStrategy;
 import logbook.internal.ThreadManager;
 import logbook.plugin.PluginContainer;
 
@@ -118,6 +119,25 @@ public class ConfigController extends WindowController {
     /** 報告書の保存先 */
     @FXML
     private TextField reportDir;
+
+    @FXML
+    private ToggleGroup shipImage;
+
+    /** 艦娘画像キャッシュ設定-全て */
+    @FXML
+    private RadioButton shipImageCacheStrategyAll;
+
+    /** 艦娘画像キャッシュ設定-使用される画像のみ */
+    @FXML
+    private RadioButton shipImageCacheStrategyUsed;
+
+    /** 艦娘画像キャッシュ設定-制限 */
+    @FXML
+    private RadioButton shipImageCacheStrategyLimit;
+
+    /** 画像ファイルを再圧縮 */
+    @FXML
+    private CheckBox shipImageCompress;
 
     /** 通信エラーの抑止 */
     @FXML
@@ -212,6 +232,23 @@ public class ConfigController extends WindowController {
         this.checkDoit.setSelected(conf.isCheckDoit());
         this.checkUpdate.setSelected(conf.isCheckUpdate());
         this.reportDir.setText(conf.getReportPath());
+        ShipImageCacheStrategy shipImageCacheStrategy = conf.getShipImageCacheStrategy();
+        if (shipImageCacheStrategy != null) {
+            switch (shipImageCacheStrategy) {
+            case ALL:
+                this.shipImageCacheStrategyAll.setSelected(true);
+                break;
+            case USED:
+                this.shipImageCacheStrategyUsed.setSelected(true);
+                break;
+            case LIMIT:
+                this.shipImageCacheStrategyLimit.setSelected(true);
+                break;
+            }
+        } else {
+            this.shipImageCacheStrategyAll.setSelected(true);
+        }
+        this.shipImageCompress.setSelected(conf.isShipImageCompress());
         this.connectionClose.setSelected(conf.isConnectionClose());
         this.listenPort.setText(Integer.toString(conf.getListenPort()));
         this.allowOnlyFromLocalhost.setSelected(conf.isAllowOnlyFromLocalhost());
@@ -280,6 +317,15 @@ public class ConfigController extends WindowController {
         conf.setCheckDoit(this.checkDoit.isSelected());
         conf.setCheckUpdate(this.checkUpdate.isSelected());
         conf.setReportPath(this.reportDir.getText());
+        ShipImageCacheStrategy shipImageCacheStrategy = ShipImageCacheStrategy.ALL;
+        if (this.shipImageCacheStrategyAll.isSelected())
+            shipImageCacheStrategy = ShipImageCacheStrategy.ALL;
+        if (this.shipImageCacheStrategyUsed.isSelected())
+            shipImageCacheStrategy = ShipImageCacheStrategy.USED;
+        if (this.shipImageCacheStrategyLimit.isSelected())
+            shipImageCacheStrategy = ShipImageCacheStrategy.LIMIT;
+        conf.setShipImageCacheStrategy(shipImageCacheStrategy);
+        conf.setShipImageCompress(this.shipImageCompress.isSelected());
         conf.setConnectionClose(this.connectionClose.isSelected());
         conf.setListenPort(Integer.parseInt(this.listenPort.getText()));
         conf.setAllowOnlyFromLocalhost(this.allowOnlyFromLocalhost.isSelected());

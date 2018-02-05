@@ -10,6 +10,7 @@ import java.util.Set;
 import logbook.internal.Config;
 import logbook.internal.Rank;
 import logbook.internal.SeaArea;
+import logbook.internal.ShipImageCacheStrategy;
 import lombok.Data;
 
 /**
@@ -149,6 +150,12 @@ public final class AppConfig implements Serializable {
 
     /** FFmpeg 拡張子 */
     private String ffmpegExt;
+
+    /** 艦娘画像キャッシュ設定 */
+    private ShipImageCacheStrategy shipImageCacheStrategy = ShipImageCacheStrategy.ALL;
+
+    /** 画像ファイルを再圧縮 */
+    private boolean shipImageCompress = false;
 
     /**
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、

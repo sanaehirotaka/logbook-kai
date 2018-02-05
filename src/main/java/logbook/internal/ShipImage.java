@@ -36,7 +36,7 @@ class ShipImage {
     private static final String[] NORMAL = { "1.jpg", "1.png" };
 
     /** 艦娘画像ファイル名(中破・大破) */
-    private static final String[] DAMAGED = { "3.jpg", "3.png" };
+    private static final String[] DAMAGED = { "3.jpg", "3.png", "1.jpg", "1.png" };
 
     /** 小破バナーアイコン */
     private static final String MC_BANNER_ICON0 = "res.common.MCBannerIcon_0.png";
