@@ -1,9 +1,5 @@
 package logbook.internal;
 
-import java.beans.ExceptionListener;
-import java.beans.XMLDecoder;
-import java.io.BufferedInputStream;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -82,7 +78,6 @@ public final class Config {
         this.write(entry.getKey(), entry.getValue());
     }
 
-    @SuppressWarnings("unchecked")
     private <T> T read(Class<T> clazz) {
         T instance = null;
         Path filepath;
@@ -101,28 +96,7 @@ public final class Config {
             }
         } catch (Exception e) {
             instance = null;
-            this.getListener().exceptionThrown(e);
-        }
-
-        // try read from XML
-        if (instance == null) {
-            filepath = this.xmlPath(clazz);
-            try {
-                if (!Files.isReadable(filepath) || (Files.size(filepath) <= 0)) {
-                    // ファイルが読み込めないまたはサイズがゼロの場合バックアップファイルを読み込む
-                    filepath = this.backupPath(filepath);
-                }
-                if (Files.isReadable(filepath)) {
-                    try (InputStream in = new BufferedInputStream(Files.newInputStream(filepath))) {
-                        try (XMLDecoder encoder = new XMLDecoder(in, this.getListener())) {
-                            instance = (T) encoder.readObject();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                instance = null;
-                this.getListener().exceptionThrown(e);
-            }
+            LoggerHolder.get().warn("アプリケーションの設定を読み込み中に例外が発生", e); //$NON-NLS-1$
         }
         return instance;
     }
@@ -150,36 +124,17 @@ public final class Config {
             try (Writer writer = Files.newBufferedWriter(filepath, StandardOpenOption.CREATE)) {
                 this.mapper.writeValue(writer, instance);
             }
-
-            // XML形式の古い設定ファイルを削除する
-            // .backup ファイルを削除して、.xml ファイルを .backupにリネームする
-            Path xml = this.xmlPath(clazz);
-            Path xmlbackup = this.backupPath(xml);
-            if (Files.exists(xmlbackup)) {
-                Files.deleteIfExists(xmlbackup);
-            }
-            if (Files.exists(xml)) {
-                Files.move(xml, xmlbackup, StandardCopyOption.REPLACE_EXISTING);
-            }
         } catch (Exception e) {
-            this.getListener().exceptionThrown(e);
+            LoggerHolder.get().warn("アプリケーションの設定を読み込み中に例外が発生", e); //$NON-NLS-1$
         }
     }
 
-    private Path xmlPath(Class<?> clazz) {
-        return this.dir.resolve(clazz.getCanonicalName() + ".xml");
-    }
-
     private Path jsonPath(Class<?> clazz) {
-        return this.dir.resolve(clazz.getCanonicalName() + ".json");
+        return this.dir.resolve(clazz.getCanonicalName() + ".json"); //$NON-NLS-1$
     }
 
     private Path backupPath(Path filepath) {
         return filepath.resolveSibling(filepath.getFileName() + ".backup"); //$NON-NLS-1$
-    }
-
-    private ExceptionListener getListener() {
-        return e -> LoggerHolder.get().warn("アプリケーションの設定を読み込み中に例外が発生", e); //$NON-NLS-1$
     }
 
     /**
