@@ -49,25 +49,7 @@ public interface ShipFilter extends Predicate<ShipItem> {
         public boolean test(ShipItem ship) {
             if (ship == null)
                 return false;
-            return eval(ship.getCond(), this.conditionValue, this.conditionType);
-        }
-
-        static boolean eval(int v1, int v2, Operator ope) {
-            switch (ope) {
-            case EQ:
-                return v1 == v2;
-            case GE:
-                return v1 >= v2;
-            case GT:
-                return v1 > v2;
-            case LE:
-                return v1 <= v2;
-            case LT:
-                return v1 < v2;
-            case NE:
-                return v1 != v2;
-            }
-            return false;
+            return this.conditionType.compare(ship.getCond(), this.conditionValue);
         }
     }
 
@@ -84,7 +66,7 @@ public interface ShipFilter extends Predicate<ShipItem> {
         public boolean test(ShipItem ship) {
             if (ship == null)
                 return false;
-            return CondFilter.eval(ship.getLv(), this.levelValue, this.levelType);
+            return this.levelType.compare(ship.getLv(), this.levelValue);
         }
     }
 
