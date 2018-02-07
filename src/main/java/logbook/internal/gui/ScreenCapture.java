@@ -17,18 +17,14 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.metadata.IIOMetadata;
-import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 
 import javafx.application.Platform;
@@ -322,49 +318,6 @@ class ScreenCapture {
             }
         }
         return out.toByteArray();
-    }
-
-    /**
-     * アニメーションGIFを作成します
-     *
-     * @param out 出力先
-     * @param images JPEG形式などにエンコード済みの画像ファイルのバイト配列
-     * @param delay 表示する際の遅延時間
-     * @throws IOException 入出力例外
-     */
-    static void createAnimetedGIF(OutputStream out, List<byte[]> images, Duration delay) throws IOException {
-        try (ImageOutputStream iout = ImageIO.createImageOutputStream(out)) {
-            ImageWriter writer = ImageIO.getImageWritersByFormatName("gif").next();
-            try {
-                ImageWriteParam param = writer.getDefaultWriteParam();
-
-                writer.setOutput(iout);
-                writer.prepareWriteSequence(writer.getDefaultStreamMetadata(param));
-
-                for (byte[] image : images) {
-                    BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(image));
-
-                    // Delay timeを設定する
-                    // 参考: https://docs.oracle.com/javase/jp/8/docs/api/javax/imageio/metadata/doc-files/gif_metadata.html
-                    IIOMetadata metadata = writer.getDefaultImageMetadata(new ImageTypeSpecifier(bufferedImage), param);
-                    IIOMetadataNode root = new IIOMetadataNode("javax_imageio_gif_image_1.0");
-                    IIOMetadataNode gce = new IIOMetadataNode("GraphicControlExtension");
-                    gce.setAttribute("disposalMethod", "none");
-                    gce.setAttribute("userInputFlag", "FALSE");
-                    gce.setAttribute("transparentColorFlag", "FALSE");
-                    gce.setAttribute("transparentColorIndex", "0");
-                    // 100分の1秒単位なので10で割る
-                    gce.setAttribute("delayTime", Long.toString(delay.toMillis() / 10));
-                    root.appendChild(gce);
-                    metadata.mergeTree("javax_imageio_gif_image_1.0", root);
-
-                    writer.writeToSequence(new IIOImage(bufferedImage, null, metadata), param);
-                }
-                writer.endWriteSequence();
-            } finally {
-                writer.dispose();
-            }
-        }
     }
 
     /**

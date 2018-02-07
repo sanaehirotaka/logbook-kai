@@ -1,13 +1,11 @@
 package logbook.internal.gui;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
@@ -46,13 +44,8 @@ public class CaptureSaveController extends WindowController {
 
     private static final String JPEG = "jpg";
 
-    private static final String GIF = "gif";
-
     @FXML
     private ChoiceBox<String> type;
-
-    @FXML
-    private TextField fps;
 
     @FXML
     private CheckBox tile;
@@ -74,7 +67,7 @@ public class CaptureSaveController extends WindowController {
 
     @FXML
     void initialize() {
-        this.type.setItems(FXCollections.observableArrayList(JPEG, GIF));
+        this.type.setItems(FXCollections.observableArrayList(JPEG));
         this.type.getSelectionModel().selectFirst();
 
         this.image.fitWidthProperty().bind(this.imageParent.widthProperty());
@@ -115,13 +108,7 @@ public class CaptureSaveController extends WindowController {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        if (GIF.equals(CaptureSaveController.this.type.getSelectionModel().getSelectedItem())) {
-                            // GIFが選ばれている時
-                            CaptureSaveController.this.saveGif(selections, path);
-                        } else {
-                            // GIF以外
-                            CaptureSaveController.this.saveJpeg(selections, path);
-                        }
+                        CaptureSaveController.this.saveJpeg(selections, path);
                         return null;
                     }
 
@@ -149,28 +136,6 @@ public class CaptureSaveController extends WindowController {
                 };
                 ThreadManager.getExecutorService().execute(task);
             }
-        }
-    }
-
-    /**
-     * アニメーションGIFファイルとして保存します
-     *
-     * @param selections 画像ファイル
-     * @param dir ディレクトリ
-     * @throws IOException 入出力例外
-     */
-    private void saveGif(List<ImageData> selections, Path dir) throws IOException {
-        Duration delay = Duration.ofMillis(1000 / Math.max(Integer.parseInt(this.fps.getText()), 1));
-
-        String fname = DATE_FORMAT.format(selections.get(0).getDateTime()) + ".gif";
-        Path to = dir.resolve(fname);
-        List<byte[]> bytes = selections.stream()
-                .map(ImageData::getImage)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(to))) {
-            ScreenCapture.createAnimetedGIF(out, bytes, delay);
         }
     }
 
