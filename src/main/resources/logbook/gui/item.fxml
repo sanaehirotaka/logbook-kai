@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="itemWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="itemWindow" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemController">
    <children>
       <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
          <items>
@@ -23,18 +23,10 @@
                  <content>
                     <FlowPane>
                        <children>
-                          <VBox prefWidth="125.0">
+                          <VBox>
                              <children>
-                                <FlowPane>
-                                   <children>
-                                      <ToggleSwitch fx:id="typeFilter" text="種類" />
-                                   </children>
-                                </FlowPane>
-                                <FlowPane>
-                                   <children>
-                                      <ComboBox fx:id="typeValue" disable="true" prefWidth="120.0" />
-                                   </children>
-                                </FlowPane>
+                                <ToggleSwitch fx:id="typeFilter" prefWidth="0.0" style="-fx-font-weight: bold;" text="テキスト" />
+                                <ComboBox fx:id="typeValue" disable="true" editable="true" prefWidth="180.0" />
                              </children>
                           </VBox>
                        </children>

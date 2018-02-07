@@ -15,16 +15,21 @@ public interface ItemFilter extends Predicate<Item> {
     @Builder
     public static class DefaultFilter implements ItemFilter {
 
-        /** 種類 */
+        /** テキスト */
         private boolean typeFilter;
 
-        /** 種類 */
+        /** テキスト */
         private String typeValue;
 
         @Override
         public boolean test(Item item) {
             if (this.typeFilter) {
-                return this.typeValue.equals(item.typeProperty().get());
+                if (item.typeProperty().get().contains(this.typeValue))
+                    return true;
+                if (item.getName().contains(this.typeValue))
+                    return true;
+
+                return false;
             }
             return true;
         }

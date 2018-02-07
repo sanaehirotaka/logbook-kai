@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.controlsfx.control.ToggleSwitch;
+import org.controlsfx.control.textfield.TextFields;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -40,11 +42,11 @@ public class ItemController extends WindowController {
 
     // フィルター
 
-    /** 種類 */
+    /** テキスト */
     @FXML
     private ToggleSwitch typeFilter;
 
-    /** 種類 */
+    /** テキスト */
     @FXML
     private ComboBox<String> typeValue;
 
@@ -187,12 +189,19 @@ public class ItemController extends WindowController {
                     .sorted(Comparator.comparing(Item::getName))
                     .sorted(Comparator.comparing(Item::getType3))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
-            // 種類フィルター
+            // テキストフィルター
             this.typeValue.setItems(items.stream()
                     .map(Item::typeProperty)
                     .map(StringProperty::get)
                     .distinct()
                     .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+            TextFields.bindAutoCompletion(this.typeValue.getEditor(),
+                    new SuggestSupport(String::contains, items.stream()
+                            .flatMap(i -> Stream.of(i.typeProperty().get(), i.getName()))
+                            .distinct()
+                            .sorted()
+                            .collect(Collectors.toList())));
+
             // 装備一覧(装備一覧)
             this.types = new FilteredList<>(items);
             SortedList<Item> sortedListTypes = new SortedList<>(this.types);

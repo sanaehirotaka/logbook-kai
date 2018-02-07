@@ -1,9 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -18,7 +16,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.ToggleSwitch;
-import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
 import javafx.beans.value.ObservableValue;
@@ -48,7 +45,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.converter.IntegerStringConverter;
 import logbook.Messages;
 import logbook.bean.DeckPort;
@@ -888,35 +884,6 @@ public class ShipTablePane extends VBox {
             } else {
                 this.setGraphic(null);
                 this.setText(null);
-            }
-        }
-    }
-
-    /**
-     * サジェスト対応
-     *
-     */
-    private static class SuggestSupport implements Callback<ISuggestionRequest, Collection<String>> {
-
-        private List<String> values;
-
-        public SuggestSupport(List<String> values) {
-            this.values = new ArrayList<>(values);
-        }
-
-        public SuggestSupport(String... values) {
-            this.values = Arrays.asList(values);
-        }
-
-        @Override
-        public Collection<String> call(ISuggestionRequest param) {
-            String text = param.getUserText();
-            if (text.isEmpty()) {
-                return this.values;
-            } else {
-                return this.values.stream()
-                        .filter(v -> v.startsWith(text))
-                        .collect(Collectors.toList());
             }
         }
     }
