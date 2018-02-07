@@ -43,9 +43,6 @@ import logbook.proxy.ResponseMetaData;
  */
 public class SWFListener implements ContentListenerSpi {
 
-    /** shipgraph -> shipid */
-    private Map<String, Integer> shipgraphCache = new HashMap<>();
-
     public SWFListener() {
         Cache.setStorageType(Cache.STORAGE_MEMORY);
     }
@@ -94,21 +91,16 @@ public class SWFListener implements ContentListenerSpi {
             Map<Integer, ShipMst> shipMstMap = ShipMstCollection.get()
                     .getShipMap();
 
-            Integer shipid = this.shipgraphCache.get(shipgraph);
-            if (shipid == null) {
-                synchronized (this.shipgraphCache) {
-                    shipMstMap.forEach((k, v) -> this.shipgraphCache.put(v.getGraph(), k));
-                }
-                shipid = this.shipgraphCache.get(shipgraph);
-            }
-            if (shipid != null) {
-                ShipMst shipMst = shipMstMap.get(shipid);
-                if (shipMst != null) {
-                    synchronized (shipMst) {
-                        // ./resources/ships/[name]
-                        Path dir = ShipMst.getResourcePathDir(shipMst);
-                        this.storeShipImages(dir, in);
-                    }
+            ShipMst shipMst = shipMstMap.entrySet().stream()
+                    .filter(e -> shipgraph.equals(e.getValue().getGraph()))
+                    .map(Map.Entry::getValue)
+                    .findAny()
+                    .orElse(null);
+            if (shipMst != null) {
+                synchronized (shipMst) {
+                    // ./resources/ships/[name]
+                    Path dir = ShipMst.getResourcePathDir(shipMst);
+                    this.storeShipImages(dir, in);
                 }
             }
         }
