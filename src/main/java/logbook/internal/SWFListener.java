@@ -1,5 +1,7 @@
 package logbook.internal;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -96,11 +98,19 @@ public class SWFListener implements ContentListenerSpi {
                     .map(Map.Entry::getValue)
                     .findAny()
                     .orElse(null);
+
             if (shipMst != null) {
+                // 艦娘画像キャッシュ設定
+                ShipImageCacheStrategy cacheStrategy = AppConfig.get().getShipImageCacheStrategy();
+                if (cacheStrategy == ShipImageCacheStrategy.USED && shipMst.getAfterlv() == null) {
+                    // 敵艦の場合は1.jpgのみしか無いのでLIMITに変える
+                    cacheStrategy = ShipImageCacheStrategy.LIMIT;
+                }
+
                 synchronized (shipMst) {
                     // ./resources/ships/[name]
                     Path dir = ShipMst.getResourcePathDir(shipMst);
-                    this.storeShipImages(dir, in);
+                    this.storeShipImages(dir, in, cacheStrategy);
                 }
             }
         }
@@ -142,10 +152,12 @@ public class SWFListener implements ContentListenerSpi {
      * 画像ファイルを保存します
      * @param dir 保存先のディレクトリ
      * @param in SWFファイル
+     * @param strategy 艦娘画像キャッシュ設定
      * @throws IOException 入出力例外またはSWFファイルの解析に失敗した場合
      * @throws InterruptedException SWFファイルの解析に失敗した場合
      */
-    void storeShipImages(Path dir, InputStream in) throws IOException, InterruptedException {
+    void storeShipImages(Path dir, InputStream in, ShipImageCacheStrategy strategy)
+            throws IOException, InterruptedException {
         if (!Files.exists(dir)) {
             Files.createDirectories(dir);
         }
@@ -155,9 +167,6 @@ public class SWFListener implements ContentListenerSpi {
                 ImageTag img = (ImageTag) e.getValue();
                 String ext = this.imageExt(img);
                 String name = img.getCharacterId() + "." + ext;
-
-                // 艦娘画像キャッシュ設定
-                ShipImageCacheStrategy strategy = AppConfig.get().getShipImageCacheStrategy();
 
                 InputStream imageData = img.getImageData();
                 if (strategy == null || strategy.getFileNames() == null || strategy.getFileNames().contains(name)) {
@@ -287,17 +296,27 @@ public class SWFListener implements ContentListenerSpi {
         try {
             BufferedImage image = ImageIO.read(in);
 
+            int width = image.getWidth();
+            int height = image.getHeight();
+
+            BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            Graphics gc = canvas.createGraphics();
+            gc.setColor(Color.WHITE);
+            gc.fillRect(0, 0, width, height);
+            gc.drawImage(image, 0, 0, null);
+
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             try (ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
                 ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
                 try {
+
                     ImageWriteParam iwp = writer.getDefaultWriteParam();
                     if (iwp.canWriteCompressed()) {
                         iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
                         iwp.setCompressionQuality(0.9f);
                     }
                     writer.setOutput(ios);
-                    writer.write(null, new IIOImage(image, null, null), iwp);
+                    writer.write(null, new IIOImage(canvas, null, null), iwp);
                 } finally {
                     writer.dispose();
                 }
