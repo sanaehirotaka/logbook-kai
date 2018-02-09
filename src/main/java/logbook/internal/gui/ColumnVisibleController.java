@@ -10,8 +10,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.WindowEvent;
-import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
+import logbook.internal.ToStringConverter;
 
 /**
  * テーブル列の表示・非表示の設定ダイアログを表示する
@@ -29,18 +29,7 @@ public class ColumnVisibleController extends WindowController {
     @FXML
     void initialize() {
         this.listView.setCellFactory(
-                CheckBoxListCell.forListView(t -> t.visibleProperty(),
-                        new StringConverter<TableColumn<?, ?>>() {
-                            @Override
-                            public String toString(TableColumn<?, ?> table) {
-                                return table.getText();
-                            }
-
-                            @Override
-                            public TableColumn<? extends Object, ?> fromString(String string) {
-                                throw new IllegalStateException();
-                            }
-                        }));
+                CheckBoxListCell.forListView(t -> t.visibleProperty(), ToStringConverter.of(TableColumn::getText)));
     }
 
     /**

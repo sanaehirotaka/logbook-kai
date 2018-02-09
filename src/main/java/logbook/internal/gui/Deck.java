@@ -23,12 +23,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.util.StringConverter;
 import logbook.bean.AppDeck;
 import logbook.bean.AppDeck.AppDeckFleet;
 import logbook.bean.AppDeckCollection;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.internal.ToStringConverter;
 
 /**
  * 編成記録
@@ -95,7 +95,7 @@ public class Deck extends WindowController {
         this.fleetList.setCellFactory(e -> new DeckFleetCell());
         // テンプレート
         this.preFleetList.getItems().addAll(DeckPortCollection.get().getDeckPortMap().values());
-        this.preFleetList.setConverter(new PreFleet());
+        this.preFleetList.setConverter(ToStringConverter.of(DeckPort::getName));
         // 艦隊が変更された時のリスナー
         this.fleets.getChildren().addListener(this::changeDeckFleet);
         // 編成記録が変更された時のリスナー
@@ -301,26 +301,6 @@ public class Deck extends WindowController {
             } else {
                 this.setGraphic(null);
             }
-        }
-    }
-
-    /**
-     * DeckPortを文字列に変換する
-     *
-     */
-    private static class PreFleet extends StringConverter<DeckPort> {
-        @Override
-        public String toString(DeckPort object) {
-            if (object != null) {
-                return object.getName();
-            } else {
-                return "";
-            }
-        }
-
-        @Override
-        public DeckPort fromString(String string) {
-            return null;
         }
     }
 }

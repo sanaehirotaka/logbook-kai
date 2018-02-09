@@ -42,6 +42,7 @@ import logbook.internal.LoggerHolder;
 import logbook.internal.ShipFilter;
 import logbook.internal.ShipTypeGroup;
 import logbook.internal.Ships;
+import logbook.internal.ToStringConverter;
 import logbook.internal.gui.PopupSelectbox.SelectboxCell;
 import lombok.Getter;
 
@@ -50,6 +51,9 @@ import lombok.Getter;
  *
  */
 public class DeckShipPane extends VBox {
+
+    /** 装備のStringConverter */
+    private static StringConverter<SlotitemMst> itemNameStringConverter = ToStringConverter.of(SlotitemMst::getName);
 
     /** 艦娘画像 */
     @FXML
@@ -381,7 +385,7 @@ public class DeckShipPane extends VBox {
      * @param label
      */
     private void installItemName(ComboBox<SlotitemMst> list, ImageView image, Label label) {
-        list.setConverter(ItemNameStringConverter.instance);
+        list.setConverter(itemNameStringConverter);
         list.setCellFactory(e -> new ItemNameCell());
         // 装備が選ばれた時のリスナー
         list.getSelectionModel().selectedItemProperty().addListener((ov, o, n) -> {
@@ -390,7 +394,7 @@ public class DeckShipPane extends VBox {
                 this.modified.set(true);
             }
             image.setImage(Items.itemImage(n));
-            label.setText(ItemNameStringConverter.instance.toString(n));
+            label.setText(itemNameStringConverter.toString(n));
         });
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get().getSlotitemMap();
         list.getItems().addAll(SlotItemCollection.get()
@@ -462,7 +466,7 @@ public class DeckShipPane extends VBox {
                     view.setFitHeight(24);
                     view.setFitWidth(24);
                     this.setGraphic(view);
-                    this.setText(ItemNameStringConverter.instance.toString(item));
+                    this.setText(itemNameStringConverter.toString(item));
                 } else {
                     this.setGraphic(null);
                     this.setText(null);
@@ -471,28 +475,6 @@ public class DeckShipPane extends VBox {
                 this.setGraphic(null);
                 this.setText(null);
             }
-        }
-    }
-
-    /**
-     * 装備のStringConverter
-     *
-     */
-    static class ItemNameStringConverter extends StringConverter<SlotitemMst> {
-
-        static final StringConverter<SlotitemMst> instance = new ItemNameStringConverter();
-
-        @Override
-        public String toString(SlotitemMst object) {
-            if (object != null) {
-                return object.getName();
-            }
-            return "";
-        }
-
-        @Override
-        public SlotitemMst fromString(String string) {
-            return null;
         }
     }
 

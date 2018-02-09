@@ -23,12 +23,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
 import logbook.internal.Config;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ShipImageCacheStrategy;
 import logbook.internal.ThreadManager;
+import logbook.internal.ToStringConverter;
 import logbook.plugin.PluginContainer;
 
 /**
@@ -378,17 +378,7 @@ public class ConfigController extends WindowController {
                 }
                 this.ffmpegTemplate.getItems().add(option);
             }
-            this.ffmpegTemplate.setConverter(new StringConverter<Map<?, ?>>() {
-                @Override
-                public String toString(Map<?, ?> object) {
-                    return object.get("name").toString();
-                }
-
-                @Override
-                public Map<?, ?> fromString(String string) {
-                    throw new UnsupportedOperationException();
-                }
-            });
+            this.ffmpegTemplate.setConverter(ToStringConverter.of(map -> map.get("name").toString()));
             this.ffmpegTemplate.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> {
                 if (nv != null) {
                     this.ffmpegArgs.setText(nv.get("params").toString());

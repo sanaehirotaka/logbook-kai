@@ -23,7 +23,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.util.StringConverter;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Maparea;
@@ -34,6 +33,7 @@ import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.LoggerHolder;
+import logbook.internal.ToStringConverter;
 import logbook.plugin.PluginContainer;
 
 /**
@@ -55,17 +55,7 @@ public class MissionCheck extends WindowController {
         this.fleet.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DeckPort>) this::buildTree);
         this.fleet.getItems().addAll(DeckPortCollection.get().getDeckPortMap().values());
         this.fleet.getSelectionModel().select(1);
-        this.fleet.setConverter(new StringConverter<DeckPort>() {
-            @Override
-            public String toString(DeckPort deck) {
-                return deck.getName();
-            }
-
-            @Override
-            public DeckPort fromString(String string) {
-                return null;
-            }
-        });
+        this.fleet.setConverter(ToStringConverter.of(DeckPort::getName));
     }
 
     @FXML
