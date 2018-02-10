@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.text.MessageFormat;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +37,8 @@ public class CreatePacFileController extends WindowController {
                     out.write(buffer, 0, length);
                 }
             }
-            packFile = MessageFormat.format(new String(out.toByteArray()), AppConfig.get().getListenPort());
+            packFile = new String(out.toByteArray())
+                    .replace("{port}", String.valueOf(AppConfig.get().getListenPort()));
 
             FileChooser fc = new FileChooser();
             fc.setTitle("名前をつけて保存");
