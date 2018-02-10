@@ -171,7 +171,7 @@ public class SWFListener implements ContentListenerSpi {
                 InputStream imageData = img.getImageData();
                 if (strategy == null || strategy.getFileNames() == null || strategy.getFileNames().contains(name)) {
                     // 画像ファイルを再圧縮するオプション
-                    if (AppConfig.get().isShipImageCompress()) {
+                    if (AppConfig.get().isShipImageCompress() && !"jpg".equals(ext)) {
                         InputStream compressedImageData = this.compressImage(imageData);
                         if (compressedImageData != null) {
                             imageData = compressedImageData;
@@ -299,7 +299,7 @@ public class SWFListener implements ContentListenerSpi {
             int width = image.getWidth();
             int height = image.getHeight();
 
-            BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+            BufferedImage canvas = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
             Graphics gc = canvas.createGraphics();
             gc.setColor(Color.WHITE);
             gc.fillRect(0, 0, width, height);
@@ -313,7 +313,7 @@ public class SWFListener implements ContentListenerSpi {
                     ImageWriteParam iwp = writer.getDefaultWriteParam();
                     if (iwp.canWriteCompressed()) {
                         iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                        iwp.setCompressionQuality(0.9f);
+                        iwp.setCompressionQuality(0.8f);
                     }
                     writer.setOutput(ios);
                     writer.write(null, new IIOImage(canvas, null, null), iwp);

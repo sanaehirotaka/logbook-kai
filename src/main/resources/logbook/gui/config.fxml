@@ -126,19 +126,32 @@
                <content>
                   <VBox styleClass="configInner">
                      <children>
-                        <Label text="艦娘画像キャッシュ設定" />
-                        <TextFlow>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
-                              <RadioButton fx:id="shipImageCacheStrategyAll" mnemonicParsing="false" selected="true" text="全て">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="shipImage" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="shipImageCacheStrategyUsed" mnemonicParsing="false" text="使用される画像のみ" toggleGroup="$shipImage" />
-                              <RadioButton fx:id="shipImageCacheStrategyLimit" mnemonicParsing="false" text="制限(中破画像を小破以下で代替)" toggleGroup="$shipImage" />
+                                <Label text="保存される艦娘の画像の種類" GridPane.columnIndex="1" />
+                                <TextFlow GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                   <children>
+                                      <RadioButton fx:id="shipImageCacheStrategyAll" mnemonicParsing="false" selected="true" text="全て">
+                                         <toggleGroup>
+                                            <ToggleGroup fx:id="shipImage" />
+                                         </toggleGroup>
+                                      </RadioButton>
+                                      <RadioButton fx:id="shipImageCacheStrategyUsed" mnemonicParsing="false" text="使用される画像のみ" toggleGroup="$shipImage" />
+                                      <RadioButton fx:id="shipImageCacheStrategyLimit" mnemonicParsing="false" text="制限(中破画像を小破以下で代替)" toggleGroup="$shipImage" />
+                                   </children>
+                                </TextFlow>
+                                <CheckBox fx:id="shipImageCompress" mnemonicParsing="false" text="PNG形式のファイルをJPEG形式に再圧縮する" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
-                        </TextFlow>
-                        <CheckBox fx:id="shipImageCompress" mnemonicParsing="false" text="画像ファイルを再圧縮" />
+                        </GridPane>
                      </children>
                   </VBox>
                </content>
