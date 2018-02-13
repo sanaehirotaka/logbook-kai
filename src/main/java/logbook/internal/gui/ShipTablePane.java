@@ -317,6 +317,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> slot4;
 
+    /** 装備5 */
+    @FXML
+    private TableColumn<ShipItem, Integer> slot5;
+
     /** 補強 */
     @FXML
     private TableColumn<ShipItem, Integer> slotEx;
@@ -529,6 +533,8 @@ public class ShipTablePane extends VBox {
             this.slot3.setCellFactory(p -> new ItemImageCell());
             this.slot4.setCellValueFactory(new PropertyValueFactory<>("slot4"));
             this.slot4.setCellFactory(p -> new ItemImageCell());
+            this.slot5.setCellValueFactory(new PropertyValueFactory<>("slot5"));
+            this.slot5.setCellFactory(p -> new ItemImageCell());
             this.slotEx.setCellValueFactory(new PropertyValueFactory<>("slotEx"));
             this.slotEx.setCellFactory(p -> new ItemImageCell());
 

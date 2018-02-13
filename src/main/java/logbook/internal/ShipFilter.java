@@ -119,6 +119,7 @@ public interface ShipFilter extends Predicate<ShipItem> {
                     () -> Items.slotitemMst(itemMap.get(ship.getSlot2())).map(SlotitemMst::getName).orElse(""),
                     () -> Items.slotitemMst(itemMap.get(ship.getSlot3())).map(SlotitemMst::getName).orElse(""),
                     () -> Items.slotitemMst(itemMap.get(ship.getSlot4())).map(SlotitemMst::getName).orElse(""),
+                    () -> Items.slotitemMst(itemMap.get(ship.getSlot5())).map(SlotitemMst::getName).orElse(""),
                     () -> Items.slotitemMst(itemMap.get(ship.getSlotEx())).map(SlotitemMst::getName).orElse(""));
             for (Supplier<String> supplier : texts) {
                 if (supplier.get().contains(this.text)) {

@@ -116,5 +116,23 @@
             </HBox>
          </children>
       </StackPane>
+      <StackPane alignment="CENTER_LEFT">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="itemImage6" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="itemName6" styleClass="itemName" />
+                  <Label fx:id="itemLv6" styleClass="itemLv" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ComboBox fx:id="itemList6" styleClass="itemList" />
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <ComboBox fx:id="itemLvList6" styleClass="itemLvList" />
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
    </children>
 </fx:root>

@@ -167,6 +167,26 @@ public class DeckShipPane extends VBox {
     @FXML
     private ComboBox<Integer> itemLvList5;
 
+    /** 装備Ex画像 */
+    @FXML
+    private ImageView itemImage6;
+
+    /** 装備Ex名前 */
+    @FXML
+    private Label itemName6;
+
+    /** 装備Ex改修レベル */
+    @FXML
+    private Label itemLv6;
+
+    /** 装備Ex選択肢 */
+    @FXML
+    private ComboBox<SlotitemMst> itemList6;
+
+    /** 装備Ex改修レベル選択肢 */
+    @FXML
+    private ComboBox<Integer> itemLvList6;
+
     /** 選択した艦娘 */
     private ObjectProperty<Integer> selectedShip = new SimpleObjectProperty<>(0);
 
@@ -214,8 +234,9 @@ public class DeckShipPane extends VBox {
                     .map(SlotitemMst::getId).orElse(null));
             this.ship.getItems().add(Optional.ofNullable(this.itemList4.getValue())
                     .map(SlotitemMst::getId).orElse(null));
-            this.ship.getItems().add(null);
             this.ship.getItems().add(Optional.ofNullable(this.itemList5.getValue())
+                    .map(SlotitemMst::getId).orElse(null));
+            this.ship.getItems().add(Optional.ofNullable(this.itemList6.getValue())
                     .map(SlotitemMst::getId).orElse(null));
 
             this.ship.getItemLvs().clear();
@@ -223,8 +244,8 @@ public class DeckShipPane extends VBox {
             this.ship.getItemLvs().add(this.itemLvList2.getValue());
             this.ship.getItemLvs().add(this.itemLvList3.getValue());
             this.ship.getItemLvs().add(this.itemLvList4.getValue());
-            this.ship.getItemLvs().add(null);
             this.ship.getItemLvs().add(this.itemLvList5.getValue());
+            this.ship.getItemLvs().add(this.itemLvList6.getValue());
         }
         this.modified.set(false);
         return this.ship;
@@ -240,23 +261,27 @@ public class DeckShipPane extends VBox {
         this.installItemName(this.itemList3, this.itemImage3, this.itemName3);
         this.installItemName(this.itemList4, this.itemImage4, this.itemName4);
         this.installItemName(this.itemList5, this.itemImage5, this.itemName5);
+        this.installItemName(this.itemList6, this.itemImage6, this.itemName6);
         this.installItemLevel(this.itemLvList1, this.itemLv1);
         this.installItemLevel(this.itemLvList2, this.itemLv2);
         this.installItemLevel(this.itemLvList3, this.itemLv3);
         this.installItemLevel(this.itemLvList4, this.itemLv4);
         this.installItemLevel(this.itemLvList5, this.itemLv5);
+        this.installItemLevel(this.itemLvList6, this.itemLv6);
 
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get().getSlotitemMap();
         this.itemList1.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(0)));
         this.itemList2.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(1)));
         this.itemList3.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(2)));
         this.itemList4.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(3)));
-        this.itemList5.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(5)));
+        this.itemList5.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(4)));
+        this.itemList6.getSelectionModel().select(itemMstMap.get(this.ship.getItems().get(5)));
         this.itemLvList1.getSelectionModel().select(this.ship.getItemLvs().get(0));
         this.itemLvList2.getSelectionModel().select(this.ship.getItemLvs().get(1));
         this.itemLvList3.getSelectionModel().select(this.ship.getItemLvs().get(2));
         this.itemLvList4.getSelectionModel().select(this.ship.getItemLvs().get(3));
-        this.itemLvList5.getSelectionModel().select(this.ship.getItemLvs().get(5));
+        this.itemLvList5.getSelectionModel().select(this.ship.getItemLvs().get(4));
+        this.itemLvList6.getSelectionModel().select(this.ship.getItemLvs().get(5));
 
         this.initialized = true;
     }
@@ -337,11 +362,13 @@ public class DeckShipPane extends VBox {
         this.itemList3.getSelectionModel().clearSelection();
         this.itemList4.getSelectionModel().clearSelection();
         this.itemList5.getSelectionModel().clearSelection();
+        this.itemList6.getSelectionModel().clearSelection();
         this.itemLvList1.getSelectionModel().clearSelection();
         this.itemLvList2.getSelectionModel().clearSelection();
         this.itemLvList3.getSelectionModel().clearSelection();
         this.itemLvList4.getSelectionModel().clearSelection();
         this.itemLvList5.getSelectionModel().clearSelection();
+        this.itemLvList6.getSelectionModel().clearSelection();
 
         if (ship != null) {
             // 艦娘が変わった
@@ -353,7 +380,8 @@ public class DeckShipPane extends VBox {
                 this.presetItem(itemMap.get(ship.getSlot().get(1)), this.itemList2, this.itemLvList2);
                 this.presetItem(itemMap.get(ship.getSlot().get(2)), this.itemList3, this.itemLvList3);
                 this.presetItem(itemMap.get(ship.getSlot().get(3)), this.itemList4, this.itemLvList4);
-                this.presetItem(itemMap.get(ship.getSlotEx()), this.itemList5, this.itemLvList5);
+                this.presetItem(itemMap.get(ship.getSlot().get(4)), this.itemList5, this.itemLvList5);
+                this.presetItem(itemMap.get(ship.getSlotEx()), this.itemList6, this.itemLvList6);
             }
         } else {
             // 艦娘の選択なしに変更

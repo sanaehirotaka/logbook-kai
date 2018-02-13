@@ -109,6 +109,9 @@ public class ShipItem {
     /** 装備4 */
     private IntegerProperty slot4 = new SimpleIntegerProperty();
 
+    /** 装備5 */
+    private IntegerProperty slot5 = new SimpleIntegerProperty();
+
     /** 補強 */
     private IntegerProperty slotEx = new SimpleIntegerProperty();
 
@@ -713,6 +716,30 @@ public class ShipItem {
     }
 
     /**
+     * 装備5を取得します。
+     * @return 装備5
+     */
+    public IntegerProperty slot5Property() {
+        return this.slot5;
+    }
+
+    /**
+     * 装備5を取得します。
+     * @return 装備5
+     */
+    public int getSlot5() {
+        return this.slot5.get();
+    }
+
+    /**
+     * 装備5を設定します。
+     * @param slot5 装備5
+     */
+    public void setSlot5(int slot5) {
+        this.slot5.setValue(slot5);
+    }
+
+    /**
      * 補強を取得します。
      * @return 補強
      */
@@ -788,6 +815,7 @@ public class ShipItem {
                 .add(slotItemName.apply(this.slot2.get()))
                 .add(slotItemName.apply(this.slot3.get()))
                 .add(slotItemName.apply(this.slot4.get()))
+                .add(slotItemName.apply(this.slot5.get()))
                 .add(slotItemName.apply(this.slotEx.get()))
                 .toString();
     }
@@ -829,20 +857,21 @@ public class ShipItem {
         shipItem.setyPower(Ships.yPower(ship));
         shipItem.settPower(Ships.tPower(ship));
 
-        shipItem.setKaryoku(ship.getKaryoku().get(0) - sumItemParam(ship, i -> i.getHoug()));
-        shipItem.setRaisou(ship.getRaisou().get(0) - sumItemParam(ship, i -> i.getRaig()));
-        shipItem.setTaiku(ship.getTaiku().get(0) - sumItemParam(ship, i -> i.getTyku()));
-        shipItem.setSoukou(ship.getSoukou().get(0) - sumItemParam(ship, i -> i.getSouk()));
-        shipItem.setKaihi(ship.getKaihi().get(0) - sumItemParam(ship, i -> i.getHouk()));
-        shipItem.setTais(ship.getTaisen().get(0) - sumItemParam(ship, i -> i.getTais()));
-        shipItem.setSakuteki(ship.getSakuteki().get(0) - sumItemParam(ship, i -> i.getSaku()));
-        shipItem.setLucky(ship.getLucky().get(0) - sumItemParam(ship, i -> i.getLuck()));
+        shipItem.setKaryoku(ship.getKaryoku().get(0) - sumItemParam(ship, SlotitemMst::getHoug));
+        shipItem.setRaisou(ship.getRaisou().get(0) - sumItemParam(ship, SlotitemMst::getRaig));
+        shipItem.setTaiku(ship.getTaiku().get(0) - sumItemParam(ship, SlotitemMst::getTyku));
+        shipItem.setSoukou(ship.getSoukou().get(0) - sumItemParam(ship, SlotitemMst::getSouk));
+        shipItem.setKaihi(ship.getKaihi().get(0) - sumItemParam(ship, SlotitemMst::getHouk));
+        shipItem.setTais(ship.getTaisen().get(0) - sumItemParam(ship, SlotitemMst::getTais));
+        shipItem.setSakuteki(ship.getSakuteki().get(0) - sumItemParam(ship, SlotitemMst::getSaku));
+        shipItem.setLucky(ship.getLucky().get(0) - sumItemParam(ship, SlotitemMst::getLuck));
 
         int slotNum = ship.getSlotnum();
         shipItem.setSlot1(ship.getSlot().get(0) == -1 && slotNum <= 0 ? 0 : ship.getSlot().get(0));
         shipItem.setSlot2(ship.getSlot().get(1) == -1 && slotNum <= 1 ? 0 : ship.getSlot().get(1));
         shipItem.setSlot3(ship.getSlot().get(2) == -1 && slotNum <= 2 ? 0 : ship.getSlot().get(2));
         shipItem.setSlot4(ship.getSlot().get(3) == -1 && slotNum <= 3 ? 0 : ship.getSlot().get(3));
+        shipItem.setSlot5(ship.getSlot().get(4) == -1 && slotNum <= 4 ? 0 : ship.getSlot().get(4));
         shipItem.setSlotEx(ship.getSlotEx());
 
         return shipItem;
@@ -854,7 +883,7 @@ public class ShipItem {
      * @param mapper 合計するパラメータを返す mapper
      * @return
      */
-    private static int sumItemParam(Ship ship, Function<? super SlotitemMst, Integer> mapper) {
+    private static int sumItemParam(Ship ship, Function<SlotitemMst, Integer> mapper) {
         Map<Integer, SlotItem> items = SlotItemCollection.get().getSlotitemMap();
         return Stream.concat(ship.getSlot().stream(), Stream.of(ship.getSlotEx()))
                 .map(items::get)

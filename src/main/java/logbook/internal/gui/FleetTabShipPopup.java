@@ -61,19 +61,19 @@ public class FleetTabShipPopup extends VBox {
     private Label item4;
 
     @FXML
+    private Label onslot5;
+
+    @FXML
+    private ImageView itemImage5;
+
+    @FXML
+    private Label item5;
+
+    @FXML
     private ImageView itemImage6;
 
     @FXML
     private Label item6;
-
-    @FXML
-    private Label ammo;
-
-    @FXML
-    private Label ammoInfo;
-
-    @FXML
-    private Label fuel;
 
     /**
      * 艦隊タブポップアップのコンストラクタ
@@ -94,9 +94,9 @@ public class FleetTabShipPopup extends VBox {
 
     @FXML
     void initialize() {
-        Label[] onslots = { this.onslot1, this.onslot2, this.onslot3, this.onslot4 };
-        ImageView[] imgs = { this.itemImage1, this.itemImage2, this.itemImage3, this.itemImage4 };
-        Label[] names = { this.item1, this.item2, this.item3, this.item4 };
+        Label[] onslots = { this.onslot1, this.onslot2, this.onslot3, this.onslot4, this.onslot5 };
+        ImageView[] imgs = { this.itemImage1, this.itemImage2, this.itemImage3, this.itemImage4, this.itemImage5 };
+        Label[] names = { this.item1, this.item2, this.item3, this.item4, this.item5 };
         for (int i = 0; i < this.ship.getSlotnum(); i++) {
             SlotItem item = SlotItemCollection.get()
                     .getSlotitemMap()

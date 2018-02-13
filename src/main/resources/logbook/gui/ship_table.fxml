@@ -127,6 +127,7 @@
           <TableColumn fx:id="slot2" prefWidth="200.0" text="装備2" />
           <TableColumn fx:id="slot3" prefWidth="200.0" text="装備3" />
           <TableColumn fx:id="slot4" prefWidth="200.0" text="装備4" />
+          <TableColumn fx:id="slot5" prefWidth="200.0" text="装備5" />
           <TableColumn fx:id="slotEx" prefWidth="200.0" text="補強" />
         </columns>
         <contextMenu>
