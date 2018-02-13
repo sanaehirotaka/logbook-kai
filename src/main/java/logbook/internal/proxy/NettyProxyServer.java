@@ -15,7 +15,6 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -289,10 +288,14 @@ public class NettyProxyServer implements ProxyServerSpi {
                     } else {
                         wrap = in;
                     }
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int n;
-                    while (-1 != (n = wrap.read(buffer))) {
-                        out.write(buffer, 0, n);
+                    try {
+                        byte[] buffer = new byte[BUFFER_SIZE];
+                        int n;
+                        while (-1 != (n = wrap.read(buffer))) {
+                            out.write(buffer, 0, n);
+                        }
+                    } finally {
+                        wrap.close();
                     }
                 }
             }
@@ -325,11 +328,6 @@ public class NettyProxyServer implements ProxyServerSpi {
         }
 
         @Override
-        public Map<String, Collection<String>> getHeaders() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public String getMethod() {
             return this.method;
         }
@@ -348,11 +346,6 @@ public class NettyProxyServer implements ProxyServerSpi {
         }
 
         @Override
-        public String getProtocol() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public String getQueryString() {
             return this.queryString;
         }
@@ -362,42 +355,12 @@ public class NettyProxyServer implements ProxyServerSpi {
         }
 
         @Override
-        public String getRemoteAddr() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getRemotePort() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public String getRequestURI() {
             return this.requestURI;
         }
 
         void setRequestURI(String requestURI) {
             this.requestURI = requestURI;
-        }
-
-        @Override
-        public String getRequestURL() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getScheme() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getServerName() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getServerPort() {
-            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -469,11 +432,6 @@ public class NettyProxyServer implements ProxyServerSpi {
 
         void setContentType(String contentType) {
             this.contentType = contentType;
-        }
-
-        @Override
-        public Map<String, Collection<String>> getHeaders() {
-            throw new UnsupportedOperationException();
         }
 
         @Override

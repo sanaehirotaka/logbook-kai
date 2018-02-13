@@ -23,7 +23,9 @@ public interface RequestMetaData {
      * @return リクエストヘッダのMap
      */
     @Deprecated
-    Map<String, Collection<String>> getHeaders();
+    default Map<String, Collection<String>> getHeaders() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * このリクエストを生成した HTTP メソッドの名前を返します
@@ -42,7 +44,9 @@ public interface RequestMetaData {
      * @return リクエストのプロトコル名とバージョン
      */
     @Deprecated
-    String getProtocol();
+    default String getProtocol() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * リクエストされた URL のパスの後ろに含まれているクエリ文字列を返します
@@ -55,14 +59,18 @@ public interface RequestMetaData {
      * @return リクエストを送ってきたクライアントの IP アドレス
      */
     @Deprecated
-    String getRemoteAddr();
+    default String getRemoteAddr() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * リクエストを送ったクライアントまたは最後のプロキシの送信元 IP ポートを返します
      * @return リクエストを送ってきたクライアントの IP ポート
      */
     @Deprecated
-    int getRemotePort();
+    default int getRemotePort() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * この HTTP リクエストの最初の行にある、リクエストの URL のうちプロトコル名からクエリ文字列までの部分を返します
@@ -75,28 +83,36 @@ public interface RequestMetaData {
      * @return URL
      */
     @Deprecated
-    String getRequestURL();
+    default String getRequestURL() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * リクエストのスキーム名を返します
      * @return リクエストのスキーム名
      */
     @Deprecated
-    String getScheme();
+    default String getScheme() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * リクエストが送られたサーバのホスト名を返します
      * @return リクエストが送られたサーバのホスト名
      */
     @Deprecated
-    String getServerName();
+    default String getServerName() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * リクエストが送られたサーバのポート番号を返します
      * @return リクエストが送られたサーバのポート番号
      */
     @Deprecated
-    int getServerPort();
+    default int getServerPort() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * リクエストに含まれるメッセージボディを返します

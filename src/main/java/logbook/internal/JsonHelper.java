@@ -576,7 +576,7 @@ public final class JsonHelper {
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
          */
-        public <T extends JsonValue> Bind setString(String key, Consumer<String> consumer) {
+        public Bind setString(String key, Consumer<String> consumer) {
             return this.set(key, consumer, JsonHelper::toString);
         }
 
@@ -588,7 +588,7 @@ public final class JsonHelper {
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
          */
-        public <T extends JsonValue> Bind setInteger(String key, Consumer<Integer> consumer) {
+        public Bind setInteger(String key, Consumer<Integer> consumer) {
             return this.set(key, consumer, JsonHelper::toInteger);
         }
 
@@ -600,7 +600,7 @@ public final class JsonHelper {
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
          */
-        public <T extends JsonValue> Bind setLong(String key, Consumer<Long> consumer) {
+        public Bind setLong(String key, Consumer<Long> consumer) {
             return this.set(key, consumer, JsonHelper::toLong);
         }
 
@@ -612,7 +612,7 @@ public final class JsonHelper {
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
          */
-        public <T extends JsonValue> Bind setDouble(String key, Consumer<Double> consumer) {
+        public Bind setDouble(String key, Consumer<Double> consumer) {
             return this.set(key, consumer, JsonHelper::toDouble);
         }
 
@@ -624,7 +624,7 @@ public final class JsonHelper {
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
          */
-        public <T extends JsonValue> Bind setBigDecimal(String key, Consumer<BigDecimal> consumer) {
+        public Bind setBigDecimal(String key, Consumer<BigDecimal> consumer) {
             return this.set(key, consumer, JsonHelper::toBigDecimal);
         }
 
@@ -636,7 +636,7 @@ public final class JsonHelper {
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
          */
-        public <T extends JsonValue> Bind setBoolean(String key, Consumer<Boolean> consumer) {
+        public Bind setBoolean(String key, Consumer<Boolean> consumer) {
             return this.set(key, consumer, JsonHelper::toBoolean);
         }
     }

@@ -28,7 +28,9 @@ public interface ResponseMetaData {
      * @return レスポンスヘッダのMap
      */
     @Deprecated
-    Map<String, Collection<String>> getHeaders();
+    default Map<String, Collection<String>> getHeaders() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * レスポンスに含まれるメッセージボディを返します
