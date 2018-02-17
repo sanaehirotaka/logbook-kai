@@ -9,7 +9,8 @@
                 {"type": "艦娘", "ship_type" :["駆逐艦"]},
                 {"type": "艦娘", "ship_type" :["駆逐艦"]},
                 {"type": "艦娘", "ship_type" :["駆逐艦"]},
-                {"type": "艦娘", "ship_type" :["駆逐艦"]}
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘"}
             ]
         }
     ]
