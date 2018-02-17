@@ -797,7 +797,7 @@ public class ShipItem {
                 .add(Integer.toString(this.exp.get()))
                 .add(Integer.toString(this.next.get()))
                 .add(Integer.toString(this.cond.get()))
-                .add(this.label.get().stream().collect(Collectors.joining(",")))
+                .add(this.label.get().stream().collect(Collectors.joining(" ")))
                 .add(Integer.toString(this.seiku.get()))
                 .add(Integer.toString(this.hPower.get()))
                 .add(Integer.toString(this.rPower.get()))
