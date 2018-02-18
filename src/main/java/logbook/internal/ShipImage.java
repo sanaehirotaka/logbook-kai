@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
 import logbook.bean.Chara;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.Friend;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -379,7 +380,7 @@ class ShipImage {
         if (mst.isPresent()) {
             Path dir = ShipMst.getResourcePathDir(mst.get());
             String[] names;
-            if (chara instanceof Ship
+            if ((chara instanceof Ship || chara instanceof Friend)
                     && (Ships.isHalfDamage(chara) || Ships.isBadlyDamage(chara) || Ships.isLost(chara))) {
                 names = DAMAGED;
             } else {

@@ -14,6 +14,8 @@ import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.AtType;
 import logbook.bean.BattleTypes.CombinedType;
+import logbook.bean.BattleTypes.FriendlyBattle;
+import logbook.bean.BattleTypes.FriendlyInfo;
 import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IBattle;
@@ -39,6 +41,7 @@ import logbook.bean.BattleTypes.SupportHourai;
 import logbook.bean.BattleTypes.SupportInfo;
 import logbook.bean.Chara;
 import logbook.bean.Enemy;
+import logbook.bean.Friend;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
@@ -58,6 +61,9 @@ public class PhaseState {
 
     /** 連合艦隊での出撃 */
     private boolean combined;
+
+    /** フェイズ後友軍艦隊(第1艦隊) */
+    private List<Friend> afterFriendly = new ArrayList<>();
 
     /** フェイズ後味方(第1艦隊) */
     private List<Ship> afterFriend = new ArrayList<>();
@@ -152,6 +158,7 @@ public class PhaseState {
                 }
             }
         }
+
         this.setInitialHp(b);
     }
 
@@ -167,6 +174,9 @@ public class PhaseState {
         this.combinedType = ps.combinedType;
         this.combined = ps.combined;
 
+        for (Friend friend : ps.afterFriendly) {
+            this.afterFriendly.add(Optional.ofNullable(friend).map(Friend::clone).orElse(null));
+        }
         for (Ship ship : ps.afterFriend) {
             this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
         }
@@ -291,10 +301,20 @@ public class PhaseState {
     }
 
     /**
+     * 友軍艦隊の砲撃戦フェイズを適用します
+     * @param battle 夜戦
+     */
+    public void applyFriendlyHougeki(IMidnightBattle battle) {
+        this.setInitialHp(battle);
+        this.applyFriendlyHougeki(battle.getFriendlyBattle());
+    }
+
+    /**
      * 夜戦を適用します
      * @param battle 夜戦
      */
     public void applyMidnightBattle(IMidnightBattle battle) {
+        // 1巡目
         this.applyHougeki(battle.getHougeki());
     }
 
@@ -355,10 +375,11 @@ public class PhaseState {
             }
             // 夜戦
             if (battle instanceof IMidnightBattle) {
+                this.applyFriendlyHougeki((IMidnightBattle) battle);
                 this.applyMidnightBattle((IMidnightBattle) battle);
             }
         } else {
-            // 夜戦→昼戦以外
+            // 夜戦→昼戦
 
             // 夜戦支援
             if (battle instanceof INSupport) {
@@ -482,10 +503,29 @@ public class PhaseState {
     }
 
     /**
-     * 砲撃戦フェイズを適用します(新API用)
+     * 砲撃戦フェイズを適用します
      * @param hougeki 砲撃戦フェイズ
      */
     private void applyHougeki(IHougeki hougeki) {
+        this.applyHougeki(hougeki, false);
+    }
+
+    /**
+     * 友軍艦隊の砲撃戦フェイズを適用します
+     * @param friendlyBattle 砲撃戦フェイズ
+     */
+    private void applyFriendlyHougeki(FriendlyBattle friendlyBattle) {
+        if (friendlyBattle != null) {
+            this.applyHougeki(friendlyBattle.getHougeki(), true);
+        }
+    }
+
+    /**
+     * 砲撃戦フェイズを適用します
+     * @param hougeki 砲撃戦フェイズ
+     * @param isFriendlyBattle 友軍艦隊フラグ
+     */
+    private void applyHougeki(IHougeki hougeki, boolean isFriendlyBattle) {
         if (hougeki == null || hougeki.getAtEflag() == null) {
             return;
         }
@@ -521,15 +561,35 @@ public class PhaseState {
             Chara defender = null;
 
             if (atkfriend) {
-                attacker = Math.max(this.afterFriend.size(), 6) > at
-                        ? this.afterFriend.get(at) : this.afterFriendCombined.get(at - 6);
-                defender = Math.max(this.afterEnemy.size(), 6) > df
-                        ? this.afterEnemy.get(df) : this.afterEnemyCombined.get(df - 6);
+                if (isFriendlyBattle) {
+                    attacker = this.afterFriendly.get(at);
+                } else {
+                    if (Math.max(this.afterFriend.size(), 6) > at) {
+                        attacker = this.afterFriend.get(at);
+                    } else {
+                        attacker = this.afterFriendCombined.get(at - 6);
+                    }
+                }
+                if (Math.max(this.afterEnemy.size(), 6) > df) {
+                    defender = this.afterEnemy.get(df);
+                } else {
+                    defender = this.afterEnemyCombined.get(df - 6);
+                }
             } else {
-                attacker = Math.max(this.afterEnemy.size(), 6) > at
-                        ? this.afterEnemy.get(at) : this.afterEnemyCombined.get(at - 6);
-                defender = Math.max(this.afterFriend.size(), 6) > df
-                        ? this.afterFriend.get(df) : this.afterFriendCombined.get(df - 6);
+                if (Math.max(this.afterEnemy.size(), 6) > at) {
+                    attacker = this.afterEnemy.get(at);
+                } else {
+                    attacker = this.afterEnemyCombined.get(at - 6);
+                }
+                if (isFriendlyBattle) {
+                    defender = this.afterFriendly.get(df);
+                } else {
+                    if (Math.max(this.afterFriend.size(), 6) > df) {
+                        defender = this.afterFriend.get(df);
+                    } else {
+                        defender = this.afterFriendCombined.get(df - 6);
+                    }
+                }
             }
 
             this.damage(defender, damage);
@@ -655,6 +715,25 @@ public class PhaseState {
                         chara.setMaxhp(eMaxHps.get(i));
                         chara.setNowhp(eNowHps.get(i));
                     }
+                }
+            }
+        }
+        // 友軍艦隊
+        if (b instanceof IMidnightBattle) {
+            this.afterFriendly.clear();
+
+            IMidnightBattle midnightBattle = (IMidnightBattle) b;
+            if (midnightBattle.getFriendlyInfo() != null) {
+                FriendlyInfo friendlyInfo = midnightBattle.getFriendlyInfo();
+                for (int i = 0, s = friendlyInfo.getShipId().size(); i < s; i++) {
+                    Friend f = new Friend();
+                    f.setShipId(friendlyInfo.getShipId().get(i));
+                    f.setLv(friendlyInfo.getShipLv().get(i));
+                    f.setSlot(friendlyInfo.getSlot().get(i));
+                    f.setMaxhp(friendlyInfo.getMaxhps().get(i));
+                    f.setNowhp(friendlyInfo.getNowhps().get(i));
+
+                    this.afterFriendly.add(f);
                 }
             }
         }

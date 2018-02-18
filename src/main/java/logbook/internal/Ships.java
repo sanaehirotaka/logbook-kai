@@ -23,6 +23,7 @@ import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.Basic;
 import logbook.bean.Chara;
+import logbook.bean.Friend;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
@@ -733,7 +734,7 @@ public class Ships {
         if (chara == null) {
             return "";
         }
-        if (chara instanceof Ship) {
+        if (chara instanceof Ship || chara instanceof Friend) {
             // 艦娘
             return Messages.getString("ship.name", shipMst(chara)
                     .map(ShipMst::getName)

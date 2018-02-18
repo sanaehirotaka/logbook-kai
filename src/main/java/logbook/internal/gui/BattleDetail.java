@@ -331,15 +331,19 @@ public class BattleDetail extends WindowController {
             this.airbattle(ps, phases);
             // 夜戦支援
             this.nSupport(ps, phases);
+            // 友軍艦隊
+            this.friendlyHougeki(ps, phases);
             // 特殊夜戦
             this.midnightBattle(ps, phases);
             // 夜戦
             this.midnight(ps, phases);
         } else {
-            // 夜戦→昼戦以外
+            // 夜戦→昼戦
 
             // 夜戦支援
             this.nSupport(ps, phases);
+            // 友軍艦隊
+            this.friendlyHougeki(ps, phases);
             // 特殊夜戦
             this.midnightBattle(ps, phases);
 
@@ -590,6 +594,25 @@ public class BattleDetail extends WindowController {
 
             BattleDetailPhase phasePane = new BattleDetailPhase(ps);
             phasePane.setText("特殊夜戦");
+            phasePane.setExpanded(false);
+            phases.add(phasePane);
+        }
+    }
+
+    /**
+     * 夜戦(友軍艦隊戦)
+     * @param ps フェーズ
+     * @param phases 表示ノード
+     */
+    private void friendlyHougeki(PhaseState ps, List<Node> phases) {
+        // 夜戦(友軍艦隊戦)
+        if (this.midnight != null && this.midnight.getFriendlyInfo() != null) {
+            PhaseState phaseMidnight = new PhaseState(ps);
+            // 夜戦(友軍艦隊戦)適用
+            phaseMidnight.applyFriendlyHougeki(this.midnight);
+
+            BattleDetailPhase phasePane = new BattleDetailPhase(phaseMidnight, null, true);
+            phasePane.setText("友軍艦隊");
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }

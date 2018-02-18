@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import logbook.bean.Chara;
 import logbook.bean.Enemy;
+import logbook.bean.Friend;
 import logbook.bean.Ship;
 import logbook.internal.LoggerHolder;
 import logbook.internal.PhaseState;
@@ -56,6 +57,9 @@ public class BattleDetailPhase extends TitledPane {
     @FXML
     private VBox detail;
 
+    /** 友軍艦隊フラグ */
+    private boolean isFriendlyBattle;
+
     /**
     * 戦闘ログ詳細のフェーズのコンストラクタ
     *
@@ -70,10 +74,23 @@ public class BattleDetailPhase extends TitledPane {
     *
     * @param phase フェイズ
     * @param infomation 付加情報
+    * @param isFriendlyBattle 友軍艦隊フラグ
     */
     public BattleDetailPhase(PhaseState phase, List<? extends Node> infomation) {
+        this(phase, infomation, false);
+    }
+
+    /**
+    * 戦闘ログ詳細のフェーズのコンストラクタ
+    *
+    * @param phase フェイズ
+    * @param infomation 付加情報
+    * @param isFriendlyBattle 友軍艦隊フラグ
+    */
+    public BattleDetailPhase(PhaseState phase, List<? extends Node> infomation, boolean isFriendlyBattle) {
         this.phase = phase;
         this.nodes = infomation;
+        this.isFriendlyBattle = isFriendlyBattle;
         try {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battle_detail_phase.fxml");
             loader.setRoot(this);
@@ -91,16 +108,24 @@ public class BattleDetailPhase extends TitledPane {
             this.infomation.getChildren().addAll(this.nodes);
         }
 
-        for (Ship ship : this.phase.getAfterFriend()) {
-            if (ship != null) {
-                this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship,
-                        this.phase.getItemMap(), this.phase.getEscape()));
+        if (this.isFriendlyBattle) {
+            for (Friend friend : this.phase.getAfterFriendly()) {
+                if (friend != null) {
+                    this.afterFriend.getChildren().add(new BattleDetailPhaseShip(friend, null, null));
+                }
             }
-        }
-        for (Ship ship : this.phase.getAfterFriendCombined()) {
-            if (ship != null) {
-                this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship,
-                        this.phase.getItemMap(), this.phase.getEscape()));
+        } else {
+            for (Ship ship : this.phase.getAfterFriend()) {
+                if (ship != null) {
+                    this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship,
+                            this.phase.getItemMap(), this.phase.getEscape()));
+                }
+            }
+            for (Ship ship : this.phase.getAfterFriendCombined()) {
+                if (ship != null) {
+                    this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship,
+                            this.phase.getItemMap(), this.phase.getEscape()));
+                }
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemyCombined()) {

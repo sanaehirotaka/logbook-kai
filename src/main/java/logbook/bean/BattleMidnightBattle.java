@@ -48,6 +48,12 @@ public class BattleMidnightBattle implements IMidnightBattle, Serializable {
     /** api_eParam */
     private List<List<Integer>> eParam;
 
+    /** api_friendly_info */
+    private BattleTypes.FriendlyInfo friendlyInfo;
+
+    /** api_friendly_battle */
+    private BattleTypes.FriendlyBattle friendlyBattle;
+
     /** api_touch_plane */
     private List<Integer> touchPlane;
 
@@ -77,6 +83,8 @@ public class BattleMidnightBattle implements IMidnightBattle, Serializable {
                 .set("api_eSlot", bean::setESlot, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam", bean::setFParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
+                .set("api_friendly_info", bean::setFriendlyInfo, BattleTypes.FriendlyInfo::toFriendlyInfo)
+                .set("api_friendly_battle", bean::setFriendlyBattle, BattleTypes.FriendlyBattle::toFriendlyBattle)
                 .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
                 .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
                 .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki);

@@ -266,6 +266,18 @@ public class BattleTypes {
         List<Integer> getFlarePos();
 
         /**
+         * api_friendly_infoを取得します。
+         * @return api_friendly_info
+         */
+        FriendlyInfo getFriendlyInfo();
+
+        /**
+         * api_friendly_battleを取得します。
+         * @return api_friendly_battle
+         */
+        BattleTypes.FriendlyBattle getFriendlyBattle();
+
+        /**
          * api_hougekiを取得します。
          * @return api_hougeki
          */
@@ -1027,6 +1039,84 @@ public class BattleTypes {
             JsonHelper.bind(json)
                     .setInteger("api_count", bean::setCount)
                     .setInteger("api_mst_id", bean::setMstId);
+            return bean;
+        }
+    }
+
+    /**
+     * api_friendly_info
+     */
+    @Data
+    public static class FriendlyInfo implements Serializable {
+
+        private static final long serialVersionUID = 6082076344715211541L;
+
+        /** api_production_type */
+        private Integer productionType;
+
+        /** api_ship_id */
+        private List<Integer> shipId;
+
+        /** api_ship_lv */
+        private List<Integer> shipLv;
+
+        /** api_nowhps */
+        private List<Integer> nowhps;
+
+        /** api_maxhps */
+        private List<Integer> maxhps;
+
+        /** api_Slot */
+        private List<List<Integer>> slot;
+
+        /** api_Param */
+        private List<List<Integer>> param;
+
+        /**
+         * JsonObjectから{@link FriendlyInfo}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link FriendlyInfo}
+         */
+        public static FriendlyInfo toFriendlyInfo(JsonObject json) {
+            FriendlyInfo bean = new FriendlyInfo();
+            JsonHelper.bind(json)
+                    .setInteger("api_production_type", bean::setProductionType)
+                    .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
+                    .set("api_ship_lv", bean::setShipLv, JsonHelper::toIntegerList)
+                    .set("api_nowhps", bean::setNowhps, JsonHelper::toIntegerList)
+                    .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
+                    .set("api_Slot", bean::setSlot, JsonHelper.toList(JsonHelper::toIntegerList))
+                    .set("api_Param", bean::setParam, JsonHelper.toList(JsonHelper::toIntegerList));
+            return bean;
+        }
+    }
+
+    /**
+     * api_friendly_battle
+     */
+    @Data
+    public static class FriendlyBattle implements Serializable {
+
+        private static final long serialVersionUID = 8663372068066994366L;
+
+        /** api_flare_pos */
+        private List<Integer> flarePos;
+
+        /** api_hougeki */
+        private BattleTypes.MidnightHougeki hougeki;
+
+        /**
+         * JsonObjectから{@link FriendlyBattle}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link FriendlyInfo}
+         */
+        public static FriendlyBattle toFriendlyBattle(JsonObject json) {
+            FriendlyBattle bean = new FriendlyBattle();
+            JsonHelper.bind(json)
+                    .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
+                    .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki);
             return bean;
         }
     }

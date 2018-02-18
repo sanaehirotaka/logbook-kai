@@ -63,6 +63,12 @@ public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattl
     /** api_formation */
     private List<Integer> formation;
 
+    /** api_friendly_info */
+    private BattleTypes.FriendlyInfo friendlyInfo;
+
+    /** api_friendly_battle */
+    private BattleTypes.FriendlyBattle friendlyBattle;
+
     /** api_touch_plane */
     private List<Integer> touchPlane;
 
@@ -102,6 +108,8 @@ public class CombinedBattleSpMidnight implements ICombinedBattle, IMidnightBattl
                 .set("api_eParam", bean::setEParam, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_fParam_combined", bean::setFParamCombined, JsonHelper.toList(JsonHelper::toIntegerList))
                 .set("api_formation", bean::setFormation, JsonHelper::toIntegerList)
+                .set("api_friendly_info", bean::setFriendlyInfo, BattleTypes.FriendlyInfo::toFriendlyInfo)
+                .set("api_friendly_battle", bean::setFriendlyBattle, BattleTypes.FriendlyBattle::toFriendlyBattle)
                 .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList)
                 .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
                 .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki)
