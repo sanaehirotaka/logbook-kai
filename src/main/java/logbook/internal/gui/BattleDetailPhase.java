@@ -93,22 +93,24 @@ public class BattleDetailPhase extends TitledPane {
 
         for (Ship ship : this.phase.getAfterFriend()) {
             if (ship != null) {
-                this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship, this.phase.getItemMap()));
+                this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship,
+                        this.phase.getItemMap(), this.phase.getEscape()));
             }
         }
         for (Ship ship : this.phase.getAfterFriendCombined()) {
             if (ship != null) {
-                this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship, this.phase.getItemMap()));
+                this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship,
+                        this.phase.getItemMap(), this.phase.getEscape()));
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemyCombined()) {
             if (enemy != null) {
-                this.afterEnemyCombined.getChildren().add(new BattleDetailPhaseShip(enemy, null));
+                this.afterEnemyCombined.getChildren().add(new BattleDetailPhaseShip(enemy, null, null));
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemy()) {
             if (enemy != null) {
-                this.afterEnemy.getChildren().add(new BattleDetailPhaseShip(enemy, null));
+                this.afterEnemy.getChildren().add(new BattleDetailPhaseShip(enemy, null, null));
             }
         }
 
@@ -141,8 +143,10 @@ public class BattleDetailPhase extends TitledPane {
                     content.getChildren().add(new Label(sb.toString()));
 
                     HBox graphic = new HBox();
-                    graphic.getChildren().add(new BattleDetailPhaseShip(attacker, this.phase.getItemMap()));
-                    graphic.getChildren().add(new BattleDetailPhaseShip(defender, this.phase.getItemMap()));
+                    graphic.getChildren().add(new BattleDetailPhaseShip(attacker,
+                            this.phase.getItemMap(), this.phase.getEscape()));
+                    graphic.getChildren().add(new BattleDetailPhaseShip(defender,
+                            this.phase.getItemMap(), this.phase.getEscape()));
                     content.getChildren().add(graphic);
                     content.getChildren().add(new Separator());
                 }

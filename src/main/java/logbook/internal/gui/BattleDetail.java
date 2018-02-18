@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import javafx.animation.Animation;
@@ -60,8 +61,11 @@ public class BattleDetail extends WindowController {
     /** 艦隊スナップショット */
     private Map<Integer, List<Ship>> deckMap;
 
-    /** 装備 */
+    /** 装備スナップショット */
     private Map<Integer, SlotItem> itemMap;
+
+    /** 退避艦IDスナップショット */
+    private Set<Integer> escape;
 
     /** 戦闘 */
     private IFormation battle;
@@ -159,7 +163,8 @@ public class BattleDetail extends WindowController {
             Map<Integer, SlotItem> itemMap = log.getItemMap();
             IFormation battle = log.getBattle();
             IMidnightBattle midnight = log.getMidnight();
-            this.setData(last, combinedType, deckMap, itemMap, battle, midnight);
+            Set<Integer> escape = log.getEscape();
+            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight);
         }
     }
 
@@ -168,16 +173,18 @@ public class BattleDetail extends WindowController {
      * @param last 出撃/進撃
      * @param combinedType 連合艦隊
      * @param deckMap 艦隊スナップショット
+     * @param escape 退避艦IDスナップショット
      * @param itemMap 装備
      * @param battle 戦闘
      * @param midnight 夜戦
      */
-    void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap,
+    void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap, Set<Integer> escape,
             Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight) {
         this.last = last;
         this.combinedType = combinedType;
         this.deckMap = deckMap;
         this.itemMap = itemMap;
+        this.escape = escape;
         this.battle = battle;
         this.midnight = midnight;
         this.update();
@@ -199,7 +206,7 @@ public class BattleDetail extends WindowController {
     }
 
     private void setInfo() {
-        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap);
+        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap, this.escape);
 
         // マス
         boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
@@ -296,7 +303,7 @@ public class BattleDetail extends WindowController {
      * 各フェイズの表示
      */
     private void setPhase() {
-        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap);
+        PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap, this.escape);
 
         List<Node> phases = this.phase.getChildren();
         phases.clear();
