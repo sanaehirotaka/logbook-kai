@@ -3,6 +3,7 @@ package logbook.internal.gui;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -177,10 +178,11 @@ public class BattleLogController extends WindowController {
                                 Map<Integer, SlotItem> itemMap = log.getItemMap();
                                 IFormation battle = log.getBattle();
                                 IMidnightBattle midnight = log.getMidnight();
+                                Set<Integer> escape = log.getEscape();
 
                                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                                         "戦闘ログ", c -> {
-                                            ((BattleDetail) c).setData(last, combinedType, deckMap, itemMap,
+                                            ((BattleDetail) c).setData(last, combinedType, deckMap, escape, itemMap,
                                                     battle, midnight);
                                         }, null);
                             } catch (Exception ex) {

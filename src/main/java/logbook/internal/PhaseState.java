@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import logbook.bean.AppCondition;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.AtType;
@@ -75,12 +77,15 @@ public class PhaseState {
     /** 装備 */
     private Map<Integer, SlotItem> itemMap;
 
+    /** 退避艦ID */
+    private Set<Integer> escape;
+
     /**
      * 戦闘から新規フェイズを作成します
      * @param log 戦闘ログ
      */
     public PhaseState(BattleLog log) {
-        this(log.getCombinedType(), log.getBattle(), log.getDeckMap(), log.getItemMap());
+        this(log.getCombinedType(), log.getBattle(), log.getDeckMap(), log.getItemMap(), log.getEscape());
     }
 
     /**
@@ -88,10 +93,13 @@ public class PhaseState {
      * @param combinedType 連合艦隊
      * @param b 戦闘
      * @param deckMap 艦隊スナップショット
+     * @param itemMap 装備スナップショット
+     * @param escape 退避艦IDスナップショット
      */
     public PhaseState(CombinedType combinedType, IBattle b,
-            Map<Integer, List<Ship>> deckMap, Map<Integer, SlotItem> itemMap) {
+            Map<Integer, List<Ship>> deckMap, Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
         this.itemMap = itemMap != null ? itemMap : SlotItemCollection.get().getSlotitemMap();
+        this.escape = escape != null ? escape : AppCondition.get().getEscape();
 
         // 連合艦隊
         this.combinedType = combinedType;
@@ -155,6 +163,7 @@ public class PhaseState {
      */
     public PhaseState(PhaseState ps) {
         this.itemMap = ps.itemMap;
+        this.escape = ps.escape;
         this.combinedType = ps.combinedType;
         this.combined = ps.combined;
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IFormation;
@@ -40,6 +41,9 @@ public class BattleLog implements Serializable {
 
     /** 装備スナップショット */
     private Map<Integer, SlotItem> itemMap;
+
+    /** 退避艦IDスナップショット */
+    private Set<Integer> escape;
 
     /** 日時(戦闘結果の取得日時) */
     private String time;
@@ -89,5 +93,6 @@ public class BattleLog implements Serializable {
         }
         log.setDeckMap(deckMap);
         log.setItemMap(cloneItem);
+        log.setEscape(AppCondition.get().getEscape());
     }
 }

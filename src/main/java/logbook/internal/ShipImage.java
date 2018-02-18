@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -110,6 +111,9 @@ class ShipImage {
     /** 疲労赤顔 */
     private static final Layer RED_FACE = new Layer(143, 12, "logbook/gui/cond_red.png");
 
+    /** 出撃札 */
+    private static final String JOIN_BANNER = "res.common.MC_Join_{0}.png";
+
     /** 装備アイコンのサイズ */
     private static final int ITEM_ICON_SIZE = 24;
 
@@ -152,10 +156,12 @@ class ShipImage {
      * @param addItem 装備画像を追加します
      * @param applyState 遠征や入渠、退避のバナーアイコンを追加する
      * @param itemMap 装備Map
+     * @param escape 退避艦ID
      * @return 艦娘の画像
      */
-    static Image get(Chara chara, boolean addItem, boolean applyState, Map<Integer, SlotItem> itemMap) {
-        return get(chara, addItem, applyState, true, true, true, itemMap);
+    static Image get(Chara chara, boolean addItem, boolean applyState,
+            Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
+        return get(chara, addItem, applyState, true, true, true, itemMap, escape);
     }
 
     /**
@@ -168,10 +174,11 @@ class ShipImage {
      * @param cond コンディションを反映する
      * @param hpGauge HPゲージを反映する
      * @param itemMap 装備Map
+     * @param escape 退避艦ID
      * @return 艦娘の画像
      */
     static Image get(Chara chara, boolean addItem, boolean applyState, boolean banner, boolean cond, boolean hpGauge,
-            Map<Integer, SlotItem> itemMap) {
+            Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
         Canvas canvas = new Canvas(160, 40);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -192,7 +199,7 @@ class ShipImage {
                     .getMissionShips()
                     .contains(((Ship) chara).getId());
             // 退避
-            boolean isEscape = applyState && isShip && Ships.isEscape((Ship) chara);
+            boolean isEscape = isShip && Ships.isEscape((Ship) chara, escape);
 
             // バッチ
             if (banner) {
@@ -225,6 +232,15 @@ class ShipImage {
                 } else if (isShip && Ships.isRed((Ship) chara)) {
                     layers.add(RED_BACKGROUND);
                     layers.add(RED_FACE);
+                }
+            }
+            // 出撃札
+            if (isShip) {
+                Ship ship = (Ship) chara;
+                Integer sallyArea = ship.getSallyArea();
+                if (sallyArea != null && sallyArea.intValue() != 0) {
+                    Path p = Paths.get("common", JOIN_BANNER.replace("{0}", Integer.toString(sallyArea - 1)));
+                    layers.add(new Layer(31, -3, p));
                 }
             }
             // 装備画像

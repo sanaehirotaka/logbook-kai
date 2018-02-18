@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
@@ -168,11 +169,24 @@ public class Ships {
      * 艦娘が退避状態か判定します
      *
      * @param ship 退避
+     * @param escape 退避艦ID
+     * @return 退避状態の場合true
+     */
+    public static boolean isEscape(Ship ship, Set<Integer> escape) {
+        if (escape != null) {
+            return escape.contains(ship.getId());
+        }
+        return false;
+    }
+
+    /**
+     * 艦娘が退避状態か判定します
+     *
+     * @param ship 退避
      * @return 退避状態の場合true
      */
     public static boolean isEscape(Ship ship) {
-        return AppCondition.get()
-                .getEscape().contains(ship.getId());
+        return isEscape(ship, AppCondition.get().getEscape());
     }
 
     /**
@@ -225,7 +239,7 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipImage(Chara chara) throws IllegalStateException {
-        return ShipImage.get(chara, false, true, null);
+        return ShipImage.get(chara, false, true, null, null);
     }
 
     /**
@@ -236,7 +250,7 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipWithItemImage(Chara chara) throws IllegalStateException {
-        return shipWithItemImage(chara, SlotItemCollection.get().getSlotitemMap());
+        return shipWithItemImage(chara, SlotItemCollection.get().getSlotitemMap(), AppCondition.get().getEscape());
     }
 
     /**
@@ -244,11 +258,13 @@ public class Ships {
      *
      * @param chara キャラクター
      * @param itemMap 装備Map
+     * @param escape 退避艦ID
      * @return 艦娘の画像
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Image shipWithItemImage(Chara chara, Map<Integer, SlotItem> itemMap) throws IllegalStateException {
-        return ShipImage.get(chara, true, true, itemMap);
+    public static Image shipWithItemImage(Chara chara,
+            Map<Integer, SlotItem> itemMap, Set<Integer> escape) throws IllegalStateException {
+        return ShipImage.get(chara, true, true, itemMap, escape);
     }
 
     /**
@@ -259,7 +275,8 @@ public class Ships {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipWithItemWithoutStateBannerImage(Chara chara) throws IllegalStateException {
-        return shipWithItemWithoutStateBannerImage(chara, SlotItemCollection.get().getSlotitemMap());
+        return shipWithItemWithoutStateBannerImage(chara,
+                SlotItemCollection.get().getSlotitemMap(), AppCondition.get().getEscape());
     }
 
     /**
@@ -267,12 +284,13 @@ public class Ships {
      *
      * @param chara キャラクター
      * @param itemMap 装備Map
+     * @param escape 退避艦ID
      * @return 艦娘の画像
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image shipWithItemWithoutStateBannerImage(Chara chara,
-            Map<Integer, SlotItem> itemMap) throws IllegalStateException {
-        return ShipImage.get(chara, true, false, itemMap);
+            Map<Integer, SlotItem> itemMap, Set<Integer> escape) throws IllegalStateException {
+        return ShipImage.get(chara, true, false, itemMap, escape);
     }
 
     /**
