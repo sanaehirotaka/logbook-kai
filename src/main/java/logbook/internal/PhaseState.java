@@ -305,8 +305,10 @@ public class PhaseState {
      * @param battle 夜戦
      */
     public void applyFriendlyHougeki(IMidnightBattle battle) {
-        this.setInitialHp(battle);
-        this.applyFriendlyHougeki(battle.getFriendlyBattle());
+        if (battle.getFriendlyBattle() != null) {
+            this.setInitialHp(battle);
+            this.applyFriendlyHougeki(battle.getFriendlyBattle());
+        }
     }
 
     /**

@@ -1,9 +1,6 @@
 package logbook.internal;
 
-import java.beans.XMLDecoder;
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -80,8 +77,8 @@ public class BattleLogs {
             // 比較するためのファイル名(拡張子を含まない)
             String expName = fileNameSafeDateString(Logs.DATE_FORMAT.format(exp));
 
-            PathMatcher xmlFilter = dir.getFileSystem()
-                    .getPathMatcher("glob:*.{xml,json}");
+            PathMatcher logFilter = dir.getFileSystem()
+                    .getPathMatcher("glob:*.{json}");
 
             Consumer<Path> deleteAction = p -> {
                 try {
@@ -100,7 +97,7 @@ public class BattleLogs {
             };
 
             try (Stream<Path> ds = Files.list(dir)) {
-                ds.filter(p -> xmlFilter.matches(p.getFileName()))
+                ds.filter(p -> logFilter.matches(p.getFileName()))
                         .filter(compareAction)
                         .forEach(deleteAction);
             }
@@ -124,27 +121,10 @@ public class BattleLogs {
                     return mapper.readValue(reader, BattleLog.class);
                 }
             }
-            path = xmlPath(dateString);
-            if (Files.isReadable(path)) {
-                try (InputStream in = new BufferedInputStream(Files.newInputStream(path))) {
-                    try (XMLDecoder decoder = new XMLDecoder(in)) {
-                        Object obj = decoder.readObject();
-
-                        if (obj instanceof BattleLog) {
-                            return (BattleLog) obj;
-                        }
-                    }
-                }
-            }
         } catch (Exception e) {
             LoggerHolder.get().warn("戦闘ログの読み込み中に例外", e);
         }
         return null;
-    }
-
-    private static Path xmlPath(String dateString) {
-        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
-        return dir.resolve(fileNameSafeDateString(dateString) + ".xml");
     }
 
     private static Path jsonPath(String dateString) {
