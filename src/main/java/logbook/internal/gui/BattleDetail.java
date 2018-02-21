@@ -346,20 +346,18 @@ public class BattleDetail extends WindowController {
             this.friendlyHougeki(ps, phases);
             // 特殊夜戦
             this.midnightBattle(ps, phases);
-
-            PhaseState phaseSortie = new PhaseState(ps);
             // 基地航空隊戦フェイズ(噴式強襲)
-            this.airBaseInjectionAttack(phaseSortie, phases);
+            this.airBaseInjectionAttack(ps, phases);
             // 航空戦フェイズ(噴式強襲)
-            this.injectionKouku(phaseSortie, phases);
+            this.injectionKouku(ps, phases);
             // 基地航空隊戦フェイズ
-            this.airBaseAttack(phaseSortie, phases);
+            this.airBaseAttack(ps, phases);
             // 航空戦フェイズ
-            this.kouku(phaseSortie, phases);
+            this.kouku(ps, phases);
             // 支援フェイズ
-            this.support(phaseSortie, phases);
+            this.support(ps, phases);
             // 砲雷撃戦フェイズ
-            this.sortieHougeki(phaseSortie, phases);
+            this.sortieHougeki(ps, phases);
         }
 
         ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
@@ -522,6 +520,7 @@ public class BattleDetail extends WindowController {
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
+        ps.getAttackDetails().clear();
     }
 
     /**
@@ -597,6 +596,7 @@ public class BattleDetail extends WindowController {
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
+        ps.getAttackDetails().clear();
     }
 
     /**
@@ -607,15 +607,15 @@ public class BattleDetail extends WindowController {
     private void friendlyHougeki(PhaseState ps, List<Node> phases) {
         // 夜戦(友軍艦隊)
         if (this.midnight != null && this.midnight.getFriendlyInfo() != null) {
-            PhaseState phaseMidnight = new PhaseState(ps);
             // 夜戦(友軍艦隊)適用
-            phaseMidnight.applyFriendlyHougeki(this.midnight);
+            ps.applyFriendlyHougeki(this.midnight);
 
-            BattleDetailPhase phasePane = new BattleDetailPhase(phaseMidnight, null, true);
+            BattleDetailPhase phasePane = new BattleDetailPhase(ps, null, true);
             phasePane.setText("夜戦(友軍艦隊)");
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
+        ps.getAttackDetails().clear();
     }
 
     /**
@@ -626,15 +626,15 @@ public class BattleDetail extends WindowController {
     private void midnight(PhaseState ps, List<Node> phases) {
         // 夜戦
         if (this.midnight != null) {
-            PhaseState phaseMidnight = new PhaseState(ps);
             // 夜戦適用
-            phaseMidnight.applyMidnightBattle(this.midnight);
+            ps.applyMidnightBattle(this.midnight);
 
-            BattleDetailPhase phasePane = new BattleDetailPhase(phaseMidnight);
+            BattleDetailPhase phasePane = new BattleDetailPhase(ps);
             phasePane.setText("夜戦");
             phasePane.setExpanded(false);
             phases.add(phasePane);
         }
+        ps.getAttackDetails().clear();
     }
 
     /**

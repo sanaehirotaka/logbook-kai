@@ -306,7 +306,20 @@ public class PhaseState {
      */
     public void applyFriendlyHougeki(IMidnightBattle battle) {
         if (battle.getFriendlyBattle() != null) {
-            this.setInitialHp(battle);
+            this.afterFriendly.clear();
+            if (battle.getFriendlyInfo() != null) {
+                FriendlyInfo friendlyInfo = battle.getFriendlyInfo();
+                for (int i = 0, s = friendlyInfo.getShipId().size(); i < s; i++) {
+                    Friend f = new Friend();
+                    f.setShipId(friendlyInfo.getShipId().get(i));
+                    f.setLv(friendlyInfo.getShipLv().get(i));
+                    f.setSlot(friendlyInfo.getSlot().get(i));
+                    f.setMaxhp(friendlyInfo.getMaxhps().get(i));
+                    f.setNowhp(friendlyInfo.getNowhps().get(i));
+
+                    this.afterFriendly.add(f);
+                }
+            }
             this.applyFriendlyHougeki(battle.getFriendlyBattle());
         }
     }
@@ -717,25 +730,6 @@ public class PhaseState {
                         chara.setMaxhp(eMaxHps.get(i));
                         chara.setNowhp(eNowHps.get(i));
                     }
-                }
-            }
-        }
-        // 友軍艦隊
-        if (b instanceof IMidnightBattle) {
-            this.afterFriendly.clear();
-
-            IMidnightBattle midnightBattle = (IMidnightBattle) b;
-            if (midnightBattle.getFriendlyInfo() != null) {
-                FriendlyInfo friendlyInfo = midnightBattle.getFriendlyInfo();
-                for (int i = 0, s = friendlyInfo.getShipId().size(); i < s; i++) {
-                    Friend f = new Friend();
-                    f.setShipId(friendlyInfo.getShipId().get(i));
-                    f.setLv(friendlyInfo.getShipLv().get(i));
-                    f.setSlot(friendlyInfo.getSlot().get(i));
-                    f.setMaxhp(friendlyInfo.getMaxhps().get(i));
-                    f.setNowhp(friendlyInfo.getNowhps().get(i));
-
-                    this.afterFriendly.add(f);
                 }
             }
         }

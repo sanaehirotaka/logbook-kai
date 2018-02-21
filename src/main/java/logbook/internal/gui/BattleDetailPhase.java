@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.value.ChangeListener;
@@ -29,6 +30,9 @@ public class BattleDetailPhase extends TitledPane {
 
     /** フェイズ */
     private PhaseState phase;
+
+    /** 詳細 */
+    private List<PhaseState.AttackDetail> attackDetails;
 
     /** 付加情報 */
     private List<? extends Node> nodes;
@@ -88,7 +92,8 @@ public class BattleDetailPhase extends TitledPane {
     * @param isFriendlyBattle 友軍艦隊フラグ
     */
     public BattleDetailPhase(PhaseState phase, List<? extends Node> infomation, boolean isFriendlyBattle) {
-        this.phase = phase;
+        this.phase = new PhaseState(phase);
+        this.attackDetails = new ArrayList<>(phase.getAttackDetails());
         this.nodes = infomation;
         this.isFriendlyBattle = isFriendlyBattle;
         try {
@@ -139,7 +144,7 @@ public class BattleDetailPhase extends TitledPane {
             }
         }
 
-        if (!this.phase.getAttackDetails().isEmpty()) {
+        if (!this.attackDetails.isEmpty()) {
             TitledPane pane = new TitledPane("詳細", new VBox());
             pane.setAnimated(false);
             pane.setExpanded(false);
@@ -155,7 +160,7 @@ public class BattleDetailPhase extends TitledPane {
         for (Node node : this.detail.getChildren()) {
             if (node instanceof TitledPane) {
                 VBox content = new VBox();
-                for (PhaseState.AttackDetail detail : this.phase.getAttackDetails()) {
+                for (PhaseState.AttackDetail detail : this.attackDetails) {
                     Chara attacker = detail.getAttacker();
                     Chara defender = detail.getDefender();
 
