@@ -1,4 +1,11 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* 所有艦娘一覧 */
+.shipWindow .tab-pane .tab-label {
+    -fx-tab-min-width: 4em;
+    -fx-font-size: 1.2em;
+}
+.shipWindow .message {
+    -fx-font-size: 12pt;
+}
 
 TabPane .deepgreen {
     -fx-text-fill: rgb(0, 60, 0);
