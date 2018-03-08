@@ -1,0 +1,13 @@
+.root {
+    -fx-background-color: white;
+    -fx-padding: .25em;
+    -fx-stroke: linear-gradient(to bottom, rgba(0, 0, 0, .3), rgba(0, 0, 0, .7)) ;
+    -fx-stroke-width: 0.5;
+    -fx-fill: rgba(255.0, 255.0, 255.0, .95);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, .2), 10.0, 0.5, 2.0, 2.0);
+}
+.title {
+    -fx-font-size: 1em;
+    -fx-text-fill: green;
+    -fx-font-weight: bold;
+}

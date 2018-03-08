@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root maxHeight="-Infinity" minHeight="-Infinity" minWidth="150.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <StackPane>
+         <children>
+            <Label fx:id="title" styleClass="title" wrapText="true" />
+         </children>
+      </StackPane>
+   </children>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@pop-over.css" />
+   </stylesheets>
+</fx:root>
