@@ -1,7 +1,5 @@
 package logbook.internal;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -522,68 +520,6 @@ public class Ships {
             return bonus;
         }
         return 0D;
-    }
-
-    /**
-     * 索敵値(2-5式秋)
-     *
-     * @param ships 艦娘達
-     * @return 索敵値(2-5式秋)
-     */
-    @Deprecated
-    public static double viewRange(List<Ship> ships) {
-        // 索敵スコア
-        // = 艦上爆撃機 × (1.04)
-        // + 艦上攻撃機 × (1.37)
-        // + 艦上偵察機 × (1.66)
-        // + 水上偵察機 × (2.00)
-        // + 水上爆撃機 × (1.78)
-        // + 小型電探 × (1.00)
-        // + 大型電探 × (0.99)
-        // + 探照灯 × (0.91)
-        // + √(各艦毎の素索敵) × (1.69)
-        // + (司令部レベルを5の倍数に切り上げ) × (-0.61)
-        ToDoubleFunction<SlotitemMst> mapper = item -> {
-            double itemScore = item.getSaku();
-            if (SlotItemType.艦上爆撃機.equals(item)) {
-                itemScore *= 1.04D;
-            } else if (SlotItemType.艦上攻撃機.equals(item)) {
-                itemScore *= 1.37D;
-            } else if (SlotItemType.艦上偵察機.equals(item) || SlotItemType.艦上偵察機II.equals(item)) {
-                itemScore *= 1.66D;
-            } else if (SlotItemType.水上偵察機.equals(item)) {
-                itemScore *= 2.00D;
-            } else if (SlotItemType.水上爆撃機.equals(item)) {
-                itemScore *= 1.78D;
-            } else if (SlotItemType.小型電探.equals(item)) {
-                itemScore *= 1.00D;
-            } else if (SlotItemType.大型電探.equals(item) || SlotItemType.大型電探II.equals(item)) {
-                itemScore *= 0.99D;
-            } else if (SlotItemType.探照灯.equals(item)) {
-                itemScore *= 0.91D;
-            } else {
-                itemScore *= 0;
-            }
-            return itemScore;
-        };
-        // 装備索敵スコア
-        double itemScore = ships.stream()
-                .flatMap(e -> getSlotitemMst(e))
-                .mapToDouble(mapper)
-                .sum();
-        // 艦娘索敵スコア
-        double shipScore = ships.stream()
-                .mapToDouble(e -> e.getSakuteki().get(0) - getSlotitemMst(e)
-                        .mapToInt(SlotitemMst::getSaku)
-                        .sum())
-                .map(Math::sqrt)
-                .sum() * 1.69D;
-        // レベルスコア
-        double levelScore = ((Basic.get().getLevel() + 4) / 5) * 5 * -0.61D;
-
-        return BigDecimal.valueOf(itemScore + shipScore + levelScore)
-                .setScale(2, RoundingMode.HALF_UP)
-                .doubleValue();
     }
 
     /**
