@@ -140,6 +140,7 @@ public class PhaseState {
                 e.setShipId(b.getShipKe().get(i));
                 e.setLv(b.getShipLv().get(i));
                 e.setSlot(b.getESlot().get(i));
+                e.setOrder(i);
 
                 this.afterEnemy.add(e);
             }
@@ -153,6 +154,7 @@ public class PhaseState {
                     e.setShipId(ecb.getShipKeCombined().get(i));
                     e.setLv(ecb.getShipLvCombined().get(i));
                     e.setSlot(ecb.getESlotCombined().get(i));
+                    e.setOrder(i + 6);
 
                     this.afterEnemyCombined.add(e);
                 }

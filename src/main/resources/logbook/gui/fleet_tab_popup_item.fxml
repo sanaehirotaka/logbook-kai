@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="popup-item" stylesheets="@fleet_tab_popup_item.css" type="HBox" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="onslot" styleClass="onslot" />
+      <Label fx:id="maxeq" />
+      <ImageView fx:id="image" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="name" />
+   </children>
+</fx:root>

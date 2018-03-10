@@ -1,16 +1,12 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
-
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +19,6 @@ import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Time;
-import logbook.plugin.PluginContainer;
 
 /**
  * 艦隊
@@ -33,8 +28,6 @@ public class MissionPane extends AnchorPane {
 
     /** 艦隊 */
     private final DeckPort port;
-
-    private PopOver pop;
 
     /** 色変化1段階目 */
     private final Duration stage1 = Duration.ofMinutes(20);
@@ -78,6 +71,27 @@ public class MissionPane extends AnchorPane {
     void initialize() {
         try {
             this.update();
+            // マウスオーバーでのポップアップ
+            PopOver<DeckPort> popover = new PopOver<>((node, port) -> {
+                String message;
+                // 帰還時間
+                long time = this.port.getMission().get(2);
+                if (time > 0) {
+                    ZonedDateTime dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time),
+                            ZoneOffset.systemDefault());
+                    if (dateTime.toLocalDate().equals(ZonedDateTime.now().toLocalDate())) {
+                        message = "今日 " + DateTimeFormatter.ofPattern("H時m分s秒").format(dateTime)
+                                + " 頃に帰投します";
+                    } else {
+                        message = DateTimeFormatter.ofPattern("M月d日 H時m分s秒").format(dateTime)
+                                + " 頃に帰投します";
+                    }
+                } else {
+                    message = "任務がありません";
+                }
+                return new PopOverPane(port.getName(), message);
+            });
+            popover.install(this, this.port);
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
@@ -145,42 +159,5 @@ public class MissionPane extends AnchorPane {
                 styleClass.add("stage1");
             }
         }
-
-        // マウスオーバーでのポップアップ
-        this.setOnMouseEntered(e -> {
-            if (this.pop != null) {
-                this.pop.hide();
-            }
-            if (time > 0) {
-                ZonedDateTime dateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time),
-                        ZoneOffset.systemDefault());
-                String message;
-                if (dateTime.toLocalDate().equals(ZonedDateTime.now().toLocalDate())) {
-                    message = "今日 " + DateTimeFormatter.ofPattern("H時m分s秒").format(dateTime)
-                            + " 頃に帰投します";
-                } else {
-                    message = DateTimeFormatter.ofPattern("M月d日 H時m分s秒").format(dateTime)
-                            + " 頃に帰投します";
-                }
-                this.pop = new PopOver(new Label(message));
-                this.pop.setOpacity(0.95D);
-                this.pop.setDetached(true);
-                this.pop.setCornerRadius(0);
-                this.pop.setTitle(this.port.getName());
-                this.pop.setArrowLocation(ArrowLocation.TOP_LEFT);
-                URL url = PluginContainer.getInstance()
-                        .getClassLoader()
-                        .getResource("logbook/gui/popup.css");
-                this.pop.getRoot()
-                        .getStylesheets()
-                        .add(url.toString());
-                this.pop.show(this);
-            }
-        });
-        this.setOnMouseExited(e -> {
-            if (this.pop != null) {
-                this.pop.hide();
-            }
-        });
     }
 }

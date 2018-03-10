@@ -3,12 +3,14 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TitledPane;
@@ -113,34 +115,78 @@ public class BattleDetailPhase extends TitledPane {
             this.infomation.getChildren().addAll(this.nodes);
         }
 
+        PopOver<Chara> popover = new PopOver<>((node, chara) -> {
+            VBox child = new VBox();
+            child.getChildren().add(new FleetTabShipPopup(chara));
+            List<PhaseState.AttackDetail> details = this.attackDetails.stream()
+                    .filter(e -> {
+                        if (chara.getClass() != e.getAttacker().getClass()) {
+                            return false;
+                        }
+                        if (chara instanceof Ship) {
+                            return ((Ship) chara).getId() == ((Ship) e.getAttacker()).getId();
+                        }
+                        if (chara instanceof Friend) {
+                            return chara.getShipId() == e.getAttacker().getShipId();
+                        }
+                        if (chara instanceof Enemy) {
+                            return ((Enemy) chara).getOrder() == ((Enemy) e.getAttacker()).getOrder();
+                        }
+                        return false;
+                    })
+                    .collect(Collectors.toList());
+            if (!details.isEmpty()) {
+                Label text = new Label("与ダメージ");
+                text.getStyleClass().add("title");
+                child.getChildren().add(text);
+                child.getChildren().add(this.detailNode(details));
+            }
+            return new PopOverPane(Ships.toName(chara), child);
+        });
+
         if (this.isFriendlyBattle) {
             for (Friend friend : this.phase.getAfterFriendly()) {
                 if (friend != null) {
-                    this.afterFriend.getChildren().add(new BattleDetailPhaseShip(friend, null, null));
+                    BattleDetailPhaseShip phaseShip = new BattleDetailPhaseShip(friend, null, null);
+                    this.afterFriend.getChildren().add(phaseShip);
+                    // マウスオーバーでのポップアップ
+                    popover.install(phaseShip, friend);
                 }
             }
         } else {
             for (Ship ship : this.phase.getAfterFriend()) {
                 if (ship != null) {
-                    this.afterFriend.getChildren().add(new BattleDetailPhaseShip(ship,
-                            this.phase.getItemMap(), this.phase.getEscape()));
+                    BattleDetailPhaseShip phaseShip = new BattleDetailPhaseShip(ship,
+                            this.phase.getItemMap(), this.phase.getEscape());
+                    this.afterFriend.getChildren().add(phaseShip);
+                    // マウスオーバーでのポップアップ
+                    popover.install(phaseShip, ship);
                 }
             }
             for (Ship ship : this.phase.getAfterFriendCombined()) {
                 if (ship != null) {
-                    this.afterFriendCombined.getChildren().add(new BattleDetailPhaseShip(ship,
-                            this.phase.getItemMap(), this.phase.getEscape()));
+                    BattleDetailPhaseShip phaseShip = new BattleDetailPhaseShip(ship,
+                            this.phase.getItemMap(), this.phase.getEscape());
+                    this.afterFriendCombined.getChildren().add(phaseShip);
+                    // マウスオーバーでのポップアップ
+                    popover.install(phaseShip, ship);
                 }
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemyCombined()) {
             if (enemy != null) {
-                this.afterEnemyCombined.getChildren().add(new BattleDetailPhaseShip(enemy, null, null));
+                BattleDetailPhaseShip phaseShip = new BattleDetailPhaseShip(enemy, null, null);
+                this.afterEnemyCombined.getChildren().add(phaseShip);
+                // マウスオーバーでのポップアップ
+                popover.install(phaseShip, enemy);
             }
         }
         for (Enemy enemy : this.phase.getAfterEnemy()) {
             if (enemy != null) {
-                this.afterEnemy.getChildren().add(new BattleDetailPhaseShip(enemy, null, null));
+                BattleDetailPhaseShip phaseShip = new BattleDetailPhaseShip(enemy, null, null);
+                this.afterEnemy.getChildren().add(phaseShip);
+                // マウスオーバーでのポップアップ
+                popover.install(phaseShip, enemy);
             }
         }
 
@@ -159,29 +205,34 @@ public class BattleDetailPhase extends TitledPane {
             return;
         for (Node node : this.detail.getChildren()) {
             if (node instanceof TitledPane) {
-                VBox content = new VBox();
-                for (PhaseState.AttackDetail detail : this.attackDetails) {
-                    Chara attacker = detail.getAttacker();
-                    Chara defender = detail.getDefender();
-
-                    StringBuilder sb = new StringBuilder();
-                    if (attacker != null)
-                        sb.append(Ships.toName(attacker)).append("が");
-                    sb.append(Ships.toName(defender)).append("に");
-                    sb.append(detail.getDamage()).append("ダメージ");
-                    sb.append("(").append(detail.getAtType()).append(")");
-                    content.getChildren().add(new Label(sb.toString()));
-
-                    HBox graphic = new HBox();
-                    graphic.getChildren().add(new BattleDetailPhaseShip(attacker,
-                            this.phase.getItemMap(), this.phase.getEscape()));
-                    graphic.getChildren().add(new BattleDetailPhaseShip(defender,
-                            this.phase.getItemMap(), this.phase.getEscape()));
-                    content.getChildren().add(graphic);
-                    content.getChildren().add(new Separator());
-                }
+                Parent content = this.detailNode(this.attackDetails);
                 ((TitledPane) node).setContent(content);
             }
         }
+    }
+
+    private Parent detailNode(List<PhaseState.AttackDetail> details) {
+        VBox content = new VBox();
+        for (PhaseState.AttackDetail detail : details) {
+            Chara attacker = detail.getAttacker();
+            Chara defender = detail.getDefender();
+
+            StringBuilder sb = new StringBuilder();
+            if (attacker != null)
+                sb.append(Ships.toName(attacker)).append("が");
+            sb.append(Ships.toName(defender)).append("に");
+            sb.append(detail.getDamage()).append("ダメージ");
+            sb.append("(").append(detail.getAtType()).append(")");
+            content.getChildren().add(new Label(sb.toString()));
+
+            HBox graphic = new HBox();
+            graphic.getChildren().add(new BattleDetailPhaseShip(attacker,
+                    this.phase.getItemMap(), this.phase.getEscape()));
+            graphic.getChildren().add(new BattleDetailPhaseShip(defender,
+                    this.phase.getItemMap(), this.phase.getEscape()));
+            content.getChildren().add(graphic);
+            content.getChildren().add(new Separator());
+        }
+        return content;
     }
 }

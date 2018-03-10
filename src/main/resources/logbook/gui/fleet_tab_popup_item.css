@@ -1,0 +1,10 @@
+.popup-item {
+    -fx-alignment: CENTER;
+}
+.onslot {
+    -fx-min-width: 1.5em;
+    -fx-alignment: CENTER_RIGHT;
+}
+.onslot.alert {
+    -fx-font-weight: bold;
+}
