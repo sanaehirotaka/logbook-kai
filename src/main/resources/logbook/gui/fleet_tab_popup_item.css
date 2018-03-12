@@ -5,6 +5,14 @@
     -fx-min-width: 1.5em;
     -fx-alignment: CENTER_RIGHT;
 }
+.onslot.disabled {
+    -fx-text-fill: gray;
+}
 .onslot.alert {
     -fx-font-weight: bold;
 }
+.onslot.empty {
+    -fx-text-fill: white;
+    -fx-background-color: brown;
+}
+
