@@ -16,7 +16,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
-import logbook.Messages;
 import logbook.bean.Ship;
 import logbook.bean.ShipLabelCollection;
 import logbook.bean.ShipMst;
@@ -770,21 +769,7 @@ public class ShipItem {
 
         // 装備の名前
         Function<Integer, String> slotItemName = itemId -> {
-            SlotItem item = itemMap.get(itemId);
-            return Items.slotitemMst(item)
-                    .map(mst -> {
-
-                        StringBuilder text = new StringBuilder(mst.getName());
-
-                        text.append(Optional.ofNullable(item.getAlv())
-                                .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
-                                .orElse(""));
-                        text.append(Optional.ofNullable(item.getLevel())
-                                .filter(lv -> lv > 0)
-                                .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
-                                .orElse(""));
-                        return text.toString();
-                    }).orElse("");
+            return Items.name(itemMap.get(itemId));
         };
 
         return new StringJoiner("\t")

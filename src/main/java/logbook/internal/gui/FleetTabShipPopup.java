@@ -1,7 +1,6 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import logbook.Messages;
 import logbook.bean.Chara;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -158,36 +156,26 @@ public class FleetTabShipPopup extends VBox {
                 }
                 if (item != null) {
                     this.image.setImage(Items.itemImage(item));
-                    Optional<SlotitemMst> slotItemMst = Items.slotitemMst(item);
-                    String name = slotItemMst
-                            .map(SlotitemMst::getName)
-                            .orElse("");
-                    name += Optional.ofNullable(item.getLevel())
-                            .filter(lv -> lv > 0)
-                            .map(lv -> Messages.getString("item.level", lv))
-                            .orElse("");
-                    name += Optional.ofNullable(item.getAlv())
-                            .map(alv -> Messages.getString("item.alv", alv))
-                            .orElse("");
-                    this.name.setText(name);
+                    this.name.setText(Items.name(item));
 
                     // 特定の装備以外は搭載機数をグレー表示にする
-                    boolean isOnslot = slotItemMst.map(mst -> SlotItemType.オートジャイロ.equals(mst)
-                            || SlotItemType.艦上攻撃機.equals(mst)
-                            || SlotItemType.艦上戦闘機.equals(mst)
-                            || SlotItemType.艦上偵察機.equals(mst)
-                            || SlotItemType.艦上偵察機II.equals(mst)
-                            || SlotItemType.艦上爆撃機.equals(mst)
-                            || SlotItemType.水上戦闘機.equals(mst)
-                            || SlotItemType.水上偵察機.equals(mst)
-                            || SlotItemType.水上爆撃機.equals(mst)
-                            || SlotItemType.対潜哨戒機.equals(mst)
-                            || SlotItemType.大型飛行艇.equals(mst)
-                            || SlotItemType.噴式攻撃機.equals(mst)
-                            || SlotItemType.噴式戦闘機.equals(mst)
-                            || SlotItemType.噴式戦闘爆撃機.equals(mst)
-                            || SlotItemType.噴式偵察機.equals(mst))
-                        .orElse(false);
+                    boolean isOnslot = Items.slotitemMst(item)
+                            .map(mst -> SlotItemType.オートジャイロ.equals(mst)
+                                    || SlotItemType.艦上攻撃機.equals(mst)
+                                    || SlotItemType.艦上戦闘機.equals(mst)
+                                    || SlotItemType.艦上偵察機.equals(mst)
+                                    || SlotItemType.艦上偵察機II.equals(mst)
+                                    || SlotItemType.艦上爆撃機.equals(mst)
+                                    || SlotItemType.水上戦闘機.equals(mst)
+                                    || SlotItemType.水上偵察機.equals(mst)
+                                    || SlotItemType.水上爆撃機.equals(mst)
+                                    || SlotItemType.対潜哨戒機.equals(mst)
+                                    || SlotItemType.大型飛行艇.equals(mst)
+                                    || SlotItemType.噴式攻撃機.equals(mst)
+                                    || SlotItemType.噴式戦闘機.equals(mst)
+                                    || SlotItemType.噴式戦闘爆撃機.equals(mst)
+                                    || SlotItemType.噴式偵察機.equals(mst))
+                            .orElse(false);
                     if (!isOnslot) {
                         this.onslot.getStyleClass().add("disabled");
                     }

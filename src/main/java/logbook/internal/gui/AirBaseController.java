@@ -41,7 +41,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import logbook.Messages;
 import logbook.bean.Maparea;
 import logbook.bean.MapareaCollection;
 import logbook.bean.Mapinfo;
@@ -49,7 +48,6 @@ import logbook.bean.Mapinfo.AirBase;
 import logbook.bean.Mapinfo.PlaneInfo;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.SlotitemMst;
 import logbook.internal.AirBases;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
@@ -610,23 +608,8 @@ public class AirBaseController extends WindowController {
         public String toString() {
             Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
                     .getSlotitemMap();
-            SlotItem item = itemMap.get(this.slot.get());
-            Optional<SlotitemMst> mst = Items.slotitemMst(item);
-
-            String itemName = "";
-            if (mst.isPresent()) {
-                StringBuilder text = new StringBuilder(mst.get().getName());
-                text.append(Optional.ofNullable(item.getAlv())
-                        .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
-                        .orElse(""));
-                text.append(Optional.ofNullable(item.getLevel())
-                        .filter(lv -> lv > 0)
-                        .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
-                        .orElse(""));
-                itemName = text.toString();
-            }
             return new StringJoiner("\t")
-                    .add(itemName)
+                    .add(Items.name(itemMap.get(this.slot.get())))
                     .add(Optional.ofNullable(this.count).map(IntegerProperty::get).map(String::valueOf).orElse(""))
                     .add(Optional.ofNullable(this.maxCount).map(IntegerProperty::get).map(String::valueOf).orElse(""))
                     .add(Optional.ofNullable(this.cond).map(IntegerProperty::get).map(String::valueOf).orElse(""))
@@ -650,20 +633,10 @@ public class AirBaseController extends WindowController {
                         .getSlotitemMap();
 
                 SlotItem item = itemMap.get(itemId);
-                Optional<SlotitemMst> mst = Items.slotitemMst(item);
 
-                if (mst.isPresent()) {
-                    StringBuilder text = new StringBuilder(mst.get().getName());
-
-                    text.append(Optional.ofNullable(item.getAlv())
-                            .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
-                            .orElse(""));
-                    text.append(Optional.ofNullable(item.getLevel())
-                            .filter(lv -> lv > 0)
-                            .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
-                            .orElse(""));
-                    this.setGraphic(new ImageView(Items.itemImage(mst.get())));
-                    this.setText(text.toString());
+                if (item != null) {
+                    this.setGraphic(new ImageView(Items.itemImage(item)));
+                    this.setText(Items.name(item));
                 } else {
                     this.setGraphic(null);
                     this.setText("未配備");

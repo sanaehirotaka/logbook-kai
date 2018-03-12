@@ -8,7 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -46,7 +45,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
-import logbook.Messages;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -55,7 +53,6 @@ import logbook.bean.ShipLabelCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
-import logbook.bean.SlotitemMst;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Operator;
@@ -913,22 +910,10 @@ public class ShipTablePane extends VBox {
                 } else {
                     this.getStyleClass().removeAll("none");
                 }
-
                 SlotItem item = this.itemMap.get(itemId);
-                Optional<SlotitemMst> mst = Items.slotitemMst(item);
-
-                if (mst.isPresent()) {
-                    StringBuilder text = new StringBuilder(mst.get().getName());
-
-                    text.append(Optional.ofNullable(item.getAlv())
-                            .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
-                            .orElse(""));
-                    text.append(Optional.ofNullable(item.getLevel())
-                            .filter(lv -> lv > 0)
-                            .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
-                            .orElse(""));
-                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(mst.get()))));
-                    this.setText(text.toString());
+                if (item != null) {
+                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(item))));
+                    this.setText(Items.name(item));
                 } else {
                     this.setGraphic(null);
                     this.setText(null);

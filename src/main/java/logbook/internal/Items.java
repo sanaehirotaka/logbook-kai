@@ -14,6 +14,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotitemMst;
@@ -48,6 +49,29 @@ public class Items {
     }
 
     private Items() {
+    }
+
+    /**
+     * 装備の名前を取得します
+     *
+     * @param item 装備
+     * @return 装備の名前
+     */
+    public static String name(SlotItem item) {
+        return Items.slotitemMst(item)
+                .map(mst -> {
+
+                    StringBuilder text = new StringBuilder(mst.getName());
+
+                    text.append(Optional.ofNullable(item.getAlv())
+                            .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
+                            .orElse(""));
+                    text.append(Optional.ofNullable(item.getLevel())
+                            .filter(lv -> lv > 0)
+                            .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
+                            .orElse(""));
+                    return text.toString();
+                }).orElse("");
     }
 
     /**
