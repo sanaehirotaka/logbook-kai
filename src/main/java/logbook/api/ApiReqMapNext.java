@@ -75,7 +75,7 @@ public class ApiReqMapNext implements APIListenerSpi {
     /**
      * 大破警告
      *
-     * @param badlyShips
+     * @param badlyShips 大破艦
      */
     private static void displayAlert(List<Ship> badlyShips) {
         try {

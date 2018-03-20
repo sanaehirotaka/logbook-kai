@@ -128,7 +128,7 @@ public class Tools {
         /**
          * ノードの内容をPNGファイルとして出力します
          *
-         * @param ndoe ノード
+         * @param node ノード
          * @param title タイトル及びファイル名
          * @param own 親ウインドウ
          */

@@ -441,6 +441,7 @@ public class BattleTypes {
 
         /**
          * api_at_eflagを取得します。
+         * @return api_at_eflag
          */
         List<Integer> getAtEflag();
     }

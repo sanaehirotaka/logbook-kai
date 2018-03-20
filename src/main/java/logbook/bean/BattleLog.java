@@ -52,7 +52,6 @@ public class BattleLog implements Serializable {
      * 艦隊スナップショットを作成します
      * @param log 戦闘ログ
      * @param dockIds 艦隊ID
-     * @return 艦隊スナップショット
      */
     public static void snapshot(BattleLog log, Integer... dockIds) {
         Map<Integer, Ship> shipMap = ShipCollection.get()

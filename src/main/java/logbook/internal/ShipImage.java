@@ -1,6 +1,5 @@
 package logbook.internal;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -401,7 +400,6 @@ class ShipImage {
      *
      * @param itemId 装備ID
      * @param itemMap 装備Map
-     * @throws IOException
      */
     private static Image itemIcon(Integer itemId, Map<Integer, SlotItem> itemMap) {
         return Items.borderedItemImage(itemMap.get(itemId));

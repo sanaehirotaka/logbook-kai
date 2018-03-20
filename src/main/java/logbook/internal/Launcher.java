@@ -27,9 +27,8 @@ public final class Launcher {
      * アプリケーションの起動
      *
      * @param args アプリケーション引数
-     * @throws Exception
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Launcher launcher = new Launcher();
         try {
             launcher.initPlugin(args);

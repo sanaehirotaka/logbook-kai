@@ -186,7 +186,7 @@ public class CaptureSaveController extends WindowController {
     /**
      * キャプチャプレビュー
      *
-     * @param image 画像データ
+     * @param value 画像データ
      */
     private void viewImage(ObservableValue<? extends ImageData> observable, ImageData oldValue, ImageData value) {
         if (value != null) {

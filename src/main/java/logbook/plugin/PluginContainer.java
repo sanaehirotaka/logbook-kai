@@ -41,6 +41,11 @@ public class PluginContainer {
         }
     }
 
+    /**
+     * プラグインコンテナを閉じます
+     *
+     * @throws IOException {@link URLClassLoader#close()}
+     */
     public void close() throws IOException {
         this.classLoader.close();
     }

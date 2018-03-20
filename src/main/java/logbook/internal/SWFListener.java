@@ -256,11 +256,11 @@ public class SWFListener implements ContentListenerSpi {
             }
         }
         // 保存
-        for (String key : tagMap.keySet()) {
-            List<ImageTag> sub = tagMap.get(key);
+        for (Entry<String, List<ImageTag>> entry : tagMap.entrySet()) {
+            List<ImageTag> sub = tagMap.get(entry.getKey());
             for (int i = 0; i < sub.size(); i++) {
                 ImageTag tag = sub.get(i);
-                Path file = dir.resolve(key + "_" + i + "." + this.imageExt(tag));
+                Path file = dir.resolve(entry.getKey() + "_" + i + "." + this.imageExt(tag));
                 Files.copy(tag.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
             }
         }

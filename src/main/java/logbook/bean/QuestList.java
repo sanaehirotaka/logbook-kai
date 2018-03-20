@@ -76,7 +76,7 @@ public class QuestList implements Serializable {
         /**
          * JsonObjectから{@link Quest}を構築します
          *
-         * @param json JsonObject
+         * @param value JsonObject
          * @return {@link Quest}
          */
         public static Quest toQuest(JsonValue value) {

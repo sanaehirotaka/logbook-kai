@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,7 +40,7 @@ public class CheckUpdate implements StartUp {
             try (InputStream in = uri.toURL().openStream()) {
                 byte[] b = new byte[1024];
                 int l = in.read(b, 0, b.length);
-                String str = new String(b, 0, l);
+                String str = new String(b, 0, l, StandardCharsets.UTF_8);
 
                 Version newversion = new Version(str);
 

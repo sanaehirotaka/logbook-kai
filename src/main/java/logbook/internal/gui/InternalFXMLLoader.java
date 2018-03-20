@@ -42,13 +42,13 @@ public final class InternalFXMLLoader {
      * @param name リソース
      * @param parent 親ウインドウ
      * @param title ウインドウタイトル
-     * @param controllerFunction コントローラーを操作するConsumer
-     * @param windowFunction ウインドウを操作するConsumer
+     * @param controllerConsumer コントローラーを操作するConsumer
+     * @param windowConsumer ウインドウを操作するConsumer
      * @throws IOException 入出力例外が発生した場合
      */
-    static void showWindow(String name, Stage parent, String title, Consumer<WindowController> controllerFunction,
-            Consumer<Stage> windowFunction) throws IOException {
-        showWindow(name, parent, title, null, controllerFunction, windowFunction);
+    static void showWindow(String name, Stage parent, String title, Consumer<WindowController> controllerConsumer,
+            Consumer<Stage> windowConsumer) throws IOException {
+        showWindow(name, parent, title, null, controllerConsumer, windowConsumer);
     }
 
     /**
@@ -58,8 +58,8 @@ public final class InternalFXMLLoader {
      * @param parent 親ウインドウ
      * @param title ウインドウタイトル
      * @param sceneFunction シーン・グラフを操作するFunction
-     * @param controllerFunction コントローラーを操作するConsumer
-     * @param windowFunction ウインドウを操作するConsumer
+     * @param controllerConsumer コントローラーを操作するConsumer
+     * @param windowConsumer ウインドウを操作するConsumer
      * @throws IOException 入出力例外が発生した場合
      */
     static void showWindow(String name, Stage parent, String title, Function<Parent, Scene> sceneFunction,

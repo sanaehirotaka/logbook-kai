@@ -616,7 +616,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(味方第1,2艦隊)
-     * @param damage ダメージ(zero-based)
+     * @param damages ダメージ(zero-based)
      */
     private void applyFriendDamage(List<Double> damages) {
         for (int i = 0, s = damages.size(); i < s; i++) {
@@ -634,7 +634,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(味方第2艦隊)
-     * @param damage ダメージ(zero-based)
+     * @param damages ダメージ(zero-based)
      */
     private void applyFriendDamageCombined(List<Double> damages) {
         for (int i = 0, s = damages.size(); i < s; i++) {
@@ -650,7 +650,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(敵第1,2艦隊)
-     * @param damage ダメージ
+     * @param damages ダメージ
      */
     private void applyEnemyDamage(List<Double> damages) {
         for (int i = 0, s = damages.size(); i < s; i++) {
@@ -668,7 +668,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(敵第2艦隊)
-     * @param damage ダメージ
+     * @param damages ダメージ
      */
     private void applyEnemyDamageCombined(List<Double> damages) {
         for (int i = 0, s = damages.size(); i < s; i++) {
@@ -831,7 +831,7 @@ public class PhaseState {
     /**
      * ダメージ詳細を追加する
      *
-     * @param atakker 攻撃側
+     * @param attacker 攻撃側
      * @param defender 防御側
      * @param damage ダメージ
      * @param atType 攻撃種別

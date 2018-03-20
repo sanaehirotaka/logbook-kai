@@ -16,6 +16,7 @@ public final class PluginServices {
     /**
      * サービスプロバイダを取得します。
      *
+     * @param <T> サービスプロバイダ
      * @param clazz プラグインのインターフェイス
      * @return clazzで指定されたサービスプロバイダインスタンス
      */

@@ -178,7 +178,7 @@ public class MainController extends WindowController {
      * @param e ActionEvent
      */
     @FXML
-    void battleStatus(ActionEvent event) {
+    void battleStatus(ActionEvent e) {
         try {
             BattleLog log = AppCondition.get()
                     .getBattleResult();
@@ -286,7 +286,7 @@ public class MainController extends WindowController {
      * @param e ActionEvent
      */
     @FXML
-    void calcExp(ActionEvent event) {
+    void calcExp(ActionEvent e) {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/calc_exp.fxml", this.getWindow(), "経験値計算機");
         } catch (Exception ex) {
@@ -300,7 +300,7 @@ public class MainController extends WindowController {
      * @param e ActionEvent
      */
     @FXML
-    void missionCheck(ActionEvent event) {
+    void missionCheck(ActionEvent e) {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/missioncheck.fxml", this.getWindow(), "遠征条件確認");
         } catch (Exception ex) {
@@ -314,7 +314,7 @@ public class MainController extends WindowController {
      * @param e ActionEvent
      */
     @FXML
-    void resourceChart(ActionEvent event) {
+    void resourceChart(ActionEvent e) {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/resource_chart.fxml", this.getWindow(), "資材チャート");
         } catch (Exception ex) {
@@ -328,7 +328,7 @@ public class MainController extends WindowController {
      * @param e ActionEvent
      */
     @FXML
-    void deck(ActionEvent event) {
+    void deck(ActionEvent e) {
         try {
             InternalFXMLLoader.showWindow("logbook/gui/deck.fxml", this.getWindow(), "編成記録");
         } catch (Exception ex) {

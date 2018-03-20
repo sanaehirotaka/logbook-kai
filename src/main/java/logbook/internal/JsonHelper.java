@@ -396,6 +396,7 @@ public final class JsonHelper {
      *
      * @param <T> JsonArrayの内容の型
      * @param <R> functionの戻り値の型
+     * @param <C> 変換後のCollectionの型
      * @param value 変換するJsonArrayまたはJsonObject
      * @param function JsonValueを受け取って変換するFunction
      * @param supplier Collectionインスタンスを供給するSupplier
@@ -571,7 +572,6 @@ public final class JsonHelper {
         /**
          * keyで取得したJsonValueをStringに変換しconsumerへ設定します<br>
          *
-         * @param <T> JsonObject#get(Object) の戻り値の型
          * @param key JsonObjectから取得するキー
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
@@ -583,7 +583,6 @@ public final class JsonHelper {
         /**
          * keyで取得したJsonValueをIntegerに変換しconsumerへ設定します<br>
          *
-         * @param <T> JsonObject#get(Object) の戻り値の型
          * @param key JsonObjectから取得するキー
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
@@ -595,7 +594,6 @@ public final class JsonHelper {
         /**
          * keyで取得したJsonValueをLongに変換しconsumerへ設定します<br>
          *
-         * @param <T> JsonObject#get(Object) の戻り値の型
          * @param key JsonObjectから取得するキー
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
@@ -607,7 +605,6 @@ public final class JsonHelper {
         /**
          * keyで取得したJsonValueをDoubleに変換しconsumerへ設定します<br>
          *
-         * @param <T> JsonObject#get(Object) の戻り値の型
          * @param key JsonObjectから取得するキー
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
@@ -619,7 +616,6 @@ public final class JsonHelper {
         /**
          * keyで取得したJsonValueをBigDecimalに変換しconsumerへ設定します<br>
          *
-         * @param <T> JsonObject#get(Object) の戻り値の型
          * @param key JsonObjectから取得するキー
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}
@@ -631,7 +627,6 @@ public final class JsonHelper {
         /**
          * keyで取得したJsonValueをBooleanに変換しconsumerへ設定します<br>
          *
-         * @param <T> JsonObject#get(Object) の戻り値の型
          * @param key JsonObjectから取得するキー
          * @param consumer converterの戻り値を消費するConsumer
          * @return {@link Bind}

@@ -31,7 +31,7 @@ public class FleetTabShipPopup extends VBox {
     /**
      * 艦隊タブポップアップのコンストラクタ
      *
-     * @param ship 艦娘
+     * @param chara キャラクター
      */
     public FleetTabShipPopup(Chara chara) {
         this.chara = chara;

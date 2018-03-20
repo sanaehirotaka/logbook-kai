@@ -80,7 +80,6 @@ public class BattleDetailPhase extends TitledPane {
     *
     * @param phase フェイズ
     * @param infomation 付加情報
-    * @param isFriendlyBattle 友軍艦隊フラグ
     */
     public BattleDetailPhase(PhaseState phase, List<? extends Node> infomation) {
         this(phase, infomation, false);

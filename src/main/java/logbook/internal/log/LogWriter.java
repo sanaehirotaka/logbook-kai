@@ -140,7 +140,7 @@ public class LogWriter<T> {
      * @param options オプション
      * @return LogWriter
      */
-    public LogWriter<T> openOption(OpenOption[] options) {
+    public LogWriter<T> openOption(OpenOption... options) {
         this.options = options;
         return this;
     }

@@ -300,7 +300,7 @@ public class ShipItem {
 
     /**
      * ラベルを設定します。
-     * @param area ラベル
+     * @param label ラベル
      */
     public void setLabel(Set<String> label) {
         this.label.setValue(label);
@@ -564,7 +564,7 @@ public class ShipItem {
 
     /**
      * 対潜(素)を設定します。
-     * @param tPower 対潜(素)
+     * @param tais 対潜(素)
      */
     public void setTais(int tais) {
         this.tais.setValue(tais);
@@ -614,8 +614,8 @@ public class ShipItem {
      * 運(素)を設定します。
      * @param lucky 運(素)
      */
-    public void setLucky(int luckey) {
-        this.lucky.setValue(luckey);
+    public void setLucky(int lucky) {
+        this.lucky.setValue(lucky);
     }
 
     /**

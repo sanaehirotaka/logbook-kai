@@ -70,6 +70,9 @@ public class ApiReqMissionStart implements APIListenerSpi {
 
     /**
      * 遠征警告
+     *
+     * @param deckId デッキID
+     * @param missionId 遠征ID
      */
     private static void displayAlert(Integer deckId, Integer missionId) {
         StringBuilder sb = new StringBuilder();

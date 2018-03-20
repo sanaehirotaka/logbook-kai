@@ -22,8 +22,6 @@ public class AkashiTimerPane extends AnchorPane {
 
     /**
      * 泊地修理タイマーペインのコンストラクタ
-     *
-     * @param port 艦隊
      */
     public AkashiTimerPane() {
         try {
