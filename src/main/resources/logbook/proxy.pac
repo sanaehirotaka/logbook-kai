@@ -12,11 +12,11 @@ function FindProxyForURL(url, host) {
       return "PROXY 127.0.0.1:{port}";
     }
 
-    if ( isInNet(host, "125.6.187.205","255.255.255.255") ) {
+    if ( isInNet(host, "203.104.209.183","255.255.255.255") ) {
       return "PROXY 127.0.0.1:{port}";
     }
 
-    if ( isInNet(host, "125.6.187.229","255.255.255.255") ) {
+    if ( isInNet(host, "203.104.209.150","255.255.255.255") ) {
       return "PROXY 127.0.0.1:{port}";
     }
 
