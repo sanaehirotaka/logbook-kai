@@ -20,8 +20,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.lang3.StringUtils;
-
 import javafx.animation.Animation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
@@ -232,9 +230,9 @@ public class CaptureController extends WindowController {
         // 連写モード解除
         this.cyclic.setSelected(false);
 
-        if (StringUtils.isEmpty(AppConfig.get().getFfmpegPath())
-                || StringUtils.isEmpty(AppConfig.get().getFfmpegArgs())
-                || StringUtils.isEmpty(AppConfig.get().getFfmpegExt())) {
+        if ((AppConfig.get().getFfmpegPath() == null || AppConfig.get().getFfmpegPath().isEmpty())
+                || (AppConfig.get().getFfmpegArgs() == null || AppConfig.get().getFfmpegArgs().isEmpty())
+                || (AppConfig.get().getFfmpegExt() == null || AppConfig.get().getFfmpegExt().isEmpty())) {
             Tools.Conrtols.alert(AlertType.INFORMATION, "設定が必要です", "[設定]メニューの[キャプチャ]タブから"
                     + "FFmpegパスおよび引数を設定してください。", this.getWindow());
             this.movie.setSelected(false);
