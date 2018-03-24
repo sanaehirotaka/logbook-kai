@@ -1,1 +1,1 @@
-logbook.internal.proxy.jetty.ProxyServer
+logbook.internal.proxy.ProxyServerImpl

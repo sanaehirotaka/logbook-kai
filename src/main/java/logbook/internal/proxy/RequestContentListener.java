@@ -1,4 +1,4 @@
-package logbook.internal.proxy.jetty;
+package logbook.internal.proxy;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;

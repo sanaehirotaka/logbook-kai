@@ -1,4 +1,4 @@
-package logbook.internal.proxy.jetty;
+package logbook.internal.proxy;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,7 +24,7 @@ import logbook.proxy.ProxyServerSpi;
  * プロキシサーバーです
  *
  */
-public final class ProxyServer implements ProxyServerSpi {
+public final class ProxyServerImpl implements ProxyServerSpi {
 
     /** Server */
     private Server server;
