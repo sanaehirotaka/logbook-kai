@@ -23,7 +23,7 @@ public class ProxyHolder {
             ProxyServerSpi impl = null;
             for (ProxyServerSpi proxy : proxies) {
                 // プラグインのプロキシサーバーを優先する
-                if (impl == null || !(proxy instanceof NettyProxyServer)) {
+                if (impl == null || !(proxy instanceof logbook.internal.proxy.jetty.ProxyServer)) {
                     impl = proxy;
                 }
             }

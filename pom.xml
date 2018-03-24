@@ -55,9 +55,19 @@
             <version>1.0.4</version>
         </dependency>
         <dependency>
-            <groupId>org.littleshoot</groupId>
-            <artifactId>littleproxy</artifactId>
-            <version>1.1.2</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.0.7.v20131107</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlet</artifactId>
+            <version>9.0.7.v20131107</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-proxy</artifactId>
+            <version>9.0.7.v20131107</version>
         </dependency>
         <dependency>
             <groupId>org.controlsfx</groupId>
