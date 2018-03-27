@@ -17,7 +17,7 @@ public final class RequestContentListener implements ContentListener {
     private final HttpServletRequest httpRequest;
 
     /**
-     * @param request
+     * @param request {@link HttpServletRequest}
      */
     public RequestContentListener(HttpServletRequest request) {
         this.httpRequest = request;

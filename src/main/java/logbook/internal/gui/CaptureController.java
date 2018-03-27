@@ -544,13 +544,7 @@ public class CaptureController extends WindowController {
         this.capture.getStyleClass().add(state.getClassName());
     }
 
-    /**
-     * トリムサイズを返します
-     *
-     * @param image
-     * @return
-     */
-    public static Rectangle getTrimSize(BufferedImage image) {
+    private static Rectangle getTrimSize(BufferedImage image) {
         int width = image.getWidth();
         int height = image.getHeight();
         int startwidth = width / 2;

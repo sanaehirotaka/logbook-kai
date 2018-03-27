@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -93,13 +92,5 @@ public class DeckFleetPane extends VBox {
         this.fleetName.textProperty().addListener((ob, o, n) -> this.modified.set(true));
         // メモの変更を検知
         this.fleetDescription.textProperty().addListener((ob, o, n) -> this.modified.set(true));
-    }
-
-    /**
-     * 艦隊名のリスナー
-     * @param listener
-     */
-    public void setNameListener(ChangeListener<? super String> listener) {
-        this.fleetName.textProperty().addListener(listener);
     }
 }
