@@ -39,9 +39,9 @@ public class RequireNdockController extends WindowController {
     @FXML
     private TableColumn<RequireNdock, Integer> row;
 
-    /** ID */
+    /** 艦隊 */
     @FXML
-    private TableColumn<RequireNdock, Integer> id;
+    private TableColumn<RequireNdock, Integer> deck;
 
     /** 艦娘 */
     @FXML
@@ -91,7 +91,7 @@ public class RequireNdockController extends WindowController {
             };
             return cell;
         });
-        this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        this.deck.setCellValueFactory(new PropertyValueFactory<>("deck"));
         this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
         this.ship.setCellFactory(p -> new ShipImageCell());
         this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));

@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import logbook.bean.DeckPort;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.internal.Logs;
@@ -23,8 +24,8 @@ import logbook.internal.Time;
  */
 public class RequireNdock {
 
-    /** ID */
-    private IntegerProperty id;
+    /** 艦隊 */
+    private StringProperty deck;
 
     /** 艦娘 */
     private ObjectProperty<Ship> ship;
@@ -45,27 +46,27 @@ public class RequireNdock {
     private IntegerProperty metal;
 
     /**
-     * IDを取得します。
-     * @return ID
+     * 艦隊を取得します。
+     * @return 艦隊
      */
-    public IntegerProperty idProperty() {
-        return this.id;
+    public StringProperty deckProperty() {
+        return this.deck;
     }
 
     /**
-     * IDを取得します。
-     * @return ID
+     * 艦隊を取得します。
+     * @return 艦隊
      */
-    public int getId() {
-        return this.id.get();
+    public String getDeck() {
+        return this.deck.get();
     }
 
     /**
-     * IDを設定します。
-     * @param id ID
+     * 艦隊を設定します。
+     * @param id 艦隊
      */
-    public void setId(int id) {
-        this.id = new SimpleIntegerProperty(id);
+    public void setDeck(String deck) {
+        this.deck = new SimpleStringProperty(deck);
     }
 
     /**
@@ -215,7 +216,7 @@ public class RequireNdock {
     @Override
     public String toString() {
         return new StringJoiner("\t")
-                .add(Integer.toString(this.id.get()))
+                .add(this.deck.get())
                 .add(Optional.ofNullable(this.ship.get())
                         .map(s -> Ships.shipMst(s).map(ShipMst::getName).orElse(""))
                         .orElse(""))
@@ -237,7 +238,7 @@ public class RequireNdock {
         Duration d = Duration.ofMillis(ship.getNdockTime());
 
         RequireNdock ndock = new RequireNdock();
-        ndock.setId(ship.getId());
+        ndock.setDeck(Ships.deckPort(ship).map(DeckPort::getId).map(Object::toString).orElse(""));
         ndock.setShip(ship);
         ndock.setLv(ship.getLv());
         ndock.setTime(d);

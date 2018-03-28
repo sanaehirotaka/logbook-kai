@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +22,8 @@ import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.Basic;
 import logbook.bean.Chara;
+import logbook.bean.DeckPort;
+import logbook.bean.DeckPortCollection;
 import logbook.bean.Friend;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -109,6 +112,21 @@ public class Ships {
     }
 
     private Ships() {
+    }
+
+    /**
+     * 所属している艦隊を取得します。
+     *
+     * @param ship 艦娘
+     * @return 所属している艦隊
+     */
+    public static Optional<DeckPort> deckPort(Ship ship) {
+        for (Entry<Integer, DeckPort> entry : DeckPortCollection.get().getDeckPortMap().entrySet()) {
+            if (entry.getValue().getShip().contains(ship.getId())) {
+                return Optional.of(entry.getValue());
+            }
+        }
+        return Optional.empty();
     }
 
     /**
