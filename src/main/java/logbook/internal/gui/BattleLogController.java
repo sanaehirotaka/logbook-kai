@@ -148,7 +148,6 @@ public class BattleLogController extends WindowController {
 
             // 統計
             this.collect.setShowRoot(false);
-            this.collect.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
             this.unit.setCellValueFactory(new TreeItemPropertyValueFactory<>("unit"));
             this.start.setCellValueFactory(new TreeItemPropertyValueFactory<>("start"));
@@ -287,10 +286,13 @@ public class BattleLogController extends WindowController {
      */
     @FXML
     void reloadAction(ActionEvent event) {
+        int selectedIndex = this.collect.getSelectionModel().getSelectedIndex();
         // 中身をクリア
         this.collect.getRoot().getChildren().clear();
 
         this.setCollect();
+        this.collect.getSelectionModel().focus(selectedIndex);
+        this.collect.getSelectionModel().select(selectedIndex);
     }
 
     /**
