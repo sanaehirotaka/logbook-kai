@@ -214,17 +214,20 @@ public class BattleLogController extends WindowController {
             this.dropShip.setCellValueFactory(new PropertyValueFactory<>("dropShip"));
 
             // 統計
+            // ルート要素(非表示)
+            TreeItem<BattleLogCollect> root = new TreeItem<BattleLogCollect>(new BattleLogCollect());
+            this.collect.setRoot(root);
+
             this.setCollect();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
 
+    /**
+     * ログをセット
+     */
     private void setCollect() {
-        // ルート要素(非表示)
-        TreeItem<BattleLogCollect> root = new TreeItem<BattleLogCollect>(new BattleLogCollect());
-        this.collect.setRoot(root);
-
         // 集計単位がキーのマップ
         this.logMap = BattleLogs.readSimpleLog();
         for (Unit unit : Unit.values()) {
@@ -275,15 +278,18 @@ public class BattleLogController extends WindowController {
                 unitRoot.getChildren().add(areaRoot);
             }
 
-            root.getChildren().add(unitRoot);
+            this.collect.getRoot().getChildren().add(unitRoot);
         }
     }
 
     /**
-     * ログを更新
+     * ログの更新
      */
     @FXML
     void reloadAction(ActionEvent event) {
+        // 中身をクリア
+        this.collect.getRoot().getChildren().clear();
+
         this.setCollect();
     }
 
