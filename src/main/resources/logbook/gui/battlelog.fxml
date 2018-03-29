@@ -23,6 +23,9 @@
                         <TreeTableColumn fx:id="d" prefWidth="40.0" text="D敗北" />
                     </columns>
                   </TreeTableView>
+                   <ToolBar>
+                       <Button mnemonicParsing="false" onAction="#reloadAction" text="更新" />
+                   </ToolBar>
                </children>
             </VBox>
             <VBox>
