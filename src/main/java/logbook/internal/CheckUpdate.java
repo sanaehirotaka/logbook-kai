@@ -15,25 +15,19 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import logbook.bean.AppConfig;
-import logbook.plugin.lifecycle.StartUp;
 
 /**
  * アップデートチェック
  *
  */
-public class CheckUpdate implements StartUp {
+public class CheckUpdate {
 
     private static final String[] CHECK_SITES = {
             "https://kancolle.sanaechan.net/logbook-kai.txt",
             "http://kancolle.sanaechan.net/logbook-kai.txt"
     };
 
-    @Override
-    public void run() {
-        if (!AppConfig.get().isCheckUpdate()) {
-            return;
-        }
+    public static void run() {
         for (String checkSite : CHECK_SITES) {
             URI uri = URI.create(checkSite);
 

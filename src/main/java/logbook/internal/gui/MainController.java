@@ -46,6 +46,7 @@ import logbook.internal.Audios;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.internal.proxy.ProxyHolder;
+import logbook.internal.CheckUpdate;
 import logbook.plugin.PluginServices;
 import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
@@ -361,6 +362,20 @@ public class MainController extends WindowController {
             InternalFXMLLoader.showWindow("logbook/gui/config.fxml", this.getWindow(), "設定");
         } catch (Exception ex) {
             LoggerHolder.get().error("設定の初期化に失敗しました", ex);
+        }
+    }
+
+    /**
+     * 更新を確認
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void updateCheck(ActionEvent e) {
+        try {
+            CheckUpdate.run();
+        } catch (Exception ex) {
+            LoggerHolder.get().error("更新情報の取得に失敗しました", ex);
         }
     }
 
