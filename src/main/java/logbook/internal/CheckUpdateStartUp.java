@@ -15,6 +15,6 @@ public class CheckUpdateStartUp implements StartUp {
             return;
         }
 
-        CheckUpdate.run();
+        CheckUpdate.run(true);
     }
 }

@@ -28,6 +28,10 @@ public class CheckUpdate {
     };
 
     public static void run() {
+        CheckUpdate.run(false);
+    }
+
+    public static void run(Boolean isStartUp) {
         for (String checkSite : CHECK_SITES) {
             URI uri = URI.create(checkSite);
 
@@ -39,7 +43,14 @@ public class CheckUpdate {
                 Version newversion = new Version(str);
 
                 if (Version.getCurrent().compareTo(newversion) < 0) {
-                    Platform.runLater(() -> CheckUpdate.openInfo(Version.getCurrent(), newversion));
+                    Platform.runLater(() -> CheckUpdate.openInfo(Version.getCurrent(), newversion, isStartUp));
+                } else if (!isStartUp) {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("更新の確認");
+                    alert.setContentText("最新のバージョンです");
+                    alert.getButtonTypes().clear();
+                    alert.getButtonTypes().addAll(ButtonType.OK);
+                    alert.showAndWait();
                 }
                 break;
             } catch (Exception e) {
@@ -48,11 +59,13 @@ public class CheckUpdate {
         }
     }
 
-    private static void openInfo(Version o, Version n) {
+    private static void openInfo(Version o, Version n, Boolean isStartUp) {
         String message = "新しいバージョンがあります。ダウンロードサイトを開きますか？\n"
                 + "現在のバージョン:" + o + "\n"
-                + "新しいバージョン:" + n + "\n"
-                + "※自動アップデートチェックは[その他]-[設定]から無効に出来ます";
+                + "新しいバージョン:" + n;
+        if (isStartUp) {
+            message += "\n※自動アップデートチェックは[その他]-[設定]から無効に出来ます";
+        }
 
         ButtonType update = new ButtonType("自動更新");
         ButtonType visible = new ButtonType("ダウンロードサイトを開く");
