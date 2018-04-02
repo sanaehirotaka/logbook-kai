@@ -373,7 +373,7 @@ public class MainController extends WindowController {
     @FXML
     void updateCheck(ActionEvent e) {
         try {
-            CheckUpdate.run();
+            CheckUpdate.run(this.getWindow());
         } catch (Exception ex) {
             LoggerHolder.get().error("更新情報の取得に失敗しました", ex);
         }
