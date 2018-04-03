@@ -19,7 +19,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.LoggerHolder;
 import logbook.internal.gui.Tools;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -40,8 +40,7 @@ public class ApiReqMissionStart implements APIListenerSpi {
             Integer missionId = Integer.valueOf(param.get("api_mission_id").get(0));
 
             try {
-                ClassLoader classLoader = PluginContainer.getInstance().getClassLoader();
-                InputStream is = classLoader.getResourceAsStream("logbook/mission/" + missionId + ".json");
+                InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + missionId + ".json");
                 if (is == null)
                     return;
                 MissionCondition condition;

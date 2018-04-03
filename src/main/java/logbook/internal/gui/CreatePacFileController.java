@@ -12,7 +12,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import logbook.bean.AppConfig;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * 自動プロキシ構成スクリプトファイル生成
@@ -28,9 +28,7 @@ public class CreatePacFileController extends WindowController {
         try {
             String packFile;
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            try (InputStream in = PluginContainer.getInstance()
-                    .getClassLoader()
-                    .getResourceAsStream("logbook/proxy.pac")) {
+            try (InputStream in = PluginServices.getResourceAsStream("logbook/proxy.pac")) {
                 byte[] buffer = new byte[1024];
                 int length = 0;
                 while ((length = in.read(buffer)) > 0) {

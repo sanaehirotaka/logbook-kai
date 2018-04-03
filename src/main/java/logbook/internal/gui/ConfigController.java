@@ -30,6 +30,7 @@ import logbook.internal.ShipImageCacheStrategy;
 import logbook.internal.ThreadManager;
 import logbook.internal.ToStringConverter;
 import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * 設定コントローラー
@@ -365,15 +366,14 @@ public class ConfigController extends WindowController {
 
     private void setFFmpegTemplate() {
         try {
-            ClassLoader classLoader = PluginContainer.getInstance().getClassLoader();
             ObjectMapper mapper = new ObjectMapper();
             List<?> list;
-            try (InputStream is = classLoader.getResourceAsStream("logbook/capture_options/list.json")) {
+            try (InputStream is = PluginServices.getResourceAsStream("logbook/capture_options/list.json")) {
                 list = mapper.readValue(is, List.class);
             }
             for (Object path : list) {
                 Map<?, ?> option;
-                try (InputStream is = classLoader.getResourceAsStream(path.toString())) {
+                try (InputStream is = PluginServices.getResourceAsStream(path.toString())) {
                     option = mapper.readValue(is, Map.class);
                 }
                 this.ffmpegTemplate.getItems().add(option);

@@ -34,7 +34,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ToStringConverter;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * 遠征確認画面
@@ -92,8 +92,7 @@ public class MissionCheck extends WindowController {
 
     private TreeItem<String> buildTree0(Mission mission, List<Ship> fleet) {
         try {
-            ClassLoader classLoader = PluginContainer.getInstance().getClassLoader();
-            InputStream is = classLoader.getResourceAsStream("logbook/mission/" + mission.getId() + ".json");
+            InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + mission.getId() + ".json");
             if (is == null) {
                 return null;
             }

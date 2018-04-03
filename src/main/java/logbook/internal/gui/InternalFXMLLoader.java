@@ -9,18 +9,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 public final class InternalFXMLLoader {
 
     public static FXMLLoader load(String name) throws IOException {
-        URL url = PluginContainer.getInstance().getClassLoader().getResource(name);
+        URL url = PluginServices.getResource(name);
         return load(url);
     }
 
     public static FXMLLoader load(URL url) throws IOException {
         FXMLLoader loader = new FXMLLoader(url);
-        loader.setClassLoader(PluginContainer.getInstance().getClassLoader());
+        loader.setClassLoader(PluginServices.getClassLoader());
         return loader;
     }
 

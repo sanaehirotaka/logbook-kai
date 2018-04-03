@@ -21,7 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Version;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * バージョン情報
@@ -53,9 +53,7 @@ public class VersionController extends WindowController {
             this.appName2.setText(Optional.ofNullable(this.getClass().getPackage())
                     .map(Package::getImplementationTitle)
                     .orElse(""));
-            try (InputStream in = PluginContainer.getInstance()
-                    .getClassLoader()
-                    .getResourceAsStream("LICENSE")) {
+            try (InputStream in = PluginServices.getResourceAsStream("LICENSE")) {
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                     this.licensetext.setText(reader.lines()
                             .collect(Collectors.joining("\n")));

@@ -16,7 +16,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import logbook.internal.LoggerHolder;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * 国際化対応
@@ -29,7 +29,7 @@ public class Messages {
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(
             BUNDLE_NAME,
             Locale.getDefault(),
-            PluginContainer.getInstance().getClassLoader(),
+            PluginServices.getClassLoader(),
             new UTF8Control());
 
     private Messages() {

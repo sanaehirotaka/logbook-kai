@@ -51,7 +51,7 @@ import logbook.bean.SlotItemCollection;
 import logbook.internal.AirBases;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 /**
  * 基地航空隊
@@ -711,13 +711,9 @@ public class AirBaseController extends WindowController {
                 if (cond != null) {
                     URL url = null;
                     if (cond == 2) {
-                        url = PluginContainer.getInstance()
-                                .getClassLoader()
-                                .getResource("logbook/gui/cond_orange.png");
+                        url = PluginServices.getResource("logbook/gui/cond_orange.png");
                     } else if (cond == 3) {
-                        url = PluginContainer.getInstance()
-                                .getClassLoader()
-                                .getResource("logbook/gui/cond_red.png");
+                        url = PluginServices.getResource("logbook/gui/cond_red.png");
                     }
                     if (url != null) {
                         this.setGraphic(new ImageView(new Image(url.toString())));

@@ -26,7 +26,7 @@ import logbook.bean.ShipMst;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
-import logbook.plugin.PluginContainer;
+import logbook.plugin.PluginServices;
 
 class ShipImage {
 
@@ -444,9 +444,7 @@ class ShipImage {
         private final Image img;
 
         private Layer(double x, double y, String name) {
-            URL url = PluginContainer.getInstance()
-                    .getClassLoader()
-                    .getResource(name);
+            URL url = PluginServices.getResource(name);
             this.x = x;
             this.y = y;
             this.w = -1;
