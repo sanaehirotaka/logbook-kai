@@ -71,6 +71,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="COMMA" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#updateCheck" text="更新を確認" />
                   <MenuItem mnemonicParsing="false" onAction="#version" text="バージョン情報" />
             </items>
           </Menu>

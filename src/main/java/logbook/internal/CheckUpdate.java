@@ -15,25 +15,30 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import logbook.bean.AppConfig;
-import logbook.plugin.lifecycle.StartUp;
+import javafx.stage.Stage;
+
+import logbook.internal.gui.Tools;
 
 /**
  * アップデートチェック
  *
  */
-public class CheckUpdate implements StartUp {
+public class CheckUpdate {
 
     private static final String[] CHECK_SITES = {
             "https://kancolle.sanaechan.net/logbook-kai.txt",
             "http://kancolle.sanaechan.net/logbook-kai.txt"
     };
 
-    @Override
-    public void run() {
-        if (!AppConfig.get().isCheckUpdate()) {
-            return;
-        }
+    public static void run(Stage stage) {
+        CheckUpdate.run(false, stage);
+    }
+
+    public static void run(boolean isStartUp) {
+        CheckUpdate.run(isStartUp, null);
+    }
+
+    private static void run(boolean isStartUp, Stage stage) {
         for (String checkSite : CHECK_SITES) {
             URI uri = URI.create(checkSite);
 
@@ -45,7 +50,9 @@ public class CheckUpdate implements StartUp {
                 Version newversion = new Version(str);
 
                 if (Version.getCurrent().compareTo(newversion) < 0) {
-                    Platform.runLater(() -> CheckUpdate.openInfo(Version.getCurrent(), newversion));
+                    Platform.runLater(() -> CheckUpdate.openInfo(Version.getCurrent(), newversion, isStartUp, stage));
+                } else if (!isStartUp) {
+                    Tools.Conrtols.alert(AlertType.INFORMATION, "更新の確認", "最新のバージョンです", stage);
                 }
                 break;
             } catch (Exception e) {
@@ -54,11 +61,13 @@ public class CheckUpdate implements StartUp {
         }
     }
 
-    private static void openInfo(Version o, Version n) {
+    private static void openInfo(Version o, Version n, boolean isStartUp, Stage stage) {
         String message = "新しいバージョンがあります。ダウンロードサイトを開きますか？\n"
                 + "現在のバージョン:" + o + "\n"
-                + "新しいバージョン:" + n + "\n"
-                + "※自動アップデートチェックは[その他]-[設定]から無効に出来ます";
+                + "新しいバージョン:" + n;
+        if (isStartUp) {
+            message += "\n※自動アップデートチェックは[その他]-[設定]から無効に出来ます";
+        }
 
         ButtonType update = new ButtonType("自動更新");
         ButtonType visible = new ButtonType("ダウンロードサイトを開く");
@@ -68,6 +77,7 @@ public class CheckUpdate implements StartUp {
         alert.setTitle("新しいバージョン");
         alert.setHeaderText("新しいバージョン");
         alert.setContentText(message);
+        alert.initOwner(stage);
         alert.getButtonTypes().clear();
         alert.getButtonTypes().addAll(update, visible, no);
         Optional<ButtonType> result = alert.showAndWait();
