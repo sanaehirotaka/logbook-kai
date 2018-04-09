@@ -57,7 +57,7 @@ public final class Version implements Comparable<Version>, Serializable {
                 revision = Integer.parseInt(ite.next());
             }
         } catch (Exception e) {
-            major = 0;
+            major = Integer.MAX_VALUE;
             minor = 0;
             revision = 0;
         }
@@ -92,7 +92,7 @@ public final class Version implements Comparable<Version>, Serializable {
 
     @Override
     public String toString() {
-        if (this == UNKNOWN) {
+        if (this.equals(UNKNOWN)) {
             return "unknown";
         }
         String version = this.major + "." + this.minor; //$NON-NLS-1$
