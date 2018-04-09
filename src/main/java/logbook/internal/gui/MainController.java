@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +21,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
@@ -130,12 +133,9 @@ public class MainController extends WindowController {
             this.shipFormat = this.ship.getText();
 
             // プラグインによるメニューの追加
-            Plugin.getContent(MainCommandMenu.class)
-                    .forEach(this.command.getItems()::add);
-            Plugin.getContent(MainCalcMenu.class)
-                    .forEach(this.calc.getItems()::add);
-            Plugin.getContent(MainExtMenu.class)
-                    .forEach(this.ext.getItems()::add);
+            this.addMenuItem(MainCommandMenu.class, this.command.getItems());
+            this.addMenuItem(MainCalcMenu.class, this.calc.getItems());
+            this.addMenuItem(MainExtMenu.class, this.ext.getItems());
 
             Timeline timeline = new Timeline(1);
             timeline.setCycleCount(Animation.INDEFINITE);
@@ -767,6 +767,20 @@ public class MainController extends WindowController {
             } catch (Exception e) {
                 LoggerHolder.get().warn("サウンド通知に失敗しました", e);
             }
+        }
+    }
+
+    /**
+     * プラグインのMenuItemを追加します
+     *
+     * @param serviceClass サービスプロバイダインターフェイス
+     * @param items MenuItemの追加先
+     */
+    private <S extends Plugin<MenuItem>> void addMenuItem(Class<S> serviceClass, ObservableList<MenuItem> items) {
+        List<MenuItem> addItem = Plugin.getContent(serviceClass);
+        if (!addItem.isEmpty()) {
+            items.add(new SeparatorMenuItem());
+            addItem.forEach(items::add);
         }
     }
 
