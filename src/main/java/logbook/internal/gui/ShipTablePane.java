@@ -902,6 +902,9 @@ public class ShipTablePane extends VBox {
 
         // フィルターの更新再開
         this.disableFilterUpdate = false;
+
+        // フィルター適用
+        this.updateFilter();
     }
 
     /**
