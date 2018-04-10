@@ -9,12 +9,14 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 
@@ -32,6 +34,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
+import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -386,8 +389,8 @@ public class Tools {
                     .getColumnVisibleMap()
                     .get(key);
             if (setting != null) {
-                table.getColumns().forEach(column -> {
-                    if (setting.contains(column.getText())) {
+                getColumns(table).forEach(column -> {
+                    if (setting.contains(getColumnName(column))) {
                         column.setVisible(false);
                     }
                 });
@@ -405,20 +408,20 @@ public class Tools {
                     .get(key);
             if (setting != null) {
                 // 初期設定
-                table.getColumns().forEach(column -> {
-                    Double width = setting.get(column.getText());
+                getColumns(table).forEach(column -> {
+                    Double width = setting.get(getColumnName(column));
                     if (width != null) {
                         column.setPrefWidth(width);
                     }
                 });
             }
             // 幅が変更された時に設定を保存する
-            table.getColumns().forEach(column -> {
+            getColumns(table).forEach(column -> {
                 column.widthProperty().addListener((ob, o, n) -> {
                     Map<String, Double> map = AppConfig.get()
                             .getColumnWidthMap()
                             .computeIfAbsent(key, e -> new HashMap<>());
-                    map.put(column.getText(), n.doubleValue());
+                    map.put(getColumnName(column), n.doubleValue());
                 });
             });
         }
@@ -435,8 +438,8 @@ public class Tools {
             ObservableList<TableColumn<S, ?>> sortOrder = table.getSortOrder();
             if (setting != null) {
                 // 初期設定
-                Map<String, TableColumn<S, ?>> columnsMap = table.getColumns().stream()
-                        .collect(Collectors.toMap(c -> c.getText(), c -> c, (c1, c2) -> c1));
+                Map<String, TableColumn<S, ?>> columnsMap = getColumns(table)
+                        .collect(Collectors.toMap(Tables::getColumnName, c -> c, (c1, c2) -> c1));
                 setting.forEach((k, v) -> {
                     Optional.ofNullable(columnsMap.get(k)).ifPresent(col -> {
                         sortOrder.add(col);
@@ -446,7 +449,7 @@ public class Tools {
             }
             // ソート列またはソートタイプが変更された時に設定を保存する
             sortOrder.addListener((ListChangeListener<TableColumn<S, ?>>) e -> storeSortOrder(table, key));
-            table.getColumns().forEach(col -> {
+            getColumns(table).forEach(col -> {
                 col.sortTypeProperty().addListener((ob, o, n) -> storeSortOrder(table, key));
             });
         }
@@ -457,15 +460,59 @@ public class Tools {
                     .getColumnSortOrderMap()
                     .computeIfAbsent(key, e1 -> new LinkedHashMap<>());
             setting.clear();
-            sortOrder.stream().forEach(col -> setting.put(col.getText(), col.getSortType().name()));
+            sortOrder.stream().forEach(col -> setting.put(getColumnName(col), col.getSortType().name()));
         }
 
         private static String tableHeader(TableView<?> table, String separator) {
-            return table.getColumns()
-                    .stream()
-                    .map(TableColumn::getText)
+            return getColumns(table)
+                    .map(Tables::getColumnName)
                     .filter(name -> !name.equals("行番号"))
                     .collect(Collectors.joining(separator));
+        }
+
+        /**
+         * TableViewからTableColumnをストリームとして取得する
+         * @param table TableView
+         * @return TableColumn
+         */
+        private static <S> Stream<TableColumn<S, ?>> getColumns(TableView<S> table) {
+            return table.getColumns()
+                    .stream()
+                    .flatMap(Tables::flatColumns);
+        }
+
+        /**
+         * ネスとされたTableColumnの終端になるTableColumnを取得する
+         * @param column TableColumn
+         * @return TableColumnのストリーム
+         */
+        private static <S> Stream<TableColumn<S, ?>> flatColumns(TableColumn<S, ?> column) {
+            if (!column.getColumns().isEmpty()) {
+                return column.getColumns().stream()
+                        .flatMap(Tables::flatColumns);
+            }
+            return Stream.of(column);
+        }
+
+        /**
+         * TableColumnの名前を取得する
+         * @param column TableColumn
+         * @return TableColumnの名前
+         */
+        private static String getColumnName(TableColumn<?, ?> column) {
+            LinkedList<String> names = null;
+            TableColumnBase<?, ?> parent = column;
+            while ((parent = parent.getParentColumn()) != null) {
+                if (names == null) {
+                    names = new LinkedList<>();
+                }
+                names.addFirst(parent.getText());
+            }
+            if (names != null) {
+                return names.stream().collect(Collectors.joining(".")) + "." + column.getText();
+            } else {
+                return column.getText();
+            }
         }
     }
 
