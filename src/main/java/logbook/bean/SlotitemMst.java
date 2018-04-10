@@ -56,13 +56,13 @@ public class SlotitemMst implements Serializable {
     /** api_atap(?) */
     private Integer atap;
 
-    /** api_houm(命中) */
+    /** api_houm(命中/対爆) */
     private Integer houm;
 
     /** api_raim(雷撃命中) */
     private Integer raim;
 
-    /** api_houk(回避) */
+    /** api_houk(回避/迎撃) */
     private Integer houk;
 
     /** api_raik(雷撃回避) */
@@ -85,6 +85,9 @@ public class SlotitemMst implements Serializable {
 
     /** api_rare(レアリティ) */
     private Integer rare;
+
+    /** api_cost(配置コスト) */
+    private Integer cost;
 
     /** api_distance(航続距離) */
     private Integer distance;
@@ -126,6 +129,7 @@ public class SlotitemMst implements Serializable {
                 .setInteger("api_luck", bean::setLuck)
                 .setInteger("api_leng", bean::setLeng)
                 .setInteger("api_rare", bean::setRare)
+                .setInteger("api_cost", bean::setCost)
                 .setInteger("api_distance", bean::setDistance);
         return bean;
     }
