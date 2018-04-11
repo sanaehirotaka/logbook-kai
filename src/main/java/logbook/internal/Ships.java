@@ -465,6 +465,8 @@ public class Ships {
             double local = 0;
 
             int onslot = ship.getOnslot().get(i);
+            if (onslot <= 0)
+                continue;
             SlotItem item = itemMap.get(ship.getSlot().get(i));
             if (item == null)
                 continue;

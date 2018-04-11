@@ -265,4 +265,81 @@ public class Items {
 
         return canvas.snapshot(sp, null);
     }
+
+    /**
+     * 航空機かどうかを調べます
+     *
+     * @param item 装備
+     * @return 航空機かどうか
+     */
+    public static boolean isAircraft(SlotitemMst item) {
+        switch (SlotItemType.toSlotItemType(item)) {
+        case 艦上戦闘機:
+        case 艦上爆撃機:
+        case 艦上攻撃機:
+        case 水上爆撃機:
+        case オートジャイロ:
+        case 対潜哨戒機:
+        case 水上戦闘機:
+        case 陸上攻撃機:
+        case 局地戦闘機:
+        case 噴式戦闘機:
+        case 噴式戦闘爆撃機:
+        case 噴式攻撃機:
+
+        case 艦上偵察機:
+        case 艦上偵察機II:
+        case 水上偵察機:
+        case 大型飛行艇:
+        case 噴式偵察機:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * 戦闘に参加する航空機かどうかを調べます
+     *
+     * @param item 装備
+     * @return 戦闘に参加する航空機かどうか
+     */
+    public static boolean isCombatAircraft(SlotitemMst item) {
+        switch (SlotItemType.toSlotItemType(item)) {
+        case 艦上戦闘機:
+        case 艦上爆撃機:
+        case 艦上攻撃機:
+        case 水上爆撃機:
+        case オートジャイロ:
+        case 対潜哨戒機:
+        case 水上戦闘機:
+        case 陸上攻撃機:
+        case 局地戦闘機:
+        case 噴式戦闘機:
+        case 噴式戦闘爆撃機:
+        case 噴式攻撃機:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * 偵察機かどうかを調べます
+     *
+     * @param item 装備
+     * @return 偵察機かどうか
+     */
+    public static boolean isReconAircraft(SlotitemMst item) {
+        switch (SlotItemType.toSlotItemType(item)) {
+        case 艦上偵察機:
+        case 艦上偵察機II:
+        case 水上偵察機:
+        case 大型飛行艇:
+        case 噴式偵察機:
+            return true;
+        default:
+            return false;
+        }
+    }
 }
