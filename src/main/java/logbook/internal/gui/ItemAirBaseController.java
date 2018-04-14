@@ -280,6 +280,7 @@ public class ItemAirBaseController extends WindowController {
                         return v;
                     })
                     .sorted(Comparator.comparing(AirBaseItem::getType3)
+                            .thenComparing(AirBaseItem::getType2)
                             .thenComparing(Comparator.comparing(AirBaseItem::getName)))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
 

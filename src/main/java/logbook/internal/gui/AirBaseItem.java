@@ -15,6 +15,8 @@ import logbook.bean.SlotitemMst;
 import logbook.internal.AirBases;
 import logbook.internal.Items;
 import logbook.internal.SlotItemType;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 基地航空隊装備
@@ -26,6 +28,13 @@ public class AirBaseItem implements Comparable<AirBaseItem> {
     private IntegerProperty id;
 
     /** ソート用 種別 */
+    @Getter
+    @Setter
+    private Integer type2;
+
+    /** ソート用 種別 */
+    @Getter
+    @Setter
     private Integer type3;
 
     /** 名称 */
@@ -96,22 +105,6 @@ public class AirBaseItem implements Comparable<AirBaseItem> {
      */
     public void setId(Integer id) {
         this.id = new SimpleIntegerProperty(id);
-    }
-
-    /**
-     * ソート用 種別を取得します。
-     * @return ソート用 種別
-     */
-    public Integer getType3() {
-        return this.type3;
-    }
-
-    /**
-     * ソート用 種別を設定します。
-     * @param type3 ソート用 種別
-     */
-    public void setType3(Integer type3) {
-        this.type3 = type3;
     }
 
     /**
@@ -466,6 +459,7 @@ public class AirBaseItem implements Comparable<AirBaseItem> {
 
         AirBaseItem abitem = new AirBaseItem();
         abitem.setId(slotitem.getId());
+        abitem.setType2(slotitem.getType().get(2));
         abitem.setType3(slotitem.getType().get(3));
         abitem.setName(slotitem.getName());
         abitem.setType(type);
@@ -506,13 +500,6 @@ public class AirBaseItem implements Comparable<AirBaseItem> {
             return false;
         // 航空機である
         if (!Items.isAircraft(slotitem))
-            return false;
-        // 水上機ではない(載せれるけど)
-        if (SlotItemType.水上偵察機.equals(slotitem))
-            return false;
-        if (SlotItemType.水上戦闘機.equals(slotitem))
-            return false;
-        if (SlotItemType.水上爆撃機.equals(slotitem))
             return false;
         // 半径1以上
         if (slotitem.getDistance() == null || slotitem.getDistance() == 0)
