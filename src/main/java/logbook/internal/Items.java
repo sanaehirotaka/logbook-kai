@@ -272,6 +272,18 @@ public class Items {
      * @param item 装備
      * @return 航空機かどうか
      */
+    public static boolean isAircraft(SlotItem item) {
+        return Items.slotitemMst(item)
+                .map(Items::isAircraft)
+                .orElse(false);
+    }
+
+    /**
+     * 航空機かどうかを調べます
+     *
+     * @param item 装備
+     * @return 航空機かどうか
+     */
     public static boolean isAircraft(SlotitemMst item) {
         switch (SlotItemType.toSlotItemType(item)) {
         case 艦上戦闘機:
@@ -304,6 +316,18 @@ public class Items {
      * @param item 装備
      * @return 戦闘に参加する航空機かどうか
      */
+    public static boolean isCombatAircraft(SlotItem item) {
+        return Items.slotitemMst(item)
+                .map(Items::isCombatAircraft)
+                .orElse(false);
+    }
+
+    /**
+     * 戦闘に参加する航空機かどうかを調べます
+     *
+     * @param item 装備
+     * @return 戦闘に参加する航空機かどうか
+     */
     public static boolean isCombatAircraft(SlotitemMst item) {
         switch (SlotItemType.toSlotItemType(item)) {
         case 艦上戦闘機:
@@ -322,6 +346,18 @@ public class Items {
         default:
             return false;
         }
+    }
+
+    /**
+     * 偵察機かどうかを調べます
+     *
+     * @param item 装備
+     * @return 偵察機かどうか
+     */
+    public static boolean isReconAircraft(SlotItem item) {
+        return Items.slotitemMst(item)
+                .map(Items::isReconAircraft)
+                .orElse(false);
     }
 
     /**

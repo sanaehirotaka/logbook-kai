@@ -454,6 +454,38 @@ public class Tools {
             });
         }
 
+        /**
+         * TableColumnの名前を取得する
+         * @param column TableColumn
+         * @return TableColumnの名前
+         */
+        public static String getColumnName(TableColumn<?, ?> column) {
+            LinkedList<String> names = null;
+            TableColumnBase<?, ?> parent = column;
+            while ((parent = parent.getParentColumn()) != null) {
+                if (names == null) {
+                    names = new LinkedList<>();
+                }
+                names.addFirst(parent.getText());
+            }
+            if (names != null) {
+                return names.stream().collect(Collectors.joining(".")) + "." + column.getText();
+            } else {
+                return column.getText();
+            }
+        }
+
+        /**
+         * TableViewからTableColumnをストリームとして取得する
+         * @param table TableView
+         * @return TableColumn
+         */
+        public static <S> Stream<TableColumn<S, ?>> getColumns(TableView<S> table) {
+            return table.getColumns()
+                    .stream()
+                    .flatMap(Tables::flatColumns);
+        }
+
         private static <S> void storeSortOrder(TableView<S> table, String key) {
             ObservableList<TableColumn<S, ?>> sortOrder = table.getSortOrder();
             Map<String, String> setting = AppConfig.get()
@@ -471,17 +503,6 @@ public class Tools {
         }
 
         /**
-         * TableViewからTableColumnをストリームとして取得する
-         * @param table TableView
-         * @return TableColumn
-         */
-        private static <S> Stream<TableColumn<S, ?>> getColumns(TableView<S> table) {
-            return table.getColumns()
-                    .stream()
-                    .flatMap(Tables::flatColumns);
-        }
-
-        /**
          * ネスとされたTableColumnの終端になるTableColumnを取得する
          * @param column TableColumn
          * @return TableColumnのストリーム
@@ -492,27 +513,6 @@ public class Tools {
                         .flatMap(Tables::flatColumns);
             }
             return Stream.of(column);
-        }
-
-        /**
-         * TableColumnの名前を取得する
-         * @param column TableColumn
-         * @return TableColumnの名前
-         */
-        private static String getColumnName(TableColumn<?, ?> column) {
-            LinkedList<String> names = null;
-            TableColumnBase<?, ?> parent = column;
-            while ((parent = parent.getParentColumn()) != null) {
-                if (names == null) {
-                    names = new LinkedList<>();
-                }
-                names.addFirst(parent.getText());
-            }
-            if (names != null) {
-                return names.stream().collect(Collectors.joining(".")) + "." + column.getText();
-            } else {
-                return column.getText();
-            }
         }
     }
 

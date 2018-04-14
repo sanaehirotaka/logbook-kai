@@ -2,3 +2,13 @@
 .itemWindow .detailName {
     -fx-font-size: 16pt;
 }
+.table-row-cell .level {
+    -fx-font-weight: bold;
+    -fx-text-fill: #33aa99;
+}
+.table-row-cell:selected .level {
+    -fx-text-fill: white;
+}
+.toggle-switch {
+    -fx-font-weight: bold;
+}
