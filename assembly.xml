@@ -1,0 +1,25 @@
+<assembly>
+    <id>dist</id>
+    <!-- Specifies that our binary distribution is a zip package -->
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <files>
+        <file>
+            <source>target/${project.artifactId}.jar</source>
+        </file>
+    </files>
+
+    <fileSets>
+        <fileSet>
+            <directory>dist-includes</directory>
+            <outputDirectory>/</outputDirectory>
+            <excludes>
+                <exclude>*/.gitkeep</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>
