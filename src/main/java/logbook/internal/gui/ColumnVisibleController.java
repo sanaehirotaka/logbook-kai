@@ -29,7 +29,8 @@ public class ColumnVisibleController extends WindowController {
     @FXML
     void initialize() {
         this.listView.setCellFactory(
-                CheckBoxListCell.forListView(t -> t.visibleProperty(), ToStringConverter.of(TableColumn::getText)));
+                CheckBoxListCell.forListView(t -> t.visibleProperty(),
+                        ToStringConverter.of(Tools.Tables::getColumnName)));
     }
 
     /**
@@ -68,14 +69,14 @@ public class ColumnVisibleController extends WindowController {
      */
     public void setData(TableView<?> table, String key) {
         this.key = key;
-        this.listView.getItems().addAll(table.getColumns());
+        this.listView.getItems().addAll(Tools.Tables.getColumns(table).collect(Collectors.toList()));
         // 閉じるときに設定を保存する
         this.getWindow().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
             // 非表示にした列のSet
             Set<String> setting = this.listView.getItems()
                     .stream()
                     .filter(c -> !c.isVisible())
-                    .map(TableColumn::getText)
+                    .map(Tools.Tables::getColumnName)
                     .collect(Collectors.toSet());
             if (setting.isEmpty()) {
                 AppConfig.get().getColumnVisibleMap().remove(key);

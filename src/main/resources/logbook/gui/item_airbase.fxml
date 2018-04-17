@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.controlsfx.control.ToggleSwitch?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemAirBaseController">
+    <children>
+        <TitledPane animated="false" expanded="false" text="フィルター">
+           <content>
+              <VBox>
+                 <children>
+                    <FlowPane>
+                       <children>
+                          <VBox fillWidth="false">
+                             <children>
+                                <ToggleSwitch fx:id="seikuFilter" prefWidth="0.0" text="制空(出撃)" />
+                              <Spinner fx:id="seikuValue" disable="true" editable="true" prefWidth="75.0" />
+                                <ChoiceBox fx:id="seikuType" disable="true" />
+                             </children>
+                          </VBox>
+                          <VBox fillWidth="false">
+                             <children>
+                                <ToggleSwitch fx:id="interceptSeikuFilter" prefWidth="0.0" text="制空(防空)" />
+                              <Spinner fx:id="interceptSeikuValue" disable="true" editable="true" prefWidth="75.0" />
+                                <ChoiceBox fx:id="interceptSeikuType" disable="true" />
+                             </children>
+                          </VBox>
+                          <VBox fillWidth="false">
+                             <children>
+                                <ToggleSwitch fx:id="distanceFilter" prefWidth="0.0" text="行動半径(素)" />
+                              <Spinner fx:id="distanceValue" disable="true" editable="true" prefWidth="75.0" />
+                                <ChoiceBox fx:id="distanceType" disable="true" />
+                             </children>
+                          </VBox>
+                          <VBox fillWidth="false">
+                             <children>
+                                <ToggleSwitch fx:id="distanceTaiteichanFilter" prefWidth="0.0" text="行動半径(二式大艇)" />
+                              <Spinner fx:id="distanceTaiteichanValue" disable="true" editable="true" prefWidth="75.0" />
+                                <ChoiceBox fx:id="distanceTaiteichanType" disable="true" />
+                             </children>
+                          </VBox>
+                          <VBox fillWidth="false">
+                             <children>
+                                <ToggleSwitch fx:id="distanceCatalinaFilter" prefWidth="0.0" text="行動半径(Catalina)" />
+                              <Spinner fx:id="distanceCatalinaValue" disable="true" editable="true" prefWidth="75.0" />
+                                <ChoiceBox fx:id="distanceCatalinaType" disable="true" />
+                             </children>
+                          </VBox>
+                       </children>
+                    </FlowPane>
+                 </children>
+              </VBox>
+           </content>
+        </TitledPane>
+        <TableView fx:id="itemTable" VBox.vgrow="ALWAYS">
+          <columns>
+            <TableColumn fx:id="name" prefWidth="200.0" text="名称" />
+            <TableColumn fx:id="type" prefWidth="90.0" text="種類" />
+            <TableColumn fx:id="alv" prefWidth="35.0" text="熟練" />
+            <TableColumn fx:id="level" prefWidth="45.0" text="改修" />
+            <TableColumn fx:id="count" prefWidth="35.0" text="所持" />
+            <TableColumn prefWidth="75.0" text="中隊制空">
+             <columns>
+                <TableColumn fx:id="seiku" prefWidth="35.0" text="出撃" />
+                <TableColumn fx:id="interceptSeiku" prefWidth="35.0" text="防空" />
+             </columns>
+            </TableColumn>
+            <TableColumn prefWidth="75.0" text="戦闘行動半径">
+             <columns>
+                <TableColumn fx:id="distance" prefWidth="35.0" text="素" />
+                <TableColumn fx:id="distanceTaiteichan" prefWidth="45.0" text="+大艇" />
+                <TableColumn fx:id="distanceCatalina" prefWidth="45.0" text="+Cata" />
+             </columns>
+            </TableColumn>
+            <TableColumn fx:id="cost" prefWidth="60.0" text="配置コスト" />
+            <TableColumn fx:id="tyku" prefWidth="35.0" text="対空" />
+            <TableColumn fx:id="houm" prefWidth="35.0" text="対爆" />
+            <TableColumn fx:id="houk" prefWidth="35.0" text="迎撃" />
+            <TableColumn fx:id="raig" prefWidth="35.0" text="雷装" />
+            <TableColumn fx:id="baku" prefWidth="35.0" text="爆装" />
+            <TableColumn fx:id="tais" prefWidth="35.0" text="対潜" />
+            <TableColumn fx:id="saku" prefWidth="35.0" text="索敵" />
+          </columns>
+           <contextMenu>
+              <ContextMenu>
+                 <items>
+                    <MenuItem mnemonicParsing="false" onAction="#copyAirBase" text="クリップボードにコピー" />
+                    <MenuItem mnemonicParsing="false" onAction="#selectAllAirBase" text="すべてを選択" />
+                    <MenuItem mnemonicParsing="false" onAction="#storeAirBase" text="CSVファイルとして保存" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#columnVisibleAirBase" text="列の表示・非表示" />
+                 </items>
+              </ContextMenu>
+           </contextMenu>
+        </TableView>
+    </children>
+</VBox>

@@ -104,7 +104,7 @@ public class AirBases {
         if (distance >= reconDistance) {
             return 0;
         }
-        return (int) Math.min(Math.sqrt(reconDistance - distance), 3);
+        return (int) Math.round(Math.min(Math.sqrt(reconDistance - distance), 3));
     }
 
     private static double magnification(SlotitemMst itemMst) {

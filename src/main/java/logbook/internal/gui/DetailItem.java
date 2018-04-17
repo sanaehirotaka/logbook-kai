@@ -4,10 +4,10 @@ import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Predicate;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import logbook.Messages;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
@@ -23,11 +23,11 @@ public class DetailItem {
     /** 装備ID */
     private Integer id;
 
-    /** 改修Lv */
-    private StringProperty level;
-
     /** 熟練度 */
-    private StringProperty alv;
+    private IntegerProperty alv;
+
+    /** 改修Lv */
+    private IntegerProperty level;
 
     /** 所持艦娘 */
     private ObjectProperty<Ship> ship;
@@ -52,26 +52,10 @@ public class DetailItem {
     }
 
     /**
-     * 改修Lvを取得します。
-     * @return 改修Lv
-     */
-    public StringProperty levelProperty() {
-        return this.level;
-    }
-
-    /**
-     * 改修Lvを設定します。
-     * @param level 改修Lv
-     */
-    public void setLevel(String level) {
-        this.level = new SimpleStringProperty(level);
-    }
-
-    /**
      * 熟練度を取得します。
      * @return 熟練度
      */
-    public StringProperty alvProperty() {
+    public IntegerProperty alvProperty() {
         return this.alv;
     }
 
@@ -79,8 +63,24 @@ public class DetailItem {
      * 熟練度を設定します。
      * @param alv 熟練度
      */
-    public void setAlv(String alv) {
-        this.alv = new SimpleStringProperty(alv);
+    public void setAlv(Integer alv) {
+        this.alv = new SimpleIntegerProperty(alv);
+    }
+
+    /**
+     * 改修Lvを取得します。
+     * @return 改修Lv
+     */
+    public IntegerProperty levelProperty() {
+        return this.level;
+    }
+
+    /**
+     * 改修Lvを設定します。
+     * @param level 改修Lv
+     */
+    public void setLevel(Integer level) {
+        this.level = new SimpleIntegerProperty(level);
     }
 
     /**
@@ -118,8 +118,14 @@ public class DetailItem {
     @Override
     public String toString() {
         return new StringJoiner("\t")
-                .add(this.alv.get())
-                .add(this.level.get())
+                .add(Optional.ofNullable(this.alv.get())
+                        .filter(v -> v > 0)
+                        .map(v -> Messages.getString("item.alv", v)) //$NON-NLS-1$
+                        .orElse(""))
+                .add(Optional.ofNullable(this.level.get())
+                        .filter(v -> v > 0)
+                        .map(v -> Messages.getString("item.level", v)) //$NON-NLS-1$
+                        .orElse(""))
                 .add(Optional.ofNullable(this.ship.get())
                         .map(Ships::toName)
                         .orElse("未所持"))
@@ -137,15 +143,10 @@ public class DetailItem {
         DetailItem detail = new DetailItem();
         detail.setId(id);
 
-        // 改修
-        detail.setLevel(Optional.ofNullable(item.getLevel())
-                .filter(lv -> lv > 0)
-                .map(lv -> Messages.getString("item.level", lv)) //$NON-NLS-1$
-                .orElse(""));
         // 熟練
-        detail.setAlv(Optional.ofNullable(item.getAlv())
-                .map(alv -> Messages.getString("item.alv", alv)) //$NON-NLS-1$
-                .orElse(""));
+        detail.setAlv(Optional.ofNullable(item.getAlv()).orElse(0));
+        // 改修
+        detail.setLevel(Optional.ofNullable(item.getLevel()).orElse(0));
         // 装備している艦娘を探す
         Predicate<Ship> filter = e -> e.getSlot().contains(id) || id.equals(e.getSlotEx());
         Optional<Ship> op = ShipCollection.get()
