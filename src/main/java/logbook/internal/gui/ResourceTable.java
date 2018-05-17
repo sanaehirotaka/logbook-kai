@@ -10,34 +10,33 @@ import javafx.beans.property.StringProperty;
 public class ResourceTable {
 
     /** 日付 */
-    private StringProperty date;
+    private StringProperty date = new SimpleStringProperty();
 
     /** 燃料 */
-    private StringProperty fuel;
+    private StringProperty fuel = new SimpleStringProperty();
 
     /** 弾薬 */
-    private StringProperty ammo;
+    private StringProperty ammo = new SimpleStringProperty();
 
     /** 鋼材 */
-    private StringProperty metal;
+    private StringProperty metal = new SimpleStringProperty();
 
     /** ボーキサイト */
-    private StringProperty bauxite;
+    private StringProperty bauxite = new SimpleStringProperty();
 
     /** 高速修復材 */
-    private StringProperty bucket;
+    private StringProperty bucket = new SimpleStringProperty();
 
     /** 高速建造材 */
-    private StringProperty burner;
+    private StringProperty burner = new SimpleStringProperty();
 
     /** 開発資材 */
-    private StringProperty research;
+    private StringProperty research = new SimpleStringProperty();
 
     /** 改修資材 */
-    private StringProperty improve;
+    private StringProperty improve = new SimpleStringProperty();
 
-    /**
-     * 日付を取得します。
+    /**日付を取得します。
      * @return 日付
      */
     public StringProperty dateProperty() {
@@ -45,11 +44,19 @@ public class ResourceTable {
     }
 
     /**
+     * 日付を取得します。
+     * @return 日付
+     */
+    public String getDate() {
+        return this.date.get();
+    }
+
+    /**
      * 日付を設定します。
      * @param date 日付
      */
     public void setDate(String date) {
-        this.date = new SimpleStringProperty(date);
+        this.date.set(date);
     }
 
     /**
@@ -61,11 +68,19 @@ public class ResourceTable {
     }
 
     /**
+     * 燃料を取得します。
+     * @return 燃料
+     */
+    public String getFuel() {
+        return this.fuel.get();
+    }
+
+    /**
      * 燃料を設定します。
      * @param fuel 燃料
      */
     public void setFuel(String fuel) {
-        this.fuel = new SimpleStringProperty(fuel);
+        this.fuel.set(fuel);
     }
 
     /**
@@ -77,11 +92,19 @@ public class ResourceTable {
     }
 
     /**
+     * 弾薬を取得します。
+     * @return 弾薬
+     */
+    public String getAmmo() {
+        return this.ammo.get();
+    }
+
+    /**
      * 弾薬を設定します。
      * @param ammo 弾薬
      */
     public void setAmmo(String ammo) {
-        this.ammo = new SimpleStringProperty(ammo);
+        this.ammo.set(ammo);
     }
 
     /**
@@ -93,11 +116,19 @@ public class ResourceTable {
     }
 
     /**
+     * 鋼材を取得します。
+     * @return 鋼材
+     */
+    public String getMetal() {
+        return this.metal.get();
+    }
+
+    /**
      * 鋼材を設定します。
      * @param metal 鋼材
      */
     public void setMetal(String metal) {
-        this.metal = new SimpleStringProperty(metal);
+        this.metal.set(metal);
     }
 
     /**
@@ -109,11 +140,19 @@ public class ResourceTable {
     }
 
     /**
+     * ボーキサイトを取得します。
+     * @return ボーキサイト
+     */
+    public String getBauxite() {
+        return this.bauxite.get();
+    }
+
+    /**
      * ボーキサイトを設定します。
      * @param bauxite ボーキサイト
      */
     public void setBauxite(String bauxite) {
-        this.bauxite = new SimpleStringProperty(bauxite);
+        this.bauxite.set(bauxite);
     }
 
     /**
@@ -125,11 +164,19 @@ public class ResourceTable {
     }
 
     /**
+     * 高速修復材を取得します。
+     * @return 高速修復材
+     */
+    public String getBucket() {
+        return this.bucket.get();
+    }
+
+    /**
      * 高速修復材を設定します。
      * @param bucket 高速修復材
      */
     public void setBucket(String bucket) {
-        this.bucket = new SimpleStringProperty(bucket);
+        this.bucket.set(bucket);
     }
 
     /**
@@ -141,11 +188,19 @@ public class ResourceTable {
     }
 
     /**
+     * 高速建造材を取得します。
+     * @return 高速建造材
+     */
+    public String getBurner() {
+        return this.burner.get();
+    }
+
+    /**
      * 高速建造材を設定します。
      * @param burner 高速建造材
      */
     public void setBurner(String burner) {
-        this.burner = new SimpleStringProperty(burner);
+        this.burner.set(burner);
     }
 
     /**
@@ -157,11 +212,19 @@ public class ResourceTable {
     }
 
     /**
+     * 開発資材を取得します。
+     * @return 開発資材
+     */
+    public String getResearch() {
+        return this.research.get();
+    }
+
+    /**
      * 開発資材を設定します。
      * @param research 開発資材
      */
     public void setResearch(String research) {
-        this.research = new SimpleStringProperty(research);
+        this.research.set(research);
     }
 
     /**
@@ -173,10 +236,18 @@ public class ResourceTable {
     }
 
     /**
+     * 改修資材を取得します。
+     * @return 改修資材
+     */
+    public String getImprove() {
+        return this.improve.get();
+    }
+
+    /**
      * 改修資材を設定します。
      * @param improve 改修資材
      */
     public void setImprove(String improve) {
-        this.improve = new SimpleStringProperty(improve);
+        this.improve.set(improve);
     }
 }

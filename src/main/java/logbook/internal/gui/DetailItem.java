@@ -13,6 +13,8 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.SlotItem;
 import logbook.internal.Ships;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 所有装備一覧の詳細
@@ -21,35 +23,23 @@ import logbook.internal.Ships;
 public class DetailItem {
 
     /** 装備ID */
+    @Getter
+    @Setter
     private Integer id;
 
     /** 熟練度 */
-    private IntegerProperty alv;
+    private IntegerProperty alv = new SimpleIntegerProperty();
 
     /** 改修Lv */
-    private IntegerProperty level;
+    private IntegerProperty level = new SimpleIntegerProperty();
 
     /** 所持艦娘 */
-    private ObjectProperty<Ship> ship;
+    private ObjectProperty<Ship> ship = new SimpleObjectProperty<Ship>();
 
     /** 所持艦娘ID */
+    @Getter
+    @Setter
     private Integer shipId;
-
-    /**
-     * 装備IDを取得します。
-     * @return 装備ID
-     */
-    public Integer getId() {
-        return this.id;
-    }
-
-    /**
-     * 装備IDを設定します。
-     * @param id 装備ID
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     /**
      * 熟練度を取得します。
@@ -60,11 +50,19 @@ public class DetailItem {
     }
 
     /**
+     * 熟練度を取得します。
+     * @return 熟練度
+     */
+    public Integer getAlv() {
+        return this.alv.get();
+    }
+
+    /**
      * 熟練度を設定します。
      * @param alv 熟練度
      */
     public void setAlv(Integer alv) {
-        this.alv = new SimpleIntegerProperty(alv);
+        this.alv.set(alv);
     }
 
     /**
@@ -76,11 +74,19 @@ public class DetailItem {
     }
 
     /**
+     * 改修Lvを取得します。
+     * @return 改修Lv
+     */
+    public Integer getLevel() {
+        return this.level.get();
+    }
+
+    /**
      * 改修Lvを設定します。
      * @param level 改修Lv
      */
     public void setLevel(Integer level) {
-        this.level = new SimpleIntegerProperty(level);
+        this.level.set(level);
     }
 
     /**
@@ -92,27 +98,19 @@ public class DetailItem {
     }
 
     /**
+     * 所持艦娘を取得します。
+     * @return 所持艦娘
+     */
+    public Ship getShip() {
+        return this.ship.get();
+    }
+
+    /**
      * 所持艦娘を設定します。
      * @param ship 所持艦娘
      */
     public void setShip(Ship ship) {
-        this.ship = new SimpleObjectProperty<>(ship);
-    }
-
-    /**
-     * 所持艦娘IDを取得します。
-     * @return 所持艦娘ID
-     */
-    public Integer getShipId() {
-        return this.shipId;
-    }
-
-    /**
-     * 所持艦娘IDを設定します。
-     * @param shipId 所持艦娘ID
-     */
-    public void setShipId(Integer shipId) {
-        this.shipId = shipId;
+        this.ship.set(ship);
     }
 
     @Override

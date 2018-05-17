@@ -281,7 +281,8 @@ public class ItemAirBaseController extends WindowController {
                     })
                     .sorted(Comparator.comparing(AirBaseItem::getType3)
                             .thenComparing(AirBaseItem::getType2)
-                            .thenComparing(Comparator.comparing(AirBaseItem::getName)))
+                            .thenComparing(Comparator.comparing(AirBaseItem::getName))
+                            .thenComparing(Comparator.comparing(item -> item.seikuProperty().get())))
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
             this.items = new FilteredList<>(items);

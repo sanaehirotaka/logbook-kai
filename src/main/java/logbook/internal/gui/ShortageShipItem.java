@@ -15,16 +15,16 @@ import logbook.internal.Ships;
 public class ShortageShipItem {
 
     /** ID */
-    private IntegerProperty id;
+    private IntegerProperty id = new SimpleIntegerProperty();
 
     /** 艦娘 */
-    private ObjectProperty<Ship> ship;
+    private ObjectProperty<Ship> ship = new SimpleObjectProperty<Ship>();
 
     /** Lv */
-    private IntegerProperty lv;
+    private IntegerProperty lv = new SimpleIntegerProperty();
 
     /** 改装Lv */
-    private IntegerProperty afterLv;
+    private IntegerProperty afterLv = new SimpleIntegerProperty();
 
     /**
      * IDを取得します。
@@ -35,11 +35,19 @@ public class ShortageShipItem {
     }
 
     /**
+     * IDを取得します。
+     * @return ID
+     */
+    public Integer getId() {
+        return this.id.get();
+    }
+
+    /**
      * IDを設定します。
      * @param id ID
      */
     public void setId(Integer id) {
-        this.id = new SimpleIntegerProperty(id);
+        this.id.set(id);
     }
 
     /**
@@ -51,11 +59,19 @@ public class ShortageShipItem {
     }
 
     /**
+     * 艦娘を取得します。
+     * @return 艦娘
+     */
+    public Ship getShip() {
+        return this.ship.get();
+    }
+
+    /**
      * 艦娘を設定します。
      * @param ship 艦娘
      */
     public void setShip(Ship ship) {
-        this.ship = new SimpleObjectProperty<>(ship);
+        this.ship.set(ship);
     }
 
     /**
@@ -79,15 +95,7 @@ public class ShortageShipItem {
      * @param lv Lv
      */
     public void setLv(Integer lv) {
-        this.lv = new SimpleIntegerProperty(lv);
-    }
-
-    /**
-     * 改装Lvを取得します。
-     * @return 改装Lv
-     */
-    public Integer getAfterLv() {
-        return this.afterLv.get();
+        this.lv.set(lv);
     }
 
     /**
@@ -99,11 +107,19 @@ public class ShortageShipItem {
     }
 
     /**
+     * 改装Lvを取得します。
+     * @return 改装Lv
+     */
+    public Integer getAfterLv() {
+        return this.afterLv.get();
+    }
+
+    /**
      * 改装Lvを設定します。
      * @param afterLv 改装Lv
      */
     public void setAfterLv(Integer afterLv) {
-        this.afterLv = new SimpleIntegerProperty(afterLv);
+        this.afterLv.set(afterLv);
     }
 
     /**

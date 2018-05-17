@@ -25,25 +25,25 @@ import logbook.internal.Time;
 public class RequireNdock {
 
     /** 艦隊 */
-    private StringProperty deck;
+    private StringProperty deck = new SimpleStringProperty();
 
     /** 艦娘 */
-    private ObjectProperty<Ship> ship;
+    private ObjectProperty<Ship> ship = new SimpleObjectProperty<Ship>();
 
     /** Lv */
-    private IntegerProperty lv;
+    private IntegerProperty lv = new SimpleIntegerProperty();
 
     /** 時間 */
-    private ObjectProperty<Duration> time;
+    private ObjectProperty<Duration> time = new SimpleObjectProperty<Duration>();
 
     /** 今から */
-    private StringProperty end;
+    private StringProperty end = new SimpleStringProperty();
 
     /** 燃料 */
-    private IntegerProperty fuel;
+    private IntegerProperty fuel = new SimpleIntegerProperty();
 
     /** 鋼材 */
-    private IntegerProperty metal;
+    private IntegerProperty metal = new SimpleIntegerProperty();
 
     /**
      * 艦隊を取得します。
@@ -63,10 +63,10 @@ public class RequireNdock {
 
     /**
      * 艦隊を設定します。
-     * @param id 艦隊
+     * @param deck 艦隊
      */
     public void setDeck(String deck) {
-        this.deck = new SimpleStringProperty(deck);
+        this.deck.set(deck);
     }
 
     /**
@@ -90,7 +90,7 @@ public class RequireNdock {
      * @param ship 艦娘
      */
     public void setShip(Ship ship) {
-        this.ship = new SimpleObjectProperty<>(ship);
+        this.ship.set(ship);
     }
 
     /**
@@ -105,7 +105,7 @@ public class RequireNdock {
      * Lvを取得します。
      * @return Lv
      */
-    public int getLv() {
+    public Integer getLv() {
         return this.lv.get();
     }
 
@@ -113,13 +113,13 @@ public class RequireNdock {
      * Lvを設定します。
      * @param lv Lv
      */
-    public void setLv(int lv) {
-        this.lv = new SimpleIntegerProperty(lv);
+    public void setLv(Integer lv) {
+        this.lv.set(lv);
     }
 
     /**
      * 時間を取得します。
-     * @return time
+     * @return 時間
      */
     public ObjectProperty<Duration> timeProperty() {
         return this.time;
@@ -138,12 +138,12 @@ public class RequireNdock {
      * @param time 時間
      */
     public void setTime(Duration time) {
-        this.time = new SimpleObjectProperty<>(time);
+        this.time.set(time);
     }
 
     /**
      * 今からを取得します。
-     * @return end
+     * @return 今から
      */
     public StringProperty endProperty() {
         return this.end;
@@ -162,12 +162,12 @@ public class RequireNdock {
      * @param end 今から
      */
     public void setEnd(String end) {
-        this.end = new SimpleStringProperty(end);
+        this.end.set(end);
     }
 
     /**
      * 燃料を取得します。
-     * @return fuel
+     * @return 燃料
      */
     public IntegerProperty fuelProperty() {
         return this.fuel;
@@ -175,9 +175,9 @@ public class RequireNdock {
 
     /**
      * 燃料を取得します。
-     * @return fuel
+     * @return 燃料
      */
-    public int getFuel() {
+    public Integer getFuel() {
         return this.fuel.get();
     }
 
@@ -185,13 +185,13 @@ public class RequireNdock {
      * 燃料を設定します。
      * @param fuel 燃料
      */
-    public void setFuel(int fuel) {
-        this.fuel = new SimpleIntegerProperty(fuel);
+    public void setFuel(Integer fuel) {
+        this.fuel.set(fuel);
     }
 
     /**
      * 鋼材を取得します。
-     * @return metal
+     * @return 鋼材
      */
     public IntegerProperty metalProperty() {
         return this.metal;
@@ -199,9 +199,9 @@ public class RequireNdock {
 
     /**
      * 鋼材を取得します。
-     * @return metal
+     * @return 鋼材
      */
-    public int getMetal() {
+    public Integer getMetal() {
         return this.metal.get();
     }
 
@@ -209,8 +209,8 @@ public class RequireNdock {
      * 鋼材を設定します。
      * @param metal 鋼材
      */
-    public void setMetal(int metal) {
-        this.metal = new SimpleIntegerProperty(metal);
+    public void setMetal(Integer metal) {
+        this.metal.set(metal);
     }
 
     @Override

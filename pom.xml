@@ -22,27 +22,27 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-		                <configuration>
-		                    <descriptorRefs>
-		                        <descriptorRef>jar-with-dependencies</descriptorRef>
-		                    </descriptorRefs>
-		                    <archive>
-		                        <manifestEntries>
-		                            <Bundle-License>The MIT License (MIT)</Bundle-License>
-		                            <Implementation-Title>航海日誌</Implementation-Title>
-		                            <Implementation-Vendor>sanaehirotaka</Implementation-Vendor>
-		                        </manifestEntries>
-		                        <manifest>
-		                            <mainClass>logbook.internal.Launcher</mainClass>
-		                            <addClasspath>true</addClasspath>
-		                            <addExtensions>false</addExtensions>
-		                            <classpathPrefix></classpathPrefix>
-		                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-		                        </manifest>
-		                    </archive>
-		                    <finalName>${project.artifactId}</finalName>
-		                    <appendAssemblyId>false</appendAssemblyId>
-		                </configuration>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifestEntries>
+                                    <Bundle-License>The MIT License (MIT)</Bundle-License>
+                                    <Implementation-Title>航海日誌</Implementation-Title>
+                                    <Implementation-Vendor>sanaehirotaka</Implementation-Vendor>
+                                </manifestEntries>
+                                <manifest>
+                                    <mainClass>logbook.internal.Launcher</mainClass>
+                                    <addClasspath>true</addClasspath>
+                                    <addExtensions>false</addExtensions>
+                                    <classpathPrefix></classpathPrefix>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                            </archive>
+                            <finalName>${project.artifactId}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>create-release</id>
@@ -50,13 +50,13 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-						<configuration>
-						    <descriptors>
-						        <descriptor>assembly.xml</descriptor>
-						    </descriptors>
-							<finalName>${project.artifactId}_${project.version}</finalName>
-		                    <appendAssemblyId>false</appendAssemblyId>
-						</configuration>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
+                            <finalName>${project.artifactId}_${project.version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

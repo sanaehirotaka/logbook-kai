@@ -11,19 +11,19 @@ import logbook.plugin.JarBasedPlugin;
 public class DetailPlugin {
 
     /** 名称 */
-    private StringProperty name;
+    private StringProperty name = new SimpleStringProperty();
 
     /** 作者 */
-    private StringProperty vendor;
+    private StringProperty vendor = new SimpleStringProperty();
 
     /** バージョン */
-    private StringProperty version;
+    private StringProperty version = new SimpleStringProperty();
 
     /** ライセンス */
-    private StringProperty license;
+    private StringProperty license = new SimpleStringProperty();
 
     /** 場所 */
-    private StringProperty location;
+    private StringProperty location = new SimpleStringProperty();
 
     /**
      * 名称を取得します。
@@ -34,11 +34,19 @@ public class DetailPlugin {
     }
 
     /**
+     * 名称を取得します。
+     * @return 名称
+     */
+    public String getName() {
+        return this.name.get();
+    }
+
+    /**
      * 名称を設定します。
      * @param name 名称
      */
     public void setName(String name) {
-        this.name = new SimpleStringProperty(name);
+        this.name.set(name);
     }
 
     /**
@@ -50,11 +58,19 @@ public class DetailPlugin {
     }
 
     /**
+     * 作者を取得します。
+     * @return 作者
+     */
+    public String getVendor() {
+        return this.vendor.get();
+    }
+
+    /**
      * 作者を設定します。
      * @param vendor 作者
      */
     public void setVendor(String vendor) {
-        this.vendor = new SimpleStringProperty(vendor);
+        this.vendor.set(vendor);
     }
 
     /**
@@ -66,11 +82,19 @@ public class DetailPlugin {
     }
 
     /**
+     * バージョンを取得します。
+     * @return バージョン
+     */
+    public String getVersion() {
+        return this.version.get();
+    }
+
+    /**
      * バージョンを設定します。
      * @param version バージョン
      */
     public void setVersion(String version) {
-        this.version = new SimpleStringProperty(version);
+        this.version.set(version);
     }
 
     /**
@@ -82,11 +106,19 @@ public class DetailPlugin {
     }
 
     /**
+     * ライセンスを取得します。
+     * @return ライセンス
+     */
+    public String getLicense() {
+        return this.license.get();
+    }
+
+    /**
      * ライセンスを設定します。
      * @param license ライセンス
      */
     public void setLicense(String license) {
-        this.license = new SimpleStringProperty(license);
+        this.license.set(license);
     }
 
     /**
@@ -98,11 +130,19 @@ public class DetailPlugin {
     }
 
     /**
+     * 場所を取得します。
+     * @return 場所
+     */
+    public String getLocation() {
+        return this.location.get();
+    }
+
+    /**
      * 場所を設定します。
      * @param location 場所
      */
     public void setLocation(String location) {
-        this.location = new SimpleStringProperty(location);
+        this.location.set(location);
     }
 
     /**

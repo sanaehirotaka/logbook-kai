@@ -10,6 +10,8 @@ import javafx.beans.property.StringProperty;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemEquiptypeCollection;
 import logbook.bean.SlotitemMst;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 所有装備
@@ -18,52 +20,57 @@ import logbook.bean.SlotitemMst;
 public class Item implements Comparable<Item> {
 
     /** 装備定義 */
-    private IntegerProperty id;
+    private IntegerProperty id = new SimpleIntegerProperty();
 
     /** ソート用 種別 */
+    @Getter
+    @Setter
     private Integer type3;
 
     /** 名称 */
+    @Getter
+    @Setter
     private String name;
 
     /** 種別 */
-    private StringProperty type;
+    private StringProperty type = new SimpleStringProperty();
 
     /** 個数 */
-    private IntegerProperty count;
+    private IntegerProperty count = new SimpleIntegerProperty();
 
     /** 火力 */
-    private IntegerProperty houg;
+    private IntegerProperty houg = new SimpleIntegerProperty();
 
     /** 命中 */
-    private IntegerProperty houm;
+    private IntegerProperty houm = new SimpleIntegerProperty();
 
     /** 射程 */
-    private IntegerProperty leng;
+    private IntegerProperty leng = new SimpleIntegerProperty();
 
     /** 運 */
-    private IntegerProperty luck;
+    private IntegerProperty luck = new SimpleIntegerProperty();
 
     /** 回避 */
-    private IntegerProperty houk;
+    private IntegerProperty houk = new SimpleIntegerProperty();
 
     /** 爆装 */
-    private IntegerProperty baku;
+    private IntegerProperty baku = new SimpleIntegerProperty();
 
     /** 雷装 */
-    private IntegerProperty raig;
+    private IntegerProperty raig = new SimpleIntegerProperty();
 
     /** 索敵 */
-    private IntegerProperty saku;
+    private IntegerProperty saku = new SimpleIntegerProperty();
 
     /** 対潜 */
-    private IntegerProperty tais;
+    private IntegerProperty tais = new SimpleIntegerProperty();
 
     /** 対空 */
-    private IntegerProperty tyku;
+    private IntegerProperty tyku = new SimpleIntegerProperty();
 
     /** 装甲 */
-    private IntegerProperty souk;
+    private IntegerProperty souk = new SimpleIntegerProperty();
+
 
     /**
      * 装備定義を取得します。
@@ -74,43 +81,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 装備定義を取得します。
+     * @return 装備定義
+     */
+    public Integer getId() {
+        return this.id.get();
+    }
+
+    /**
      * 装備定義を設定します。
      * @param id 装備定義
      */
     public void setId(Integer id) {
-        this.id = new SimpleIntegerProperty(id);
-    }
-
-    /**
-     * ソート用 種別を取得します。
-     * @return ソート用 種別
-     */
-    public Integer getType3() {
-        return this.type3;
-    }
-
-    /**
-     * ソート用 種別を設定します。
-     * @param type3 ソート用 種別
-     */
-    public void setType3(Integer type3) {
-        this.type3 = type3;
-    }
-
-    /**
-     * 名称を取得します。
-     * @return 名称
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * 名称を設定します。
-     * @param name 名称
-     */
-    public void setName(String name) {
-        this.name = name;
+        this.id.set(id);
     }
 
     /**
@@ -122,11 +105,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 種別を取得します。
+     * @return 種別
+     */
+    public String getType() {
+        return this.type.get();
+    }
+
+    /**
      * 種別を設定します。
      * @param type 種別
      */
     public void setType(String type) {
-        this.type = new SimpleStringProperty(type);
+        this.type.set(type);
     }
 
     /**
@@ -150,7 +141,7 @@ public class Item implements Comparable<Item> {
      * @param count 個数
      */
     public void setCount(Integer count) {
-        this.count = new SimpleIntegerProperty(count);
+        this.count.set(count);
     }
 
     /**
@@ -162,11 +153,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 火力を取得します。
+     * @return 火力
+     */
+    public Integer getHoug() {
+        return this.houg.get();
+    }
+
+    /**
      * 火力を設定します。
      * @param houg 火力
      */
     public void setHoug(Integer houg) {
-        this.houg = new SimpleIntegerProperty(houg);
+        this.houg.set(houg);
     }
 
     /**
@@ -178,11 +177,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 命中を取得します。
+     * @return 命中
+     */
+    public Integer getHoum() {
+        return this.houm.get();
+    }
+
+    /**
      * 命中を設定します。
      * @param houm 命中
      */
     public void setHoum(Integer houm) {
-        this.houm = new SimpleIntegerProperty(houm);
+        this.houm.set(houm);
     }
 
     /**
@@ -194,11 +201,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 射程を取得します。
+     * @return 射程
+     */
+    public Integer getLeng() {
+        return this.leng.get();
+    }
+
+    /**
      * 射程を設定します。
      * @param leng 射程
      */
     public void setLeng(Integer leng) {
-        this.leng = new SimpleIntegerProperty(leng);
+        this.leng.set(leng);
     }
 
     /**
@@ -210,11 +225,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 運を取得します。
+     * @return 運
+     */
+    public Integer getLuck() {
+        return this.luck.get();
+    }
+
+    /**
      * 運を設定します。
      * @param luck 運
      */
     public void setLuck(Integer luck) {
-        this.luck = new SimpleIntegerProperty(luck);
+        this.luck.set(luck);
     }
 
     /**
@@ -226,11 +249,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 回避を取得します。
+     * @return 回避
+     */
+    public Integer getHouk() {
+        return this.houk.get();
+    }
+
+    /**
      * 回避を設定します。
      * @param houk 回避
      */
     public void setHouk(Integer houk) {
-        this.houk = new SimpleIntegerProperty(houk);
+        this.houk.set(houk);
     }
 
     /**
@@ -242,11 +273,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 爆装を取得します。
+     * @return 爆装
+     */
+    public Integer getBaku() {
+        return this.baku.get();
+    }
+
+    /**
      * 爆装を設定します。
      * @param baku 爆装
      */
     public void setBaku(Integer baku) {
-        this.baku = new SimpleIntegerProperty(baku);
+        this.baku.set(baku);
     }
 
     /**
@@ -258,11 +297,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 雷装を取得します。
+     * @return 雷装
+     */
+    public Integer getRaig() {
+        return this.raig.get();
+    }
+
+    /**
      * 雷装を設定します。
      * @param raig 雷装
      */
     public void setRaig(Integer raig) {
-        this.raig = new SimpleIntegerProperty(raig);
+        this.raig.set(raig);
     }
 
     /**
@@ -274,11 +321,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 索敵を取得します。
+     * @return 索敵
+     */
+    public Integer getSaku() {
+        return this.saku.get();
+    }
+
+    /**
      * 索敵を設定します。
      * @param saku 索敵
      */
     public void setSaku(Integer saku) {
-        this.saku = new SimpleIntegerProperty(saku);
+        this.saku.set(saku);
     }
 
     /**
@@ -290,11 +345,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 対潜を取得します。
+     * @return 対潜
+     */
+    public Integer getTais() {
+        return this.tais.get();
+    }
+
+    /**
      * 対潜を設定します。
      * @param tais 対潜
      */
     public void setTais(Integer tais) {
-        this.tais = new SimpleIntegerProperty(tais);
+        this.tais.set(tais);
     }
 
     /**
@@ -306,11 +369,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 対空を取得します。
+     * @return 対空
+     */
+    public Integer getTyku() {
+        return this.tyku.get();
+    }
+
+    /**
      * 対空を設定します。
      * @param tyku 対空
      */
     public void setTyku(Integer tyku) {
-        this.tyku = new SimpleIntegerProperty(tyku);
+        this.tyku.set(tyku);
     }
 
     /**
@@ -322,11 +393,19 @@ public class Item implements Comparable<Item> {
     }
 
     /**
+     * 装甲を取得します。
+     * @return 装甲
+     */
+    public Integer getSouk() {
+        return this.souk.get();
+    }
+
+    /**
      * 装甲を設定します。
      * @param souk 装甲
      */
     public void setSouk(Integer souk) {
-        this.souk = new SimpleIntegerProperty(souk);
+        this.souk.set(souk);
     }
 
     @Override

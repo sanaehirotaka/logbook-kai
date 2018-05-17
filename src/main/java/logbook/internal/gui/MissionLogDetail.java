@@ -17,45 +17,37 @@ import logbook.internal.gui.MissionLogController.SimpleMissionLog;
 public class MissionLogDetail {
 
     /** 日付 */
-    private StringProperty date;
+    private StringProperty date = new SimpleStringProperty();
 
     /** 遠征名 */
-    private StringProperty name;
+    private StringProperty name = new SimpleStringProperty();
 
     /** 結果 */
-    private StringProperty result;
+    private StringProperty result = new SimpleStringProperty();
 
     /** 燃料 */
-    private IntegerProperty fuel;
+    private IntegerProperty fuel = new SimpleIntegerProperty();
 
     /** 弾薬 */
-    private IntegerProperty ammo;
+    private IntegerProperty ammo = new SimpleIntegerProperty();
 
     /** 鋼材 */
-    private IntegerProperty metal;
+    private IntegerProperty metal = new SimpleIntegerProperty();
 
     /** ボーキ */
-    private IntegerProperty bauxite;
+    private IntegerProperty bauxite = new SimpleIntegerProperty();
 
     /** アイテム1 */
-    private StringProperty item1name;
+    private StringProperty item1name = new SimpleStringProperty();
 
     /** アイテム1 */
-    private StringProperty item1count;
+    private StringProperty item1count = new SimpleStringProperty();
 
     /** アイテム2 */
-    private StringProperty item2name;
+    private StringProperty item2name = new SimpleStringProperty();
 
     /** アイテム2 */
-    private StringProperty item2count;
-
-    /**
-     * 日付を設定します。
-     * @param date 日付
-     */
-    public void setDate(String date) {
-        this.date = new SimpleStringProperty(date);
-    }
+    private StringProperty item2count = new SimpleStringProperty();
 
     /**
      * 日付を取得します。
@@ -66,11 +58,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * 遠征名を設定します。
-     * @param name 遠征名
+     * 日付を取得します。
+     * @return 日付
      */
-    public void setName(String name) {
-        this.name = new SimpleStringProperty(name);
+    public String getDate() {
+        return this.date.get();
+    }
+
+    /**
+     * 日付を設定します。
+     * @param date 日付
+     */
+    public void setDate(String date) {
+        this.date.set(date);
     }
 
     /**
@@ -82,11 +82,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * 結果を設定します。
-     * @param result 結果
+     * 遠征名を取得します。
+     * @return 遠征名
      */
-    public void setResult(String result) {
-        this.result = new SimpleStringProperty(result);
+    public String getName() {
+        return this.name.get();
+    }
+
+    /**
+     * 遠征名を設定します。
+     * @param name 遠征名
+     */
+    public void setName(String name) {
+        this.name.set(name);
     }
 
     /**
@@ -98,11 +106,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * 燃料を設定します。
-     * @param fuel 燃料
+     * 結果を取得します。
+     * @return 結果
      */
-    public void setFuel(Integer fuel) {
-        this.fuel = new SimpleIntegerProperty(fuel);
+    public String getResult() {
+        return this.result.get();
+    }
+
+    /**
+     * 結果を設定します。
+     * @param result 結果
+     */
+    public void setResult(String result) {
+        this.result.set(result);
     }
 
     /**
@@ -114,11 +130,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * 弾薬を設定します。
-     * @param ammo 弾薬
+     * 燃料を取得します。
+     * @return 燃料
      */
-    public void setAmmo(Integer ammo) {
-        this.ammo = new SimpleIntegerProperty(ammo);
+    public Integer getFuel() {
+        return this.fuel.get();
+    }
+
+    /**
+     * 燃料を設定します。
+     * @param fuel 燃料
+     */
+    public void setFuel(Integer fuel) {
+        this.fuel.set(fuel);
     }
 
     /**
@@ -130,11 +154,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * 鋼材を設定します。
-     * @param metal 鋼材
+     * 弾薬を取得します。
+     * @return 弾薬
      */
-    public void setMetal(Integer metal) {
-        this.metal = new SimpleIntegerProperty(metal);
+    public Integer getAmmo() {
+        return this.ammo.get();
+    }
+
+    /**
+     * 弾薬を設定します。
+     * @param ammo 弾薬
+     */
+    public void setAmmo(Integer ammo) {
+        this.ammo.set(ammo);
     }
 
     /**
@@ -146,11 +178,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * ボーキを設定します。
-     * @param bauxite ボーキ
+     * 鋼材を取得します。
+     * @return 鋼材
      */
-    public void setBauxite(Integer bauxite) {
-        this.bauxite = new SimpleIntegerProperty(bauxite);
+    public Integer getMetal() {
+        return this.metal.get();
+    }
+
+    /**
+     * 鋼材を設定します。
+     * @param metal 鋼材
+     */
+    public void setMetal(Integer metal) {
+        this.metal.set(metal);
     }
 
     /**
@@ -162,11 +202,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * アイテム1を設定します。
-     * @param item1name アイテム1
+     * ボーキを取得します。
+     * @return ボーキ
      */
-    public void setItem1name(String item1name) {
-        this.item1name = new SimpleStringProperty(item1name);
+    public Integer getBauxite() {
+        return this.bauxite.get();
+    }
+
+    /**
+     * ボーキを設定します。
+     * @param bauxite ボーキ
+     */
+    public void setBauxite(Integer bauxite) {
+        this.bauxite.set(bauxite);
     }
 
     /**
@@ -178,11 +226,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * アイテム1を設定します。
-     * @param item1count アイテム1
+     * アイテム1を取得します。
+     * @return アイテム1
      */
-    public void setItem1count(String item1count) {
-        this.item1count = new SimpleStringProperty(item1count);
+    public String getItem1name() {
+        return this.item1name.get();
+    }
+
+    /**
+     * アイテム1を設定します。
+     * @param item1name アイテム1
+     */
+    public void setItem1name(String item1name) {
+        this.item1name.set(item1name);
     }
 
     /**
@@ -194,11 +250,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * アイテム2を設定します。
-     * @param item2name アイテム2
+     * アイテム1を取得します。
+     * @return アイテム1
      */
-    public void setItem2name(String item2name) {
-        this.item2name = new SimpleStringProperty(item2name);
+    public String getItem1count() {
+        return this.item1count.get();
+    }
+
+    /**
+     * アイテム1を設定します。
+     * @param item1count アイテム1
+     */
+    public void setItem1count(String item1count) {
+        this.item1count.set(item1count);
     }
 
     /**
@@ -210,11 +274,19 @@ public class MissionLogDetail {
     }
 
     /**
-     * アイテム2を設定します。
-     * @param item2count アイテム2
+     * アイテム2を取得します。
+     * @return アイテム2
      */
-    public void setItem2count(String item2count) {
-        this.item2count = new SimpleStringProperty(item2count);
+    public String getItem2name() {
+        return this.item2name.get();
+    }
+
+    /**
+     * アイテム2を設定します。
+     * @param item2name アイテム2
+     */
+    public void setItem2name(String item2name) {
+        this.item2name.set(item2name);
     }
 
     /**
@@ -223,6 +295,22 @@ public class MissionLogDetail {
      */
     public StringProperty item2countProperty() {
         return this.item2count;
+    }
+
+    /**
+     * アイテム2を取得します。
+     * @return アイテム2
+     */
+    public String getItem2count() {
+        return this.item2count.get();
+    }
+
+    /**
+     * アイテム2を設定します。
+     * @param item2count アイテム2
+     */
+    public void setItem2count(String item2count) {
+        this.item2count.set(item2count);
     }
 
     @Override
