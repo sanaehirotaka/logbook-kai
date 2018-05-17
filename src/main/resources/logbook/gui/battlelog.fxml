@@ -46,6 +46,7 @@
                         <TableColumn fx:id="efleet" prefWidth="100.0" text="敵艦隊" />
                         <TableColumn fx:id="dropType" prefWidth="75.0" text="ドロップ艦種" />
                         <TableColumn fx:id="dropShip" prefWidth="75.0" text="ドロップ艦娘" />
+                        <TableColumn fx:id="dropItem" prefWidth="75.0" text="アイテム" />
                     </columns>
                     <contextMenu>
                        <ContextMenu>

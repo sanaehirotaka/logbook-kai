@@ -279,6 +279,8 @@ public class BattleLogs {
         private String dropType;
         /** ドロップ艦娘 */
         private String dropShip;
+        /** ドロップアイテム */
+        private String dropItem = "";
 
         /**
          * 海戦・ドロップ報告書.csvから出撃統計のベースを作成します
@@ -307,6 +309,9 @@ public class BattleLogs {
             this.setEfleet(columns[11]);
             this.setDropType(columns[12]);
             this.setDropShip(columns[13]);
+            if (columns.length > 62) {
+                this.setDropItem(columns[62]);
+            }
         }
     }
 

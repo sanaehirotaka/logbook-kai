@@ -42,6 +42,8 @@ public class BattleLogDetail {
     private StringProperty dropType;
     /** ドロップ艦娘 */
     private StringProperty dropShip;
+    /** ドロップアイテム */
+    private StringProperty dropItem;
 
     /**
      * 日付を取得します。
@@ -379,6 +381,30 @@ public class BattleLogDetail {
         return this.dropShip;
     }
 
+    /**
+     * ドロップアイテムを取得します。
+     * @return ドロップアイテム
+     */
+    public String getDropItem() {
+        return this.dropItem.get();
+    }
+
+    /**
+     * ドロップアイテムを設定します。
+     * @param dropItem ドロップアイテム
+     */
+    public void setDropItem(String dropItem) {
+        this.dropItem = new SimpleStringProperty(dropItem);
+    }
+
+    /**
+     * ドロップアイテムを取得します。
+     * @return ドロップアイテム
+     */
+    public StringProperty dropItemProperty() {
+        return this.dropItem;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner("\t")
@@ -396,6 +422,7 @@ public class BattleLogDetail {
                 .add(this.efleet.get())
                 .add(this.dropType.get())
                 .add(this.dropShip.get())
+                .add(this.dropItem.get())
                 .toString();
     }
 
@@ -423,6 +450,7 @@ public class BattleLogDetail {
         detail.setEfleet(log.getEfleet());
         detail.setDropType(log.getDropType());
         detail.setDropShip(log.getDropShip());
+        detail.setDropItem(log.getDropItem());
         return detail;
     }
 }

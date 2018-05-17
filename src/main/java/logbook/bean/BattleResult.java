@@ -68,6 +68,9 @@ public class BattleResult implements Serializable {
     /** api_get_flag */
     private List<Integer> getFlag;
 
+    /** api_get_useitem */
+    private Useitem getUseitem;
+
     /** api_get_ship */
     private BattleResult.GetShip getShip;
 
@@ -267,6 +270,35 @@ public class BattleResult implements Serializable {
     }
 
     /**
+     * ドロップアイテム
+     */
+    @Data
+    public static class Useitem implements Serializable {
+
+        private static final long serialVersionUID = 3453865997555376359L;
+
+        /** api_useitem_id*/
+        private Integer useitemId;
+
+        /** api_useitem_name */
+        private String useitemName;
+
+        /**
+         * JsonObjectから{@link Useitem}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link Useitem}
+         */
+        public static Useitem toUseitem(JsonObject json) {
+            Useitem bean = new Useitem();
+            JsonHelper.bind(json)
+                    .setInteger("api_useitem_id", bean::setUseitemId)
+                    .setString("api_useitem_name", bean::setUseitemName);
+            return bean;
+        }
+    }
+
+    /**
      * JsonObjectから{@link BattleResult}を構築します
      *
      * @param json JsonObject
@@ -291,6 +323,7 @@ public class BattleResult implements Serializable {
                 .setInteger("api_first_clear", bean::setFirstClear)
                 .setBoolean("api_mapcell_incentive", bean::setMapcellIncentive)
                 .set("api_get_flag", bean::setGetFlag, JsonHelper::toIntegerList)
+                .set("api_get_useitem", bean::setGetUseitem, Useitem::toUseitem)
                 .set("api_get_ship", bean::setGetShip, GetShip::toGetShip)
                 .set("api_get_eventitem", bean::setGetEventitem, JsonHelper.toList(GetEventitem::toGetEventitem))
                 .setInteger("api_get_exmap_rate", bean::setGetExmapRate)

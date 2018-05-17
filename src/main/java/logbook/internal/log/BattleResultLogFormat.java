@@ -20,6 +20,8 @@ import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
+import logbook.bean.Useitem;
+import logbook.bean.UseitemCollection;
 import logbook.internal.Ships;
 
 /**
@@ -50,12 +52,25 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 .add("味方艦4").add("味方艦4HP")
                 .add("味方艦5").add("味方艦5HP")
                 .add("味方艦6").add("味方艦6HP")
+                .add("味方艦7").add("味方艦7HP")
+                .add("味方艦8").add("味方艦8HP")
+                .add("味方艦9").add("味方艦9HP")
+                .add("味方艦10").add("味方艦10HP")
+                .add("味方艦11").add("味方艦11HP")
+                .add("味方艦12").add("味方艦12HP")
                 .add("敵艦1").add("敵艦1HP")
                 .add("敵艦2").add("敵艦2HP")
                 .add("敵艦3").add("敵艦3HP")
                 .add("敵艦4").add("敵艦4HP")
                 .add("敵艦5").add("敵艦5HP")
                 .add("敵艦6").add("敵艦6HP")
+                .add("敵艦7").add("敵艦7HP")
+                .add("敵艦8").add("敵艦8HP")
+                .add("敵艦9").add("敵艦9HP")
+                .add("敵艦10").add("敵艦10HP")
+                .add("敵艦11").add("敵艦11HP")
+                .add("敵艦12").add("敵艦12HP")
+                .add("ドロップアイテム")
                 .toString();
     }
 
@@ -145,13 +160,18 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         joiner.add(Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipName).orElse(""));
         // 味方艦
         List<Ship> friendFleet = log.getDeckMap().get(battle.getDockId());
-        for (int i = 0; i < friendFleet.size(); i++) {
-            Ship ship = friendFleet.get(i);
-            if (ship != null) {
-                // 名前
-                joiner.add(Ships.toName(ship));
-                // HP
-                joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
+        for (int i = 0; i < 12; i++) {
+            if (friendFleet.size() > i) {
+                Ship ship = friendFleet.get(i);
+                if (ship != null) {
+                    // 名前
+                    joiner.add(Ships.toName(ship));
+                    // HP
+                    joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
+                } else {
+                    joiner.add("");
+                    joiner.add("");
+                }
             } else {
                 joiner.add("");
                 joiner.add("");
@@ -159,24 +179,35 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         }
         // 敵艦
         List<Integer> enemyFleet = battle.getShipKe();
-        for (int i = 0; i < enemyFleet.size(); i++) {
-            ShipMst shipMst = ShipMstCollection.get()
-                    .getShipMap()
-                    .get(enemyFleet.get(i));
+        for (int i = 0; i < 12; i++) {
+            if (enemyFleet.size() > i) {
+                ShipMst shipMst = ShipMstCollection.get()
+                        .getShipMap()
+                        .get(enemyFleet.get(i));
 
-            if (shipMst != null) {
-                String flagship = shipMst.getYomi();
-                if ("".equals(flagship) || "-".equals(flagship)) {
-                    joiner.add(shipMst.getName());
+                if (shipMst != null) {
+                    String flagship = shipMst.getYomi();
+                    if ("".equals(flagship) || "-".equals(flagship)) {
+                        joiner.add(shipMst.getName());
+                    } else {
+                        joiner.add(shipMst.getName() + "(" + flagship + ")");
+                    }
+                    joiner.add(battle.getENowhps().get(i) + "/" + battle.getEMaxhps().get(i));
                 } else {
-                    joiner.add(shipMst.getName() + "(" + flagship + ")");
+                    joiner.add("");
+                    joiner.add("");
                 }
-                joiner.add(battle.getENowhps().get(i) + "/" + battle.getEMaxhps().get(i));
             } else {
                 joiner.add("");
                 joiner.add("");
             }
         }
+        //ドロップアイテム
+        joiner.add(Optional.ofNullable(result.getGetUseitem())
+                .map(BattleResult.Useitem::getUseitemId)
+                .map(id -> Optional.ofNullable(UseitemCollection.get().getUseitemMap().get(id)))
+                .map(o -> o.map(Useitem::getName).orElse("不明"))
+                .orElse(""));
         return joiner.toString();
     }
 

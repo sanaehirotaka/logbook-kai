@@ -135,6 +135,10 @@ public class BattleLogController extends WindowController {
     @FXML
     private TableColumn<BattleLogDetail, String> dropShip;
 
+    /** ドロップアイテム */
+    @FXML
+    private TableColumn<BattleLogDetail, String> dropItem;
+
     /** 戦闘ログ */
     private Map<Unit, List<SimpleBattleLog>> logMap;
 
@@ -211,6 +215,7 @@ public class BattleLogController extends WindowController {
             this.efleet.setCellValueFactory(new PropertyValueFactory<>("efleet"));
             this.dropType.setCellValueFactory(new PropertyValueFactory<>("dropType"));
             this.dropShip.setCellValueFactory(new PropertyValueFactory<>("dropShip"));
+            this.dropItem.setCellValueFactory(new PropertyValueFactory<>("dropItem"));
 
             // 統計
             // ルート要素(非表示)
