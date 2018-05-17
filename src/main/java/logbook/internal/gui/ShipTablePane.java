@@ -285,14 +285,6 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> taiku;
 
-    /** 装甲(素) */
-    @FXML
-    private TableColumn<ShipItem, Integer> soukou;
-
-    /** 回避(素) */
-    @FXML
-    private TableColumn<ShipItem, Integer> kaihi;
-
     /** 対潜(素) */
     @FXML
     private TableColumn<ShipItem, Integer> tais;
@@ -304,6 +296,26 @@ public class ShipTablePane extends VBox {
     /** 運(素) */
     @FXML
     private TableColumn<ShipItem, Integer> lucky;
+
+    /** 耐久 */
+    @FXML
+    private TableColumn<ShipItem, Integer> maxhp;
+
+    /** 装甲(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> soukou;
+
+    /** 回避(素) */
+    @FXML
+    private TableColumn<ShipItem, Integer> kaihi;
+
+    /** 速力 */
+    @FXML
+    private TableColumn<ShipItem, Integer> soku;
+
+    /** 射程 */
+    @FXML
+    private TableColumn<ShipItem, Integer> leng;
 
     /** 装備1 */
     @FXML
@@ -496,11 +508,28 @@ public class ShipTablePane extends VBox {
             this.karyoku.setCellValueFactory(new PropertyValueFactory<>("karyoku"));
             this.raisou.setCellValueFactory(new PropertyValueFactory<>("raisou"));
             this.taiku.setCellValueFactory(new PropertyValueFactory<>("taiku"));
-            this.soukou.setCellValueFactory(new PropertyValueFactory<>("soukou"));
-            this.kaihi.setCellValueFactory(new PropertyValueFactory<>("kaihi"));
             this.tais.setCellValueFactory(new PropertyValueFactory<>("tais"));
             this.sakuteki.setCellValueFactory(new PropertyValueFactory<>("sakuteki"));
             this.lucky.setCellValueFactory(new PropertyValueFactory<>("lucky"));
+            this.maxhp.setCellValueFactory(new PropertyValueFactory<>("maxhp"));
+            this.soukou.setCellValueFactory(new PropertyValueFactory<>("soukou"));
+            this.kaihi.setCellValueFactory(new PropertyValueFactory<>("kaihi"));
+            this.soku.setCellValueFactory(new PropertyValueFactory<>("soku"));
+            this.soku.setCellFactory(p -> new TableCell<ShipItem, Integer>() {
+                @Override
+                protected void updateItem(Integer i, boolean empty) {
+                    super.updateItem(i, empty);
+                    this.setText(Ships.sokuText(i));
+                }
+            });
+            this.leng.setCellValueFactory(new PropertyValueFactory<>("leng"));
+            this.leng.setCellFactory(p -> new TableCell<ShipItem, Integer>() {
+                @Override
+                protected void updateItem(Integer i, boolean empty) {
+                    super.updateItem(i, empty);
+                    this.setText(Ships.lengText(i));
+                }
+            });
             this.slot1.setCellValueFactory(new PropertyValueFactory<>("slot1"));
             this.slot1.setCellFactory(p -> new ItemImageCell());
             this.slot2.setCellValueFactory(new PropertyValueFactory<>("slot2"));

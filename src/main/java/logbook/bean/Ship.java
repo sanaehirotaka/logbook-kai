@@ -38,6 +38,9 @@ public class Ship implements Chara, Serializable, Cloneable {
     /** 最大HP */
     private Integer maxhp;
 
+    /** 速力 */
+    private Integer soku;
+
     /** 射程 */
     private Integer leng;
 
@@ -135,6 +138,7 @@ public class Ship implements Chara, Serializable, Cloneable {
                 .set("api_exp", bean::setExp, JsonHelper::toIntegerList)
                 .setInteger("api_nowhp", bean::setNowhp)
                 .setInteger("api_maxhp", bean::setMaxhp)
+                .setInteger("api_soku", bean::setSoku)
                 .setInteger("api_leng", bean::setLeng)
                 .set("api_slot", bean::setSlot, JsonHelper::toIntegerList)
                 .set("api_onslot", bean::setOnslot, JsonHelper::toIntegerList)

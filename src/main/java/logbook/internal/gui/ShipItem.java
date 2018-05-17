@@ -81,13 +81,7 @@ public class ShipItem {
     /** 対空 */
     private IntegerProperty taiku = new SimpleIntegerProperty();
 
-    /** 装甲 */
-    private IntegerProperty soukou = new SimpleIntegerProperty();
-
-    /** 回避 */
-    private IntegerProperty kaihi = new SimpleIntegerProperty();
-
-    /** 対潜(素) */
+    /** 対潜 */
     private IntegerProperty tais = new SimpleIntegerProperty();
 
     /** 索敵 */
@@ -95,6 +89,21 @@ public class ShipItem {
 
     /** 運 */
     private IntegerProperty lucky = new SimpleIntegerProperty();
+
+    /** 耐久 */
+    private IntegerProperty maxhp = new SimpleIntegerProperty();
+
+    /** 装甲 */
+    private IntegerProperty soukou = new SimpleIntegerProperty();
+
+    /** 回避 */
+    private IntegerProperty kaihi = new SimpleIntegerProperty();
+
+    /** 速力 */
+    private IntegerProperty soku = new SimpleIntegerProperty();
+
+    /** 射程 */
+    private IntegerProperty leng = new SimpleIntegerProperty();
 
     /** 装備1 */
     private IntegerProperty slot1 = new SimpleIntegerProperty();
@@ -499,72 +508,24 @@ public class ShipItem {
     }
 
     /**
-     * 装甲を取得します。
-     * @return 装甲
-     */
-    public IntegerProperty soukouProperty() {
-        return this.soukou;
-    }
-
-    /**
-     * 装甲を取得します。
-     * @return 装甲
-     */
-    public Integer getSoukou() {
-        return this.soukou.get();
-    }
-
-    /**
-     * 装甲を設定します。
-     * @param soukou 装甲
-     */
-    public void setSoukou(Integer soukou) {
-        this.soukou.set(soukou);
-    }
-
-    /**
-     * 回避を取得します。
-     * @return 回避
-     */
-    public IntegerProperty kaihiProperty() {
-        return this.kaihi;
-    }
-
-    /**
-     * 回避を取得します。
-     * @return 回避
-     */
-    public Integer getKaihi() {
-        return this.kaihi.get();
-    }
-
-    /**
-     * 回避を設定します。
-     * @param kaihi 回避
-     */
-    public void setKaihi(Integer kaihi) {
-        this.kaihi.set(kaihi);
-    }
-
-    /**
-     * 対潜(素)を取得します。
-     * @return 対潜(素)
+     * 対潜を取得します。
+     * @return 対潜
      */
     public IntegerProperty taisProperty() {
         return this.tais;
     }
 
     /**
-     * 対潜(素)を取得します。
-     * @return 対潜(素)
+     * 対潜を取得します。
+     * @return 対潜
      */
     public Integer getTais() {
         return this.tais.get();
     }
 
     /**
-     * 対潜(素)を設定します。
-     * @param tais 対潜(素)
+     * 対潜を設定します。
+     * @param tais 対潜
      */
     public void setTais(Integer tais) {
         this.tais.set(tais);
@@ -616,6 +577,126 @@ public class ShipItem {
      */
     public void setLucky(Integer lucky) {
         this.lucky.set(lucky);
+    }
+
+    /**
+     * 耐久を取得します。
+     * @return 耐久
+     */
+    public IntegerProperty maxhpProperty() {
+        return this.maxhp;
+    }
+
+    /**
+     * 耐久を取得します。
+     * @return 耐久
+     */
+    public Integer getMaxhp() {
+        return this.maxhp.get();
+    }
+
+    /**
+     * 耐久を設定します。
+     * @param maxhp 耐久
+     */
+    public void setMaxhp(Integer maxhp) {
+        this.maxhp.set(maxhp);
+    }
+
+    /**
+     * 装甲を取得します。
+     * @return 装甲
+     */
+    public IntegerProperty soukouProperty() {
+        return this.soukou;
+    }
+
+    /**
+     * 装甲を取得します。
+     * @return 装甲
+     */
+    public Integer getSoukou() {
+        return this.soukou.get();
+    }
+
+    /**
+     * 装甲を設定します。
+     * @param soukou 装甲
+     */
+    public void setSoukou(Integer soukou) {
+        this.soukou.set(soukou);
+    }
+
+    /**
+     * 回避を取得します。
+     * @return 回避
+     */
+    public IntegerProperty kaihiProperty() {
+        return this.kaihi;
+    }
+
+    /**
+     * 回避を取得します。
+     * @return 回避
+     */
+    public Integer getKaihi() {
+        return this.kaihi.get();
+    }
+
+    /**
+     * 回避を設定します。
+     * @param kaihi 回避
+     */
+    public void setKaihi(Integer kaihi) {
+        this.kaihi.set(kaihi);
+    }
+
+    /**
+     * 速力を取得します。
+     * @return 速力
+     */
+    public IntegerProperty sokuProperty() {
+        return this.soku;
+    }
+
+    /**
+     * 速力を取得します。
+     * @return 速力
+     */
+    public Integer getSoku() {
+        return this.soku.get();
+    }
+
+    /**
+     * 速力を設定します。
+     * @param soku 速力
+     */
+    public void setSoku(Integer soku) {
+        this.soku.set(soku);
+    }
+
+    /**
+     * 射程を取得します。
+     * @return 射程
+     */
+    public IntegerProperty lengProperty() {
+        return this.leng;
+    }
+
+    /**
+     * 射程を取得します。
+     * @return 射程
+     */
+    public Integer getLeng() {
+        return this.leng.get();
+    }
+
+    /**
+     * 射程を設定します。
+     * @param leng 射程
+     */
+    public void setLeng(Integer leng) {
+        this.leng.set(leng);
     }
 
     /**
@@ -791,11 +872,14 @@ public class ShipItem {
                 .add(Integer.toString(this.karyoku.get()))
                 .add(Integer.toString(this.raisou.get()))
                 .add(Integer.toString(this.taiku.get()))
-                .add(Integer.toString(this.soukou.get()))
-                .add(Integer.toString(this.kaihi.get()))
                 .add(Integer.toString(this.tais.get()))
                 .add(Integer.toString(this.sakuteki.get()))
                 .add(Integer.toString(this.lucky.get()))
+                .add(Integer.toString(this.maxhp.get()))
+                .add(Integer.toString(this.soukou.get()))
+                .add(Integer.toString(this.kaihi.get()))
+                .add(Ships.sokuText(this.soku.get()))
+                .add(Ships.lengText(this.leng.get()))
                 .add(slotItemName.apply(this.slot1.get()))
                 .add(slotItemName.apply(this.slot2.get()))
                 .add(slotItemName.apply(this.slot3.get()))
@@ -845,11 +929,15 @@ public class ShipItem {
         shipItem.setKaryoku(ship.getKaryoku().get(0) - sumItemParam(ship, SlotitemMst::getHoug));
         shipItem.setRaisou(ship.getRaisou().get(0) - sumItemParam(ship, SlotitemMst::getRaig));
         shipItem.setTaiku(ship.getTaiku().get(0) - sumItemParam(ship, SlotitemMst::getTyku));
-        shipItem.setSoukou(ship.getSoukou().get(0) - sumItemParam(ship, SlotitemMst::getSouk));
-        shipItem.setKaihi(ship.getKaihi().get(0) - sumItemParam(ship, SlotitemMst::getHouk));
         shipItem.setTais(ship.getTaisen().get(0) - sumItemParam(ship, SlotitemMst::getTais));
         shipItem.setSakuteki(ship.getSakuteki().get(0) - sumItemParam(ship, SlotitemMst::getSaku));
         shipItem.setLucky(ship.getLucky().get(0) - sumItemParam(ship, SlotitemMst::getLuck));
+        shipItem.setMaxhp(ship.getMaxhp());
+        shipItem.setSoukou(ship.getSoukou().get(0) - sumItemParam(ship, SlotitemMst::getSouk));
+        shipItem.setKaihi(ship.getKaihi().get(0) - sumItemParam(ship, SlotitemMst::getHouk));
+        if (ship.getSoku() != null)
+            shipItem.setSoku(ship.getSoku());
+        shipItem.setLeng(ship.getLeng());
 
         int slotNum = ship.getSlotnum();
         shipItem.setSlot1(ship.getSlot().get(0) == -1 && slotNum <= 0 ? 0 : ship.getSlot().get(0));

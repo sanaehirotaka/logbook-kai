@@ -710,6 +710,52 @@ public class Ships {
     }
 
     /**
+     * 速力のテキスト表記
+     *
+     * @param soku soku
+     * @return 速力
+     */
+    public static String sokuText(Integer soku) {
+        if (soku == null)
+            return "";
+        switch (soku) {
+        case 0:
+            return "基地";
+        case 5:
+            return "低速";
+        case 10:
+            return "高速";
+        case 15:
+            return "高速+";
+        case 20:
+            return "最速";
+        }
+        return "";
+    }
+
+    /**
+     * 射程のテキスト表記
+     *
+     * @param leng leng
+     * @return
+     */
+    public static String lengText(Integer leng) {
+        if (leng == null)
+            return "";
+        switch (leng) {
+        case 1:
+            return "短";
+        case 2:
+            return "中";
+        case 3:
+            return "長";
+        case 4:
+            return "超長";
+        }
+        return "";
+    }
+
+    /**
      * 内部熟練度を取得します
      *
      * @param level 熟練度
