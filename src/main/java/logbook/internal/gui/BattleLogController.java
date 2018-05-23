@@ -384,6 +384,7 @@ public class BattleLogController extends WindowController {
      */
     private void initializeFilterPane() {
         this.filterPane.getChildren().clear();
+        this.filteredDetails.setPredicate(null);
         List<Predicate<BattleLogDetail>> filterBase = new ArrayList<>();
         ListChangeListener<Object> listener = c -> {
             Predicate<BattleLogDetail> predicate = null;
