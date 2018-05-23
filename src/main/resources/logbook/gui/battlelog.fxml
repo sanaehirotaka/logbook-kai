@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
@@ -15,7 +16,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleLogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleLogController">
    <children>
       <SplitPane dividerPositions="0.35" VBox.vgrow="ALWAYS">
          <items>
@@ -40,15 +41,11 @@
             </VBox>
             <VBox>
                <children>
-                  <Accordion>
-                    <panes>
-                      <TitledPane animated="false" expanded="false" text="フィルター">
-                           <content>
-                              <FlowPane fx:id="filterPane" />
-                           </content>
-                        </TitledPane>
-                    </panes>
-                  </Accordion>
+                  <TitledPane animated="false" expanded="false" text="フィルター">
+                  <content>
+                    <FlowPane fx:id="filterPane" styleClass="filter" />
+                  </content>
+                  </TitledPane>
                   <TableView fx:id="detail" VBox.vgrow="ALWAYS">
                     <columns>
                       <TableColumn fx:id="date" prefWidth="150.0" text="日付" />
@@ -83,4 +80,8 @@
          </items>
       </SplitPane>
    </children>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@battlelog.css" />
+   </stylesheets>
 </VBox>
