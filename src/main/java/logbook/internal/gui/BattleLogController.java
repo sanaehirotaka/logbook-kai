@@ -1,17 +1,25 @@
 package logbook.internal.gui;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.controlsfx.control.CheckComboBox;
+
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -21,6 +29,8 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IFormation;
@@ -32,6 +42,7 @@ import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
+import logbook.internal.ToStringConverter;
 
 /**
  * 戦闘ログのUIコントローラー
@@ -74,6 +85,10 @@ public class BattleLogController extends WindowController {
     /** D敗北 */
     @FXML
     private TreeTableColumn<BattleLogCollect, String> d;
+
+    /** フィルタ */
+    @FXML
+    private FlowPane filterPane;
 
     /** 詳細 */
     @FXML
@@ -142,8 +157,11 @@ public class BattleLogController extends WindowController {
     /** 戦闘ログ */
     private Map<Unit, List<SimpleBattleLog>> logMap;
 
-    /** 詳細 */
-    private ObservableList<BattleLogDetail> details = FXCollections.observableArrayList();
+    /** 詳細(フィルタ前) */
+    private ObservableList<BattleLogDetail> detailsSource = FXCollections.observableArrayList();
+
+    /** 詳細(フィルタ済み) */
+    private FilteredList<BattleLogDetail> filteredDetails = new FilteredList<>(this.detailsSource);
 
     @FXML
     void initialize() {
@@ -197,7 +215,7 @@ public class BattleLogController extends WindowController {
                 });
                 return r;
             });
-            this.detail.setItems(this.details);
+            this.detail.setItems(this.filteredDetails);
             this.detail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.detail.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
 
@@ -223,6 +241,7 @@ public class BattleLogController extends WindowController {
             this.collect.setRoot(root);
 
             this.setCollect();
+            this.initializeFilterPane();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
@@ -337,7 +356,7 @@ public class BattleLogController extends WindowController {
      */
     private void detail(ObservableValue<? extends TreeItem<BattleLogCollect>> observable,
             TreeItem<BattleLogCollect> oldValue, TreeItem<BattleLogCollect> value) {
-        this.details.clear();
+        this.detailsSource.clear();
         if (value != null) {
             BattleLogCollect collect = value.getValue();
             String area = collect.getArea();
@@ -349,7 +368,7 @@ public class BattleLogController extends WindowController {
             // ボスフィルタ
             Predicate<BattleLogDetail> bossFilter = boss ? e -> e.getBoss().indexOf("ボス") != -1 : anyFilter;
 
-            this.details.addAll(this.logMap.get(collect.getCollectUnit())
+            this.detailsSource.addAll(this.logMap.get(collect.getCollectUnit())
                     .stream()
                     .map(BattleLogDetail::toBattleLogDetail)
                     .filter(areaFilter)
@@ -357,5 +376,73 @@ public class BattleLogController extends WindowController {
                     .sorted(Comparator.comparing(BattleLogDetail::getDate).reversed())
                     .collect(Collectors.toList()));
         }
+        this.initializeFilterPane();
+    }
+
+    /**
+     * フィルターを初期化する
+     */
+    private void initializeFilterPane() {
+        this.filterPane.getChildren().clear();
+        List<Predicate<BattleLogDetail>> filterBase = new ArrayList<>();
+        ListChangeListener<Object> listener = c -> {
+            Predicate<BattleLogDetail> predicate = null;
+            for (Predicate<BattleLogDetail> filter : filterBase) {
+                if (predicate == null) {
+                    predicate = filter;
+                } else {
+                    predicate = predicate.and(filter);
+                }
+            }
+            this.filteredDetails.setPredicate(predicate);
+        };
+        filterBase.add(this.addFilterColumn(this.detail, this.area, listener, BattleLogDetail::getArea));
+        filterBase.add(this.addFilterColumn(this.detail, this.cell, listener, BattleLogDetail::getCell));
+        filterBase.add(this.addFilterColumn(this.detail, this.boss, listener, BattleLogDetail::getBoss));
+        filterBase.add(this.addFilterColumn(this.detail, this.rank, listener, BattleLogDetail::getRank));
+        filterBase.add(this.addFilterColumn(this.detail, this.intercept, listener, BattleLogDetail::getIntercept));
+        filterBase.add(this.addFilterColumn(this.detail, this.fformation, listener, BattleLogDetail::getFformation));
+        filterBase.add(this.addFilterColumn(this.detail, this.eformation, listener, BattleLogDetail::getEformation));
+        filterBase.add(this.addFilterColumn(this.detail, this.dispseiku, listener, BattleLogDetail::getDispseiku));
+        filterBase.add(this.addFilterColumn(this.detail, this.ftouch, listener, BattleLogDetail::getFtouch));
+        filterBase.add(this.addFilterColumn(this.detail, this.etouch, listener, BattleLogDetail::getEtouch));
+        filterBase.add(this.addFilterColumn(this.detail, this.efleet, listener, BattleLogDetail::getEfleet));
+        filterBase.add(this.addFilterColumn(this.detail, this.dropType, listener, BattleLogDetail::getDropType));
+        filterBase.add(this.addFilterColumn(this.detail, this.dropShip, listener, BattleLogDetail::getDropShip));
+        filterBase.add(this.addFilterColumn(this.detail, this.dropItem, listener, BattleLogDetail::getDropItem));
+    }
+
+    /**
+     * 列をフィルターに追加する
+     */
+    private <S, T> Predicate<S> addFilterColumn(TableView<S> table, TableColumn<S, T> column,
+            ListChangeListener<Object> listener, Function<S, T> getter) {
+        VBox box = new VBox();
+        box.getChildren().add(new Label(Tools.Tables.getColumnName(column)));
+        CheckComboBox<T> comboBox = new CheckComboBox<>();
+        comboBox.setConverter(new ToStringConverter<>(v -> {
+            String str = v.toString();
+            if (str.isEmpty())
+                return "(空白)";
+            return str;
+        }));
+        comboBox.getItems().addAll(
+                table.getItems().stream()
+                        .map(column::getCellData)
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .sorted()
+                        .collect(Collectors.toList()));
+        box.getChildren().add(comboBox);
+        this.filterPane.getChildren().add(box);
+
+        comboBox.getCheckModel()
+                .getCheckedItems()
+                .addListener(listener);
+        Predicate<S> filter = o -> {
+            return comboBox.getCheckModel().getCheckedItems().isEmpty()
+                    || comboBox.getCheckModel().getCheckedItems().contains(getter.apply(o));
+        };
+        return filter;
     }
 }
