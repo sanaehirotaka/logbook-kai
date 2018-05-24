@@ -2,8 +2,10 @@ package logbook.internal.gui;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
@@ -19,6 +21,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -154,6 +158,30 @@ public class BattleLogController extends WindowController {
     @FXML
     private TableColumn<BattleLogDetail, String> dropItem;
 
+    /** 種類 */
+    @FXML
+    private ChoiceBox<String> aggregateType;
+
+    /** 集計 */
+    @FXML
+    private TableView<BattleLogDetailAggregate> aggregate;
+
+    /** 種類 */
+    @FXML
+    private TableColumn<BattleLogDetailAggregate, String> type;
+
+    /** 合計 */
+    @FXML
+    private TableColumn<BattleLogDetailAggregate, Long> count;
+
+    /** 割合 */
+    @FXML
+    private TableColumn<BattleLogDetailAggregate, Double> ratio;
+
+    /** 集計 */
+    @FXML
+    private PieChart chart;
+
     /** 戦闘ログ */
     private Map<Unit, List<SimpleBattleLog>> logMap;
 
@@ -163,10 +191,14 @@ public class BattleLogController extends WindowController {
     /** 詳細(フィルタ済み) */
     private FilteredList<BattleLogDetail> filteredDetails = new FilteredList<>(this.detailsSource);
 
+    /** 集計用Map */
+    private Map<String, Function<BattleLogDetail, ?>> aggregateTypeMap = new HashMap<>();
+
     @FXML
     void initialize() {
         try {
             TableTool.setVisible(this.detail, this.getClass().toString() + "#" + "detail");
+            TableTool.setVisible(this.aggregate, this.getClass().toString() + "#" + "aggregate");
 
             // 統計
             this.collect.setShowRoot(false);
@@ -240,7 +272,22 @@ public class BattleLogController extends WindowController {
             TreeItem<BattleLogCollect> root = new TreeItem<BattleLogCollect>(new BattleLogCollect());
             this.collect.setRoot(root);
 
+            // 集計
+            this.aggregate.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            this.aggregate.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
+            // 種類
+            this.type.setCellValueFactory(new PropertyValueFactory<>("name"));
+            // 合計
+            this.count.setCellValueFactory(new PropertyValueFactory<>("count"));
+            // 割合
+            this.ratio.setCellValueFactory(new PropertyValueFactory<>("ratio"));
+            // 集計初期化
+            this.initializeAggregate();
+
+            // ログの読み込み
             this.setCollect();
+
+            // フィルタ
             this.initializeFilterPane();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
@@ -348,6 +395,35 @@ public class BattleLogController extends WindowController {
     }
 
     /**
+     * クリップボードにコピー
+     */
+    @FXML
+    void copyAggregate() {
+        TableTool.selectionCopy(this.aggregate);
+    }
+
+    /**
+     * すべてを選択
+     */
+    @FXML
+    void selectAllAggregate() {
+        TableTool.selectAll(this.aggregate);
+    }
+
+    /**
+     * テーブル列の表示・非表示の設定
+     */
+    @FXML
+    void columnVisibleAggregate() {
+        try {
+            TableTool.showVisibleSetting(this.aggregate, this.getClass().toString() + "#" + "aggregate",
+                    this.getWindow());
+        } catch (Exception e) {
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
      * 右ペインに詳細表示するリスナー
      *
      * @param observable 値が変更されたObservableValue
@@ -445,5 +521,79 @@ public class BattleLogController extends WindowController {
                     || comboBox.getCheckModel().getCheckedItems().contains(getter.apply(o));
         };
         return filter;
+    }
+
+    /**
+     * 集計を初期化する
+     */
+    private void initializeAggregate() {
+        this.addAggregate(this.area, BattleLogDetail::getArea);
+        this.addAggregate(this.cell, BattleLogDetail::getCell);
+        this.addAggregate(this.boss, BattleLogDetail::getBoss);
+        this.addAggregate(this.rank, BattleLogDetail::getRank);
+        this.addAggregate(this.intercept, BattleLogDetail::getIntercept);
+        this.addAggregate(this.fformation, BattleLogDetail::getFformation);
+        this.addAggregate(this.eformation, BattleLogDetail::getEformation);
+        this.addAggregate(this.dispseiku, BattleLogDetail::getDispseiku);
+        this.addAggregate(this.ftouch, BattleLogDetail::getFtouch);
+        this.addAggregate(this.etouch, BattleLogDetail::getEtouch);
+        this.addAggregate(this.efleet, BattleLogDetail::getEfleet);
+        this.addAggregate(this.dropType, BattleLogDetail::getDropType);
+        this.addAggregate(this.dropShip, BattleLogDetail::getDropShip);
+        this.addAggregate(this.dropItem, BattleLogDetail::getDropItem);
+
+        // 列の選択が変更されたときに集計する
+        this.aggregateType.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(c -> this.aggregate());
+        // 右ペインの詳細が変化したときに集計する
+        this.filteredDetails.addListener((ListChangeListener<Object>) c -> this.aggregate());
+    }
+
+    /**
+     * 列を集計対象に追加する
+     */
+    private void addAggregate(TableColumn<BattleLogDetail, ?> column, Function<BattleLogDetail, ?> getter) {
+        String name = Tools.Tables.getColumnName(column);
+        this.aggregateType.getItems().add(name);
+        this.aggregateTypeMap.put(name, getter);
+    }
+
+    /**
+     * 集計する
+     */
+    private void aggregate() {
+        String name = this.aggregateType.getSelectionModel()
+                .getSelectedItem();
+        ObservableList<BattleLogDetailAggregate> items = FXCollections.observableArrayList();
+        ObservableList<PieChart.Data> value = FXCollections.observableArrayList();
+        if (name != null) {
+            Function<BattleLogDetail, ?> getter = this.aggregateTypeMap.get(name);
+            Map<String, Long> result = this.filteredDetails.stream()
+                    .map(getter)
+                    .map(String::valueOf)
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+            double total = result.values().stream()
+                    .mapToLong(Long::longValue)
+                    .sum();
+            for (Entry<String, Long> entry : result.entrySet()) {
+                String type = entry.getKey();
+                if (type.isEmpty()) {
+                    type = "(空白)";
+                }
+                // テーブル行
+                BattleLogDetailAggregate row = new BattleLogDetailAggregate();
+                row.setName(type);
+                row.setCount(entry.getValue());
+                row.setRatio(entry.getValue() / total * 100);
+                items.add(row);
+                // チャート
+                value.add(new PieChart.Data(type, entry.getValue()));
+            }
+            items.sort(Comparator.comparing(BattleLogDetailAggregate::getName));
+            value.sort(Comparator.comparing(PieChart.Data::getPieValue).reversed());
+        }
+        this.aggregate.setItems(items);
+        this.chart.setData(value);
     }
 }
