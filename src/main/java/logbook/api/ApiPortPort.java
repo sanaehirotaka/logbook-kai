@@ -87,7 +87,7 @@ public class ApiPortPort implements APIListenerSpi {
             return false;
         };
         if (before.values().stream()
-                .filter(ship -> ship.getCond() < 49)
+                .filter(ship -> ship.getCond() <= 49)
                 .anyMatch(update)) {
             ZonedDateTime time = ZonedDateTime.now(ZoneId.systemDefault());
             AppCondition.get().setCondUpdateTime(time.toEpochSecond());
