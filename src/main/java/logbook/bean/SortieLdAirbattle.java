@@ -8,6 +8,7 @@ import javax.json.JsonObject;
 import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
+import logbook.bean.BattleTypes.ILdAirbattle;
 import logbook.bean.BattleTypes.ISortieBattle;
 import logbook.internal.JsonHelper;
 import lombok.Data;
@@ -17,7 +18,8 @@ import lombok.Data;
  *
  */
 @Data
-public class SortieLdAirbattle implements ISortieBattle, IFormation, IKouku, IAirBaseAttack, Serializable {
+public class SortieLdAirbattle
+        implements ISortieBattle, IFormation, IKouku, IAirBaseAttack, ILdAirbattle, Serializable {
 
     private static final long serialVersionUID = -1090849552625550232L;
 

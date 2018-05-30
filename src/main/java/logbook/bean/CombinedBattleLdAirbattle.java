@@ -9,6 +9,7 @@ import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.ICombinedBattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
+import logbook.bean.BattleTypes.ILdAirbattle;
 import logbook.bean.BattleTypes.ISortieBattle;
 import logbook.internal.JsonHelper;
 import lombok.Data;
@@ -19,7 +20,7 @@ import lombok.Data;
  */
 @Data
 public class CombinedBattleLdAirbattle
-        implements ICombinedBattle, ISortieBattle, IFormation, IKouku, IAirBaseAttack, Serializable {
+        implements ICombinedBattle, ISortieBattle, IFormation, IKouku, IAirBaseAttack, ILdAirbattle, Serializable {
 
     private static final long serialVersionUID = 6539186077635769896L;
 

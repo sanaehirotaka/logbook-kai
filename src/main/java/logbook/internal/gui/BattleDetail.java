@@ -27,6 +27,7 @@ import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
+import logbook.bean.BattleTypes.ILdAirbattle;
 import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.BattleTypes.INSupport;
 import logbook.bean.BattleTypes.INightToDayBattle;
@@ -371,8 +372,10 @@ public class BattleDetail extends WindowController {
         }
 
         // 評価判定
-        judge.setAfter(ps);
-        this.judge.setText(String.valueOf(judge.getRank()));
+        judge.setAfter(ps, this.battle);
+        this.judge.setText(String.valueOf(judge.getRank())
+                + "(味方損害率:" + (int) judge.getFriendDamageRatio()
+                + "/敵損害率:" + (int) judge.getEnemyDamageRatio() + ")");
 
         ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
     }
@@ -712,8 +715,12 @@ public class BattleDetail extends WindowController {
 
         private int afterEnemyAliveCount;
 
+        /** 味方損害率 */
+        @Getter
         private double friendDamageRatio;
 
+        /** 敵損害率 */
+        @Getter
         private double enemyDamageRatio;
 
         /** 勝敗 */
@@ -735,54 +742,73 @@ public class BattleDetail extends WindowController {
          * 戦闘後の状態を設定します。
          * @param ps フェイズ
          */
-        public void setAfter(PhaseState ps) {
+        public void setAfter(PhaseState ps, IFormation battle) {
             this.afterFriendTotalHp = ps.friendTotalHp();
             this.afterFriendAliveCount = ps.friendAliveCount();
             this.afterEnemyTotalHp = ps.enemyTotalHp();
             this.afterEnemyAliveCount = ps.enemydAliveCount();
             this.friendDamageRatio = this.damageRatio(this.beforeFriendTotalHp, this.afterFriendTotalHp);
             this.enemyDamageRatio = this.damageRatio(this.beforeEnemyTotalHp, this.afterEnemyTotalHp);
-            this.rank = this.judge(ps);
+            this.rank = this.judge(ps, battle);
         }
 
         /**
          * 勝敗判定
          * @param ps フェイズ
+         * @param battle 戦闘
          * @return ランク
          */
-        private Rank judge(PhaseState ps) {
-            if (this.beforeFriendAliveCount == this.afterFriendAliveCount) {
-                if (this.afterEnemyAliveCount == 0) {
-                    if (this.afterFriendTotalHp >= this.beforeFriendTotalHp) {
-                        return Rank.S完全勝利;
-                    } else {
-                        return Rank.S勝利;
-                    }
-                } else if (this.beforeEnemyAliveCount > 1
-                        && (this.beforeEnemyAliveCount
-                                - this.afterEnemyAliveCount) >= (int) (this.beforeEnemyAliveCount * 0.7D)) {
+        private Rank judge(PhaseState ps, IFormation battle) {
+            if (battle instanceof ILdAirbattle) {
+                if (this.friendDamageRatio <= 0) {
+                    return Rank.S完全勝利;
+                }
+                if (this.friendDamageRatio < 10) {
                     return Rank.A勝利;
                 }
-            }
-            if (Ships.isLost(ps.getAfterEnemy().get(0))
-                    && (this.beforeFriendAliveCount - this.afterFriendAliveCount) < (this.beforeEnemyAliveCount
-                            - this.afterEnemyAliveCount)) {
-                return Rank.B戦術的勝利;
-            }
-            if (this.beforeFriendAliveCount == 1 && Ships.isBadlyDamage(ps.getAfterFriend().get(0))) {
+                if (this.friendDamageRatio < 20) {
+                    return Rank.B戦術的勝利;
+                }
+                if (this.friendDamageRatio < 50) {
+                    return Rank.C戦術的敗北;
+                }
+                if (this.friendDamageRatio < 80) {
+                    return Rank.D敗北;
+                }
+                return Rank.E敗北;
+            } else {
+                if (this.beforeFriendAliveCount == this.afterFriendAliveCount) {
+                    if (this.afterEnemyAliveCount == 0) {
+                        if (this.afterFriendTotalHp >= this.beforeFriendTotalHp) {
+                            return Rank.S完全勝利;
+                        } else {
+                            return Rank.S勝利;
+                        }
+                    } else if (this.beforeEnemyAliveCount > 1
+                            && (this.beforeEnemyAliveCount
+                                    - this.afterEnemyAliveCount) >= (int) (this.beforeEnemyAliveCount * 0.7D)) {
+                        return Rank.A勝利;
+                    }
+                }
+                if (Ships.isLost(ps.getAfterEnemy().get(0))
+                        && (this.beforeFriendAliveCount - this.afterFriendAliveCount) < (this.beforeEnemyAliveCount
+                                - this.afterEnemyAliveCount)) {
+                    return Rank.B戦術的勝利;
+                }
+                if (this.beforeFriendAliveCount == 1 && Ships.isBadlyDamage(ps.getAfterFriend().get(0))) {
+                    return Rank.D敗北;
+                }
+                if (this.enemyDamageRatio > 2.5 * this.friendDamageRatio) {
+                    return Rank.B戦術的勝利;
+                }
+                if (this.enemyDamageRatio > 0.9 * this.friendDamageRatio) {
+                    return Rank.C戦術的敗北;
+                }
+                if (this.beforeFriendAliveCount > this.afterFriendAliveCount && this.afterFriendAliveCount == 1) {
+                    return Rank.E敗北;
+                }
                 return Rank.D敗北;
             }
-            if (this.enemyDamageRatio > 2.5 * this.friendDamageRatio) {
-                return Rank.B戦術的勝利;
-            }
-            if (this.enemyDamageRatio > 0.9 * this.friendDamageRatio) {
-                return Rank.C戦術的敗北;
-            }
-
-            //if ( this.beforeFriendAliveCount > this.afterFriendAliveCount && this.afterFriendAliveCount == 1 )
-            //    return Rank.E敗北;
-
-            return Rank.D敗北;
         }
 
         /**

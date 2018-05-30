@@ -399,6 +399,12 @@ public class BattleTypes {
     }
 
     /**
+     * 長距離空襲戦(マーカーインターフェイス)
+     */
+    public interface ILdAirbattle {
+    }
+
+    /**
      * 砲撃フェイズ
      */
     public interface IHougeki {
