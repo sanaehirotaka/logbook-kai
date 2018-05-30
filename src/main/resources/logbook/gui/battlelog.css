@@ -10,3 +10,7 @@
 .filter .label {
     -fx-font-weight: bold;
 }
+/* 集計 */
+.aggregate {
+    -fx-max-height: 24em;
+}
