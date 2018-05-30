@@ -44,7 +44,9 @@ import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
 import logbook.internal.PhaseState;
+import logbook.internal.Rank;
 import logbook.internal.Ships;
+import lombok.Getter;
 
 /**
  * 戦況表示
@@ -124,6 +126,10 @@ public class BattleDetail extends WindowController {
     /** 対空CI */
     @FXML
     private Label tykuCI;
+
+    /** 評価 */
+    @FXML
+    private Label judge;
 
     /** 周期タイマー */
     private Timeline timeline = new Timeline();
@@ -305,6 +311,10 @@ public class BattleDetail extends WindowController {
     private void setPhase() {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap, this.escape);
 
+        // 評価初期化
+        Judge judge = new Judge();
+        judge.setBefore(ps);
+
         List<Node> phases = this.phase.getChildren();
         phases.clear();
 
@@ -359,6 +369,10 @@ public class BattleDetail extends WindowController {
             // 砲雷撃戦フェイズ
             this.sortieHougeki(ps, phases);
         }
+
+        // 評価判定
+        judge.setAfter(ps);
+        this.judge.setText(String.valueOf(judge.getRank()));
 
         ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
     }
@@ -675,5 +689,110 @@ public class BattleDetail extends WindowController {
      */
     private void onClose(WindowEvent event) {
         this.timeline.stop();
+    }
+
+    /**
+     * 勝敗判定
+     */
+    private static class Judge {
+
+        private double beforeFriendTotalHp;
+
+        private int beforeFriendAliveCount;
+
+        private double beforeEnemyTotalHp;
+
+        private int beforeEnemyAliveCount;
+
+        private double afterFriendTotalHp;
+
+        private int afterFriendAliveCount;
+
+        private double afterEnemyTotalHp;
+
+        private int afterEnemyAliveCount;
+
+        private double friendDamageRatio;
+
+        private double enemyDamageRatio;
+
+        /** 勝敗 */
+        @Getter
+        private Rank rank;
+
+        /**
+         * 戦闘前の状態を設定します。
+         * @param ps フェイズ
+         */
+        public void setBefore(PhaseState ps) {
+            this.beforeFriendTotalHp = ps.friendTotalHp();
+            this.beforeFriendAliveCount = ps.friendAliveCount();
+            this.beforeEnemyTotalHp = ps.enemyTotalHp();
+            this.beforeEnemyAliveCount = ps.enemydAliveCount();
+        }
+
+        /**
+         * 戦闘後の状態を設定します。
+         * @param ps フェイズ
+         */
+        public void setAfter(PhaseState ps) {
+            this.afterFriendTotalHp = ps.friendTotalHp();
+            this.afterFriendAliveCount = ps.friendAliveCount();
+            this.afterEnemyTotalHp = ps.enemyTotalHp();
+            this.afterEnemyAliveCount = ps.enemydAliveCount();
+            this.friendDamageRatio = this.damageRatio(this.beforeFriendTotalHp, this.afterFriendTotalHp);
+            this.enemyDamageRatio = this.damageRatio(this.beforeEnemyTotalHp, this.afterEnemyTotalHp);
+            this.rank = this.judge(ps);
+        }
+
+        /**
+         * 勝敗判定
+         * @param ps フェイズ
+         * @return ランク
+         */
+        private Rank judge(PhaseState ps) {
+            if (this.beforeFriendAliveCount == this.afterFriendAliveCount) {
+                if (this.afterEnemyAliveCount == 0) {
+                    if (this.afterFriendTotalHp >= this.beforeFriendTotalHp) {
+                        return Rank.S完全勝利;
+                    } else {
+                        return Rank.S勝利;
+                    }
+                } else if (this.beforeEnemyAliveCount > 1
+                        && (this.beforeEnemyAliveCount
+                                - this.afterEnemyAliveCount) >= (int) (this.beforeEnemyAliveCount * 0.7D)) {
+                    return Rank.A勝利;
+                }
+            }
+            if (Ships.isLost(ps.getAfterEnemy().get(0))
+                    && (this.beforeFriendAliveCount - this.afterFriendAliveCount) < (this.beforeEnemyAliveCount
+                            - this.afterEnemyAliveCount)) {
+                return Rank.B戦術的勝利;
+            }
+            if (this.beforeFriendAliveCount == 1 && Ships.isBadlyDamage(ps.getAfterFriend().get(0))) {
+                return Rank.D敗北;
+            }
+            if (this.enemyDamageRatio > 2.5 * this.friendDamageRatio) {
+                return Rank.B戦術的勝利;
+            }
+            if (this.enemyDamageRatio > 0.9 * this.friendDamageRatio) {
+                return Rank.C戦術的敗北;
+            }
+
+            //if ( this.beforeFriendAliveCount > this.afterFriendAliveCount && this.afterFriendAliveCount == 1 )
+            //    return Rank.E敗北;
+
+            return Rank.D敗北;
+        }
+
+        /**
+         * 損害率を計算する
+         * @param before 前HP
+         * @param after 後HP
+         * @return 損害率
+         */
+        private double damageRatio(double before, double after) {
+            return (int) ((before - after) / before * 100);
+        }
     }
 }

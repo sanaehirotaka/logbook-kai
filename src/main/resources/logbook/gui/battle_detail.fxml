@@ -34,6 +34,7 @@
                       <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <HBox>
@@ -137,6 +138,16 @@
                         <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5">
                            <children>
                               <Label fx:id="tykuCI" />
+                           </children>
+                        </HBox>
+                        <HBox GridPane.rowIndex="6">
+                           <children>
+                              <Label text="評価:" />
+                           </children>
+                        </HBox>
+                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                           <children>
+                              <Label fx:id="judge" />
                            </children>
                         </HBox>
                      </children>

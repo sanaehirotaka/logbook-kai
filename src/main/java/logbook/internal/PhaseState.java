@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -840,6 +841,54 @@ public class PhaseState {
         this.attackDetails.add(new AttackDetail(
                 Optional.ofNullable(attacker).map(Chara::clone).orElse(null),
                 Optional.ofNullable(defender).map(Chara::clone).orElse(null), damage, atType));
+    }
+
+    /**
+     * 味方のHP合計を取得する
+     * @return 味方のHP合計
+     */
+    public double friendTotalHp() {
+        return Stream.concat(this.afterFriend.stream(), this.afterFriendCombined.stream())
+                .filter(Objects::nonNull)
+                .mapToInt(Chara::getNowhp)
+                .map(hp -> Math.max(hp, 0))
+                .sum();
+    }
+
+    /**
+     * 敵のHP合計を取得する
+     * @return 敵のHP合計
+     */
+    public double enemyTotalHp() {
+        return Stream.concat(this.afterEnemy.stream(), this.afterEnemyCombined.stream())
+                .filter(Objects::nonNull)
+                .mapToInt(Chara::getNowhp)
+                .map(hp -> Math.max(hp, 0))
+                .sum();
+    }
+
+    /**
+     * 味方のHP1以上の隻数を取得する
+     * @return 味方のHP1以上の隻数
+     */
+    public int friendAliveCount() {
+        return (int) Stream.concat(this.afterFriend.stream(), this.afterFriendCombined.stream())
+                .filter(Objects::nonNull)
+                .mapToInt(Chara::getNowhp)
+                .filter(hp -> hp > 0)
+                .count();
+    }
+
+    /**
+     * 敵のHP1以上の隻数を取得する
+     * @return 敵のHP1以上の隻数
+     */
+    public int enemydAliveCount() {
+        return (int) Stream.concat(this.afterEnemy.stream(), this.afterEnemyCombined.stream())
+                .filter(Objects::nonNull)
+                .mapToInt(Chara::getNowhp)
+                .filter(hp -> hp > 0)
+                .count();
     }
 
     @Data
