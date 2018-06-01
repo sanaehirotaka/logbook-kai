@@ -181,7 +181,7 @@ public class SWFListener implements ContentListenerSpi {
                         }
                     }
                     Path file = dir.resolve(name);
-                    Files.copy(imageData, file, StandardCopyOption.REPLACE_EXISTING);
+                    this.write(imageData, file);
                 }
             }
         }
@@ -209,7 +209,7 @@ public class SWFListener implements ContentListenerSpi {
 
                 Path file = dir.resolve(img.getCharacterId() + "." + ext);
 
-                Files.copy(img.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
+                this.write(img.getImageData(), file);
             }
         }
         Cache.clearAll();
@@ -261,7 +261,7 @@ public class SWFListener implements ContentListenerSpi {
             for (int i = 0; i < sub.size(); i++) {
                 ImageTag tag = sub.get(i);
                 Path file = dir.resolve(entry.getKey() + "_" + i + "." + this.imageExt(tag));
-                Files.copy(tag.getImageData(), file, StandardCopyOption.REPLACE_EXISTING);
+                this.write(tag.getImageData(), file);
             }
         }
         Cache.clearAll();
@@ -273,7 +273,7 @@ public class SWFListener implements ContentListenerSpi {
      * @param tag ImageTag
      * @return tagのファイルフォーマットに対応する拡張子
      */
-    String imageExt(ImageTag tag) {
+    private String imageExt(ImageTag tag) {
         String ext;
         switch (tag.getImageFormat()) {
         case JPEG:
@@ -292,7 +292,7 @@ public class SWFListener implements ContentListenerSpi {
      * @param in InputStream
      * @return InputStream
      */
-    InputStream compressImage(InputStream in) {
+    private InputStream compressImage(InputStream in) {
         try {
             BufferedImage image = ImageIO.read(in);
 
@@ -324,6 +324,23 @@ public class SWFListener implements ContentListenerSpi {
             return new ByteArrayInputStream(out.toByteArray());
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * InputStreamの内容をpathに書き込みます
+     *
+     * @param in ファイルの内容
+     * @param path ファイル
+     * @throws IOException
+     */
+    private void write(InputStream in, Path path) throws IOException {
+        Path temp = Files.createTempFile(path.getParent(), "SWFListener-", "");
+        try {
+            Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING);
+        } finally {
+            Files.deleteIfExists(temp);
         }
     }
 }
