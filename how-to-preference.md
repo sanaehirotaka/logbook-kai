@@ -20,7 +20,7 @@
 
 ※航海日誌が[スレッドが予期せず終了しました]というエラーメッセージを出した場合、ポートを8888から任意の別のポートに変更して下さい。
 
-![メイン画面](https://kancolle.sanaechan.net/logbook-kai/firefox/1.png)
+![メイン画面](images/firefox_1.png)
 
 ### Firefox の場合 2/3
 
@@ -28,14 +28,14 @@
 
  Firefox用のアドレスをコピーします。
 
-![自動プロキシ構成スクリプト](https://kancolle.sanaechan.net/logbook-kai/firefox/2.png)
+![自動プロキシ構成スクリプト](images/firefox_2.png)
 
 ### Firefox の場合 3/3
 
  [オプション](about:preferences)を開き[詳細]-[ネットワーク]-[接続設定]を選択します。
 [自動プロキシ設定スクリプトURL]にアドレスを貼り付けます。
 
-![preferences](https://kancolle.sanaechan.net/logbook-kai/firefox/3.png)
+![preferences](images/firefox_3.png)
 
 設定は以上です。
 
@@ -50,13 +50,13 @@ Google Chrome単体ではプロキシの設定が出来ないため拡張機能�
 
 ※航海日誌が[スレッドが予期せず終了しました]というエラーメッセージを出した場合、ポートを8888から任意の別のポートに変更して下さい。
 
-![メイン画面](https://kancolle.sanaechan.net/logbook-kai/chrome/1.png)
+![メイン画面](images/chrome_1.png)
 
 ### Chrome の場合 2/4
 
 [保存...]を選択してスクリプトファイルを保存します。(Firefox用のアドレスは使用しません)
 
-![自動プロキシ構成スクリプト](https://kancolle.sanaechan.net/logbook-kai/chrome/2.png)
+![自動プロキシ構成スクリプト](images/chrome_2.png)
 
 ### Chrome の場合 3/4
 
@@ -64,10 +64,10 @@ SwitchySharpのオプションで新しいプロファイルを作成します�
 
 Import PAC Fileを選択し、前の手順で作成したPACファイルを選択して保存します。
 
-![SwitchySharp](https://kancolle.sanaechan.net/logbook-kai/chrome/3.png)
+![SwitchySharp](images/chrome_3.png)
 
 ### Chrome の場合 4/4
 
 作成したプロファイルを有効にします。
 
-![SwitchySharp](https://kancolle.sanaechan.net/logbook-kai/chrome/4.png)
+![SwitchySharp](images/chrome_4.png)

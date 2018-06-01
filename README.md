@@ -5,7 +5,7 @@
 
 画面がコンパクトなのが特徴です。
 
-![メイン画面](https://kancolle.sanaechan.net/logbook-kai/overview.png "メイン画面")
+![メイン画面](images/overview.png)
 
 ### 航海日誌 について
 
@@ -50,35 +50,17 @@ Java 8u40以降がインストールされた環境で動作します
 
 * メイン画面
 
-![メイン画面](https://kancolle.sanaechan.net/logbook-kai/overview.png)
-
-![艦隊タブ](https://kancolle.sanaechan.net/logbook-kai/fleet-tab2.jpg)
+![メイン画面](images/overview.png)
 
 * 所有装備一覧
 
-![所有装備一覧](https://kancolle.sanaechan.net/logbook-kai/items.png)
-
-* 所有艦娘一覧
-
-![所有艦娘一覧](https://kancolle.sanaechan.net/logbook-kai/ships.png)
+![所有装備一覧そのいち](images/items1.png)
+![所有装備一覧そのに](images/items2.png)
 
 * 戦闘ログ
 
-![戦闘ログ](https://kancolle.sanaechan.net/logbook-kai/battle_log.png)
-
-![戦闘ログ詳細](https://kancolle.sanaechan.net/logbook-kai/battlelog-view1.jpg)
-
-* 経験値計算機
-
-![経験値計算機](https://kancolle.sanaechan.net/logbook-kai/calc_exp.png)
-
-* 資材チャート
-
-![資材チャート](https://kancolle.sanaechan.net/logbook-kai/resource_chart.png)
-
-* 通知機能
-
-![通知機能](https://kancolle.sanaechan.net/logbook-kai/notify.png)
+![戦闘ログそのいち](images/battlelog1.png)
+![戦闘ログそのに](images/battlelog2.png)
 
 ### 開発者向け
 
