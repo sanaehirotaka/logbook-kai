@@ -29,8 +29,8 @@
                         {"type": "艦娘", "ship_type" :["練習巡洋艦"]},
                         {"type": "艦娘", "ship_type" :["海防艦"]},
                         {"type": "艦娘", "ship_type" :["海防艦"]},
-                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
-                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]}
+                        {"type": "艦娘"},
+                        {"type": "艦娘"}
                     ]
                 },
                 {
@@ -47,10 +47,20 @@
                     "operator": "AND",
                     "conditions": [
                         {"type": "艦娘", "ship_type" :["護衛空母"]},
-                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
-                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
-                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]},
-                        {"type": "艦娘", "ship_type" :["海防艦", "駆逐艦"]}
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘"},
+                        {"type": "艦娘"}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["護衛空母"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘"},
+                        {"type": "艦娘"}
                     ]
                 }
             ]
