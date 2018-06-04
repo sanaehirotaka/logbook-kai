@@ -1,3 +1,4 @@
+/*長時間対潜警戒*/
 {
     "operator": "AND",
     "conditions": [
