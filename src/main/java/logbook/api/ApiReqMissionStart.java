@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 
+import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Platform;
@@ -45,7 +46,9 @@ public class ApiReqMissionStart implements APIListenerSpi {
                     return;
                 MissionCondition condition;
                 try {
-                    condition = new ObjectMapper().readValue(is, MissionCondition.class);
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.enable(Feature.ALLOW_COMMENTS);
+                    condition = mapper.readValue(is, MissionCondition.class);
                 } finally {
                     is.close();
                 }
