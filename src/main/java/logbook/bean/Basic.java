@@ -41,6 +41,9 @@ public class Basic implements Serializable {
     /** api_level */
     private Integer level = 0;
 
+    /** api_rank */
+    private Integer rank = 0;
+
     /** api_max_chara */
     private Integer maxChara = 0;
 
@@ -70,6 +73,7 @@ public class Basic implements Serializable {
                 .setInteger("api_fcoin", bean::setFcoin)
                 .setBoolean("api_large_dock", bean::setLargeDock)
                 .setInteger("api_level", bean::setLevel)
+                .setInteger("api_rank", bean::setRank)
                 .setInteger("api_max_chara", bean::setMaxChara)
                 .setInteger("api_max_slotitem", bean::setMaxSlotitem)
                 .setInteger("api_medals", bean::setMedals)
