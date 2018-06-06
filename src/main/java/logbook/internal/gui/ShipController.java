@@ -77,6 +77,8 @@ public class ShipController extends WindowController {
                 this.addLabelTabs();
             }
 
+            this.addStatistics();
+
             this.timeline = new Timeline();
             this.timeline.setCycleCount(Timeline.INDEFINITE);
             this.timeline.getKeyFrames().add(new KeyFrame(
@@ -140,6 +142,13 @@ public class ShipController extends WindowController {
                     }, label);
                     this.tab.getTabs().add(new Tab(label, labelPane));
                 });
+    }
+
+    /**
+     * 統計タブ
+     */
+    private void addStatistics() {
+        this.tab.getTabs().add(new Tab("統計", new StatisticsPane()));
     }
 
     /**
