@@ -2,7 +2,7 @@ package logbook.internal.gui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import logbook.internal.BattleLogs.Unit;
+import logbook.internal.BattleLogs.IUnit;
 
 /**
  * 集計行
@@ -35,7 +35,7 @@ public class BattleLogCollect {
     private StringProperty d;
 
     /** 集計単位 */
-    private Unit collectUnit;
+    private IUnit collectUnit;
 
     /** 海域 */
     private String area;
@@ -239,7 +239,7 @@ public class BattleLogCollect {
      * 集計単位を取得します。
      * @return 集計単位
      */
-    public Unit getCollectUnit() {
+    public IUnit getCollectUnit() {
         return this.collectUnit;
     }
 
@@ -247,7 +247,7 @@ public class BattleLogCollect {
      * 集計単位を設定します。
      * @param collectUnit 集計単位
      */
-    public void setCollectUnit(Unit collectUnit) {
+    public void setCollectUnit(IUnit collectUnit) {
         this.collectUnit = collectUnit;
     }
 

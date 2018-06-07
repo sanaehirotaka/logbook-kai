@@ -7,16 +7,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
-import java.util.Collections;
-import java.util.EnumMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,6 +38,7 @@ import logbook.internal.gui.BattleLogCollect;
 import logbook.internal.log.BattleResultLogFormat;
 import logbook.internal.log.LogWriter;
 import lombok.Data;
+import lombok.Getter;
 
 /**
  * 戦闘ログに関するクラス
@@ -141,7 +146,7 @@ public class BattleLogs {
      *
      * @return 出撃統計のベースになるリスト
      */
-    public static Map<Unit, List<SimpleBattleLog>> readSimpleLog() {
+    public static Map<IUnit, List<SimpleBattleLog>> readSimpleLog() {
         try {
             Function<String, SimpleBattleLog> mapper = line -> {
                 try {
@@ -173,8 +178,8 @@ public class BattleLogs {
                         .filter(log -> log.getDate().compareTo(limit) > 0)
                         .collect(Collectors.toList());
 
-                EnumMap<Unit, List<SimpleBattleLog>> map = new EnumMap<>(Unit.class);
-                for (Unit unit : Unit.values()) {
+                Map<IUnit, List<SimpleBattleLog>> map = new LinkedHashMap<>();
+                for (IUnit unit : Unit.values()) {
                     map.put(unit, all.stream()
                             .filter(log -> unit.accept(log.getDate(), now))
                             .collect(Collectors.toList()));
@@ -184,7 +189,49 @@ public class BattleLogs {
         } catch (Exception e) {
             LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
         }
-        return Collections.emptyMap();
+        return new LinkedHashMap<>();
+    }
+
+    /**
+     * 任意期間の出撃統計を取得します。
+     *
+     * @param unit 期間
+     * @return 出撃統計
+     */
+    public static List<SimpleBattleLog> readSimpleLog(IUnit unit) {
+        try {
+            Function<String, SimpleBattleLog> mapper = line -> {
+                try {
+                    return new SimpleBattleLog(line);
+                } catch (Exception e) {
+                    LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
+                }
+                return null;
+            };
+            Path dir = Paths.get(AppConfig.get().getReportPath());
+            Path path = dir.resolve(new BattleResultLogFormat().fileName());
+
+            // 今日
+            ZonedDateTime now = unitToday();
+
+            Stream<String> tmp;
+            if (Files.exists(path)) {
+                tmp = Files.lines(path, LogWriter.DEFAULT_CHARSET);
+            } else {
+                tmp = Stream.empty();
+            }
+            try (Stream<String> lines = tmp) {
+                return lines.skip(1)
+                        .filter(l -> !l.isEmpty())
+                        .map(mapper)
+                        .filter(Objects::nonNull)
+                        .filter(log -> unit.accept(log.getDate(), now))
+                        .collect(Collectors.toList());
+            }
+        } catch (Exception e) {
+            LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -317,9 +364,29 @@ public class BattleLogs {
 
     /**
      * 集計の単位
+     */
+    public interface IUnit {
+        /**
+         * 名前を取得します。
+         * @return 名前
+         */
+        String getName();
+
+        /**
+         * 集計するかを判定します
+         *
+         * @param target 集計対象の日付(タイムゾーンがGMT+04:00)
+         * @param now 今日(タイムゾーンがGMT+04:00)
+         * @return 集計する場合true
+         */
+        boolean accept(ZonedDateTime target, ZonedDateTime now);
+    }
+
+    /**
+     * 集計の単位
      *
      */
-    public enum Unit {
+    public enum Unit implements IUnit {
 
         /** デイリー */
         DAILY("デイリー") {
@@ -378,6 +445,7 @@ public class BattleLogs {
          * 名前を取得します。
          * @return 名前
          */
+        @Override
         public String getName() {
             return this.name;
         }
@@ -389,8 +457,66 @@ public class BattleLogs {
          * @param now 今日(タイムゾーンがGMT+04:00)
          * @return 集計する場合true
          */
+        @Override
         public boolean accept(ZonedDateTime target, ZonedDateTime now) {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    /**
+     * 任意期間の集計単位
+     *
+     */
+    public static class CustomUnit implements IUnit {
+
+        /** 単位の名前 */
+        private String name;
+
+        /** 期間の開始 */
+        @Getter
+        private ZonedDateTime from;
+
+        /** 期間の終了 */
+        @Getter
+        private ZonedDateTime to;
+
+        /**
+         * 任意期間の集計単位
+         *
+         * @param from 期間の開始日付
+         * @param to 期間の終了日付
+         */
+        public CustomUnit(LocalDate from, LocalDate to) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+            // 単位の名前
+            // yy/MM/dd-yy/MM/dd(xx日)
+            this.name = formatter.format(from) + "-" + formatter.format(to)
+                    + "(" + ((to.toEpochDay() - from.toEpochDay()) + 1) + "日)";
+            // 期間の開始
+            this.from = ZonedDateTime.of(LocalDateTime.of(from, LocalTime.MIN), ZoneId.of("GMT+04:00"));
+            // 期間の終了
+            this.to = ZonedDateTime.of(LocalDateTime.of(to, LocalTime.MAX), ZoneId.of("GMT+04:00"));
+        }
+
+        /**
+         * 名前を取得します。
+         * @return 名前
+         */
+        @Override
+        public String getName() {
+            return this.name;
+        }
+
+        /**
+         * 集計するかを判定します
+         *
+         * @param target 集計対象の日付(タイムゾーンがGMT+04:00)
+         * @param now 今日(タイムゾーンがGMT+04:00)
+         * @return 集計する場合true
+         */
+        @Override
+        public boolean accept(ZonedDateTime target, ZonedDateTime now) {
+            return this.from.compareTo(target) <= 0 && this.to.compareTo(target) >= 0;
         }
     }
 }

@@ -43,6 +43,7 @@ import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
 import logbook.internal.BattleLogs;
+import logbook.internal.BattleLogs.IUnit;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
@@ -183,7 +184,7 @@ public class BattleLogController extends WindowController {
     private PieChart chart;
 
     /** 戦闘ログ */
-    private Map<Unit, List<SimpleBattleLog>> logMap;
+    private Map<IUnit, List<SimpleBattleLog>> logMap;
 
     /** 詳細(フィルタ前) */
     private ObservableList<BattleLogDetail> detailsSource = FXCollections.observableArrayList();
@@ -300,56 +301,64 @@ public class BattleLogController extends WindowController {
     private void setCollect() {
         // 集計単位がキーのマップ
         this.logMap = BattleLogs.readSimpleLog();
-        for (Unit unit : Unit.values()) {
-            List<SimpleBattleLog> list = this.logMap.get(unit);
-
-            // 単位のルート
-            BattleLogCollect unitRootValue = BattleLogs.collect(list, null, false);
-            unitRootValue.setUnit(unit.getName());
-            unitRootValue.setCollectUnit(unit);
-
-            TreeItem<BattleLogCollect> unitRoot = new TreeItem<BattleLogCollect>(unitRootValue);
-            unitRoot.setExpanded(true);
-
-            // ボス
-            BattleLogCollect bossValue = BattleLogs.collect(list, null, true);
-            bossValue.setUnit("ボス");
-            bossValue.setCollectUnit(unit);
-            bossValue.setBoss(true);
-
-            TreeItem<BattleLogCollect> boss = new TreeItem<BattleLogCollect>(bossValue);
-            unitRoot.getChildren().add(boss);
-
-            // 海域の名前
-            List<String> areaNames = list.stream()
-                    .map(SimpleBattleLog::getArea)
-                    .distinct()
-                    .sorted(Comparator.naturalOrder())
-                    .collect(Collectors.toList());
-            for (String area : areaNames) {
-                // 海域毎の集計
-                BattleLogCollect areaValue = BattleLogs.collect(list, area, false);
-                areaValue.setUnit(area);
-                areaValue.setCollectUnit(unit);
-                areaValue.setArea(area);
-
-                TreeItem<BattleLogCollect> areaRoot = new TreeItem<BattleLogCollect>(areaValue);
-
-                // 海域ボス
-                BattleLogCollect areaBossValue = BattleLogs.collect(list, area, true);
-                areaBossValue.setUnit("ボス");
-                areaBossValue.setCollectUnit(unit);
-                areaBossValue.setArea(area);
-                areaBossValue.setBoss(true);
-
-                TreeItem<BattleLogCollect> areaBoss = new TreeItem<BattleLogCollect>(areaBossValue);
-                areaRoot.getChildren().add(areaBoss);
-
-                unitRoot.getChildren().add(areaRoot);
-            }
-
-            this.collect.getRoot().getChildren().add(unitRoot);
+        for (IUnit unit : Unit.values()) {
+            addTree(unit);
         }
+    }
+
+    /**
+     * ログをセット
+     * @param unit 集計単位
+     */
+    private void addTree(IUnit unit) {
+        List<SimpleBattleLog> list = this.logMap.get(unit);
+
+        // 単位のルート
+        BattleLogCollect unitRootValue = BattleLogs.collect(list, null, false);
+        unitRootValue.setUnit(unit.getName());
+        unitRootValue.setCollectUnit(unit);
+
+        TreeItem<BattleLogCollect> unitRoot = new TreeItem<BattleLogCollect>(unitRootValue);
+        unitRoot.setExpanded(true);
+
+        // ボス
+        BattleLogCollect bossValue = BattleLogs.collect(list, null, true);
+        bossValue.setUnit("ボス");
+        bossValue.setCollectUnit(unit);
+        bossValue.setBoss(true);
+
+        TreeItem<BattleLogCollect> boss = new TreeItem<BattleLogCollect>(bossValue);
+        unitRoot.getChildren().add(boss);
+
+        // 海域の名前
+        List<String> areaNames = list.stream()
+                .map(SimpleBattleLog::getArea)
+                .distinct()
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
+        for (String area : areaNames) {
+            // 海域毎の集計
+            BattleLogCollect areaValue = BattleLogs.collect(list, area, false);
+            areaValue.setUnit(area);
+            areaValue.setCollectUnit(unit);
+            areaValue.setArea(area);
+
+            TreeItem<BattleLogCollect> areaRoot = new TreeItem<BattleLogCollect>(areaValue);
+
+            // 海域ボス
+            BattleLogCollect areaBossValue = BattleLogs.collect(list, area, true);
+            areaBossValue.setUnit("ボス");
+            areaBossValue.setCollectUnit(unit);
+            areaBossValue.setArea(area);
+            areaBossValue.setBoss(true);
+
+            TreeItem<BattleLogCollect> areaBoss = new TreeItem<BattleLogCollect>(areaBossValue);
+            areaRoot.getChildren().add(areaBoss);
+
+            unitRoot.getChildren().add(areaRoot);
+        }
+
+        this.collect.getRoot().getChildren().add(unitRoot);
     }
 
     /**
