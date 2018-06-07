@@ -335,12 +335,17 @@ public class SWFListener implements ContentListenerSpi {
      * @throws IOException
      */
     private void write(InputStream in, Path path) throws IOException {
-        Path temp = Files.createTempFile(path.getParent(), "SWFListener-", "");
-        try {
-            Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
-            Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING);
-        } finally {
-            Files.deleteIfExists(temp);
+        Path dir = path.getParent();
+        if (dir != null) {
+            Path temp = Files.createTempFile(dir, "SWFListener-", "");
+            try {
+                Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                Files.deleteIfExists(temp);
+            }
+        } else {
+            throw new IllegalStateException();
         }
     }
 }
