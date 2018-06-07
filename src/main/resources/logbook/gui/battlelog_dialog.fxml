@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.TextFlow?>
+
+
+<fx:root type="DialogPane" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <TextFlow>
+         <children>
+            <Label text="期間の開始" />
+            <DatePicker fx:id="from" prefWidth="120.0" />
+            <Label text="終了" />
+            <DatePicker fx:id="to" prefWidth="120.0" />
+         </children>
+      </TextFlow>
+   </content>
+   <header>
+      <Label text="集計期間の設定" />
+   </header>
+</fx:root>

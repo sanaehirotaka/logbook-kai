@@ -1,5 +1,7 @@
 package logbook.internal.gui;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,8 +23,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -183,6 +190,9 @@ public class BattleLogController extends WindowController {
     @FXML
     private PieChart chart;
 
+    /** ユーザー追加単位 */
+    private List<IUnit> userUnit = new ArrayList<>();
+
     /** 戦闘ログ */
     private Map<IUnit, List<SimpleBattleLog>> logMap;
 
@@ -302,7 +312,11 @@ public class BattleLogController extends WindowController {
         // 集計単位がキーのマップ
         this.logMap = BattleLogs.readSimpleLog();
         for (IUnit unit : Unit.values()) {
-            addTree(unit);
+            this.addTree(unit);
+        }
+        for (IUnit unit : this.userUnit) {
+            this.logMap.put(unit, BattleLogs.readSimpleLog(unit));
+            this.addTree(unit);
         }
     }
 
@@ -373,6 +387,28 @@ public class BattleLogController extends WindowController {
         this.setCollect();
         this.collect.getSelectionModel().focus(selectedIndex);
         this.collect.getSelectionModel().select(selectedIndex);
+    }
+
+    /**
+     * 集計の追加
+     */
+    @FXML
+    void addUnitAction(ActionEvent event) {
+        UnitDialog dialog = new UnitDialog();
+
+        Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.initOwner(this.getWindow());
+        alert.setTitle("集計の追加");
+        alert.setDialogPane(dialog);
+        alert.getButtonTypes().add(ButtonType.OK);
+        alert.showAndWait().filter(ButtonType.OK::equals).ifPresent(b -> {
+            IUnit unit = dialog.getUnit();
+            if (unit != null) {
+                this.logMap.put(unit, BattleLogs.readSimpleLog(unit));
+                this.addTree(unit);
+                this.userUnit.add(unit);
+            }
+        });
     }
 
     /**
@@ -604,5 +640,45 @@ public class BattleLogController extends WindowController {
         }
         this.aggregate.setItems(items);
         this.chart.setData(value);
+    }
+
+    private class UnitDialog extends DialogPane {
+
+        @FXML
+        private DatePicker from;
+
+        @FXML
+        private DatePicker to;
+
+        public UnitDialog() {
+            try {
+                FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/battlelog_dialog.fxml");
+                loader.setRoot(this);
+                loader.setController(this);
+                loader.load();
+            } catch (IOException e) {
+                LoggerHolder.get().error("FXMLのロードに失敗しました", e);
+            }
+        }
+
+        @FXML
+        void initialize() {
+            LocalDate date = LocalDate.now();
+            this.to.setValue(date);
+            this.from.setValue(date.minusWeeks(2));
+        }
+
+        public IUnit getUnit() {
+            LocalDate from = this.from.getValue();
+            LocalDate to = this.to.getValue();
+            if (from != null && to != null) {
+                if (from.compareTo(to) <= 0) {
+                    return new BattleLogs.CustomUnit(from, to);
+                } else {
+                    return new BattleLogs.CustomUnit(to, from);
+                }
+            }
+            return null;
+        }
     }
 }

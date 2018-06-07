@@ -15,6 +15,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -37,9 +38,22 @@
                         <TreeTableColumn fx:id="c" prefWidth="40.0" text="C敗北" />
                         <TreeTableColumn fx:id="d" prefWidth="40.0" text="D敗北" />
                     </columns>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#addUnitAction" text="集計の追加" />
+                              <MenuItem mnemonicParsing="false" onAction="#reloadAction" text="更新">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="F5" control="UP" meta="UP" shift="UP" shortcut="ANY" />
+                                 </accelerator>
+                              </MenuItem>
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
                   </TreeTableView>
                    <ToolBar>
-                       <Button mnemonicParsing="false" onAction="#reloadAction" text="更新" />
+                     <Button mnemonicParsing="false" onAction="#addUnitAction" text="集計の追加" />
+                       <Button mnemonicParsing="false" onAction="#reloadAction" text="更新(F5)" />
                    </ToolBar>
                </children>
             </VBox>
