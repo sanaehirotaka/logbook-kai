@@ -28,6 +28,7 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -42,6 +43,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.BattleTypes.IFormation;
@@ -400,8 +402,7 @@ public class BattleLogController extends WindowController {
         alert.initOwner(this.getWindow());
         alert.setTitle("集計の追加");
         alert.setDialogPane(dialog);
-        alert.getButtonTypes().add(ButtonType.OK);
-        alert.showAndWait().filter(ButtonType.OK::equals).ifPresent(b -> {
+        alert.showAndWait().filter(ButtonType.APPLY::equals).ifPresent(b -> {
             IUnit unit = dialog.getUnit();
             if (unit != null) {
                 this.logMap.put(unit, BattleLogs.readSimpleLog(unit));
@@ -664,8 +665,28 @@ public class BattleLogController extends WindowController {
         @FXML
         void initialize() {
             LocalDate date = LocalDate.now();
+            Callback<DatePicker, DateCell> callback = d -> new DateCell() {
+                public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+                    this.getStyleClass().remove("selected");
+                    this.getStyleClass().remove("contains");
+
+                    LocalDate from = UnitDialog.this.from.getValue();
+                    LocalDate to = UnitDialog.this.to.getValue();
+                    if (from != null && to != null) {
+                        if (item.equals(from) || item.equals(to)) {
+                            this.getStyleClass().add("selected");
+                        } else if ((from.compareTo(to) < 0 && item.compareTo(from) > 0 && item.compareTo(to) < 0)
+                            || (from.compareTo(to) > 0 && item.compareTo(from) < 0 && item.compareTo(to) > 0)) {
+                            this.getStyleClass().add("contains");
+                        }
+                    }
+                }
+            };
             this.to.setValue(date);
+            this.to.setDayCellFactory(callback);
             this.from.setValue(date.minusWeeks(2));
+            this.from.setDayCellFactory(callback);
         }
 
         public IUnit getUnit() {

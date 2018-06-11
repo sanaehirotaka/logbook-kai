@@ -14,3 +14,10 @@
 .aggregate {
     -fx-max-height: 24em;
 }
+/* 範囲選択 */
+.date-cell.selected {
+    -fx-background-color: rgb(123, 201, 111);
+}
+.date-cell.contains {
+    -fx-background-color: rgb(198, 228, 139);
+}

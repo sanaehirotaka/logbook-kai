@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
+<?import javafx.scene.control.ButtonType?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.text.TextFlow?>
-
 
 <fx:root type="DialogPane" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1">
    <content>
@@ -20,4 +21,12 @@
    <header>
       <Label text="集計期間の設定" />
    </header>
+   <buttonTypes>
+      <ButtonType fx:constant="APPLY" />
+      <ButtonType fx:constant="CANCEL" />
+   </buttonTypes>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@battlelog.css" />
+   </stylesheets>
 </fx:root>
