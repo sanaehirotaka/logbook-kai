@@ -8,8 +8,11 @@ import java.net.URLEncoder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
@@ -117,6 +120,7 @@ public class QuestPane extends HBox {
             }
             this.name.setText(quest.getTitle());
             this.detail.setText(quest.getDetail().replaceAll("<br>", ""));
+            this.setOnContextMenuRequested(this::showContextMenu);
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
@@ -127,6 +131,13 @@ public class QuestPane extends HBox {
         AppQuestCollection.get()
                 .getQuest()
                 .remove(this.quest.getNo());
+    }
+
+    @FXML
+    void removeAll(ActionEvent event) {
+        AppQuestCollection.get()
+                .getQuest()
+                .clear();
     }
 
     @FXML
@@ -149,5 +160,12 @@ public class QuestPane extends HBox {
         } else {
             this.getStyleClass().remove("expanded");
         }
+    }
+
+    private void showContextMenu(ContextMenuEvent event) {
+        MenuItem item = new MenuItem("全て除去");
+        item.setOnAction(this::removeAll);
+        ContextMenu contextMenu = new ContextMenu(item);
+        contextMenu.show(this.getScene().getWindow(), event.getScreenX(), event.getScreenY());
     }
 }
