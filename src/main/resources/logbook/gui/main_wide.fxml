@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="455.0" prefWidth="600.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
+<VBox prefHeight="455.0" prefWidth="600.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -31,6 +31,7 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#createitemlog" text="開発ログ" />
               <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#airBase" text="基地航空隊">
                      <accelerator>

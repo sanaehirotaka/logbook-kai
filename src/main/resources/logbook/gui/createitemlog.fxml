@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CreateItemController">
+   <children>
+      <SplitPane dividerPositions="0.35" VBox.vgrow="ALWAYS">
+         <items>
+            <VBox>
+               <children>
+                  <TreeTableView fx:id="collect" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TreeTableColumn fx:id="unit" prefWidth="175.0" text="集計" />
+                        <TreeTableColumn fx:id="count" prefWidth="60.0" text="件数" />
+                        <TreeTableColumn fx:id="ratio" prefWidth="60.0" text="割合" />
+                     </columns>
+                  </TreeTableView>
+                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                     <items>
+                        <ToggleButton fx:id="buttonItemRecipe" mnemonicParsing="false" selected="true" text="装備→投入資材">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="group" />
+                           </toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="buttonRecipeItem" mnemonicParsing="false" text="投入資材→装備" toggleGroup="$group" />
+                     </items>
+                  </ToolBar>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <TableView fx:id="detail" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="date" prefWidth="150.0" text="日付" />
+                        <TableColumn fx:id="item" prefWidth="120.0" text="開発装備" />
+                        <TableColumn fx:id="type" prefWidth="100.0" text="種別" />
+                        <TableColumn fx:id="recipe" prefWidth="120.0" text="投入資材" />
+                        <TableColumn fx:id="secretary" prefWidth="150.0" text="秘書艦" />
+                     </columns>
+                     <contextMenu>
+                       <ContextMenu>
+                         <items>
+                           <MenuItem mnemonicParsing="false" onAction="#copyDetail" text="クリップボードにコピー" />
+                           <MenuItem mnemonicParsing="false" onAction="#selectAllDetail" text="すべてを選択" />
+                           <SeparatorMenuItem mnemonicParsing="false" />
+                           <MenuItem mnemonicParsing="false" onAction="#columnVisibleDetail" text="列の表示・非表示" />
+                         </items>
+                       </ContextMenu>
+                     </contextMenu>
+                  </TableView>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</VBox>

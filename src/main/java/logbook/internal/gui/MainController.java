@@ -46,10 +46,10 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
+import logbook.internal.CheckUpdate;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.internal.proxy.ProxyHolder;
-import logbook.internal.CheckUpdate;
 import logbook.plugin.PluginServices;
 import logbook.plugin.gui.MainCalcMenu;
 import logbook.plugin.gui.MainCommandMenu;
@@ -222,6 +222,20 @@ public class MainController extends WindowController {
             InternalFXMLLoader.showWindow("logbook/gui/missionlog.fxml", this.getWindow(), "遠征ログ");
         } catch (Exception ex) {
             LoggerHolder.get().error("遠征ログの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
+     * 開発ログ
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void createitemlog(ActionEvent e) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/createitemlog.fxml", this.getWindow(), "開発ログ");
+        } catch (Exception ex) {
+            LoggerHolder.get().error("開発ログの初期化に失敗しました", ex);
         }
     }
 
