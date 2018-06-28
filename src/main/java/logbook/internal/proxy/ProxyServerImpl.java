@@ -58,7 +58,7 @@ public final class ProxyServerImpl implements ProxyServerSpi {
                 try {
                     this.server.start();
                     this.server.join();
-                } catch (InterruptedException e) {
+                } finally {
                     try {
                         this.server.stop();
                     } catch (Exception ex) {
