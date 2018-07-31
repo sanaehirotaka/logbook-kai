@@ -1,9 +1,13 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +46,8 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -54,6 +60,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipLabelCollection;
 import logbook.bean.ShipMst;
+import logbook.bean.ShipMstCollection;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Items;
@@ -61,6 +68,8 @@ import logbook.internal.LoggerHolder;
 import logbook.internal.Operator;
 import logbook.internal.ShipFilter;
 import logbook.internal.Ships;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.val;
 
 /**
@@ -760,6 +769,22 @@ public class ShipTablePane extends VBox {
     }
 
     /**
+     * 艦隊晒しページ（仮）.全員をクリップボードにコピー
+     */
+    @FXML
+    void kanmusuListCopyAll() {
+        KanmusuList.copyAll();
+    }
+
+    /**
+     * 艦隊晒しページ（仮）.選択した艦のみクリップボードにコピー
+     */
+    @FXML
+    void kanmusuListSelectionCopy() {
+        KanmusuList.selectionCopy(this.table);
+    }
+
+    /**
      * テーブル列の表示・非表示の設定
      */
     @FXML
@@ -1126,4 +1151,112 @@ public class ShipTablePane extends VBox {
             return "#" + ("000000" + hex).substring(hex.length());
         }
     }
+
+    /**
+     * 艦隊晒しページ（仮）
+     */
+    public static class KanmusuList {
+
+        /**
+         * すべての艦をクリップボードにコピーする。
+         */
+        public static void copyAll() {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(text(ShipCollection.get()
+                    .getShipMap()
+                    .values()));
+            Clipboard.getSystemClipboard().setContent(content);
+        }
+
+        /**
+         * 選択された艦のみをクリップボードにコピーする。
+         *
+         * @param table テーブル
+         */
+        public static void selectionCopy(TableView<ShipItem> table) {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(text(table.getSelectionModel()
+                    .getSelectedItems()
+                    .stream()
+                    .map(ShipItem::getShip)
+                    .collect(Collectors.toList())));
+            Clipboard.getSystemClipboard().setContent(content);
+        }
+
+        private static String text(Collection<Ship> ships) {
+            // 艦船マスタID => 艦隊晒しページ（仮）のID
+            Map<Integer, Kanmusu> map = new LinkedHashMap<>();
+            // 艦船マスタ
+            Map<Integer, ShipMst> shipMstMap = ShipMstCollection.get().getShipMap();
+
+            // 改装に関連する艦をグルーピングする
+            Map<Integer, Set<Integer>> groupMap = new LinkedHashMap<>();
+            for (ShipMst shipMst : shipMstMap.values()) {
+                Integer id = shipMst.getId();
+                Integer afterid = shipMst.getAftershipid();
+                if (afterid == null) {
+                    continue;
+                }
+
+                Set<Integer> list = new HashSet<>();
+                list.addAll(groupMap.computeIfAbsent(id, HashSet::new));
+                list.add(id);
+                if (afterid != 0) {
+                    list.addAll(groupMap.computeIfAbsent(afterid, HashSet::new));
+                    list.add(afterid);
+                }
+                for (Integer linkid : list) {
+                    groupMap.put(linkid, list);
+                }
+            }
+            // グループごとのループ
+            Set<Set<Integer>> link = new HashSet<>(groupMap.values());
+            for (Set<Integer> list : link) {
+                List<Integer> sorted = new ArrayList<>();
+                // グループの中で改装レベルが最も小さい艦を選択
+                ShipMst mst = list.stream()
+                        .map(shipMstMap::get)
+                        .filter(m -> m.getAftershipid() != 0)
+                        .sorted(Comparator.comparing(ShipMst::getAfterlv))
+                        .findFirst()
+                        .get();
+                // 選択した艦を親にしてaftershipidを順に辿っていく
+                while (true) {
+                    if (mst == null)
+                        break;
+                    sorted.add(mst.getId());
+                    if (sorted.contains(mst.getAftershipid()))
+                        break;
+                    mst = shipMstMap.get(mst.getAftershipid());
+                }
+                for (int i = 0; i < sorted.size(); i++) {
+                    map.put(sorted.get(i), new Kanmusu(sorted.get(0), i + 1));
+                }
+            }
+            return ".2|" + ships.stream()
+                    .filter(s -> map.containsKey(s.getShipId()))
+                    .map(s -> new Value(map.get(s.getShipId()), s.getLv()))
+                    .sorted(Comparator.comparing(v -> v.ship.id))
+                    .collect(Collectors.groupingBy(v -> v.ship.id, LinkedHashMap::new, Collectors.toList()))
+                    .entrySet().stream()
+                    .map(e -> e.getKey() + ":"
+                            + e.getValue().stream().map(v -> v.lv + "." + v.ship.kai).collect(Collectors.joining(",")))
+                    .collect(Collectors.joining("|"));
+        }
+
+        @Data
+        @AllArgsConstructor
+        private static class Kanmusu {
+            private int id;
+            private int kai;
+        }
+
+        @Data
+        @AllArgsConstructor
+        private static class Value {
+            private Kanmusu ship;
+            private int lv;
+        }
+    }
+
 }
