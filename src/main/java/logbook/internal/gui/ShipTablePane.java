@@ -1199,12 +1199,17 @@ public class ShipTablePane extends VBox {
                 }
 
                 Set<Integer> list = new HashSet<>();
-                list.addAll(groupMap.computeIfAbsent(id, HashSet::new));
+
+                if (groupMap.get(id) != null)
+                    list.addAll(groupMap.get(id));
+
+                if (groupMap.get(afterid) != null)
+                    list.addAll(groupMap.get(afterid));
+
                 list.add(id);
-                if (afterid != 0) {
-                    list.addAll(groupMap.computeIfAbsent(afterid, HashSet::new));
+                if (afterid != 0)
                     list.add(afterid);
-                }
+
                 for (Integer linkid : list) {
                     groupMap.put(linkid, list);
                 }
@@ -1239,8 +1244,10 @@ public class ShipTablePane extends VBox {
                     .sorted(Comparator.comparing(v -> v.ship.id))
                     .collect(Collectors.groupingBy(v -> v.ship.id, LinkedHashMap::new, Collectors.toList()))
                     .entrySet().stream()
-                    .map(e -> e.getKey() + ":"
-                            + e.getValue().stream().map(v -> v.lv + "." + v.ship.kai).collect(Collectors.joining(",")))
+                    .map(e -> e.getKey() + ":" + e.getValue().stream()
+                            .sorted(Comparator.comparing(Value::getLv, Comparator.reverseOrder()))
+                            .map(v -> v.lv + "." + v.ship.kai)
+                            .collect(Collectors.joining(",")))
                     .collect(Collectors.joining("|"));
         }
 
