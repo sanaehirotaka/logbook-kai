@@ -147,6 +147,7 @@
                   <Menu mnemonicParsing="false" text="艦隊晒しページ（仮）">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#kanmusuListCopyAll" text="全員をクリップボードにコピー" />
+                        <MenuItem mnemonicParsing="false" onAction="#kanmusuListDisplayCopy" text="表示されている艦をクリップボードにコピー" />
                         <MenuItem mnemonicParsing="false" onAction="#kanmusuListSelectionCopy" text="選択した艦のみクリップボードにコピー" />
                     </items>
                   </Menu>

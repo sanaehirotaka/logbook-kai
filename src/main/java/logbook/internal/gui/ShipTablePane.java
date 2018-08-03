@@ -1,11 +1,11 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -777,6 +777,14 @@ public class ShipTablePane extends VBox {
     }
 
     /**
+     * 艦隊晒しページ（仮）.表示されている艦をクリップボードにコピー
+     */
+    @FXML
+    void kanmusuListDisplayCopy() {
+        KanmusuList.displayCopy(this.table);
+    }
+
+    /**
      * 艦隊晒しページ（仮）.選択した艦のみクリップボードにコピー
      */
     @FXML
@@ -1169,6 +1177,20 @@ public class ShipTablePane extends VBox {
         }
 
         /**
+         * 表示されている艦をクリップボードにコピーする。
+         *
+         * @param table テーブル
+         */
+        public static void displayCopy(TableView<ShipItem> table) {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(text(table.getItems()
+                    .stream()
+                    .map(ShipItem::getShip)
+                    .collect(Collectors.toList())));
+            Clipboard.getSystemClipboard().setContent(content);
+        }
+
+        /**
          * 選択された艦のみをクリップボードにコピーする。
          *
          * @param table テーブル
@@ -1185,57 +1207,41 @@ public class ShipTablePane extends VBox {
 
         private static String text(Collection<Ship> ships) {
             // 艦船マスタID => 艦隊晒しページ（仮）のID
-            Map<Integer, Kanmusu> map = new LinkedHashMap<>();
+            Map<Integer, Kanmusu> map = new HashMap<>();
             // 艦船マスタ
             Map<Integer, ShipMst> shipMstMap = ShipMstCollection.get().getShipMap();
-
             // 改装に関連する艦をグルーピングする
-            Map<Integer, Set<Integer>> groupMap = new LinkedHashMap<>();
+            Map<Integer, Set<Integer>> groupMap = new HashMap<>();
             for (ShipMst shipMst : shipMstMap.values()) {
                 Integer id = shipMst.getId();
                 Integer afterid = shipMst.getAftershipid();
-                if (afterid == null) {
+                if (afterid == null || afterid == 0) {
                     continue;
                 }
-
                 Set<Integer> list = new HashSet<>();
-
-                if (groupMap.get(id) != null)
+                if (groupMap.containsKey(id))
                     list.addAll(groupMap.get(id));
-
-                if (groupMap.get(afterid) != null)
+                if (groupMap.containsKey(afterid))
                     list.addAll(groupMap.get(afterid));
-
                 list.add(id);
-                if (afterid != 0)
-                    list.add(afterid);
-
-                for (Integer linkid : list) {
-                    groupMap.put(linkid, list);
-                }
+                list.add(afterid);
+                list.forEach(v -> groupMap.put(v, list));
             }
             // グループごとのループ
-            Set<Set<Integer>> link = new HashSet<>(groupMap.values());
-            for (Set<Integer> list : link) {
-                List<Integer> sorted = new ArrayList<>();
+            for (Set<Integer> list : new HashSet<>(groupMap.values())) {
                 // グループの中で改装レベルが最も小さい艦を選択
-                ShipMst mst = list.stream()
+                ShipMst root = list.stream()
                         .map(shipMstMap::get)
                         .filter(m -> m.getAftershipid() != 0)
                         .sorted(Comparator.comparing(ShipMst::getAfterlv))
                         .findFirst()
                         .get();
+                ShipMst after = root;
                 // 選択した艦を親にしてaftershipidを順に辿っていく
-                while (true) {
-                    if (mst == null)
-                        break;
-                    sorted.add(mst.getId());
-                    if (sorted.contains(mst.getAftershipid()))
-                        break;
-                    mst = shipMstMap.get(mst.getAftershipid());
-                }
-                for (int i = 0; i < sorted.size(); i++) {
-                    map.put(sorted.get(i), new Kanmusu(sorted.get(0), i + 1));
+                int index = 0;
+                while (after != null && !map.containsKey(after.getId())) {
+                    map.put(after.getId(), new Kanmusu(root.getId(), ++index));
+                    after = shipMstMap.get(after.getAftershipid());
                 }
             }
             return ".2|" + ships.stream()
@@ -1246,7 +1252,7 @@ public class ShipTablePane extends VBox {
                     .entrySet().stream()
                     .map(e -> e.getKey() + ":" + e.getValue().stream()
                             .sorted(Comparator.comparing(Value::getLv, Comparator.reverseOrder()))
-                            .map(v -> v.lv + "." + v.ship.kai)
+                            .map(Value::toString)
                             .collect(Collectors.joining(",")))
                     .collect(Collectors.joining("|"));
         }
@@ -1263,6 +1269,10 @@ public class ShipTablePane extends VBox {
         private static class Value {
             private Kanmusu ship;
             private int lv;
+
+            public String toString() {
+                return ship.kai == 1 ? Integer.toString(lv) : lv + "." + ship.kai;
+            }
         }
     }
 
