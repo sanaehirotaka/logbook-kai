@@ -71,9 +71,9 @@ class ScreenCapture {
         /** 切り取らない */
         NONE(null),
         /** 改装一覧の範囲(艦娘除く) */
-        UNIT_WITHOUT_SHIP(new Rectangle(327, 103, 230, 365)),
+        UNIT_WITHOUT_SHIP(new Rectangle(490, 154, 345, 547)),
         /** 改装一覧の範囲 */
-        UNIT(new Rectangle(327, 103, 460, 365));
+        UNIT(new Rectangle(490, 154, 690, 547));
 
         private Rectangle angle;
 
