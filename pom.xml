@@ -114,56 +114,6 @@
             <version>1.16.12</version>
             <scope>provided</scope>
         </dependency>
-<!--
-以下の依存性は次のコマンドでmvn installすることで解決してください。
-ライブラリのダウンロード先  : https://www.free-decompiler.com/flash/download/
-
-mvn install:install-file -Dfile="lib/ffdec_lib.jar" -DgroupId=ffdec -DartifactId=ffdec -Dversion=0 -Dpackaging=jar
-mvn install:install-file -Dfile="lib/cmykjpeg.jar" -DgroupId=cmykjpeg -DartifactId=cmykjpeg -Dversion=0 -Dpackaging=jar
-mvn install:install-file -Dfile="lib/LZMA.jar" -DgroupId=LZMA -DartifactId=LZMA -Dversion=0 -Dpackaging=jar
- -->
-        <dependency>
-            <groupId>ffdec</groupId>
-            <artifactId>ffdec</artifactId>
-            <version>0</version>
-        </dependency>
-        <dependency>
-            <groupId>cmykjpeg</groupId>
-            <artifactId>cmykjpeg</artifactId>
-            <version>0</version>
-        </dependency>
-        <dependency>
-            <groupId>LZMA</groupId>
-            <artifactId>LZMA</artifactId>
-            <version>0</version>
-        </dependency>
-<!--
-コマンドを打つのが面倒なときはこっちを使う
- -->
-<!--
-        <dependency>
-            <groupId>ffdec</groupId>
-            <artifactId>ffdec</artifactId>
-            <version>0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/ffdec_lib.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>cmykjpeg</groupId>
-            <artifactId>cmykjpeg</artifactId>
-            <version>0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/cmykjpeg.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>LZMA</groupId>
-            <artifactId>LZMA</artifactId>
-            <version>0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/LZMA.jar</systemPath>
-        </dependency>
- -->
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

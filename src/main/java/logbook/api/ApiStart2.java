@@ -31,7 +31,7 @@ import logbook.proxy.ResponseMetaData;
  * /kcsapi/api_start2
  *
  */
-@API("/kcsapi/api_start2")
+@API("/kcsapi/api_start2/getData")
 public class ApiStart2 implements APIListenerSpi {
 
     @Override

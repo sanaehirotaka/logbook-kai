@@ -301,16 +301,16 @@ class ScreenCapture {
                 int y;
                 int w;
                 int h;
-                if (image.getWidth() == 800 && image.getHeight() == 480) {
+                if (image.getWidth() == 1200 && image.getHeight() == 720) {
                     x = rect.x;
                     y = rect.y;
                     w = rect.width;
                     h = rect.height;
                 } else {
-                    x = (int) (rect.x * ((double) image.getWidth() / 800));
-                    y = (int) (rect.y * ((double) image.getHeight() / 480));
-                    w = (int) (rect.width * ((double) image.getWidth() / 800));
-                    h = (int) (rect.height * ((double) image.getHeight() / 480));
+                    x = (int) (rect.x * ((double) image.getWidth() / 1200));
+                    y = (int) (rect.y * ((double) image.getHeight() / 720));
+                    w = (int) (rect.width * ((double) image.getWidth() / 1200));
+                    h = (int) (rect.height * ((double) image.getHeight() / 720));
                 }
                 writer.write(null, new IIOImage(image.getSubimage(x, y, w, h), null, null), iwp);
             } finally {
