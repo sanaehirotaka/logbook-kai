@@ -3,11 +3,7 @@ package logbook.internal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -27,26 +23,10 @@ import logbook.bean.SlotitemMstCollection;
 public class Items {
 
     /** 画像キャッシュ */
-    private static final ReferenceCache<String, Image> CACHE = new ReferenceCache<>(100);
+    private static final ReferenceCache<String, Image> CACHE = new ReferenceCache<>(50);
 
     /** 装備アイコンサイズ */
-    private static final int ITEM_ICON_SIZE = 36;
-
-    /** 装備アイコンファイル名 */
-    private static final Map<Integer, String> ITEM_MAP = new HashMap<Integer, String>();
-
-    /** 装備アイコンファイル名 */
-    private static final Map<Integer, String> BORDERED_ITEM_MAP = new HashMap<Integer, String>();
-
-    static {
-        ResourceBundle itemBundle = ResourceBundle.getBundle("logbook.itemName");
-        Collections.list(itemBundle.getKeys()).stream()
-                .forEach(k -> ITEM_MAP.put(Integer.valueOf(k), itemBundle.getString(k)));
-
-        ResourceBundle borderedItemBundle = ResourceBundle.getBundle("logbook.borderedItemName");
-        Collections.list(borderedItemBundle.getKeys()).stream()
-                .forEach(k -> BORDERED_ITEM_MAP.put(Integer.valueOf(k), borderedItemBundle.getString(k)));
-    }
+    private static final int ITEM_ICON_SIZE = 45;
 
     private Items() {
     }
@@ -93,11 +73,22 @@ public class Items {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image borderedItemImage(SlotitemMst item) throws IllegalStateException {
-        Path path = null;
         if (item != null) {
-            path = getBorderedItemImagePath(item);
+            int key = item.getType().get(3);
+            return itemIcon(key, true);
         }
-        return optimizeItemIcon(path);
+        return defaultItemIcon();
+    }
+
+    /**
+     * 装備の画像を取得します
+     *
+     * @param item 装備定義
+     * @return 装備の画像(36x36)
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image borderedItemImageByType(int type3) throws IllegalStateException {
+        return itemIcon(type3, true);
     }
 
     /**
@@ -119,11 +110,22 @@ public class Items {
      * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
     public static Image itemImage(SlotitemMst item) throws IllegalStateException {
-        Path path = null;
         if (item != null) {
-            path = getItemImagePath(item);
+            int type3 = item.getType().get(3);
+            return itemIcon(type3, false);
         }
-        return optimizeItemIcon(path);
+        return defaultItemIcon();
+    }
+
+    /**
+     * 装備の画像を取得します
+     *
+     * @param type3 装備定義
+     * @return 装備の画像(36x36)
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
+     */
+    public static Image itemImageByType(int type3) throws IllegalStateException {
+        return itemIcon(type3, false);
     }
 
     /**
@@ -151,69 +153,28 @@ public class Items {
     }
 
     /**
-     * 装備画像を装備種定数より取得します。
-     * @param type 装備種定数
-     * @return 装備画像
+     * 装備アイコンを返します
+     *
+     * @param type 装備
+     * @param slot スロット背景
+     * @return 装備アイコン
+     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    public static Path itemImageByType(int type) {
-        String name = ITEM_MAP.get(type);
-        if (name != null) {
-            return getItemResourcePathDir().resolve(name);
-        } else {
-            return null;
+    private static Image itemIcon(int type, boolean slot) {
+        Image image = optimizeItemIcon(type);
+        if (slot) {
+            double width = image.getWidth();
+            double height = image.getHeight();
+            Canvas canvas = new Canvas(width, height);
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.setFill(Color.rgb(44, 58, 59));
+            gc.fillOval(2, 2, width - 2, height - 2);
+            gc.drawImage(image, 0, 0);
+            SnapshotParameters sp = new SnapshotParameters();
+            sp.setFill(Color.TRANSPARENT);
+            return canvas.snapshot(sp, null);
         }
-    }
-
-    /**
-     * 装備画像を装備種定数より取得します。
-     * @param type 装備種定数
-     * @return 装備画像
-     */
-    public static Path borderedImageByType(int type) {
-        String name = BORDERED_ITEM_MAP.get(type);
-        if (name != null) {
-            return getItemResourcePathDir().resolve(name);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 装備アイコン(背景無し)を取得します。
-     * @param item 装備
-     * @return 装備アイコン(背景無し)
-     */
-    private static Path getItemImagePath(SlotitemMst item) {
-        String name = getItemImageName(item);
-        if (name != null) {
-            return getItemResourcePathDir().resolve(name);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 装備アイコン(背景有り)を取得します。
-     * @param item 装備
-     * @return 装備アイコン(背景有り)
-     */
-    private static Path getBorderedItemImagePath(SlotitemMst item) {
-        String name = getBorderedItemImageName(item);
-        if (name != null) {
-            return getItemResourcePathDir().resolve(name);
-        } else {
-            return null;
-        }
-    }
-
-    private static String getItemImageName(SlotitemMst item) {
-        int key = item.getType().get(3);
-        return ITEM_MAP.get(key);
-    }
-
-    private static String getBorderedItemImageName(SlotitemMst item) {
-        int key = item.getType().get(3);
-        return BORDERED_ITEM_MAP.get(key);
+        return image;
     }
 
     /**
@@ -221,9 +182,11 @@ public class Items {
      *
      * @param p 装備アイコンへのパス
      * @return 装備アイコン
-     * @throws IllegalStateException このメソッドがJavaFXアプリケーション・スレッド以外のスレッドで呼び出された場合
      */
-    private static Image optimizeItemIcon(Path p) {
+    private static Image optimizeItemIcon(int type) {
+        Path dir = Paths.get(AppConfig.get().getResourcesDir());
+        Path p = dir.resolve(Paths.get("common", "common_icon_weapon/common_icon_weapon_id_" + type + ".png"));
+
         if (p != null && Files.isReadable(p)) {
             try {
                 Image image = CACHE.get(p.toUri().toString(), Image::new);

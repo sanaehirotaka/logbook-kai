@@ -1,7 +1,6 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -21,7 +20,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import logbook.bean.AppCondition;
@@ -282,22 +280,9 @@ public class FleetTabPane extends ScrollPane {
     }
 
     private void setIcon() {
-        Path path;
-        path = Items.itemImageByType(6);
-        if (path != null) {
-            this.airSuperiorityImg.setImage(new Image(path.toUri().toString()));
-        }
-        path = Items.itemImageByType(10);
-        if (path != null) {
-            this.touchPlaneStartProbabilityImg.setImage(new Image(path.toUri().toString()));
-        }
-        path = Items.itemImageByType(9);
-        if (path != null) {
-            this.decision33Img.setImage(new Image(path.toUri().toString()));
-        }
-        path = Items.itemImageByType(28);
-        if (path != null) {
-            this.lvsumImg.setImage(new Image(path.toUri().toString()));
-        }
+        this.airSuperiorityImg.setImage(Items.itemImageByType(6));
+        this.touchPlaneStartProbabilityImg.setImage(Items.itemImageByType(10));
+        this.decision33Img.setImage(Items.itemImageByType(9));
+        this.lvsumImg.setImage(Items.itemImageByType(28));
     }
 }

@@ -14,7 +14,7 @@ public class Spritesmith {
     private Map<String, Frame> frames;
 
     @Data
-    public class Frame {
+    public static class Frame {
         private Rect frame;
         private boolean rotated;
         private boolean trimmed;
@@ -23,7 +23,7 @@ public class Spritesmith {
     }
 
     @Data
-    public class Rect {
+    public static class Rect {
         private int x;
         private int y;
         private int w;

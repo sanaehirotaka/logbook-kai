@@ -34,40 +34,52 @@ class ShipImage {
     private static final ReferenceCache<String, Image> CACHE = new ReferenceCache<>(200);
 
     /** 艦娘画像ファイル名(健在・小破) */
-    private static final String[] NORMAL = { "1.jpg", "1.png" };
+    private static final String[] NORMAL = { "1.png", "1.jpg" };
 
     /** 艦娘画像ファイル名(中破・大破) */
-    private static final String[] DAMAGED = { "3.jpg", "3.png", "1.jpg", "1.png" };
+    private static final String[] DAMAGED = { "3.png", "3.jpg", "1.png", "1.jpg" };
 
     /** 小破バナーアイコン */
-    private static final String MC_BANNER_ICON0 = "res.common.MCBannerIcon_0.png";
+    private static final String MC_BANNER_ICON0 = "common_misc/common_misc_105.png";
 
     /** 中破バナーアイコン */
-    private static final String MC_BANNER_ICON1 = "res.common.MCBannerIcon_1.png";
+    private static final String MC_BANNER_ICON1 = "common_misc/common_misc_99.png";
 
     /** 大破バナーアイコン */
-    private static final String MC_BANNER_ICON2 = "res.common.MCBannerIcon_2.png";
+    private static final String MC_BANNER_ICON2 = "common_misc/common_misc_109.png";
 
     /** 撃沈バナーアイコン */
-    private static final String MC_BANNER_ICON3 = "res.common.MCBannerIcon_3.png";
+    private static final String MC_BANNER_ICON3 = "common_misc/common_misc_102.png";
 
     /** 修復バナーアイコン */
-    private static final String MC_BANNER_ICON4 = "res.common.MCBannerIcon_4.png";
+    private static final String MC_BANNER_ICON4 = "common_misc/common_misc_108.png";
 
     /** 遠征バナーアイコン */
-    private static final String MC_BANNER_ICON5 = "res.common.MCBannerIcon_5.png";
+    private static final String MC_BANNER_ICON5 = "common_misc/common_misc_100.png";
 
-    /** 遠征バナーアイコン */
-    private static final String MC_BANNER_ICON10 = "res.common.MCBannerIcon_10.png";
+    /** 退避バナーアイコン */
+    private static final String MC_BANNER_ICON10 = "common_misc/common_misc_110.png";
 
     /** 小破汚れ */
-    private static final String MC_BANNER_SMOKE_IMG0 = "res.common.MCBannerSmokeImg_0.png";
+    private static final String MC_BANNER_SMOKE_IMG0 = "common_misc/common_misc_96.png";
 
     /** 中破汚れ */
-    private static final String MC_BANNER_SMOKE_IMG1 = "res.common.MCBannerSmokeImg_1.png";
+    private static final String MC_BANNER_SMOKE_IMG1 = "common_misc/common_misc_97.png";
 
     /** 大破汚れ */
-    private static final String MC_BANNER_SMOKE_IMG2 = "res.common.MCBannerSmokeImg_2.png";
+    private static final String MC_BANNER_SMOKE_IMG2 = "common_misc/common_misc_98.png";
+
+    /** 疲労オレンジ背景 */
+    private static final String COMMON_MISC_35 = "common_misc/common_misc_35.png";
+
+    /** 疲労オレンジ顔 */
+    private static final String COMMON_MISC_112 = "common_misc/common_misc_112.png";
+
+    /** 疲労赤背景 */
+    private static final String COMMON_MISC_36 = "common_misc/common_misc_36.png";
+
+    /** 疲労赤顔 */
+    private static final String COMMON_MISC_113 = "common_misc/common_misc_113.png";
 
     /** 小破バッチ */
     private static final Layer SLIGHT_DAMAGE_BADGE = new Layer(0, 0, Paths.get("common", MC_BANNER_ICON0));
@@ -100,22 +112,22 @@ class ShipImage {
     private static final Layer BADLY_DAMAGE_BACKGROUND = new Layer(0, 0, Paths.get("common", MC_BANNER_SMOKE_IMG2));
 
     /** 疲労オレンジ背景 */
-    private static final Layer ORANGE_BACKGROUND = new Layer(100, 0, "logbook/gui/cond_orange_bg.png");
+    private static final Layer ORANGE_BACKGROUND = new Layer(150, 0, Paths.get("common", COMMON_MISC_35));
 
     /** 疲労オレンジ顔 */
-    private static final Layer ORANGE_FACE = new Layer(143, 12, "logbook/gui/cond_orange.png");
+    private static final Layer ORANGE_FACE = new Layer(214, 18, Paths.get("common", COMMON_MISC_112));
 
     /** 疲労赤背景 */
-    private static final Layer RED_BACKGROUND = new Layer(100, 0, "logbook/gui/cond_red_bg.png");
+    private static final Layer RED_BACKGROUND = new Layer(150, 0, Paths.get("common", COMMON_MISC_36));
 
     /** 疲労赤顔 */
-    private static final Layer RED_FACE = new Layer(143, 12, "logbook/gui/cond_red.png");
+    private static final Layer RED_FACE = new Layer(214, 18, Paths.get("common", COMMON_MISC_113));
 
     /** 出撃札 */
-    private static final String JOIN_BANNER = "res.common.MC_Join_{0}.png";
+    private static final String JOIN_BANNER = "common_event/common_event_{0}.png";
 
     /** 装備アイコンのサイズ */
-    private static final int ITEM_ICON_SIZE = 24;
+    private static final int ITEM_ICON_SIZE = 32;
 
     /**
      * キャラクターの画像を作成します
@@ -179,10 +191,10 @@ class ShipImage {
      */
     static Image get(Chara chara, boolean addItem, boolean applyState, boolean banner, boolean cond, boolean hpGauge,
             Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
-        Canvas canvas = new Canvas(160, 40);
+        Canvas canvas = new Canvas(240, 60);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        gc.drawImage(get(chara), 0, 0);
+        gc.drawImage(get(chara), 0, 0, canvas.getWidth(), canvas.getHeight());
 
         if (chara != null) {
             List<Layer> layers = new ArrayList<>();
@@ -245,8 +257,8 @@ class ShipImage {
             }
             // 装備画像
             if (addItem) {
-                int x = 11;
-                int y = 16;
+                int x = 17;
+                int y = 24;
                 if (isShip) {
                     Ship ship = (Ship) chara;
                     for (Integer itemId : ship.getSlot()) {
@@ -334,9 +346,9 @@ class ShipImage {
 
         double hpPer = (double) chara.getNowhp() / (double) chara.getMaxhp();
         gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
-        gc.fillRect(width - 5, 0, 5, height - (height * hpPer));
+        gc.fillRect(width - 7, 0, 7, height - (height * hpPer));
         gc.setFill(hpGaugeColor(hpPer));
-        gc.fillRect(width - 5, height - (height * hpPer), 5, height * hpPer);
+        gc.fillRect(width - 7, height - (height * hpPer), 7, height * hpPer);
     }
 
     /**
