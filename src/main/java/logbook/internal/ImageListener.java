@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -150,11 +151,11 @@ public class ImageListener implements ContentListenerSpi {
                 Spritesmith.Rect rect = v.getFrame();
                 BufferedImage subimage = image.getSubimage(rect.getX(), rect.getY(), rect.getW(), rect.getH());
                 try {
-                    try (OutputStream out = Files.newOutputStream(storeDir.resolve(k + ".png"))) {
+                    try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(storeDir.resolve(k + ".png")))) {
                         ImageIO.write(subimage, "png", out);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LoggerHolder.get().warn("画像ファイル処理中に例外が発生しました[src=" + imageSrc + "]", e);
                 }
             };
             sprite.getFrames().forEach(action);
@@ -167,10 +168,10 @@ public class ImageListener implements ContentListenerSpi {
             if (!Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
-            Path temp = Files.createTempFile(parent, "ImageListener-", "");
-            Files.copy(from, temp, StandardCopyOption.REPLACE_EXISTING);
-            Files.move(temp, to, StandardCopyOption.REPLACE_EXISTING);
         }
+        Path temp = Files.createTempFile("ImageListener-", "");
+        Files.copy(from, temp, StandardCopyOption.REPLACE_EXISTING);
+        Files.move(temp, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
