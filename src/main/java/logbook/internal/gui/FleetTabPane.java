@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
@@ -273,9 +274,20 @@ public class FleetTabPane extends ScrollPane {
      * 判定式(33) を設定する
      */
     private void setDecision33() {
+        Ships.Decision33 decision33 = Ships.decision33(this.shipList, this.branchCoefficient);
         // 判定式(33)
-        this.decision33.setText(MessageFormat.format("{0,number,#.##}",
-                Ships.decision33(this.shipList, this.branchCoefficient)));
+        this.decision33.setText(MessageFormat.format("{0,number,#.##}", decision33.get()));
+        PopOver<Ships.Decision33> popover = new PopOver<>((node, data) -> {
+            String content = new StringJoiner("\n")
+                    .add("判定式(33):" + data.get() + "(分岐点係数:" + data.getBranchCoefficient() + ")")
+                    .add("裝備索敵:" + data.getItemView())
+                    .add("艦娘索敵:" + data.getShipView())
+                    .add("司令部スコア:" + data.getLevelScore())
+                    .add("艦隊スコア:" + data.getFleetScore())
+                    .toString();
+            return new PopOverPane("判定式(33)", content);
+        });
+        popover.install(this.decision33, decision33);
         this.branchCoefficientButton.setText("分岐点係数:" + this.branchCoefficient);
     }
 

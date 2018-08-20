@@ -34,6 +34,8 @@ import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.bean.Stype;
 import logbook.bean.StypeCollection;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * 艦娘に関するメソッドを集めたクラス
@@ -548,7 +550,7 @@ public class Ships {
      * @param ships 艦娘達
      * @return 判定式(33)
      */
-    public static double decision33(List<Ship> ships) {
+    public static Decision33 decision33(List<Ship> ships) {
         return decision33(ships, 1);
     }
 
@@ -559,7 +561,7 @@ public class Ships {
      * @param branchCoefficient 分岐点係数
      * @return 判定式(33)
      */
-    public static double decision33(List<Ship> ships, double branchCoefficient) {
+    public static Decision33 decision33(List<Ship> ships, double branchCoefficient) {
         // 装備マスタ
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
                 .getSlotitemMap();
@@ -605,7 +607,7 @@ public class Ships {
         // 2×(6－出撃艦数)
         double fleetScore = 2 * (6 - ships.size());
 
-        return (branchCoefficient * itemView) + shipView - levelScore + fleetScore;
+        return new Decision33(branchCoefficient, itemView, shipView, levelScore, fleetScore);
     }
 
     /**
@@ -881,6 +883,33 @@ public class Ships {
 
         private V getValue() {
             return this.value;
+        }
+    }
+
+    /**
+     * 判定式(33)
+     */
+    @Data
+    @AllArgsConstructor
+    public static class Decision33 {
+
+        /** 分岐点係数 */
+        private double branchCoefficient;
+
+        /** 裝備索敵 */
+        private double itemView;
+
+        /** 艦娘索敵 */
+        private double shipView;
+
+        /** 司令部スコア */
+        private double levelScore;
+
+        /** 艦隊スコア */
+        private double fleetScore;
+
+        public double get() {
+            return (this.branchCoefficient * this.itemView) + this.shipView - this.levelScore + this.fleetScore;
         }
     }
 }
