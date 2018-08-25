@@ -2,6 +2,8 @@ package logbook.internal.gui;
 
 import java.time.Duration;
 import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -69,6 +71,8 @@ public class RequireNdockController extends WindowController {
 
     private ObservableList<RequireNdock> ndocks = FXCollections.observableArrayList();
 
+    private int ndocksHashCode;
+
     private Timeline timeline;
 
     @FXML
@@ -123,15 +127,22 @@ public class RequireNdockController extends WindowController {
      * @param e ActionEvent
      */
     void update(ActionEvent e) {
-        this.ndocks.clear();
-        ShipCollection.get()
+        List<Ship> ndockList = ShipCollection.get()
                 .getShipMap()
                 .values()
                 .stream()
                 .filter(s -> s.getNdockTime() > 0)
-                .sorted(Comparator.comparing(Ship::getNdockTime, Comparator.reverseOrder()))
-                .map(RequireNdock::toRequireNdock)
-                .forEach(this.ndocks::add);
+                .collect(Collectors.toList());
+        if (this.ndocksHashCode == ndockList.hashCode()) {
+            this.ndocks.forEach(RequireNdock::update);
+        } else {
+            this.ndocks.clear();
+            ndockList.stream()
+                    .sorted(Comparator.comparing(Ship::getNdockTime, Comparator.reverseOrder()))
+                    .map(RequireNdock::toRequireNdock)
+                    .forEach(this.ndocks::add);
+            this.ndocksHashCode = ndockList.hashCode();
+        }
     }
 
     /**

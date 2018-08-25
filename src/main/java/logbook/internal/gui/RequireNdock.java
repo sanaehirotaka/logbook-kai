@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.StringJoiner;
@@ -235,18 +236,24 @@ public class RequireNdock {
      * @return お風呂に入りたい艦娘
      */
     public static RequireNdock toRequireNdock(Ship ship) {
-        Duration d = Duration.ofMillis(ship.getNdockTime());
-
         RequireNdock ndock = new RequireNdock();
-        ndock.setDeck(Ships.deckPort(ship).map(DeckPort::getId).map(Object::toString).orElse(""));
         ndock.setShip(ship);
-        ndock.setLv(ship.getLv());
-        ndock.setTime(d);
-        ndock.setEnd(endText(d));
-        ndock.setFuel(ship.getNdockItem().get(0));
-        ndock.setMetal(ship.getNdockItem().get(1));
-
+        ndock.update();
         return ndock;
+    }
+
+    /**
+     * お風呂に入りたい艦娘を更新します
+     */
+    public void update() {
+        Ship ship = this.getShip();
+        Duration d = Duration.ofMillis(ship.getNdockTime());
+        this.setDeck(Ships.deckPort(ship).map(DeckPort::getId).map(Object::toString).orElse(""));
+        this.setLv(ship.getLv());
+        this.setTime(d);
+        this.setEnd(endText(d));
+        this.setFuel(ship.getNdockItem().get(0));
+        this.setMetal(ship.getNdockItem().get(1));
     }
 
     /**
@@ -256,6 +263,7 @@ public class RequireNdock {
      * @return 今からのテキスト表現
      */
     private static String endText(Duration d) {
-        return DateTimeFormatter.ofPattern("HH:mm:ss").format(Logs.now().plus(d));
+        ZonedDateTime dateTime = Logs.now().plus(d);
+        return DateTimeFormatter.ofPattern("H時m分s秒").format(dateTime);
     }
 }
