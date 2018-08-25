@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -21,6 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
@@ -33,6 +35,18 @@ import logbook.internal.Time;
  *
  */
 public class RequireNdockController extends WindowController {
+
+    /** 入渠中 */
+    @FXML
+    private CheckBox includeNdock;
+
+    /** 小破以下 */
+    @FXML
+    private CheckBox slightDamage;
+
+    /** 中破・大破 */
+    @FXML
+    private CheckBox damage;
 
     @FXML
     private TableView<RequireNdock> table;
@@ -126,12 +140,13 @@ public class RequireNdockController extends WindowController {
      *
      * @param e ActionEvent
      */
+    @FXML
     void update(ActionEvent e) {
         List<Ship> ndockList = ShipCollection.get()
                 .getShipMap()
                 .values()
                 .stream()
-                .filter(s -> s.getNdockTime() > 0)
+                .filter(this::filter)
                 .collect(Collectors.toList());
         if (this.ndocksHashCode == ndockList.hashCode()) {
             this.ndocks.forEach(RequireNdock::update);
@@ -172,6 +187,26 @@ public class RequireNdockController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * フィルター
+     * @param ship 艦娘
+     * @return フィルタ結果
+     */
+    private boolean filter(Ship ship) {
+        boolean result = ship.getNdockTime() > 0;
+
+        if (result && !this.includeNdock.isSelected()) {
+            result &= !NdockCollection.get().getNdockSet().contains(ship.getId());
+        }
+        if (result && !this.slightDamage.isSelected()) {
+            result &= !Ships.isSlightDamage(ship) && !Ships.isLessThanSlightDamage(ship);
+        }
+        if (result && !this.damage.isSelected()) {
+            result &= !Ships.isHalfDamage(ship) && !Ships.isBadlyDamage(ship) && !Ships.isLost(ship);
+        }
+        return result;
     }
 
     /**
