@@ -264,7 +264,7 @@ class ShipImage {
                     for (Integer itemId : ship.getSlot()) {
                         // 装備アイコン
                         layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId, itemMap)));
-                        x += ITEM_ICON_SIZE;
+                        x += ITEM_ICON_SIZE + 2;
                     }
                     if (((Ship) chara).getSlotEx() != 0) {
                         // 補強増設は0(未開放)以外の場合
@@ -278,7 +278,7 @@ class ShipImage {
                         Image icon = Items.borderedItemImage(map.get(itemId));
                         // 装備アイコン
                         layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, icon));
-                        x += ITEM_ICON_SIZE;
+                        x += ITEM_ICON_SIZE + 2;
                     }
                 }
             }

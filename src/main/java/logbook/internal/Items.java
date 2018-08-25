@@ -195,8 +195,8 @@ public class Items {
                 double height = image.getHeight();
 
                 if (width != ITEM_ICON_SIZE) {
-                    double x = (ITEM_ICON_SIZE - width) / 2;
-                    double y = (ITEM_ICON_SIZE - height) / 2;
+                    double x = (int) ((ITEM_ICON_SIZE - width) / 2);
+                    double y = (int) ((ITEM_ICON_SIZE - height) / 2);
 
                     Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
                     GraphicsContext gc = canvas.getGraphicsContext2D();

@@ -1064,7 +1064,10 @@ public class ShipTablePane extends VBox {
                 }
                 SlotItem item = this.itemMap.get(itemId);
                 if (item != null) {
-                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(item))));
+                    ImageView img = new ImageView(Items.itemImage(item));
+                    img.setFitWidth(36);
+                    img.setFitHeight(36);
+                    this.setGraphic(img);
                     this.setText(Items.name(item));
                 } else {
                     this.setGraphic(null);
@@ -1270,8 +1273,9 @@ public class ShipTablePane extends VBox {
             private Kanmusu ship;
             private int lv;
 
+            @Override
             public String toString() {
-                return ship.kai == 1 ? Integer.toString(lv) : lv + "." + ship.kai;
+                return this.ship.kai == 1 ? Integer.toString(this.lv) : this.lv + "." + this.ship.kai;
             }
         }
     }

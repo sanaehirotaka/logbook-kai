@@ -287,7 +287,10 @@ public class ItemItemController extends WindowController {
                         .get(itemId);
 
                 if (mst != null) {
-                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(mst))));
+                    ImageView img = new ImageView(Items.itemImage(mst));
+                    img.setFitWidth(36);
+                    img.setFitHeight(36);
+                    this.setGraphic(img);
                     this.setText(mst.getName());
                 }
             } else {
