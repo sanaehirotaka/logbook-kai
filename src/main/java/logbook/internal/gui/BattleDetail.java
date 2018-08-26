@@ -265,6 +265,8 @@ public class BattleDetail extends WindowController {
                         Image image = Items.itemImage(fTouchPlaneItem);
                         if (image != null) {
                             this.fTouchPlaneImage.setImage(image);
+                            this.fTouchPlaneImage.setFitWidth(24);
+                            this.fTouchPlaneImage.setFitHeight(24);
                         }
                         this.fTouchPlane.setText(fTouchPlaneItem.getName()
                                 + "(+" + (int) (Ships.touchPlaneAttackCompensation(fTouchPlaneItem) * 100) + "%)");
@@ -279,6 +281,8 @@ public class BattleDetail extends WindowController {
                         Image image = Items.itemImage(eTouchPlaneItem);
                         if (image != null) {
                             this.eTouchPlaneImage.setImage(image);
+                            this.eTouchPlaneImage.setFitWidth(24);
+                            this.eTouchPlaneImage.setFitHeight(24);
                         }
                         this.eTouchPlane.setText(eTouchPlaneItem.getName()
                                 + "(+" + (int) (Ships.touchPlaneAttackCompensation(eTouchPlaneItem) * 100) + "%)");
