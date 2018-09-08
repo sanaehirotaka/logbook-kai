@@ -1,7 +1,9 @@
 package logbook.internal.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -9,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,7 +47,19 @@ class ScreenCapture {
     /** Jpeg品質 */
     private static final float QUALITY = 0.9f;
 
-    private static final int WHITE = Color.WHITE.getRGB();
+    /** ゲーム画面サイズ */
+    private static Dimension[] sizes = {
+            new Dimension(600, 360), //50%
+            new Dimension(720, 432), //60%
+            new Dimension(800, 480), //67%
+            new Dimension(837, 502), //70%
+            new Dimension(840, 504), //70%
+            new Dimension(900, 540), //75%
+            new Dimension(960, 576), //80%
+            new Dimension(1074, 645), //90%
+            new Dimension(1080, 648), //90%
+            new Dimension(1200, 720) //100%
+    };
 
     @Setter
     @Getter
@@ -199,54 +214,33 @@ class ScreenCapture {
      * イメージからゲーム画面を検索します
      *
      * @param image イメージ
-     * @param width 画面の幅
-     * @param height 画面の高さ
      * @return 画面の座標
      */
-    static Rectangle detectGameScreen(BufferedImage image, int width, int height) {
-        int searchX = image.getWidth() - width - 2;
-        int searchY = image.getHeight() - height - 2;
-
-        for (int x = 0; x <= searchX; x++) {
-            for (int y = 0; y <= searchY; y++) {
-                // 左上
-                if ((image.getRGB(x, y) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + 1, y) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x, y + 1) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + 1, y + 1) & WHITE) == WHITE)
-                    continue;
-                // 右上
-                if ((image.getRGB(x + width, y) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + width + 1, y) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + width, y + 1) & WHITE) == WHITE)
-                    continue;
-                if ((image.getRGB(x + width + 1, y + 1) & WHITE) != WHITE)
-                    continue;
-                // 左下
-                if ((image.getRGB(x, y + height) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + 1, y + height) & WHITE) == WHITE)
-                    continue;
-                if ((image.getRGB(x, y + height + 1) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + 1, y + height + 1) & WHITE) != WHITE)
-                    continue;
-                // 右下
-                if ((image.getRGB(x + width, y + height) & WHITE) == WHITE)
-                    continue;
-                if ((image.getRGB(x + width + 1, y + height) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + width, y + height + 1) & WHITE) != WHITE)
-                    continue;
-                if ((image.getRGB(x + width + 1, y + height + 1) & WHITE) != WHITE)
-                    continue;
-
-                return new Rectangle(x + 1, y + 1, width, height);
+    static Rectangle detectGameScreen(BufferedImage image) {
+        BiImage biImage = new BiImage(image, Color.WHITE) {
+            @Override
+            protected boolean test(int a, int b) {
+                return (a & 0xf0f0f0) == (b & 0xf0f0f0);
+            }
+        };
+        for (int y = 0, height = image.getHeight() - sizes[0].height; y < height; y++) {
+            for (int x = 0, width = image.getWidth() - sizes[0].width; x < width; x++) {
+                for (int i = 0; i < sizes.length; i++) {
+                    Dimension size = sizes[i];
+                    if (!biImage.allW(x, y, size.width + 2))
+                        break;
+                    if (!biImage.allH(x, y, size.height + 2))
+                        break;
+                    if (!biImage.allW(x, y + size.height + 1, size.width + 2))
+                        continue;
+                    if (!biImage.allH(x + size.width + 1, y, size.height + 2))
+                        continue;
+                    if (biImage.allH(x + 1, y + 1, size.height))
+                        continue;
+                    if (biImage.allH(x + size.width, y + 1, size.height))
+                        continue;
+                    return new Rectangle(x + 1, y + 1, size.width, size.height);
+                }
             }
         }
         return null;
@@ -405,6 +399,202 @@ class ScreenCapture {
         @Override
         public String toString() {
             return DATE_FORMAT.format(this.dateTime);
+        }
+    }
+
+    /**
+     * 2値画像
+     */
+    public static class BiImage {
+
+        private final static int ADDRESS_BITS_PER_WORD = 6;
+
+        /** color */
+        private int color;
+        /** width */
+        private int width;
+        /** height */
+        private int height;
+        // (width/64)×height
+        private long[][] dataW;
+        // (height/64)×width
+        private long[][] dataH;
+
+        /**
+         * {@code image}で指定された画像と{@code color}で指定された色からBiImageを構築します
+         *
+         * @param image ソース画像
+         * @param color 黒色として認識する色
+         */
+        public BiImage(BufferedImage image, Color color) {
+            this.color = color.getRGB() & 0xffffff; // truncate alpha
+            this.width = image.getWidth();
+            this.height = image.getHeight();
+            WritableRaster raster;
+            if (image.getType() == BufferedImage.TYPE_INT_RGB) {
+                raster = image.getRaster();
+            } else {
+                BufferedImage newimg = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = newimg.createGraphics();
+                g.drawImage(image, 0, 0, null);
+                g.dispose();
+                raster = newimg.getRaster();
+            }
+            int[] data = (int[]) raster.getDataElements(0, 0, this.width, this.height, null);
+
+            this.init(data, this.width, this.height, this.color);
+        }
+
+        // 初期化処理
+        private void init(int[] data, int w, int h, int color) {
+            this.dataW = new long[h][((w - 1) >> ADDRESS_BITS_PER_WORD) + 1];
+            this.dataH = new long[w][((h - 1) >> ADDRESS_BITS_PER_WORD) + 1];
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
+                    int pixcel = data[x + (y * w)] & 0xffffff;
+                    if (this.test(color, pixcel)) {
+                        this.dataW[y][x >> ADDRESS_BITS_PER_WORD] |= (1L << x);
+                        this.dataH[x][y >> ADDRESS_BITS_PER_WORD] |= (1L << y);
+                    }
+                }
+            }
+        }
+
+        /**
+         * 2値化します
+         *
+         * @param a {@link #BiImage(BufferedImage, Color)}で指定された色のRGB値
+         * @param b テスト対象のピクセル
+         * @return 2値化した結果
+         */
+        protected boolean test(int a, int b) {
+            return a == b;
+        }
+
+        /**
+         * このBiImageの内容をBufferedImageとして出力します
+         *
+         * @return BufferedImage
+         */
+        public BufferedImage dump() {
+            BufferedImage image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
+            WritableRaster raster = image.getRaster();
+            int[] data = new int[this.width * this.height];
+
+            int foreground = this.color;
+            int background = this.color ^ 0xffffff;
+
+            for (int y = 0; y < this.height; y++) {
+                for (int x = 0; x < this.width; x++) {
+                    data[x + (y * this.width)] = (this.dataW[y][x >> ADDRESS_BITS_PER_WORD] & (1L << x)) == 0
+                            ? background
+                            : foreground;
+                }
+            }
+            raster.setDataElements(0, 0, this.width, this.height, data);
+            return image;
+        }
+
+        /**
+         * x,yで指定された座標が黒色であるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @return x,yで指定された座標の色
+         */
+        public boolean get(int x, int y) {
+            int idx = x >> ADDRESS_BITS_PER_WORD;
+            return (this.dataW[y].length > idx) && (this.dataW[y][idx] & (1L << x)) != 0;
+        }
+
+        /**
+         * x,yで指定された座標を原点としてx+width,yまで(を含まない)の線形が全て黒色であるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @param width 調べる横幅
+         * @return 単色であればtrue
+         */
+        public boolean allW(int x, int y, int width) {
+            return this.all(this.dataW, x, y, width);
+        }
+
+        /**
+         * x,yで指定された座標を原点としてx,y+heightまで(を含まない)の線形が全て黒色であるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @param height 調べる縦幅
+         * @return 単色であればtrue
+         */
+        public boolean allH(int x, int y, int height) {
+            return this.all(this.dataH, y, x, height);
+        }
+
+        /**
+         * x,yで指定された座標を原点としてx+width,y+heightまで(を含まない)の矩形が全て黒色であるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @param width 調べる横幅
+         * @param height 調べる縦幅
+         * @return 単色であればtrue
+         */
+        public boolean all(int x, int y, int width, int height) {
+            int wcost = (((x + width - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (x >> ADDRESS_BITS_PER_WORD)) * height;
+            int hcost = (((y + height - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (y >> ADDRESS_BITS_PER_WORD)) * width;
+            if (wcost > hcost) {
+                for (int i = x, max = x + width; i < max; i++) {
+                    if (!this.all(this.dataH, y, x, height)) {
+                        return false;
+                    }
+                }
+            } else {
+                for (int i = y, max = y + height; i < max; i++) {
+                    if (!this.all(this.dataW, x, y, width)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // 線形が全て黒色かを調べる
+        private boolean all(long[][] datas, int a, int b, int size) {
+            int startIdx = a >> ADDRESS_BITS_PER_WORD;
+            int endIdx = (a + size - 1) >> ADDRESS_BITS_PER_WORD;
+
+            if (datas.length <= b)
+                return false;
+            long[] data = datas[b];
+            if (data.length <= endIdx)
+                return false;
+
+            long mask;
+            if (startIdx == endIdx) {
+                if (a == 0) {
+                    mask = (1L << size) - 1;
+                } else {
+                    mask = ((1L << a + size) - 1) ^ (1L << a) - 1;
+                }
+                return (data[startIdx] & mask) == mask;
+            } else {
+                for (int i = startIdx; i <= endIdx; i++) {
+                    if (i == startIdx && a != 0) {
+                        mask = -1 ^ (1L << a) - 1;
+                        if ((data[i] & mask) != mask)
+                            return false;
+                    } else if (i == endIdx) {
+                        mask = (1L << a + size) - 1;
+                        if ((data[i] & mask) != mask)
+                            return false;
+                    } else {
+                        if (data[i] != -1L)
+                            return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

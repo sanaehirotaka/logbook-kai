@@ -323,7 +323,7 @@ public class CaptureController extends WindowController {
             GraphicsConfiguration gc = this.currentGraphicsConfiguration();
             Robot robot = new Robot(gc.getDevice());
             BufferedImage image = robot.createScreenCapture(gc.getBounds());
-            Rectangle relative = ScreenCapture.detectGameScreen(image, 1200, 720);
+            Rectangle relative = ScreenCapture.detectGameScreen(image);
             Rectangle screenBounds = gc.getBounds();
             this.setBounds(robot, relative, screenBounds);
         } catch (Exception e) {
