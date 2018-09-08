@@ -181,6 +181,16 @@ public class ExpTable {
         EXP_TABLE.put(163, 6910000);
         EXP_TABLE.put(164, 7320000);
         EXP_TABLE.put(165, 7820000);
+        EXP_TABLE.put(166, 7920000);
+        EXP_TABLE.put(167, 8033000);
+        EXP_TABLE.put(168, 8172000);
+        EXP_TABLE.put(169, 8350000);
+        EXP_TABLE.put(170, 8580000);
+        EXP_TABLE.put(171, 8875000);
+        EXP_TABLE.put(172, 9248000);
+        EXP_TABLE.put(173, 9705000);
+        EXP_TABLE.put(174, 10266000);
+        EXP_TABLE.put(175, 10950000);
     }
 
     /**
