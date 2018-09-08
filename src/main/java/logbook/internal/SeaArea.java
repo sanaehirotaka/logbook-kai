@@ -38,10 +38,11 @@ public enum SeaArea {
     中部北海域ピーコック島沖("6-4", "中部北海域ピーコック島沖"),
 
     警戒部隊(null, "警戒部隊", -1, 1),
-    栗田艦隊(null, "栗田艦隊", -1, 2),
-    西村艦隊(null, "西村艦隊", -1, 3),
-    小沢艦隊(null, "小沢艦隊", -1, 4),
-    志摩艦隊(null, "志摩艦隊", -1, 5);
+    海峡派遣艦隊(null, "海峡派遣艦隊", -1, 2),
+    西方作戦部隊(null, "西方作戦部隊", -1, 3),
+    欧州特務艦隊(null, "欧州特務艦隊", -1, 4),
+    ForceH(null, "ForceH", -1, 5),
+    ライン演習部隊(null, "ライン演習部隊", -1, 6);
 
     /** 短い名前 */
     private String shortName;
@@ -122,13 +123,15 @@ public enum SeaArea {
         case 1:
             return SeaArea.警戒部隊;
         case 2:
-            return SeaArea.栗田艦隊;
+            return SeaArea.海峡派遣艦隊;
         case 3:
-            return SeaArea.西村艦隊;
+            return SeaArea.西方作戦部隊;
         case 4:
-            return SeaArea.小沢艦隊;
+            return SeaArea.欧州特務艦隊;
         case 5:
-            return SeaArea.志摩艦隊;
+            return SeaArea.ForceH;
+        case 6:
+            return SeaArea.ライン演習部隊;
         default:
             return null;
         }
