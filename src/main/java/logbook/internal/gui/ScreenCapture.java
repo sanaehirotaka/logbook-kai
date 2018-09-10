@@ -410,15 +410,19 @@ class ScreenCapture {
         private final static int ADDRESS_BITS_PER_WORD = 6;
 
         /** color */
-        private int color;
+        private final int color;
         /** width */
-        private int width;
+        private final int width;
         /** height */
-        private int height;
+        private final int height;
+        /** width word length */
+        private final int wwl;
+        /** height word length */
+        private final int hwl;
         // (width/64)×height
-        private long[][] dataW;
+        private long[] dataW;
         // (height/64)×width
-        private long[][] dataH;
+        private long[] dataH;
 
         /**
          * {@code image}で指定された画像と{@code color}で指定された色からBiImageを構築します
@@ -430,6 +434,8 @@ class ScreenCapture {
             this.color = color.getRGB() & 0xffffff; // truncate alpha
             this.width = image.getWidth();
             this.height = image.getHeight();
+            this.wwl = ((this.width - 1) >> ADDRESS_BITS_PER_WORD) + 1;
+            this.hwl = ((this.height - 1) >> ADDRESS_BITS_PER_WORD) + 1;
             WritableRaster raster;
             if (image.getType() == BufferedImage.TYPE_INT_RGB) {
                 raster = image.getRaster();
@@ -447,14 +453,14 @@ class ScreenCapture {
 
         // 初期化処理
         private void init(int[] data, int w, int h, int color) {
-            this.dataW = new long[h][((w - 1) >> ADDRESS_BITS_PER_WORD) + 1];
-            this.dataH = new long[w][((h - 1) >> ADDRESS_BITS_PER_WORD) + 1];
-            for (int y = 0; y < h; y++) {
-                for (int x = 0; x < w; x++) {
-                    int pixcel = data[x + (y * w)] & 0xffffff;
-                    if (this.test(color, pixcel)) {
-                        this.dataW[y][x >> ADDRESS_BITS_PER_WORD] |= (1L << x);
-                        this.dataH[x][y >> ADDRESS_BITS_PER_WORD] |= (1L << y);
+            this.dataW = new long[this.wwl * this.height];
+            this.dataH = new long[this.hwl * this.width];
+            for (int y = 0; y < this.height; y++) {
+                for (int x = 0; x < this.width; x++) {
+                    int pixcel = data[x + (y * this.width)] & 0xffffff;
+                    if (this.test(this.color, pixcel)) {
+                        this.dataW[(x >> ADDRESS_BITS_PER_WORD) + y * this.wwl] |= (1L << x);
+                        this.dataH[(y >> ADDRESS_BITS_PER_WORD) + x * this.hwl] |= (1L << y);
                     }
                 }
             }
@@ -486,9 +492,9 @@ class ScreenCapture {
 
             for (int y = 0; y < this.height; y++) {
                 for (int x = 0; x < this.width; x++) {
-                    data[x + (y * this.width)] = (this.dataW[y][x >> ADDRESS_BITS_PER_WORD] & (1L << x)) == 0
-                            ? background
-                            : foreground;
+                    data[x + y * this.width] = (this.dataW[(x >> ADDRESS_BITS_PER_WORD) + y * this.wwl] & (1L << x)) == 0
+                                    ? background
+                                    : foreground;
                 }
             }
             raster.setDataElements(0, 0, this.width, this.height, data);
@@ -503,8 +509,8 @@ class ScreenCapture {
          * @return x,yで指定された座標の色
          */
         public boolean get(int x, int y) {
-            int idx = x >> ADDRESS_BITS_PER_WORD;
-            return (this.dataW[y].length > idx) && (this.dataW[y][idx] & (1L << x)) != 0;
+            int idx = (x >> ADDRESS_BITS_PER_WORD) + y * this.wwl;
+            return (this.dataW.length > idx) && (this.dataW[idx] & (1L << x)) != 0;
         }
 
         /**
@@ -513,10 +519,22 @@ class ScreenCapture {
          * @param x X
          * @param y Y
          * @param width 調べる横幅
-         * @return 単色であればtrue
+         * @return 全て黒色であればtrue
          */
         public boolean allW(int x, int y, int width) {
-            return this.all(this.dataW, x, y, width);
+            return this.all(this.dataW, x, y, width, this.wwl);
+        }
+
+        /**
+         * x,yで指定された座標を原点としてx+width,yまで(を含まない)の線形に黒色が含まれるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @param width 調べる横幅
+         * @return 黒色が含まれる場合true
+         */
+        public boolean anyW(int x, int y, int width) {
+            return this.any(this.dataW, x, y, width, this.wwl);
         }
 
         /**
@@ -525,10 +543,22 @@ class ScreenCapture {
          * @param x X
          * @param y Y
          * @param height 調べる縦幅
-         * @return 単色であればtrue
+         * @return 全て黒色であればtrue
          */
         public boolean allH(int x, int y, int height) {
-            return this.all(this.dataH, y, x, height);
+            return this.all(this.dataH, y, x, height, this.hwl);
+        }
+
+        /**
+         * x,yで指定された座標を原点としてx,y+heightまで(を含まない)の線形に黒色が含まれるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @param height 調べる縦幅
+         * @return 黒色が含まれる場合true
+         */
+        public boolean anyH(int x, int y, int height) {
+            return this.all(this.dataH, y, x, height, this.hwl);
         }
 
         /**
@@ -538,20 +568,20 @@ class ScreenCapture {
          * @param y Y
          * @param width 調べる横幅
          * @param height 調べる縦幅
-         * @return 単色であればtrue
+         * @return 全て黒色であればtrue
          */
         public boolean all(int x, int y, int width, int height) {
             int wcost = (((x + width - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (x >> ADDRESS_BITS_PER_WORD)) * height;
             int hcost = (((y + height - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (y >> ADDRESS_BITS_PER_WORD)) * width;
             if (wcost > hcost) {
                 for (int i = x, max = x + width; i < max; i++) {
-                    if (!this.all(this.dataH, y, x, height)) {
+                    if (!this.all(this.dataH, y, i, height, this.hwl)) {
                         return false;
                     }
                 }
             } else {
                 for (int i = y, max = y + height; i < max; i++) {
-                    if (!this.all(this.dataW, x, y, width)) {
+                    if (!this.all(this.dataW, x, i, width, this.wwl)) {
                         return false;
                     }
                 }
@@ -559,14 +589,39 @@ class ScreenCapture {
             return true;
         }
 
-        // 線形が全て黒色かを調べる
-        private boolean all(long[][] datas, int a, int b, int size) {
-            int startIdx = a >> ADDRESS_BITS_PER_WORD;
-            int endIdx = (a + size - 1) >> ADDRESS_BITS_PER_WORD;
+        /**
+         * x,yで指定された座標を原点としてx+width,y+heightまで(を含まない)の矩形に黒色が含まれるかを調べます
+         *
+         * @param x X
+         * @param y Y
+         * @param width 調べる横幅
+         * @param height 調べる縦幅
+         * @return 黒色が含まれる場合true
+         */
+        public boolean any(int x, int y, int width, int height) {
+            int wcost = (((x + width - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (x >> ADDRESS_BITS_PER_WORD)) * height;
+            int hcost = (((y + height - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (y >> ADDRESS_BITS_PER_WORD)) * width;
+            if (wcost > hcost) {
+                for (int i = x, max = x + width; i < max; i++) {
+                    if (this.any(this.dataH, y, i, height, this.hwl)) {
+                        return true;
+                    }
+                }
+            } else {
+                for (int i = y, max = y + height; i < max; i++) {
+                    if (this.any(this.dataW, x, i, width, this.wwl)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-            if (datas.length <= b)
-                return false;
-            long[] data = datas[b];
+        // 線形が全て黒色かを調べる
+        private boolean all(long[] data, int a, int b, int size, int wl) {
+            int startIdx = (a >> ADDRESS_BITS_PER_WORD) + b * wl;
+            int endIdx = ((a + size - 1) >> ADDRESS_BITS_PER_WORD) + b * wl;
+
             if (data.length <= endIdx)
                 return false;
 
@@ -595,6 +650,41 @@ class ScreenCapture {
                 }
             }
             return true;
+        }
+
+        // 線形に黒色が含まれるかを調べる
+        private boolean any(long[] data, int a, int b, int size, int wl) {
+            int startIdx = (a >> ADDRESS_BITS_PER_WORD) + b * wl;
+            int endIdx = ((a + size - 1) >> ADDRESS_BITS_PER_WORD) + b * wl;
+
+            if (data.length <= endIdx)
+                return false;
+
+            long mask;
+            if (startIdx == endIdx) {
+                if (a == 0) {
+                    mask = (1L << size) - 1;
+                } else {
+                    mask = ((1L << a + size) - 1) ^ (1L << a) - 1;
+                }
+                return (data[startIdx] & mask) != 0;
+            } else {
+                for (int i = startIdx; i <= endIdx; i++) {
+                    if (i == startIdx && a != 0) {
+                        mask = -1 ^ (1L << a) - 1;
+                        if ((data[i] & mask) != 0)
+                            return true;
+                    } else if (i == endIdx) {
+                        mask = (1L << a + size) - 1;
+                        if ((data[i] & mask) != 0)
+                            return true;
+                    } else {
+                        if (data[i] != 0)
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
