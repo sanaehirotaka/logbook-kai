@@ -96,8 +96,8 @@ public class BiImage {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
                 data[x + y * this.width] = (this.dataW[(x >> ADDRESS_BITS_PER_WORD) + y * this.wwl] & (1L << x)) == 0
-                                ? background
-                                : foreground;
+                        ? background
+                        : foreground;
             }
         }
         raster.setDataElements(0, 0, this.width, this.height, data);
@@ -161,7 +161,7 @@ public class BiImage {
      * @return 黒色が含まれる場合true
      */
     public boolean anyH(int x, int y, int height) {
-        return this.all(this.dataH, y, x, height, this.hwl);
+        return this.any(this.dataH, y, x, height, this.hwl);
     }
 
     /**

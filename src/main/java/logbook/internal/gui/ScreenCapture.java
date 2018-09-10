@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -47,18 +48,9 @@ class ScreenCapture {
     private static final float QUALITY = 0.9f;
 
     /** ゲーム画面サイズ */
-    private static Dimension[] sizes = {
-            new Dimension(600, 360), //50%
-            new Dimension(720, 432), //60%
-            new Dimension(800, 480), //67%
-            new Dimension(837, 502), //70%
-            new Dimension(840, 504), //70%
-            new Dimension(900, 540), //75%
-            new Dimension(960, 576), //80%
-            new Dimension(1074, 645), //90%
-            new Dimension(1080, 648), //90%
-            new Dimension(1200, 720) //100%
-    };
+    private static final Dimension[] sizes = IntStream.rangeClosed(600, 1500)
+            .mapToObj(w -> new Dimension(w, (int) (w / 1200f * 720)))
+            .toArray(Dimension[]::new);
 
     @Setter
     @Getter
@@ -231,12 +223,12 @@ class ScreenCapture {
                     if (!biImage.allH(x, y, size.height + 2))
                         break;
                     if (!biImage.allW(x, y + size.height + 1, size.width + 2))
-                        continue;
+                        break;
                     if (!biImage.allH(x + size.width + 1, y, size.height + 2))
+                        break;
+                    if (!biImage.anyH(x + 1, y + 1, size.height))
                         continue;
-                    if (biImage.allH(x + 1, y + 1, size.height))
-                        continue;
-                    if (biImage.allH(x + size.width, y + 1, size.height))
+                    if (!biImage.anyH(x + size.width, y + 1, size.height))
                         continue;
                     return new Rectangle(x + 1, y + 1, size.width, size.height);
                 }
