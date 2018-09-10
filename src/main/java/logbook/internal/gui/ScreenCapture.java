@@ -214,21 +214,30 @@ class ScreenCapture {
                 return (a & 0xf0f0f0) == (b & 0xf0f0f0);
             }
         };
-        for (int y = 0, height = image.getHeight() - sizes[0].height; y < height; y++) {
-            for (int x = 0, width = image.getWidth() - sizes[0].width; x < width; x++) {
-                for (int i = 0; i < sizes.length; i++) {
+        int height = image.getHeight() - sizes[0].height;
+        int width = image.getWidth() - sizes[0].width;
+        int sizelen = sizes.length;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                for (int i = 0; i < sizelen; i++) {
                     Dimension size = sizes[i];
+                    // x,yから横方向(width+2)が全て白かテスト(「全てが白」ではない場合break) (上辺)
                     if (!biImage.allW(x, y, size.width + 2))
                         break;
+                    // x,yから縦方向(height+2)が全て白かテスト(「全てが白」ではない場合break) (左辺)
                     if (!biImage.allH(x, y, size.height + 2))
                         break;
+                    // x,y+height+1から横方向(width+2)が全て白かテスト(「全てが白」ではない場合別の矩形をテストする) (下辺)
                     if (!biImage.allW(x, y + size.height + 1, size.width + 2))
-                        break;
-                    if (!biImage.allH(x + size.width + 1, y, size.height + 2))
-                        break;
-                    if (!biImage.anyH(x + 1, y + 1, size.height))
                         continue;
-                    if (!biImage.anyH(x + size.width, y + 1, size.height))
+                    // x+width+1,yから縦方向(height+2)が全て白かテスト(「全てが白」ではない場合別の矩形をテストする) (右辺)
+                    if (!biImage.allH(x + size.width + 1, y, size.height + 2))
+                        continue;
+                    // x+1,y+1から縦方向(height)が全て白かテスト(「全てが白」の場合別の矩形をテストする)
+                    if (biImage.allH(x + 1, y + 1, size.height))
+                        continue;
+                    // x+width,y+1から縦方向(height)が全て白かテスト(「全てが白」の場合別の矩形をテストする)
+                    if (biImage.allH(x + size.width, y + 1, size.height))
                         continue;
                     return new Rectangle(x + 1, y + 1, size.width, size.height);
                 }
