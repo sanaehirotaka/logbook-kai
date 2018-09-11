@@ -219,25 +219,39 @@ class ScreenCapture {
         int sizelen = sizes.length;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
+                // 最初の1パターンをテスト
+                // x,yから縦方向(height+2)が全て白かテスト(「全てが白」ではない場合スキップ)
+                if (!biImage.allH(x, y, sizes[0].height + 2))
+                    continue;
+                // x+1,y+1から縦方向(height)が全て白かテスト(「全てが白」の場合スキップ)
+                if (biImage.allH(x + 1, y + 1, sizes[0].height))
+                    continue;
+
                 for (int i = 0; i < sizelen; i++) {
                     Dimension size = sizes[i];
-                    // x,yから横方向(width+2)が全て白かテスト(「全てが白」ではない場合break) (上辺)
-                    if (!biImage.allW(x, y, size.width + 2))
-                        break;
                     // x,yから縦方向(height+2)が全て白かテスト(「全てが白」ではない場合break) (左辺)
                     if (!biImage.allH(x, y, size.height + 2))
                         break;
-                    // x,y+height+1から横方向(width+2)が全て白かテスト(「全てが白」ではない場合別の矩形をテストする) (下辺)
-                    if (!biImage.allW(x, y + size.height + 1, size.width + 2))
-                        continue;
+                    // x,yから横方向(width+2)が全て白かテスト(「全てが白」ではない場合break) (上辺)
+                    if (!biImage.allW(x, y, size.width + 2))
+                        break;
                     // x+width+1,yから縦方向(height+2)が全て白かテスト(「全てが白」ではない場合別の矩形をテストする) (右辺)
                     if (!biImage.allH(x + size.width + 1, y, size.height + 2))
+                        continue;
+                    // x,y+height+1から横方向(width+2)が全て白かテスト(「全てが白」ではない場合別の矩形をテストする) (下辺)
+                    if (!biImage.allW(x, y + size.height + 1, size.width + 2))
                         continue;
                     // x+1,y+1から縦方向(height)が全て白かテスト(「全てが白」の場合別の矩形をテストする)
                     if (biImage.allH(x + 1, y + 1, size.height))
                         continue;
                     // x+width,y+1から縦方向(height)が全て白かテスト(「全てが白」の場合別の矩形をテストする)
                     if (biImage.allH(x + size.width, y + 1, size.height))
+                        continue;
+                    // x+1,y+1から縦方向(height)の白の数を数える(白の数が50%より多ければ別の矩形をテストする)
+                    if (biImage.countH(x + 1, y + 1, size.height) > size.height / 2)
+                        continue;
+                    // x+width,y+1から縦方向(height)の白の数を数える(白の数が50%より多ければ別の矩形をテストする)
+                    if (biImage.countH(x + size.width, y + 1, size.height) > size.height / 2)
                         continue;
                     return new Rectangle(x + 1, y + 1, size.width, size.height);
                 }

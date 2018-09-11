@@ -141,6 +141,18 @@ public class BiImage {
     }
 
     /**
+     * x,yで指定された座標を原点としてx+width,yまで(を含まない)の線形の黒色のピクセル数を数えます
+     *
+     * @param x X
+     * @param y Y
+     * @param width 調べる横幅
+     * @return 線形の黒色のピクセル数
+     */
+    public int countW(int x, int y, int width) {
+        return this.count(this.dataW, x, y, width, this.wwl);
+    }
+
+    /**
      * x,yで指定された座標を原点としてx,y+heightまで(を含まない)の線形が全て黒色であるかを調べます
      *
      * @param x X
@@ -162,6 +174,18 @@ public class BiImage {
      */
     public boolean anyH(int x, int y, int height) {
         return this.any(this.dataH, y, x, height, this.hwl);
+    }
+
+    /**
+     * x,yで指定された座標を原点としてx,y+heightまで(を含まない)の線形の黒色のピクセル数を数えます
+     *
+     * @param x X
+     * @param y Y
+     * @param height 調べる縦幅
+     * @return 線形の黒色のピクセル数
+     */
+    public int countH(int x, int y, int height) {
+        return this.count(this.dataH, y, x, height, this.hwl);
     }
 
     /**
@@ -218,6 +242,31 @@ public class BiImage {
             }
         }
         return false;
+    }
+
+    /**
+     * x,yで指定された座標を原点としてx+width,y+heightまで(を含まない)の矩形の黒色のピクセル数を数えます
+     *
+     * @param x X
+     * @param y Y
+     * @param width 調べる横幅
+     * @param height 調べる縦幅
+     * @return 矩形の黒色のピクセル数
+     */
+    public int count(int x, int y, int width, int height) {
+        int wcost = (((x + width - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (x >> ADDRESS_BITS_PER_WORD)) * height;
+        int hcost = (((y + height - 1) >> ADDRESS_BITS_PER_WORD) + 1 - (y >> ADDRESS_BITS_PER_WORD)) * width;
+        int count = 0;
+        if (wcost > hcost) {
+            for (int i = x, max = x + width; i < max; i++) {
+                count += this.count(this.dataH, y, i, height, this.hwl);
+            }
+        } else {
+            for (int i = y, max = y + height; i < max; i++) {
+                count += this.count(this.dataW, x, i, width, this.wwl);
+            }
+        }
+        return count;
     }
 
     // 線形が全て黒色かを調べる
@@ -288,5 +337,38 @@ public class BiImage {
             }
         }
         return false;
+    }
+
+    // 線形の黒色のピクセル数を調べる
+    private int count(long[] data, int a, int b, int size, int wl) {
+        int count = 0;
+        int startIdx = (a >> ADDRESS_BITS_PER_WORD) + b * wl;
+        int endIdx = ((a + size - 1) >> ADDRESS_BITS_PER_WORD) + b * wl;
+
+        if (data.length <= endIdx)
+            return 0;
+
+        long mask;
+        if (startIdx == endIdx) {
+            if (a == 0) {
+                mask = (1L << size) - 1;
+            } else {
+                mask = ((1L << a + size) - 1) ^ (1L << a) - 1;
+            }
+            return Long.bitCount(data[startIdx] & mask);
+        } else {
+            for (int i = startIdx; i <= endIdx; i++) {
+                if (i == startIdx && a != 0) {
+                    mask = -1 ^ (1L << a) - 1;
+                    count += Long.bitCount(data[i] & mask);
+                } else if (i == endIdx) {
+                    mask = (1L << a + size) - 1;
+                    count += Long.bitCount(data[i] & mask);
+                } else {
+                    count += Long.bitCount(data[i]);
+                }
+            }
+        }
+        return count;
     }
 }
