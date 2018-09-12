@@ -1,7 +1,6 @@
 package logbook.internal;
 
 import java.beans.ExceptionListener;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,18 +32,12 @@ public final class Launcher {
         try {
             launcher.initPlugin(args);
             launcher.initLocal(args);
+            Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitLocalProxy));
+            Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitLocalThreadPool));
+            Runtime.getRuntime().addShutdownHook(new Thread(launcher::storeConfig));
+            Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitPlugin));
         } catch (Exception | Error e) {
             LoggerHolder.get().warn("例外が発生しました", e); //$NON-NLS-1$
-        } finally {
-            try {
-                try {
-                    launcher.exitLocal();
-                } finally {
-                    launcher.exitPlugin();
-                }
-            } catch (Exception | Error e) {
-                LoggerHolder.get().warn("例外が発生しました", e); //$NON-NLS-1$
-            }
         }
     }
 
@@ -85,29 +78,43 @@ public final class Launcher {
     }
 
     /**
-     * アプリケーションの終了処理
+     * プロキシサーバースレッドの終了処理
      */
-    void exitLocal() {
+    private void exitLocalProxy() {
         try {
             ProxyHolder.getInstance().interrupt();
-        } finally {
-            try {
-                Config.getDefault().store();
-            } finally {
-                ScheduledExecutorService executor = ThreadManager.getExecutorService();
-                executor.shutdownNow();
-            }
+        } catch (Exception e) {
+            LoggerHolder.get().warn("プロキシサーバースレッドの終了処理中に例外が発生", e); //$NON-NLS-1$
         }
     }
 
     /**
-     * プラグインの初期化処理
+     * スレッドプールの終了処理
      */
-    void exitPlugin() {
+    private void exitLocalThreadPool() {
+        ScheduledExecutorService executor = ThreadManager.getExecutorService();
+        executor.shutdownNow();
+    }
+
+    /**
+     * アプリケーション設定ファイルの保存処理
+     */
+    private void storeConfig() {
+        try {
+            Config.getDefault().store();
+        } catch (Exception e) {
+            LoggerHolder.get().warn("アプリケーション設定ファイルの保存処理中に例外が発生", e); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * プラグインの終了処理
+     */
+    private void exitPlugin() {
         try {
             PluginContainer container = PluginContainer.getInstance();
             container.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             LoggerHolder.get().warn("プラグインのクローズ中に例外が発生", e); //$NON-NLS-1$
         }
     }

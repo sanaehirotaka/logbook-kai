@@ -69,7 +69,7 @@ public final class Config {
     /**
      * 読み込まれたすべてのインスタンスをファイルに書き込みます
      */
-    public void store() {
+    public synchronized void store() {
         this.map.entrySet()
                 .forEach(this::store);
     }
@@ -80,18 +80,26 @@ public final class Config {
 
     private <T> T read(Class<T> clazz) {
         T instance = null;
-        Path filepath;
-
-        // try read from JSON
-        filepath = this.jsonPath(clazz);
         try {
-            if (!Files.isReadable(filepath) || (Files.size(filepath) <= 0)) {
+            tryRead: {
+                Path filepath = this.jsonPath(clazz);
+                // 通常ファイル読み込み
+                if (Files.isReadable(filepath) && (Files.size(filepath) > 0)) {
+                    try (Reader reader = Files.newBufferedReader(filepath)) {
+                        instance = this.mapper.readValue(reader, clazz);
+                        break tryRead;
+                    } catch (Exception e) {
+                        instance = null;
+                        LoggerHolder.get().warn("アプリケーションの設定を読み込み中に例外が発生", e); //$NON-NLS-1$
+                    }
+                }
                 // ファイルが読み込めないまたはサイズがゼロの場合バックアップファイルを読み込む
                 filepath = this.backupPath(filepath);
-            }
-            if (Files.isReadable(filepath)) {
-                try (Reader reader = Files.newBufferedReader(filepath)) {
-                    instance = this.mapper.readValue(reader, clazz);
+                if (Files.isReadable(filepath) && (Files.size(filepath) > 0)) {
+                    try (Reader reader = Files.newBufferedReader(filepath)) {
+                        instance = this.mapper.readValue(reader, clazz);
+                        break tryRead;
+                    }
                 }
             }
         } catch (Exception e) {
