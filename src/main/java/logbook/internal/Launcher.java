@@ -30,12 +30,17 @@ public final class Launcher {
     public static void main(String[] args) {
         Launcher launcher = new Launcher();
         try {
-            launcher.initPlugin(args);
-            launcher.initLocal(args);
-            Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitLocalProxy));
-            Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitLocalThreadPool));
-            Runtime.getRuntime().addShutdownHook(new Thread(launcher::storeConfig));
-            Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitPlugin));
+            try {
+                launcher.initPlugin(args);
+                launcher.initLocal(args);
+                Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitLocalProxy));
+                Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitLocalThreadPool));
+                Runtime.getRuntime().addShutdownHook(new Thread(launcher::storeConfig));
+                Runtime.getRuntime().addShutdownHook(new Thread(launcher::exitPlugin));
+            } finally {
+                launcher.exitLocalProxy();
+                launcher.exitLocalThreadPool();
+            }
         } catch (Exception | Error e) {
             LoggerHolder.get().warn("例外が発生しました", e); //$NON-NLS-1$
         }
