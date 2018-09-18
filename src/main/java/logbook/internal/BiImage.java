@@ -10,7 +10,8 @@ import java.awt.image.WritableRaster;
  */
 public class BiImage {
 
-    private final static int ADDRESS_BITS_PER_WORD = 6;
+    private static final int ADDRESS_BITS_PER_WORD = 6;
+    private static final long WORD_MASK = 0xffffffffffffffffL;
 
     /** color */
     private final int color;
@@ -273,33 +274,22 @@ public class BiImage {
     private boolean all(long[] data, int a, int b, int size, int wl) {
         int startIdx = (a >> ADDRESS_BITS_PER_WORD) + b * wl;
         int endIdx = ((a + size - 1) >> ADDRESS_BITS_PER_WORD) + b * wl;
-
+        long firstWordMask = WORD_MASK << a;
+        long lastWordMask = WORD_MASK >>> -(a + size);
         if (data.length <= endIdx)
             return false;
 
-        long mask;
         if (startIdx == endIdx) {
-            if (a == 0) {
-                mask = (1L << size) - 1;
-            } else {
-                mask = ((1L << a + size) - 1) ^ (1L << a) - 1;
-            }
-            return (data[startIdx] & mask) == mask;
+            long wordMask = (firstWordMask & lastWordMask);
+            return (data[startIdx] & wordMask) == wordMask;
         } else {
-            for (int i = startIdx; i <= endIdx; i++) {
-                if (i == startIdx && a != 0) {
-                    mask = -1 ^ (1L << a) - 1;
-                    if ((data[i] & mask) != mask)
-                        return false;
-                } else if (i == endIdx) {
-                    mask = (1L << a + size) - 1;
-                    if ((data[i] & mask) != mask)
-                        return false;
-                } else {
-                    if (data[i] != -1L)
-                        return false;
-                }
-            }
+            if ((data[startIdx] & firstWordMask) != firstWordMask)
+                return false;
+            for (int i = startIdx + 1; i < endIdx; i++)
+                if (data[i] != -1L)
+                    return false;
+            if ((data[endIdx] & lastWordMask) != lastWordMask)
+                return false;
         }
         return true;
     }
@@ -308,33 +298,22 @@ public class BiImage {
     private boolean any(long[] data, int a, int b, int size, int wl) {
         int startIdx = (a >> ADDRESS_BITS_PER_WORD) + b * wl;
         int endIdx = ((a + size - 1) >> ADDRESS_BITS_PER_WORD) + b * wl;
+        long firstWordMask = WORD_MASK << a;
+        long lastWordMask = WORD_MASK >>> -(a + size);
 
         if (data.length <= endIdx)
             return false;
 
-        long mask;
         if (startIdx == endIdx) {
-            if (a == 0) {
-                mask = (1L << size) - 1;
-            } else {
-                mask = ((1L << a + size) - 1) ^ (1L << a) - 1;
-            }
-            return (data[startIdx] & mask) != 0;
+            return (data[startIdx] & (firstWordMask & lastWordMask)) != 0;
         } else {
-            for (int i = startIdx; i <= endIdx; i++) {
-                if (i == startIdx && a != 0) {
-                    mask = -1 ^ (1L << a) - 1;
-                    if ((data[i] & mask) != 0)
-                        return true;
-                } else if (i == endIdx) {
-                    mask = (1L << a + size) - 1;
-                    if ((data[i] & mask) != 0)
-                        return true;
-                } else {
-                    if (data[i] != 0)
-                        return true;
-                }
-            }
+            if ((data[startIdx] & firstWordMask) != 0)
+                return true;
+            for (int i = startIdx + 1; i < endIdx; i++)
+                if (data[i] != 0)
+                    return true;
+            if ((data[endIdx] & lastWordMask) != 0)
+                return true;
         }
         return false;
     }
@@ -344,30 +323,19 @@ public class BiImage {
         int count = 0;
         int startIdx = (a >> ADDRESS_BITS_PER_WORD) + b * wl;
         int endIdx = ((a + size - 1) >> ADDRESS_BITS_PER_WORD) + b * wl;
+        long firstWordMask = WORD_MASK << a;
+        long lastWordMask = WORD_MASK >>> -(a + size);
 
         if (data.length <= endIdx)
             return 0;
 
-        long mask;
         if (startIdx == endIdx) {
-            if (a == 0) {
-                mask = (1L << size) - 1;
-            } else {
-                mask = ((1L << a + size) - 1) ^ (1L << a) - 1;
-            }
-            return Long.bitCount(data[startIdx] & mask);
+            return Long.bitCount(data[startIdx] & (firstWordMask & lastWordMask));
         } else {
-            for (int i = startIdx; i <= endIdx; i++) {
-                if (i == startIdx && a != 0) {
-                    mask = -1 ^ (1L << a) - 1;
-                    count += Long.bitCount(data[i] & mask);
-                } else if (i == endIdx) {
-                    mask = (1L << a + size) - 1;
-                    count += Long.bitCount(data[i] & mask);
-                } else {
-                    count += Long.bitCount(data[i]);
-                }
-            }
+            count += Long.bitCount(data[startIdx] & firstWordMask);
+            for (int i = startIdx + 1; i < endIdx; i++)
+                count += Long.bitCount(data[i]);
+            count += Long.bitCount(data[endIdx] & lastWordMask);
         }
         return count;
     }
