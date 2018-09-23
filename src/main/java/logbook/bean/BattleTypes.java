@@ -1276,7 +1276,8 @@ public class BattleTypes {
         主砲電探CI,
         主砲徹甲弾CI,
         主砲主砲CI,
-        戦爆連合CI;
+        戦爆連合CI,
+        NelsonTouch;
 
         public static SortieAtType toSortieAtType(int i) {
             switch (i) {
@@ -1296,6 +1297,8 @@ public class BattleTypes {
                 return 主砲主砲CI;
             case 7:
                 return 戦爆連合CI;
+            case 100:
+                return NelsonTouch;
             default:
                 return 通常攻撃;
             }
@@ -1321,7 +1324,10 @@ public class BattleTypes {
         魚雷魚雷CI,
         主砲副砲CI,
         主砲主砲CI,
-        戦爆連合CI;
+        夜襲CI,
+        主砲魚雷電探CI,
+        魚雷見張員電探CI,
+        NelsonTouch;
 
         public static MidnightSpList toMidnightSpList(int i) {
             switch (i) {
@@ -1338,7 +1344,13 @@ public class BattleTypes {
             case 5:
                 return 主砲主砲CI;
             case 6:
-                return 戦爆連合CI;
+                return 夜襲CI;
+            case 7:
+                return 主砲魚雷電探CI;
+            case 8:
+                return 魚雷見張員電探CI;
+            case 100:
+                return NelsonTouch;
             default:
                 return 通常攻撃;
             }

@@ -2,8 +2,10 @@ package logbook.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -550,8 +552,6 @@ public class PhaseState {
 
         for (int i = 0, s = hougeki.getDamage().size(); i < s; i++) {
             int index = i;
-            // 防御側インデックス
-            int df = hougeki.getDfList().get(i).get(0);
             // 攻撃側インデックス
             int at = hougeki.getAtList().get(i);
             // 攻撃種別
@@ -567,51 +567,62 @@ public class PhaseState {
                         .map(SortieAtType::toSortieAtType)
                         .orElse(SortieAtType.toSortieAtType(0));
             }
-            // ダメージ
-            int damage = hougeki.getDamage().get(i)
-                    .stream()
-                    .mapToInt(Double::intValue)
-                    .filter(d -> d > 0)
-                    .sum();
             // 攻撃側が味方の場合true
             boolean atkfriend = hougeki.getAtEflag().get(i) == 0;
-            Chara attacker = null;
-            Chara defender = null;
 
-            if (atkfriend) {
-                if (isFriendlyBattle) {
-                    attacker = this.afterFriendly.get(at);
-                } else {
-                    if (Math.max(this.afterFriend.size(), 6) > at) {
-                        attacker = this.afterFriend.get(at);
-                    } else {
-                        attacker = this.afterFriendCombined.get(at - 6);
-                    }
-                }
-                if (Math.max(this.afterEnemy.size(), 6) > df) {
-                    defender = this.afterEnemy.get(df);
-                } else {
-                    defender = this.afterEnemyCombined.get(df - 6);
-                }
-            } else {
-                if (Math.max(this.afterEnemy.size(), 6) > at) {
-                    attacker = this.afterEnemy.get(at);
-                } else {
-                    attacker = this.afterEnemyCombined.get(at - 6);
-                }
-                if (isFriendlyBattle) {
-                    defender = this.afterFriendly.get(df);
-                } else {
-                    if (Math.max(this.afterFriend.size(), 6) > df) {
-                        defender = this.afterFriend.get(df);
-                    } else {
-                        defender = this.afterFriendCombined.get(df - 6);
-                    }
+            Map<Integer, Integer> dfMap = new LinkedHashMap<>();
+            List<Integer> dfList = hougeki.getDfList().get(i);
+            List<Double> damageList = hougeki.getDamage().get(i);
+            for (int j = 0; j < dfList.size(); j++) {
+                if (dfList.get(j) >= 0) {
+                    int damage = Math.max(damageList.get(j).intValue(), 0);
+                    dfMap.compute(dfList.get(j), (k, v) -> v != null ? v + damage : damage);
                 }
             }
 
-            this.damage(defender, damage);
-            this.addDetail(attacker, defender, damage, atType);
+            for (Entry<Integer, Integer> dfDamage : dfMap.entrySet()) {
+                // 防御側インデックス
+                int df = dfDamage.getKey();
+                // ダメージ
+                int damage = dfDamage.getValue();
+                Chara attacker = null;
+                Chara defender = null;
+
+                if (atkfriend) {
+                    if (isFriendlyBattle) {
+                        attacker = this.afterFriendly.get(at);
+                    } else {
+                        if (Math.max(this.afterFriend.size(), 6) > at) {
+                            attacker = this.afterFriend.get(at);
+                        } else {
+                            attacker = this.afterFriendCombined.get(at - 6);
+                        }
+                    }
+                    if (Math.max(this.afterEnemy.size(), 6) > df) {
+                        defender = this.afterEnemy.get(df);
+                    } else {
+                        defender = this.afterEnemyCombined.get(df - 6);
+                    }
+                } else {
+                    if (Math.max(this.afterEnemy.size(), 6) > at) {
+                        attacker = this.afterEnemy.get(at);
+                    } else {
+                        attacker = this.afterEnemyCombined.get(at - 6);
+                    }
+                    if (isFriendlyBattle) {
+                        defender = this.afterFriendly.get(df);
+                    } else {
+                        if (Math.max(this.afterFriend.size(), 6) > df) {
+                            defender = this.afterFriend.get(df);
+                        } else {
+                            defender = this.afterFriendCombined.get(df - 6);
+                        }
+                    }
+                }
+
+                this.damage(defender, damage);
+                this.addDetail(attacker, defender, damage, atType);
+            }
         }
     }
 
