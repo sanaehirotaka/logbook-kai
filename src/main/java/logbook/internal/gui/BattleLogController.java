@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -45,12 +44,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import logbook.bean.BattleLog;
-import logbook.bean.BattleTypes.CombinedType;
-import logbook.bean.BattleTypes.IFormation;
-import logbook.bean.BattleTypes.IMidnightBattle;
-import logbook.bean.MapStartNext;
-import logbook.bean.Ship;
-import logbook.bean.SlotItem;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.IUnit;
 import logbook.internal.BattleLogs.SimpleBattleLog;
@@ -239,18 +232,9 @@ public class BattleLogController extends WindowController {
                         BattleLog log = BattleLogs.read(d.getDate());
                         if (log != null) {
                             try {
-                                MapStartNext last = log.getNext().get(log.getNext().size() - 1);
-                                CombinedType combinedType = log.getCombinedType();
-                                Map<Integer, List<Ship>> deckMap = log.getDeckMap();
-                                Map<Integer, SlotItem> itemMap = log.getItemMap();
-                                IFormation battle = log.getBattle();
-                                IMidnightBattle midnight = log.getMidnight();
-                                Set<Integer> escape = log.getEscape();
-
                                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                                         "戦闘ログ", c -> {
-                                            ((BattleDetail) c).setData(last, combinedType, deckMap, escape, itemMap,
-                                                    battle, midnight);
+                                            ((BattleDetail) c).setData(log);
                                         }, null);
                             } catch (Exception ex) {
                                 LoggerHolder.get().error("詳細の表示に失敗しました", ex);

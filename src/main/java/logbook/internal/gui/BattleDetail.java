@@ -148,7 +148,6 @@ public class BattleDetail extends WindowController {
         this.timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.millis(1000),
                 e -> this.setData(supplier.get())));
         this.timeline.play();
-        this.setData(supplier.get());
     }
 
     /**

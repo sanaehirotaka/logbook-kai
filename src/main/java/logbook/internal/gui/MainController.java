@@ -1,5 +1,6 @@
 package logbook.internal.gui;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -46,9 +48,13 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
+import logbook.internal.BattleLogs;
+import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.CheckUpdate;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
+import logbook.internal.log.BattleResultLogFormat;
+import logbook.internal.log.LogWriter;
 import logbook.internal.proxy.ProxyHolder;
 import logbook.plugin.PluginServices;
 import logbook.plugin.gui.MainCalcMenu;
@@ -183,11 +189,24 @@ public class MainController extends WindowController {
         try {
             BattleLog log = AppCondition.get()
                     .getBattleResult();
-
+            if (log == null) {
+                Path dir = Paths.get(AppConfig.get().getReportPath());
+                Path path = dir.resolve(new BattleResultLogFormat().fileName());
+                if (Files.exists(path)) {
+                    try (Stream<String> lines = Files.lines(path, LogWriter.DEFAULT_CHARSET)) {
+                        String line = lines.skip(1).reduce((first, second) -> second).orElse(null);
+                        log = BattleLogs.read(BattleLogDetail.toBattleLogDetail(new SimpleBattleLog(line)).getDate());
+                    } catch (Exception ex) {
+                        log = null;
+                    }
+                }
+            }
             if (log != null && log.getBattle() != null) {
+                BattleLog sendlog = log;
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
                         "現在の戦闘", c -> {
                             ((BattleDetail) c).setInterval(() -> AppCondition.get().getBattleResult());
+                            ((BattleDetail) c).setData(sendlog);
                         }, null);
             } else {
                 Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.getWindow());
