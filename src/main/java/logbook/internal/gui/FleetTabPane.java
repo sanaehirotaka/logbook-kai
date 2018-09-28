@@ -25,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import logbook.bean.AppCondition;
 import logbook.bean.DeckPort;
+import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
@@ -51,6 +52,9 @@ public class FleetTabPane extends ScrollPane {
 
     /** 艦娘達のハッシュ・コード */
     private int shipsHashCode;
+
+    /** 入渠中の艦娘達のハッシュ・コード */
+    private int ndocksHashCode;
 
     /** Tabのクラス名(タブ色を変えるのに使用) */
     private String tabCssClass;
@@ -182,11 +186,15 @@ public class FleetTabPane extends ScrollPane {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        if (this.portHashCode != this.port.hashCode() || this.shipsHashCode != this.shipList.hashCode()) {
+        int ndocksHashCode = NdockCollection.get().getNdockSet().hashCode();
+
+        if (this.portHashCode != this.port.hashCode() || this.shipsHashCode != this.shipList.hashCode()
+                || this.ndocksHashCode != ndocksHashCode) {
             this.updateShips();
         }
         this.portHashCode = this.port.hashCode();
         this.shipsHashCode = this.shipList.hashCode();
+        this.ndocksHashCode = ndocksHashCode;
     }
 
     /**
