@@ -65,6 +65,8 @@ public class Ships {
 
     static {
         // 索敵係数
+        // 小口径主砲：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.小口径主砲, 0.6D);
         // 艦上戦闘機：0.6
         VIEW_COEFFICIENT.put(SlotItemType.艦上戦闘機, 0.6D);
         // 艦上爆撃機：0.6
