@@ -1,7 +1,6 @@
 package logbook.api;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import javax.json.JsonObject;
@@ -22,14 +21,12 @@ public class ApiReqKousyouDestroyship implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        List<String> apiShipId = req.getParameterMap()
-                .get("api_ship_id");
-        List<String> apiSlotDestFlag = req.getParameterMap()
-                .get("api_slot_dest_flag");
+        String apiShipId = req.getParameter("api_ship_id");
+        String apiSlotDestFlag = req.getParameter("api_slot_dest_flag");
 
         if (apiShipId != null) {
-            boolean slotDest = "1".equals(apiSlotDestFlag.stream().findFirst().get());
-            Arrays.stream(apiShipId.get(0).split(","))
+            boolean slotDest = "1".equals(apiSlotDestFlag);
+            Arrays.stream(apiShipId.split(","))
                     .map(Integer::parseInt)
                     .forEach(id -> this.destroyShip(id, slotDest));
         }

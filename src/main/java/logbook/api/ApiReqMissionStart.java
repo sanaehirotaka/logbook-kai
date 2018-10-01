@@ -36,9 +36,8 @@ public class ApiReqMissionStart implements APIListenerSpi {
 
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
-            Map<String, List<String>> param = req.getParameterMap();
-            Integer deckId = Integer.valueOf(param.get("api_deck_id").get(0));
-            Integer missionId = Integer.valueOf(param.get("api_mission_id").get(0));
+            Integer deckId = Integer.valueOf(req.getParameter("api_deck_id"));
+            Integer missionId = Integer.valueOf(req.getParameter("api_mission_id"));
 
             try {
                 InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + missionId + ".json");

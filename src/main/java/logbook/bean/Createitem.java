@@ -2,7 +2,6 @@ package logbook.bean;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import javax.json.JsonObject;
 
@@ -59,13 +58,11 @@ public class Createitem implements Serializable {
      * @return {@link Createitem}
      */
     public static Createitem toCreateitem(JsonObject json, RequestMetaData req) {
-        Map<String, List<String>> param = req.getParameterMap();
-
         Createitem bean = new Createitem();
-        bean.setItem1(Integer.valueOf(param.get("api_item1").get(0)));
-        bean.setItem2(Integer.valueOf(param.get("api_item2").get(0)));
-        bean.setItem3(Integer.valueOf(param.get("api_item3").get(0)));
-        bean.setItem4(Integer.valueOf(param.get("api_item4").get(0)));
+        bean.setItem1(Integer.valueOf(req.getParameter("api_item1", "0")));
+        bean.setItem2(Integer.valueOf(req.getParameter("api_item2", "0")));
+        bean.setItem3(Integer.valueOf(req.getParameter("api_item3", "0")));
+        bean.setItem4(Integer.valueOf(req.getParameter("api_item4", "0")));
 
         JsonHelper.bind(json)
                 .setBoolean("api_create_flag", bean::setCreateFlag)

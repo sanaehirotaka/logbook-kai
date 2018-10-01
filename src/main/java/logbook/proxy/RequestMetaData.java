@@ -40,6 +40,30 @@ public interface RequestMetaData {
     Map<String, List<String>> getParameterMap();
 
     /**
+     * このリクエストから取得できるパラメータを返します
+     *
+     * @param key パラメータのキー
+     * @return パラメータのキーに対応する値、存在しない場合null
+     */
+    default String getParameter(String key) {
+        return this.getParameter(key, null);
+    }
+
+    /**
+     * このリクエストから取得できるパラメータを返します
+     *
+     * @param key パラメータのキー
+     * @param def 存在しない場合のデフォルト値
+     * @return パラメータのキーに対応する値
+     */
+    default String getParameter(String key, String def) {
+        List<String> v = this.getParameterMap().get(key);
+        if (v != null && !v.isEmpty())
+            return v.get(0);
+        return def;
+    }
+
+    /**
      * リクエストのプロトコル名とバージョンを返します
      * @return リクエストのプロトコル名とバージョン
      */

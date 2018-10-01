@@ -24,7 +24,7 @@ public class ApiReqKaisouSlotExchangeIndex implements APIListenerSpi {
             Map<Integer, Ship> shipMap = ShipCollection.get()
                     .getShipMap();
 
-            Integer shipId = Integer.valueOf(req.getParameterMap().get("api_id").get(0));
+            Integer shipId = Integer.valueOf(req.getParameter("api_id"));
             Ship ship = shipMap.get(shipId)
                     .clone();
             ship.setSlot(JsonHelper.toIntegerList(data.getJsonArray("api_slot")));

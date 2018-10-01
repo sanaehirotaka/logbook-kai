@@ -2,7 +2,6 @@ package logbook.bean;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import logbook.proxy.RequestMetaData;
 import lombok.Data;
@@ -56,17 +55,15 @@ public class Createship implements Serializable {
      * @return {@link Createship}
      */
     public static Createship toCreateship(RequestMetaData req) {
-        Map<String, List<String>> param = req.getParameterMap();
-
         Createship bean = new Createship();
-        bean.setKdockId(Integer.valueOf(param.get("api_kdock_id").get(0)));
-        bean.setItem1(Integer.valueOf(param.get("api_item1").get(0)));
-        bean.setItem2(Integer.valueOf(param.get("api_item2").get(0)));
-        bean.setItem3(Integer.valueOf(param.get("api_item3").get(0)));
-        bean.setItem4(Integer.valueOf(param.get("api_item4").get(0)));
-        bean.setItem5(Integer.valueOf(param.get("api_item5").get(0)));
-        bean.setHighspeed(Integer.valueOf(param.get("api_highspeed").get(0)));
-        bean.setLargeFlag(Integer.valueOf(param.get("api_large_flag").get(0)));
+        bean.setKdockId(Integer.valueOf(req.getParameter("api_kdock_id", "0")));
+        bean.setItem1(Integer.valueOf(req.getParameter("api_item1", "0")));
+        bean.setItem2(Integer.valueOf(req.getParameter("api_item2", "0")));
+        bean.setItem3(Integer.valueOf(req.getParameter("api_item3", "0")));
+        bean.setItem4(Integer.valueOf(req.getParameter("api_item4", "0")));
+        bean.setItem5(Integer.valueOf(req.getParameter("api_item5", "0")));
+        bean.setHighspeed(Integer.valueOf(req.getParameter("api_highspeed", "0")));
+        bean.setLargeFlag(Integer.valueOf(req.getParameter("api_large_flag", "0")));
 
         Ship secretary = null;
         DeckPort port = DeckPortCollection.get()

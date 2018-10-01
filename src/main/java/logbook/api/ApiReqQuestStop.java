@@ -17,8 +17,7 @@ public class ApiReqQuestStop implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        Optional.ofNullable(req.getParameterMap().get("api_quest_id"))
-                .map(list -> list.get(0))
+        Optional.ofNullable(req.getParameter("api_quest_id"))
                 .map(Integer::valueOf)
                 .ifPresent(AppQuestCollection.get().getQuest()::remove);
     }

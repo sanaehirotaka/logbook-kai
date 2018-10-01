@@ -24,8 +24,8 @@ public class ApiReqAirCorpsSetPlane implements APIListenerSpi {
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
         JsonObject object = json.getJsonObject("api_data");
         if (object != null) {
-            int areaId = Integer.parseInt(req.getParameterMap().get("api_area_id").get(0));
-            int baseId = Integer.parseInt(req.getParameterMap().get("api_base_id").get(0));
+            int areaId = Integer.parseInt(req.getParameter("api_area_id"));
+            int baseId = Integer.parseInt(req.getParameter("api_base_id"));
 
             AirBase airBase = Mapinfo.get()
                     .getAirBase()

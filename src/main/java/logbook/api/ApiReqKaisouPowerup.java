@@ -1,6 +1,5 @@
 package logbook.api;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.json.JsonObject;
@@ -21,10 +20,9 @@ public class ApiReqKaisouPowerup implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        List<String> apiIdItems = req.getParameterMap()
-                .get("api_id_items");
+        String apiIdItems = req.getParameter("api_id_items");
         if (apiIdItems != null) {
-            for (String apiIdItem : apiIdItems.get(0).split(",")) {
+            for (String apiIdItem : apiIdItems.split(",")) {
                 Integer shipId = Integer.valueOf(apiIdItem);
                 // 艦娘を外す
                 Ship ship = ShipCollection.get()

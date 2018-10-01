@@ -1,7 +1,6 @@
 package logbook.api;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import javax.json.JsonObject;
 
@@ -18,16 +17,9 @@ public class ApiReqQuestClearitemget implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        JsonObject data = json.getJsonObject("api_data");
-        if (data != null) {
-
-            Map<String, List<String>> param = req.getParameterMap();
-            Integer questId = Integer.valueOf(param.get("api_quest_id").get(0));
-
-            AppQuestCollection.get()
-                    .getQuest()
-                    .remove(questId);
-        }
+        Optional.ofNullable(req.getParameter("api_quest_id"))
+                .map(Integer::valueOf)
+                .ifPresent(AppQuestCollection.get().getQuest()::remove);
     }
 
 }

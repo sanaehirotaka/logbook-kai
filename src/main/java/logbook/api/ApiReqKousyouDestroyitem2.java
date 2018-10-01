@@ -1,6 +1,5 @@
 package logbook.api;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.json.JsonObject;
@@ -19,12 +18,11 @@ public class ApiReqKousyouDestroyitem2 implements APIListenerSpi {
 
     @Override
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
-        List<String> apiSlotitemIds = req.getParameterMap()
-                .get("api_slotitem_ids");
+        String apiSlotitemIds = req.getParameter("api_slotitem_ids");
         if (apiSlotitemIds != null) {
             Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
                     .getSlotitemMap();
-            for (String apiSlotitemId : apiSlotitemIds.get(0).split(",")) {
+            for (String apiSlotitemId : apiSlotitemIds.split(",")) {
                 Integer itemId = Integer.valueOf(apiSlotitemId);
                 // 装備を廃棄する
                 itemMap.remove(itemId);

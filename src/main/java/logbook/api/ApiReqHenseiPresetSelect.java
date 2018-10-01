@@ -19,7 +19,7 @@ public class ApiReqHenseiPresetSelect implements APIListenerSpi {
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
-            Integer deckId = Integer.valueOf(req.getParameterMap().get("api_deck_id").get(0));
+            Integer deckId = Integer.valueOf(req.getParameter("api_deck_id"));
             String name = data.getString("api_name");
             DeckPort deckPort = DeckPortCollection.get()
                     .getDeckPortMap()

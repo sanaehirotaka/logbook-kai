@@ -35,9 +35,9 @@ public class ApiReqHenseiChange implements APIListenerSpi {
         Map<Integer, DeckPort> deckMap = DeckPortCollection.get()
                 .getDeckPortMap();
 
-        Integer portId = Integer.valueOf(req.getParameterMap().get("api_id").get(0));
-        Integer shipId = Integer.parseInt(req.getParameterMap().get("api_ship_id").get(0));
-        int shipIdx = Integer.parseInt(req.getParameterMap().get("api_ship_idx").get(0));
+        Integer portId = Integer.valueOf(req.getParameter("api_id"));
+        Integer shipId = Integer.valueOf(req.getParameter("api_ship_id"));
+        int shipIdx = Integer.parseInt(req.getParameter("api_ship_idx"));
 
         DeckPort deckPort = deckMap.get(portId)
                 .clone();

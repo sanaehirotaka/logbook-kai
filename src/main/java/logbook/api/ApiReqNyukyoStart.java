@@ -20,13 +20,11 @@ public class ApiReqNyukyoStart implements APIListenerSpi {
     public void accept(JsonObject json, RequestMetaData req, ResponseMetaData res) {
         Map<Integer, Ship> map = ShipCollection.get()
                 .getShipMap();
-        Integer shipId = Integer.valueOf(req.getParameterMap()
-                .get("api_ship_id")
-                .get(0));
+        Integer shipId = Integer.valueOf(req.getParameter("api_ship_id"));
         Ship ship = map.get(shipId)
                 .clone();
 
-        if ("1".equals(req.getParameterMap().get("api_highspeed").get(0))) {
+        if ("1".equals(req.getParameter("api_highspeed"))) {
             ship.setNowhp(ship.getMaxhp());
             ship.setNdockTime(0);
         }
