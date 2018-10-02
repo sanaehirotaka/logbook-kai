@@ -252,7 +252,7 @@ class ShipImage {
                 Integer sallyArea = ship.getSallyArea();
                 if (sallyArea != null && sallyArea.intValue() != 0) {
                     Path p = Paths.get("common", JOIN_BANNER.replace("{0}", Integer.toString(sallyArea - 1)));
-                    layers.add(new Layer(31, -3, p));
+                    layers.add(new Layer(50, -3, p));
                 }
             }
             // 装備画像
