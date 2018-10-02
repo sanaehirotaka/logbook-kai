@@ -30,7 +30,7 @@ public class ApiReqMapStart implements APIListenerSpi {
             AppCondition.get()
                     .setMapStart(Boolean.TRUE);
             AppCondition.get()
-                    .setDeckId(Integer.valueOf(req.getParameter("api_deck_id")));
+                    .setDeckId(Integer.parseInt(req.getParameter("api_deck_id")));
         }
     }
 
