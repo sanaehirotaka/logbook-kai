@@ -189,7 +189,7 @@ public class MainController extends WindowController {
         try {
             BattleLog log = AppCondition.get()
                     .getBattleResult();
-            if (log == null) {
+            if (log == null || log.getBattle() == null) {
                 Path dir = Paths.get(AppConfig.get().getReportPath());
                 Path path = dir.resolve(new BattleResultLogFormat().fileName());
                 if (Files.exists(path)) {

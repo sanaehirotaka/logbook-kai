@@ -624,6 +624,7 @@ public class BattleLogController extends WindowController {
             value.sort(Comparator.comparing(PieChart.Data::getPieValue).reversed());
         }
         this.aggregate.setItems(items);
+        this.chart.setTitle(name);
         this.chart.setData(value);
     }
 
@@ -650,6 +651,7 @@ public class BattleLogController extends WindowController {
         void initialize() {
             LocalDate date = LocalDate.now();
             Callback<DatePicker, DateCell> callback = d -> new DateCell() {
+                @Override
                 public void updateItem(LocalDate item, boolean empty) {
                     super.updateItem(item, empty);
                     this.getStyleClass().remove("selected");
@@ -661,7 +663,7 @@ public class BattleLogController extends WindowController {
                         if (item.equals(from) || item.equals(to)) {
                             this.getStyleClass().add("selected");
                         } else if ((from.compareTo(to) < 0 && item.compareTo(from) > 0 && item.compareTo(to) < 0)
-                            || (from.compareTo(to) > 0 && item.compareTo(from) < 0 && item.compareTo(to) > 0)) {
+                                || (from.compareTo(to) > 0 && item.compareTo(from) < 0 && item.compareTo(to) > 0)) {
                             this.getStyleClass().add("contains");
                         }
                     }
