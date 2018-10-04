@@ -14,6 +14,7 @@ import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
