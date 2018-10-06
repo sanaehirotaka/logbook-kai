@@ -302,7 +302,8 @@ public class BattleDetail extends WindowController {
                         } else {
                             ship = ps.getAfterFriendCombined().get(idx - 6);
                         }
-                        this.tykuCI.setText(Ships.toName(ship));
+                        this.tykuCI.setText(Ships.toName(ship)
+                                + " (第" + stage2.getAirFire().getKind() + "種)");
                     }
                 }
             }
