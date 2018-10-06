@@ -194,8 +194,12 @@ public class MainController extends WindowController {
                 Path path = dir.resolve(new BattleResultLogFormat().fileName());
                 if (Files.exists(path)) {
                     try (Stream<String> lines = Files.lines(path, LogWriter.DEFAULT_CHARSET)) {
-                        String line = lines.skip(1).reduce((first, second) -> second).orElse(null);
-                        log = BattleLogs.read(BattleLogDetail.toBattleLogDetail(new SimpleBattleLog(line)).getDate());
+                        SimpleBattleLog battleLog = lines.skip(1).reduce((first, second) -> second)
+                                .map(SimpleBattleLog::new)
+                                .orElse(null);
+                        if (battleLog != null) {
+                            log = BattleLogs.read(BattleLogDetail.toBattleLogDetail(battleLog).getDate());
+                        }
                     } catch (Exception ex) {
                         log = null;
                     }
