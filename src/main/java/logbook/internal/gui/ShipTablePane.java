@@ -12,6 +12,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
@@ -1243,7 +1244,10 @@ public class ShipTablePane extends VBox {
                 // 選択した艦を親にしてaftershipidを順に辿っていく
                 int index = 0;
                 while (after != null && !map.containsKey(after.getId())) {
-                    map.put(after.getId(), new Kanmusu(root.getId(), ++index));
+                    int afterlv = Optional.ofNullable(after.getAfterlv())
+                            .filter(v -> v > 0)
+                            .orElse(Integer.MAX_VALUE);
+                    map.put(after.getId(), new Kanmusu(root.getId(), ++index, afterlv));
                     after = shipMstMap.get(after.getAftershipid());
                 }
             }
@@ -1265,6 +1269,7 @@ public class ShipTablePane extends VBox {
         private static class Kanmusu {
             private int id;
             private int kai;
+            private int afterlv;
         }
 
         @Data
@@ -1275,7 +1280,9 @@ public class ShipTablePane extends VBox {
 
             @Override
             public String toString() {
-                return this.ship.kai == 1 ? Integer.toString(this.lv) : this.lv + "." + this.ship.kai;
+                return this.ship.kai == 1 && this.ship.afterlv > this.lv
+                        ? Integer.toString(this.lv)
+                        : this.lv + "." + this.ship.kai;
             }
         }
     }
