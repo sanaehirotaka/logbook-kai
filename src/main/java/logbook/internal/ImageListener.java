@@ -120,24 +120,35 @@ public class ImageListener implements ContentListenerSpi {
             this.write(response.getResponseBody().get(), path);
 
             String filename = String.valueOf(path.getFileName());
+            // pngファイル
+            Path pngPath = null;
+            // jsonファイル
+            Path jsonPath = null;
+
+            // jsonファイルの場合
+            if (filename.endsWith(".json")) {
+                pngPath = path.resolveSibling(filename.replace(".json", ".png"));
+                jsonPath = path;
+            }
             // pngファイルの場合
             if (filename.endsWith(".png")) {
-                // sprite情報があるかチェック
-                Path jsonPath = path.resolveSibling(filename.replace(".png", ".json"));
-                if (Files.exists(jsonPath)) {
-                    // 分解した画像の格納先
-                    Path spriteDir = path.resolveSibling(filename.substring(0, filename.lastIndexOf('.')));
-                    this.sprite(spriteDir, path, jsonPath);
-                }
+                pngPath = path;
+                jsonPath = path.resolveSibling(filename.replace(".png", ".json"));
             }
+            // 分解した画像の格納先
+            Path spriteDir = pngPath.resolveSibling(filename.substring(0, filename.lastIndexOf('.')));
+
+            this.sprite(spriteDir, pngPath, jsonPath);
         }
     }
 
     private void sprite(Path storeDir, Path imageSrc, Path jsonSrc) throws IOException {
+        if (!Files.exists(imageSrc) || !Files.exists(jsonSrc)) {
+            return;
+        }
         if (!Files.exists(storeDir)) {
             Files.createDirectories(storeDir);
         }
-
         Spritesmith sprite;
         try (BufferedInputStream is = new BufferedInputStream(Files.newInputStream(jsonSrc))) {
             ObjectMapper mapper = new ObjectMapper();
@@ -151,7 +162,8 @@ public class ImageListener implements ContentListenerSpi {
                 Spritesmith.Rect rect = v.getFrame();
                 BufferedImage subimage = image.getSubimage(rect.getX(), rect.getY(), rect.getW(), rect.getH());
                 try {
-                    try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(storeDir.resolve(k + ".png")))) {
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(storeDir.resolve(k + ".png")))) {
                         ImageIO.write(subimage, "png", out);
                     }
                 } catch (Exception e) {
