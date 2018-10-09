@@ -90,12 +90,13 @@ class PopupSelectboxContainer<T> extends VBox {
             List<T> items = PopupSelectboxContainer.this.items.get();
             if (items != null) {
                 int start = PopupSelectboxContainer.this.maxPageItem.get() * page;
-                int end = Math.min(start + PopupSelectboxContainer.this.maxPageItem.get(), items.size());
-                for (int i = start; i < end; i++) {
+                int end = start + PopupSelectboxContainer.this.maxPageItem.get();
+                int stop = Math.min(end, items.size());
+                SelectboxCell<T> factory = PopupSelectboxContainer.this.cellFactory.get();
+                for (int i = start; i < stop; i++) {
                     Button button = new Button();
                     button.getStyleClass().add("popup-selectbox-menu");
                     T item = items.get(i);
-                    SelectboxCell<T> factory = PopupSelectboxContainer.this.cellFactory.get();
                     if (factory != null) {
                         factory.changed(item, false);
                         button.setText(factory.getText());
@@ -107,6 +108,19 @@ class PopupSelectboxContainer<T> extends VBox {
                         PopupSelectboxContainer.this.selectHandle(item);
                         button.getScene().getWindow().hide();
                     });
+                    box.getChildren().add(button);
+                }
+                for (int i = stop; i < end; i++) {
+                    Button button = new Button();
+                    button.getStyleClass().add("popup-selectbox-menu");
+                    button.setDisable(true);
+                    if (factory != null) {
+                        factory.changed(null, false);
+                        button.setText(factory.getText());
+                        button.setGraphic(factory.getGraphic());
+                    } else {
+                        button.setText("");
+                    }
                     box.getChildren().add(button);
                 }
             }

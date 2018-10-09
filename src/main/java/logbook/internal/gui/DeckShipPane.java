@@ -337,7 +337,7 @@ public class DeckShipPane extends VBox {
         box.setItems(filtered);
         box.setCellFactory(new ShipCell());
         box.selectedItemProperty().addListener((ov, o, n) -> {
-            this.selectedShip.setValue(n.idProperty() != null ? n.getId() : 0);
+            this.selectedShip.setValue(n != null && n.idProperty() != null ? n.getId() : 0);
         });
         box.getStylesheets().add("logbook/gui/deck.css");
         box.show(this.shipButton);
