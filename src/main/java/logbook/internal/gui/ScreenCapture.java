@@ -44,12 +44,16 @@ import lombok.Setter;
  */
 class ScreenCapture {
 
+    private static final int SCREEN_WIDTH = 1200;
+
+    private static final int SCREEN_HEIGHT = 720;
+
     /** Jpeg品質 */
     private static final float QUALITY = 0.9f;
 
     /** ゲーム画面サイズ */
     private static final Dimension[] sizes = IntStream.rangeClosed(600, 1500)
-            .mapToObj(w -> new Dimension(w, (int) (w / 1200f * 720)))
+            .mapToObj(w -> new Dimension(w, (int) (w / (double) (SCREEN_WIDTH * SCREEN_HEIGHT))))
             .toArray(Dimension[]::new);
 
     @Setter
@@ -129,12 +133,13 @@ class ScreenCapture {
         try {
             ImageData image = new ImageData();
             image.setDateTime(ZonedDateTime.now());
+            image.setFormat("jpg");
 
             byte[] data;
             if (this.cutRect != null) {
-                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle), this.cutRect);
+                data = encode(cut(this.robot.createScreenCapture(this.rectangle), this.cutRect), image.getFormat());
             } else {
-                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle));
+                data = encode(this.robot.createScreenCapture(this.rectangle), image.getFormat());
             }
             image.setImage(data);
 
@@ -154,17 +159,19 @@ class ScreenCapture {
         try {
             ImageData image = new ImageData();
             image.setDateTime(ZonedDateTime.now());
+            image.setFormat("jpg");
 
             byte[] data;
             if (this.cutRect != null) {
-                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle), this.cutRect);
+                data = encode(cut(this.robot.createScreenCapture(this.rectangle), this.cutRect), image.getFormat());
             } else {
-                data = encodeJpeg(this.robot.createScreenCapture(this.rectangle));
+                data = encode(this.robot.createScreenCapture(this.rectangle), image.getFormat());
             }
             image.setImage(data);
 
             if (data != null) {
-                Path to = dir.resolve(CaptureSaveController.DATE_FORMAT.format(ZonedDateTime.now()) + ".jpg");
+                String fname = CaptureSaveController.DATE_FORMAT.format(image.getDateTime()) + "." + image.getFormat();
+                Path to = dir.resolve(fname);
                 try (OutputStream out = Files.newOutputStream(to)) {
                     out.write(data);
                 }
@@ -261,6 +268,20 @@ class ScreenCapture {
     }
 
     /**
+     * BufferedImageをエンコードします
+     *
+     * @param image BufferedImage
+     * @param format 画像形式
+     * @return エンコードされた画像
+     * @throws IOException 入出力例外
+     */
+    static byte[] encode(BufferedImage image, String format) throws IOException {
+        if ("jpg".equals(format))
+            return encodeJpeg(image);
+        return encodeOther(image, format);
+    }
+
+    /**
      * BufferedImageをJPEG形式にエンコードします
      *
      * @param image BufferedImage
@@ -287,45 +308,51 @@ class ScreenCapture {
     }
 
     /**
-     * BufferedImageをJPEG形式にエンコードします
+     * BufferedImageを指定された形式にエンコードします
      *
      * @param image BufferedImage
-     * @param rect 画像の範囲
-     * @return JPEG形式の画像
+     * @param format 画像形式
+     * @return 指定された形式の画像
      * @throws IOException 入出力例外
      */
-    static byte[] encodeJpeg(BufferedImage image, Rectangle rect) throws IOException {
+    static byte[] encodeOther(BufferedImage image, String format) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
-            ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+            ImageWriter writer = ImageIO.getImageWritersByFormatName(format).next();
             try {
-                ImageWriteParam iwp = writer.getDefaultWriteParam();
-                if (iwp.canWriteCompressed()) {
-                    iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                    iwp.setCompressionQuality(QUALITY);
-                }
                 writer.setOutput(ios);
-                int x;
-                int y;
-                int w;
-                int h;
-                if (image.getWidth() == 1200 && image.getHeight() == 720) {
-                    x = rect.x;
-                    y = rect.y;
-                    w = rect.width;
-                    h = rect.height;
-                } else {
-                    x = (int) (rect.x * ((double) image.getWidth() / 1200));
-                    y = (int) (rect.y * ((double) image.getHeight() / 720));
-                    w = (int) (rect.width * ((double) image.getWidth() / 1200));
-                    h = (int) (rect.height * ((double) image.getHeight() / 720));
-                }
-                writer.write(null, new IIOImage(image.getSubimage(x, y, w, h), null, null), iwp);
+                writer.write(null, new IIOImage(image, null, null), null);
             } finally {
                 writer.dispose();
             }
         }
         return out.toByteArray();
+    }
+
+    /**
+     * BufferedImageを{@code rect}で指定された範囲で切り取ります
+     *
+     * @param image BufferedImage
+     * @param rect 画像の範囲
+     * @return BufferedImage
+     */
+    static BufferedImage cut(BufferedImage image, Rectangle rect) {
+        int x;
+        int y;
+        int w;
+        int h;
+        if (image.getWidth() == SCREEN_WIDTH && image.getHeight() == SCREEN_HEIGHT) {
+            x = rect.x;
+            y = rect.y;
+            w = rect.width;
+            h = rect.height;
+        } else {
+            x = (int) (rect.x * ((double) image.getWidth() / SCREEN_WIDTH));
+            y = (int) (rect.y * ((double) image.getHeight() / SCREEN_HEIGHT));
+            w = (int) (rect.width * ((double) image.getWidth() / SCREEN_WIDTH));
+            h = (int) (rect.height * ((double) image.getHeight() / SCREEN_HEIGHT));
+        }
+        return image.getSubimage(x, y, w, h);
     }
 
     /**
@@ -372,11 +399,30 @@ class ScreenCapture {
         /** 日付書式 */
         private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
 
+        /** 画像フォーマット */
+        private String format;
+
         /** 日付 */
         private ZonedDateTime dateTime;
 
         /** 画像データ */
         private Reference<byte[]> image;
+
+        /**
+         * 画像フォーマットを取得します。
+         * @return 画像フォーマット
+         */
+        String getFormat() {
+            return this.format;
+        }
+
+        /**
+         * 画像フォーマットを設定します。
+         * @param format 画像フォーマット
+         */
+        void setFormat(String format) {
+            this.format = format;
+        }
 
         /**
          * 日付を取得します。

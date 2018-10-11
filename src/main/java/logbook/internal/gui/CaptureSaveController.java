@@ -150,20 +150,21 @@ public class CaptureSaveController extends WindowController {
         if (this.tile.isSelected()) {
             // 並べる場合
             int column = Math.max(Integer.parseInt(this.tileCount.getText()), 1);
-            Path to = dir.resolve(DATE_FORMAT.format(selections.get(0).getDateTime()) + ".jpg");
+            ImageData top = selections.get(0);
+            Path to = dir.resolve(DATE_FORMAT.format(top.getDateTime()) + "." + top.getFormat());
             List<byte[]> bytes = selections.stream()
                     .map(ImageData::getImage)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             try (OutputStream out = Files.newOutputStream(to)) {
-                out.write(ScreenCapture.encodeJpeg(ScreenCapture.tileImage(bytes, column)));
+                out.write(ScreenCapture.encode(ScreenCapture.tileImage(bytes, column), top.getFormat()));
             }
         } else {
             // 並べない場合個別にファイル保存する
             for (ImageData image : selections) {
                 byte[] data = image.getImage();
                 if (data != null) {
-                    Path to = dir.resolve(DATE_FORMAT.format(image.getDateTime()) + ".jpg");
+                    Path to = dir.resolve(DATE_FORMAT.format(image.getDateTime()) + "." + image.getFormat());
                     try (OutputStream out = Files.newOutputStream(to)) {
                         out.write(data);
                     }
