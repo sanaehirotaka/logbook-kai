@@ -45,6 +45,7 @@ logbook.api.ApiReqKousyouRemodelSlot
 logbook.api.ApiReqKousyouRemodelSlotlist
 logbook.api.ApiReqMapNext
 logbook.api.ApiReqMapStart
+logbook.api.ApiReqMemberItemuse
 logbook.api.ApiReqMissionResult
 logbook.api.ApiReqMissionStart
 logbook.api.ApiReqNyukyoSpeedchange
