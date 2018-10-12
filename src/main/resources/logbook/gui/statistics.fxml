@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.BubbleChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.chart.StackedBarChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
@@ -18,59 +19,71 @@
             <Button mnemonicParsing="false" onAction="#storeImageAction" text="画像ファイルに保存..." />
          </children>
       </TextFlow>
-      <VBox fx:id="content" styleClass="content">
-         <children>
-            <VBox>
+      <ScrollPane>
+         <content>
+            <VBox fx:id="content" styleClass="content">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="total-title" text="艦娘総経験値" />
-                  <Text fx:id="total" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="total-value" text="999.99M" />
-               </children>
-            </VBox>
-            <HBox>
-               <children>
-                  <VBox HBox.hgrow="ALWAYS">
+                  <HBox alignment="CENTER_LEFT">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-title" text="経験値比率" />
-                        <StackPane>
-                           <children>
-                              <PieChart fx:id="ratio" />
-                           </children>
-                        </StackPane>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="total-title" text="艦娘総経験値" />
+                        <Text fx:id="total" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="total-value" text="999.99M" />
                      </children>
-                  </VBox>
-                  <VBox HBox.hgrow="ALWAYS">
+                  </HBox>
+                  <HBox>
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-title" text="平均レベル" />
-                        <StackPane>
+                        <VBox HBox.hgrow="ALWAYS">
                            <children>
-                              <StackedBarChart fx:id="average" legendVisible="false">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-title" text="経験値比率" />
+                              <PieChart fx:id="ratio" styleClass="ratio" />
+                           </children>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-title" text="平均レベル" />
+                              <StackedBarChart fx:id="average" styleClass="average">
                                 <xAxis>
-                                  <CategoryAxis fx:id="averageCategory" side="BOTTOM" />
+                                  <NumberAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <CategoryAxis fx:id="averageCategory" side="LEFT" />
+                                </yAxis>
+                              </StackedBarChart>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-title" text="レベル分布" />
+                  <HBox>
+                     <children>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <StackedBarChart fx:id="spectrum" styleClass="spectrum">
+                                <xAxis>
+                                  <NumberAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <CategoryAxis fx:id="spectrumCategory" side="LEFT" />
+                                </yAxis>
+                              </StackedBarChart>
+                           </children>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <BubbleChart fx:id="bubble" styleClass="bubble">
+                                <xAxis>
+                                  <NumberAxis side="BOTTOM" />
                                 </xAxis>
                                 <yAxis>
                                   <NumberAxis side="LEFT" />
                                 </yAxis>
-                              </StackedBarChart>
+                              </BubbleChart>
                            </children>
-                        </StackPane>
+                        </VBox>
                      </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <VBox>
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="section-title" text="レベル分布" />
-                  <StackedBarChart fx:id="spectrum">
-                    <xAxis>
-                      <CategoryAxis fx:id="spectrumCategory" side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </StackedBarChart>
+                  </HBox>
                </children>
             </VBox>
-         </children>
-      </VBox>
+         </content>
+      </ScrollPane>
    </children>
 </fx:root>

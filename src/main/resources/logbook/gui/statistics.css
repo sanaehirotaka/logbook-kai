@@ -1,11 +1,8 @@
+
+.content {
+}
 .content {
     -fx-padding: .5em;
-}
-.nickname{
-    -fx-font-size: 4.5em;
-}
-.rank {
-    -fx-font-size: 3.25em;
 }
 .level {
     -fx-fill: gray;
@@ -13,10 +10,43 @@
 }
 .total-title {
     -fx-font-size: 2.5em;
+    -fx-padding: .5em;
 }
 .total-value {
-    -fx-font-size: 3.25em;
+    -fx-font-size: 4em;
+    -fx-padding: .5em;
 }
 .section-title {
     -fx-font-size: 2em;
+}
+.chart-bubble {
+    -fx-background-color: -fx-bubble-fill;
+    -fx-background-insets: 1;
+    -fx-border-color: -fx-bubble-border;
+}
+.default-color0.chart-bubble { -fx-bubble-fill: CHART_COLOR_1_TRANS_20; -fx-border-color: CHART_COLOR_1; }
+.default-color1.chart-bubble { -fx-bubble-fill: CHART_COLOR_2_TRANS_20; -fx-border-color: CHART_COLOR_2; }
+.default-color2.chart-bubble { -fx-bubble-fill: CHART_COLOR_3_TRANS_20; -fx-border-color: CHART_COLOR_3; }
+.default-color3.chart-bubble { -fx-bubble-fill: CHART_COLOR_4_TRANS_20; -fx-border-color: CHART_COLOR_4; }
+.default-color4.chart-bubble { -fx-bubble-fill: CHART_COLOR_5_TRANS_20; -fx-border-color: CHART_COLOR_5; }
+.default-color5.chart-bubble { -fx-bubble-fill: CHART_COLOR_6_TRANS_20; -fx-border-color: CHART_COLOR_6; }
+.default-color6.chart-bubble { -fx-bubble-fill: CHART_COLOR_7_TRANS_20; -fx-border-color: CHART_COLOR_7; }
+.default-color7.chart-bubble { -fx-bubble-fill: CHART_COLOR_8_TRANS_20; -fx-border-color: CHART_COLOR_8; }
+.default-color8.chart-bubble { -fx-bubble-fill: CHART_COLOR_9_TRANS_20; -fx-border-color: CHART_COLOR_9; }
+
+.ratio {
+    -fx-pref-width: 525px;
+    -fx-pref-height: 300px;
+}
+.average {
+    -fx-pref-width: 525px;
+    -fx-pref-height: 300px;
+}
+.spectrum {
+    -fx-pref-width: 525px;
+    -fx-pref-height: 525px;
+}
+.bubble {
+    -fx-pref-width: 525px;
+    -fx-pref-height: 525px;
 }

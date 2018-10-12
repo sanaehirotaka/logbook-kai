@@ -54,6 +54,9 @@ public class ShipController extends WindowController {
                         ((ShipTablePane) node).enable();
                         ((ShipTablePane) node).update();
                     }
+                    if (node instanceof StatisticsPane) {
+                        ((StatisticsPane) node).update();
+                    }
                 }
             });
 
