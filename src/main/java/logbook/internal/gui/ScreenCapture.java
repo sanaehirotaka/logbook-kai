@@ -53,7 +53,7 @@ class ScreenCapture {
 
     /** ゲーム画面サイズ */
     private static final Dimension[] sizes = IntStream.rangeClosed(600, 1500)
-            .mapToObj(w -> new Dimension(w, (int) (w / (double) (SCREEN_WIDTH * SCREEN_HEIGHT))))
+            .mapToObj(w -> new Dimension(w, (int) (((float) w) / SCREEN_WIDTH * SCREEN_HEIGHT)))
             .toArray(Dimension[]::new);
 
     @Setter
