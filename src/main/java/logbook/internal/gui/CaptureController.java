@@ -410,6 +410,8 @@ public class CaptureController extends WindowController {
             root.getChildren().addAll(new ImageView(image), canvas);
 
             stage.setScene(new Scene(root));
+            stage.setX(gcnf.getBounds().getX());
+            stage.setY(gcnf.getBounds().getY());
             stage.setTitle("座標取得");
             stage.setFullScreenExitHint("キャプチャする領域をマウスでドラッグして下さい。 [Esc]キーでキャンセル");
             stage.setFullScreen(true);
