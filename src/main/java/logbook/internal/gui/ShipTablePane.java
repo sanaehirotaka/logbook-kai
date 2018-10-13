@@ -53,6 +53,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.IntegerStringConverter;
+import logbook.bean.AppConfig;
 import logbook.bean.AppShipTableConfig;
 import logbook.bean.AppShipTableConfig.AppShipTableTabConfig;
 import logbook.bean.DeckPort;
@@ -1066,8 +1067,13 @@ public class ShipTablePane extends VBox {
                 SlotItem item = this.itemMap.get(itemId);
                 if (item != null) {
                     ImageView img = new ImageView(Items.itemImage(item));
-                    img.setFitWidth(36);
-                    img.setFitHeight(36);
+                    int percent = AppConfig.get().getImageZoomRate();
+                    int size = 32;
+                    if (percent > 0) {
+                        size = (int) Math.min(size, 60 * ((double) percent / 100));
+                    }
+                    img.setFitWidth(size);
+                    img.setFitHeight(size);
                     this.setGraphic(img);
                     this.setText(Items.name(item));
                 } else {
