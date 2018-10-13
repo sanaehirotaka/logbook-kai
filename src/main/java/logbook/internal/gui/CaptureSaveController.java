@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -41,11 +40,6 @@ public class CaptureSaveController extends WindowController {
 
     /** ファイル名日付書式 */
     static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss.SSS");
-
-    private static final String JPEG = "jpg";
-
-    @FXML
-    private ChoiceBox<String> type;
 
     @FXML
     private CheckBox tile;
@@ -67,9 +61,6 @@ public class CaptureSaveController extends WindowController {
 
     @FXML
     void initialize() {
-        this.type.setItems(FXCollections.observableArrayList(JPEG));
-        this.type.getSelectionModel().selectFirst();
-
         this.image.fitWidthProperty().bind(this.imageParent.widthProperty());
         this.image.fitHeightProperty().bind(this.imageParent.heightProperty());
     }

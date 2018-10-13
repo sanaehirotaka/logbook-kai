@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="320.0" styleClass="captureWindow" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="320.0" styleClass="captureWindow" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureController">
    <children>
       <ToolBar>
          <items>
@@ -43,13 +43,24 @@
                         <RadioMenuItem mnemonicParsing="false" onAction="#cutUnitWithoutShip" text="改装(艦娘除く)" toggleGroup="$cut" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="画像の形式">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#setJpeg" selected="true" text="JPEG">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="type" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#setPng" text="PNG" toggleGroup="$type" />
+                     </items>
+                  </Menu>
               </items>
             </MenuButton>
             <Button fx:id="capture" disable="true" mnemonicParsing="false" onAction="#capture" text="キャプチャ">
                <styleClass>
                   <String fx:value="capture" />
                   <String fx:value="start" />
-               </styleClass></Button>
+               </styleClass>
+            </Button>
             <Button fx:id="save" mnemonicParsing="false" onAction="#save" text="保存" />
             <CheckBox fx:id="direct" mnemonicParsing="false" text="直接保存" />
          </items>

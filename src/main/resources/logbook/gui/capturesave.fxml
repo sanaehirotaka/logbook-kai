@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -13,13 +12,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.CheckListView?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="450.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureSaveController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="450.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CaptureSaveController">
    <children>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
-            <Label text="ファイル形式" />
-            <ChoiceBox fx:id="type" prefWidth="60.0" />
-            <Separator orientation="VERTICAL" />
             <CheckBox fx:id="tile" mnemonicParsing="false" onAction="#tile" text="並べる" />
             <TextField fx:id="tileCount" disable="true" prefWidth="40.0" text="3" />
             <Label text="列" />

@@ -307,6 +307,16 @@ public class CaptureController extends WindowController {
         }
     }
 
+    @FXML
+    void setJpeg(ActionEvent event) {
+        this.sc.setType("jpg");
+    }
+
+    @FXML
+    void setPng(ActionEvent event) {
+        this.sc.setType("png");
+    }
+
     @Override
     public void setWindow(Stage window) {
         super.setWindow(window);

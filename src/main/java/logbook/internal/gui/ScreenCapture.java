@@ -70,6 +70,11 @@ class ScreenCapture {
     @Getter
     private Rectangle cutRect;
 
+    /** 形式 */
+    @Setter
+    @Getter
+    private String type = "jpg";
+
     private int size = 200;
 
     private ObservableList<ImageData> list;
@@ -133,7 +138,7 @@ class ScreenCapture {
         try {
             ImageData image = new ImageData();
             image.setDateTime(ZonedDateTime.now());
-            image.setFormat("jpg");
+            image.setFormat(this.type);
 
             byte[] data;
             if (this.cutRect != null) {
@@ -159,7 +164,7 @@ class ScreenCapture {
         try {
             ImageData image = new ImageData();
             image.setDateTime(ZonedDateTime.now());
-            image.setFormat("jpg");
+            image.setFormat(this.type);
 
             byte[] data;
             if (this.cutRect != null) {
