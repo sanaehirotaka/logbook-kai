@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import logbook.internal.LoggerHolder;
+import logbook.internal.ThreadManager;
 import logbook.internal.Version;
 import logbook.plugin.PluginServices;
 
@@ -72,8 +73,12 @@ public class VersionController extends WindowController {
     @FXML
     void visibleDownloadSite(ActionEvent event) {
         try {
-            Desktop.getDesktop()
-                    .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
+            ThreadManager.getExecutorService()
+                    .submit(() -> {
+                        Desktop.getDesktop()
+                                .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
+                        return null;
+                    });
         } catch (Exception e) {
             LoggerHolder.get().warn("ブラウザの起動で例外", e);
         }
@@ -82,8 +87,12 @@ public class VersionController extends WindowController {
     @FXML
     void visibleIssue(ActionEvent event) {
         try {
-            Desktop.getDesktop()
-                    .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/issues"));
+            ThreadManager.getExecutorService()
+                    .submit(() -> {
+                        Desktop.getDesktop()
+                                .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/issues"));
+                        return null;
+                    });
         } catch (Exception e) {
             LoggerHolder.get().warn("ブラウザの起動で例外", e);
         }

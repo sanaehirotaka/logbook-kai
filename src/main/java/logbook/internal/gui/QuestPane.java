@@ -20,6 +20,7 @@ import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCollection;
 import logbook.bean.QuestList.Quest;
 import logbook.internal.LoggerHolder;
+import logbook.internal.ThreadManager;
 
 /**
  * 任務
@@ -143,9 +144,13 @@ public class QuestPane extends HBox {
     @FXML
     void search(ActionEvent event) {
         try {
-            Desktop.getDesktop()
-                    .browse(URI.create("https://www.google.co.jp/search?q="
-                            + URLEncoder.encode(this.quest.getQuest().getTitle(), "UTF-8")));
+            ThreadManager.getExecutorService()
+                    .submit(() -> {
+                        Desktop.getDesktop()
+                                .browse(URI.create("https://www.google.co.jp/search?q="
+                                        + URLEncoder.encode(this.quest.getQuest().getTitle(), "UTF-8")));
+                        return null;
+                    });
         } catch (Exception e) {
             LoggerHolder.get().warn("ブラウザを開けませんでした", e);
         }

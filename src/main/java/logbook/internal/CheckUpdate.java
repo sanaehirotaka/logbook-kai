@@ -18,7 +18,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-
 import logbook.internal.gui.Tools;
 
 /**
@@ -116,8 +115,12 @@ public class CheckUpdate {
 
     private static void openBrowser() {
         try {
-            Desktop.getDesktop()
-                    .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
+            ThreadManager.getExecutorService()
+                    .submit(() -> {
+                        Desktop.getDesktop()
+                                .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
+                        return null;
+                    });
         } catch (Exception e) {
             LoggerHolder.get().warn("アップデートチェックで例外", e);
         }
