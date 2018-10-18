@@ -1,8 +1,10 @@
 package logbook.internal;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -29,7 +31,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import logbook.bean.AppConfig;
@@ -46,6 +51,13 @@ import lombok.Getter;
  */
 public class BattleLogs {
 
+    private static final ObjectMapper mapper;
+
+    static {
+        mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
     /**
      * 戦闘ログを書き込みます
      *
@@ -60,15 +72,25 @@ public class BattleLogs {
             if (parent != null && !Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
-            try (Writer writer = Files.newBufferedWriter(path)) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.writeValue(writer, log);
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(path));
+            try {
+                if (AppConfig.get().isCompressBattleLog()) {
+                    out = new GZIPOutputStream(out);
+                }
+                ObjectMapper mapper = getObjectMapper();
+                mapper.writeValue(out, log);
+            } finally {
+                out.close();
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("戦闘ログの書き込み中に例外", e);
         }
         // 期限切れの削除
         deleteExpiration();
+    }
+
+    private static ObjectMapper getObjectMapper() {
+        return mapper;
     }
 
     private static void deleteExpiration() {
@@ -121,9 +143,19 @@ public class BattleLogs {
         try {
             Path path = jsonPath(dateString);
             if (Files.isReadable(path)) {
-                try (Reader reader = Files.newBufferedReader(path)) {
-                    ObjectMapper mapper = new ObjectMapper();
-                    return mapper.readValue(reader, BattleLog.class);
+                InputStream in = new BufferedInputStream(Files.newInputStream(path));
+                try {
+                    // Check header
+                    in.mark(1024);
+                    int header = (in.read() | (in.read() << 8));
+                    in.reset();
+                    if (header == GZIPInputStream.GZIP_MAGIC) {
+                        in = new GZIPInputStream(in);
+                    }
+                    ObjectMapper mapper = getObjectMapper();
+                    return mapper.readValue(in, BattleLog.class);
+                } finally {
+                    in.close();
                 }
             }
         } catch (Exception e) {

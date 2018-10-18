@@ -121,6 +121,9 @@ public final class AppConfig implements Serializable {
     /** 戦闘ログの保存期限 */
     private int battleLogExpires = 60;
 
+    /** 戦闘ログの圧縮 */
+    private boolean compressBattleLog = false;
+
     /** レベリング海域 */
     private SeaArea battleSeaArea = SeaArea.キス島沖;
 
