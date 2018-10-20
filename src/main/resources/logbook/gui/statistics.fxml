@@ -62,7 +62,7 @@
                                   <NumberAxis side="BOTTOM" />
                                 </xAxis>
                                 <yAxis>
-                                  <CategoryAxis fx:id="spectrumCategory" side="LEFT" />
+                                  <CategoryAxis fx:id="spectrumCategory" label="レベル" side="LEFT" />
                                 </yAxis>
                               </StackedBarChart>
                            </children>
@@ -71,10 +71,10 @@
                            <children>
                               <BubbleChart fx:id="bubble" styleClass="bubble">
                                 <xAxis>
-                                  <NumberAxis side="BOTTOM" />
+                                  <NumberAxis label="平均レベル" side="BOTTOM" />
                                 </xAxis>
                                 <yAxis>
-                                  <NumberAxis side="LEFT" />
+                                  <NumberAxis label="中央レベル" side="LEFT" />
                                 </yAxis>
                               </BubbleChart>
                            </children>
