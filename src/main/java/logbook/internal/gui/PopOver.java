@@ -58,6 +58,7 @@ public class PopOver<T> {
      */
     protected Popup initPopup(Node anchorNode) {
         Parent node = this.nodeSupplier.apply(anchorNode, this.userData.get(anchorNode));
+        node.setOnMouseExited(this::setOnMouseExited);
         this.popup.getScene().setRoot(node);
         return this.popup;
     }
