@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
    <children>
       <TabPane VBox.vgrow="ALWAYS">
          <tabs>
@@ -82,10 +82,29 @@
                   </VBox>
                </content>
             </Tab>
-            <Tab closable="false" text="戦闘・艦隊">
+            <Tab closable="false" text="戦闘・艦隊・艦娘">
                <content>
                   <VBox styleClass="configInner">
                      <children>
+                        <Label styleClass="bold" text="戦闘" />
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="applyBattle" mnemonicParsing="false" text="戦闘開始時に結果を反映" GridPane.columnSpan="2147483647" />
+                              <CheckBox fx:id="applyResult" mnemonicParsing="false" text="戦闘結果時に結果を反映" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="compressBattleLogs" mnemonicParsing="false" text="戦闘ログを圧縮する" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+                        <Label styleClass="bold" text="艦隊・艦娘" />
                         <GridPane>
                            <columnConstraints>
                               <ColumnConstraints fillWidth="false" />
@@ -97,25 +116,20 @@
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <CheckBox fx:id="applyBattle" mnemonicParsing="false" text="戦闘開始時に結果を反映" GridPane.columnSpan="2147483647" />
-                              <Label text="母港枠の空きが" GridPane.rowIndex="2" />
-                              <TextField fx:id="shipFullyThreshold" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Label text="以下でボタン色を変更" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                              <Label text="装備枠の空きが" GridPane.rowIndex="3" />
-                              <TextField fx:id="itemFullyThreshold" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Label text="以下でボタン色を変更" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                              <CheckBox fx:id="applyResult" mnemonicParsing="false" text="戦闘結果時に結果を反映" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                              <Label text="画像の拡大・縮小(%)" GridPane.rowIndex="5" />
-                              <TextField fx:id="imageZoomRate" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label text="(一部の一覧表示にのみ適用)" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                              <CheckBox fx:id="deckTabs" mnemonicParsing="false" text="所有艦娘一覧に艦隊単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
-                              <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="所有艦娘一覧にラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
+                              <Label text="母港枠の空きが" />
+                              <TextField fx:id="shipFullyThreshold" prefWidth="60.0" GridPane.columnIndex="1" />
+                              <Label text="以下でボタン色を変更" GridPane.columnIndex="2" />
+                              <Label text="装備枠の空きが" GridPane.rowIndex="1" />
+                              <TextField fx:id="itemFullyThreshold" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="以下でボタン色を変更" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="画像の拡大・縮小(%)" GridPane.rowIndex="2" />
+                              <TextField fx:id="imageZoomRate" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="(一部の一覧表示にのみ適用)" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="deckTabs" mnemonicParsing="false" text="所有艦娘一覧に艦隊単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="所有艦娘一覧にラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </children>

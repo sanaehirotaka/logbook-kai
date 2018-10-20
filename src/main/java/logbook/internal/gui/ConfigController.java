@@ -85,6 +85,10 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox applyResult;
 
+    /** 戦闘ログを圧縮する */
+    @FXML
+    private CheckBox compressBattleLogs;
+
     /** 母港枠 */
     @FXML
     private TextField shipFullyThreshold;
@@ -224,6 +228,7 @@ public class ConfigController extends WindowController {
         this.materialLogInterval.setText(Integer.toString(conf.getMaterialLogInterval()));
         this.applyBattle.setSelected(conf.isApplyBattle());
         this.applyResult.setSelected(conf.isApplyResult());
+        this.compressBattleLogs.setSelected(conf.isCompressBattleLogs());
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
@@ -304,14 +309,15 @@ public class ConfigController extends WindowController {
         conf.setUseSound(this.useSound.isSelected());
         conf.setUseToast(this.useToast.isSelected());
         conf.setUseRemind(this.useRemind.isSelected());
-        conf.setRemind(Math.max(Integer.parseInt(this.remind.getText()), 10));
-        conf.setSoundLevel(Integer.parseInt(this.soundLevel.getText()));
-        conf.setMaterialLogInterval(Integer.parseInt(this.materialLogInterval.getText()));
+        conf.setRemind(Math.max(this.toInt(this.remind.getText()), 10));
+        conf.setSoundLevel(this.toInt(this.soundLevel.getText()));
+        conf.setMaterialLogInterval(this.toInt(this.materialLogInterval.getText()));
         conf.setApplyBattle(this.applyBattle.isSelected());
         conf.setApplyResult(this.applyResult.isSelected());
-        conf.setShipFullyThreshold(Integer.parseInt(this.shipFullyThreshold.getText()));
-        conf.setItemFullyThreshold(Integer.parseInt(this.itemFullyThreshold.getText()));
-        conf.setImageZoomRate(Integer.parseInt(this.imageZoomRate.getText()));
+        conf.setCompressBattleLogs(this.compressBattleLogs.isSelected());
+        conf.setShipFullyThreshold(this.toInt(this.shipFullyThreshold.getText()));
+        conf.setItemFullyThreshold(this.toInt(this.itemFullyThreshold.getText()));
+        conf.setImageZoomRate(this.toInt(this.imageZoomRate.getText()));
         conf.setDeckTabs(this.deckTabs.isSelected());
         conf.setLabelTabs(this.labelTabs.isSelected());
         conf.setOnTop(this.onTop.isSelected());
@@ -328,10 +334,10 @@ public class ConfigController extends WindowController {
         conf.setShipImageCacheStrategy(shipImageCacheStrategy);
         conf.setShipImageCompress(this.shipImageCompress.isSelected());
         conf.setConnectionClose(this.connectionClose.isSelected());
-        conf.setListenPort(Integer.parseInt(this.listenPort.getText()));
+        conf.setListenPort(this.toInt(this.listenPort.getText()));
         conf.setAllowOnlyFromLocalhost(this.allowOnlyFromLocalhost.isSelected());
         conf.setUseProxy(this.useProxy.isSelected());
-        conf.setProxyPort(Integer.parseInt(this.proxyPort.getText()));
+        conf.setProxyPort(this.toInt(this.proxyPort.getText()));
         conf.setProxyHost(this.proxyHost.getText());
         conf.setFfmpegPath(this.ffmpegPath.getText());
         conf.setFfmpegArgs(this.ffmpegArgs.getText());
@@ -388,5 +394,16 @@ public class ConfigController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    private int toInt(String v) {
+        if (v.isEmpty())
+            return 0;
+        for (int i = 0; i < v.length(); i++) {
+            char c = v.charAt(i);
+            if (!('0' <= c && '9' >= c))
+                return 0;
+        }
+        return Integer.parseInt(v, 10);
     }
 }

@@ -74,7 +74,7 @@ public class BattleLogs {
             }
             OutputStream out = new BufferedOutputStream(Files.newOutputStream(path));
             try {
-                if (AppConfig.get().isCompressBattleLog()) {
+                if (AppConfig.get().isCompressBattleLogs()) {
                     out = new GZIPOutputStream(out);
                 }
                 ObjectMapper mapper = getObjectMapper();
