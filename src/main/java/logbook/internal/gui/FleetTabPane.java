@@ -1,7 +1,8 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.text.MessageFormat;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -31,7 +32,6 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
-import logbook.internal.SeaArea;
 import logbook.internal.Ships;
 import lombok.val;
 
@@ -145,11 +145,11 @@ public class FleetTabPane extends ScrollPane {
         dialog.initOwner(this.getScene().getWindow());
         dialog.setTitle("分岐点係数を変更");
         dialog.setHeaderText("分岐点係数を数値で入力してください 例)\n"
-                + SeaArea.沖ノ島沖 + " H,Iマス 係数: 1.0\n"
-                + SeaArea.北方AL海域 + " Gマス 係数: 4.0\n"
-                + SeaArea.中部海域哨戒線 + " E,Fマス 係数: 4.0\n"
-                + SeaArea.MS諸島沖 + " F,Hマス 係数: 3.0\n"
-                + SeaArea.グアノ環礁沖海域 + " Hマス 係数: 3.0");
+                + "沖ノ島沖 G,I,Jマス 係数: 1.0\n"
+                + "北方AL海域 Gマス 係数: 4.0\n"
+                + "中部海域哨戒線 G,Hマス 係数: 4.0\n"
+                + "MS諸島沖 E,Iマス 係数: 3.0\n"
+                + "グアノ環礁沖海域 Hマス 係数: 3.0");
 
         val result = dialog.showAndWait();
         if (result.isPresent()) {
@@ -284,7 +284,9 @@ public class FleetTabPane extends ScrollPane {
     private void setDecision33() {
         Ships.Decision33 decision33 = Ships.decision33(this.shipList, this.branchCoefficient);
         // 判定式(33)
-        this.decision33.setText(MessageFormat.format("{0,number,#.##}", decision33.get()));
+        this.decision33.setText(BigDecimal.valueOf(decision33.get())
+                .setScale(3, RoundingMode.FLOOR)
+                .toPlainString());
         PopOver<Ships.Decision33> popover = new PopOver<>((node, data) -> {
             String content = new StringJoiner("\n")
                     .add("判定式(33):" + data.get() + "(分岐点係数:" + data.getBranchCoefficient() + ")")

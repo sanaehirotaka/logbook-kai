@@ -9,7 +9,6 @@ import java.util.Set;
 
 import logbook.internal.Config;
 import logbook.internal.Rank;
-import logbook.internal.SeaArea;
 import logbook.internal.ShipImageCacheStrategy;
 import lombok.Data;
 
@@ -125,7 +124,7 @@ public final class AppConfig implements Serializable {
     private boolean compressBattleLogs = false;
 
     /** レベリング海域 */
-    private SeaArea battleSeaArea = SeaArea.キス島沖;
+    private int seaAreaIndex = 0;
 
     /** レベリング評価 */
     private Rank resultRank = Rank.S勝利;

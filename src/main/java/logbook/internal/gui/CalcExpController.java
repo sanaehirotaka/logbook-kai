@@ -26,14 +26,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import logbook.bean.AppConfig;
+import logbook.bean.AppSeaAreaExp;
+import logbook.bean.AppSeaAreaExpCollection;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.ExpTable;
+import logbook.internal.LoggerHolder;
 import logbook.internal.Rank;
-import logbook.internal.SeaArea;
 import logbook.internal.Ships;
 
 public class CalcExpController extends WindowController {
@@ -54,7 +57,10 @@ public class CalcExpController extends WindowController {
     private TextField goalExp;
 
     @FXML
-    private ChoiceBox<SeaArea> sea;
+    private ChoiceBox<AppSeaAreaExp> sea;
+
+    @FXML
+    private TextField baseExp;
 
     @FXML
     private ChoiceBox<Rank> rank;
@@ -122,14 +128,8 @@ public class CalcExpController extends WindowController {
         // コンボボックス
         this.shipList.setItems(this.ships);
         this.shipList();
-
         // 海域
-        this.sea.setItems(FXCollections.observableArrayList(
-                Arrays.stream(SeaArea.values())
-                        .filter(s -> s.getSeaExp() > 0)
-                        .collect(Collectors.toList())));
-        this.sea.getSelectionModel().select(AppConfig.get().getBattleSeaArea());
-
+        this.seaAreaList();
         // 評価
         this.rank.setItems(FXCollections.observableArrayList(Rank.values()));
         this.rank.getSelectionModel().select(AppConfig.get().getResultRank());
@@ -157,7 +157,7 @@ public class CalcExpController extends WindowController {
                 .addListener((ChangeListener<Integer>) this::changeGoalLv);
         this.sea.getSelectionModel()
                 .selectedItemProperty()
-                .addListener((ChangeListener<SeaArea>) (ov, o, n) -> this.update());
+                .addListener((ChangeListener<AppSeaAreaExp>) (ov, o, n) -> this.changeSeaArea());
         this.rank.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((ChangeListener<Rank>) (ov, o, n) -> this.update());
@@ -177,6 +177,7 @@ public class CalcExpController extends WindowController {
                 .findAny()
                 .get();
         // 発火させるためにここでselect
+        this.sea.getSelectionModel().select(AppConfig.get().getSeaAreaIndex());
         this.shipList.getSelectionModel().select(flagShip);
     }
 
@@ -198,6 +199,32 @@ public class CalcExpController extends WindowController {
                 .orElse(this.ships.get(0));
         this.shipList.getSelectionModel().select(select);
         this.update();
+    }
+
+    /**
+     * 海域Exp変更
+     *
+     * @param event KeyEvent
+     */
+    @FXML
+    void changeExp(KeyEvent event) {
+        this.update();
+    }
+
+    /**
+     * 海域編集
+     *
+     * @param event ActionEvent
+     */
+    @FXML
+    void edit(ActionEvent event) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/calc_exp_area.fxml", this.getWindow(), "海域編集", c -> {
+                ((CalcExpSeaAreaEditorController) c).setApply(this::seaAreaList);
+            }, null);
+        } catch (Exception ex) {
+            LoggerHolder.get().error("資材チャートの初期化に失敗しました", ex);
+        }
     }
 
     /**
@@ -286,11 +313,28 @@ public class CalcExpController extends WindowController {
     }
 
     /**
+     * 海域Expを変えた時
+     */
+    private void changeSeaArea() {
+        if (this.sea.getValue() != null) {
+            this.baseExp.setText(Integer.toString(this.sea.getValue().getExp()));
+            this.update();
+        }
+    }
+
+    /**
      * 計算する
      */
     private void update() {
-        // 海域経験値
-        int base = this.sea.getValue().getSeaExp();
+        // 海域Exp
+        int base;
+        try {
+            base = Integer.parseInt(this.baseExp.getText());
+        } catch (Exception e) {
+            base = 0;
+        }
+        base = Math.max(1, base);
+
         // 評価
         double eval = this.rank.getValue().getRatio();
         // 1回あたり
@@ -304,8 +348,18 @@ public class CalcExpController extends WindowController {
 
         this.chart();
 
-        AppConfig.get().setBattleSeaArea(this.sea.getValue());
+        AppConfig.get().setSeaAreaIndex(this.sea.getSelectionModel().getSelectedIndex());
         AppConfig.get().setResultRank(this.rank.getValue());
+    }
+
+    /**
+     * 海域のコンボボックスを作る
+     */
+    private void seaAreaList() {
+        int index = this.sea.getSelectionModel().getSelectedIndex();
+        this.sea.setItems(FXCollections.observableArrayList(AppSeaAreaExpCollection.get().getList()));
+        index = Math.min(this.sea.getItems().size() - 1, index);
+        this.sea.getSelectionModel().select(index);
     }
 
     /**
