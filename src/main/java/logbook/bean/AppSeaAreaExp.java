@@ -10,6 +10,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class AppSeaAreaExp {
 
+    public AppSeaAreaExp() {
+    }
+
     /** 海域 */
     private String name;
 
