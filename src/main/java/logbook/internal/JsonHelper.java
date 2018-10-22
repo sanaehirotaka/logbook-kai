@@ -535,11 +535,33 @@ public final class JsonHelper {
 
     /**
      * JsonObjectから別のオブジェクトへの単方向バインディングを提供します。<br>
+     * <br>
+     * 次の例はbeanにJSONからの値を設定する例です。<br>
+     * JSON例<br>
+     * <pre><code>{"api_id" : 558, "api_name" : "深海復讐艦攻改", "api_type" : [ 3, 5, 8, 8 ]}</code></pre>
+     * Javaコード例<br>
+     * <pre><code>JsonHelper.bind(json)
+     *      .set("api_id", bean::setId, JsonHelper::toInteger)
+     *      .set("api_name", bean::setName, JsonHelper::toString)
+     *      .set("api_type", bean::setType, JsonHelper::toIntegerList);</code></pre>
+     *
+     * @param json JsonObject
+     * @param listener BindListener
+     * @return {@link Bind}
+     */
+    public static Bind bind(JsonObject json, BindListener listener) {
+        return new Bind(json, listener);
+    }
+
+    /**
+     * JsonObjectから別のオブジェクトへの単方向バインディングを提供します。<br>
      *
      */
     public static class Bind {
 
         private JsonObject json;
+
+        private BindListener listener;
 
         /**
          * コンストラクター
@@ -548,6 +570,17 @@ public final class JsonHelper {
          */
         private Bind(JsonObject json) {
             this.json = json;
+        }
+
+        /**
+         * コンストラクター
+         *
+         * @param json JsonObject
+         * @param listener BindListener
+         */
+        private Bind(JsonObject json, BindListener listener) {
+            this.json = json;
+            this.listener = listener;
         }
 
         /**
@@ -564,7 +597,11 @@ public final class JsonHelper {
         public <T extends JsonValue, R> Bind set(String key, Consumer<R> consumer, Function<T, R> converter) {
             JsonValue val = this.json.get(key);
             if (val != null && JsonValue.NULL != val) {
-                consumer.accept(converter.apply((T) val));
+                R obj = converter.apply((T) val);
+                consumer.accept(obj);
+                if (this.listener != null) {
+                    this.listener.apply(key, val, obj);
+                }
             }
             return this;
         }
@@ -634,5 +671,20 @@ public final class JsonHelper {
         public Bind setBoolean(String key, Consumer<Boolean> consumer) {
             return this.set(key, consumer, JsonHelper::toBoolean);
         }
+    }
+
+    /**
+     * {@link Bind}によって設定される値を監視するためのリスナー
+     */
+    public static interface BindListener {
+
+        /**
+         * 設定される値を監視します
+         *
+         * @param key JsonObjectのキー
+         * @param val JsonObjectの値
+         * @param obj converterより返された値
+         */
+        void apply(String key, JsonValue val, Object obj);
     }
 }
