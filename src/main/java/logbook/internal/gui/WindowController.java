@@ -2,6 +2,7 @@ package logbook.internal.gui;
 
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import logbook.bean.WindowLocation;
 
 /**
@@ -61,5 +62,25 @@ public abstract class WindowController {
         location.setWidth(this.window.getWidth());
         location.setHeight(this.window.getHeight());
         return location;
+    }
+
+    /**
+     * このウィンドウが非表示になった直後に処理するイベント・ハンドラ
+     * @param e WindowEvent
+     */
+    protected void onWindowHidden(WindowEvent e) {
+    }
+
+    /**
+     * このウィンドウを閉じるリクエストを処理するイベント・ハンドラ
+     * @param e WindowEvent
+     */
+    protected void onWindowCloseRequest(WindowEvent e) {
+    }
+
+    final void initWindow(Stage window) {
+        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onWindowHidden);
+        window.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, this::onWindowCloseRequest);
+        this.setWindow(window);
     }
 }

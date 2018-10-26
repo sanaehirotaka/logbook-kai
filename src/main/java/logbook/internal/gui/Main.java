@@ -29,7 +29,7 @@ public class Main extends Application {
         stage.setScene(new Scene(root));
 
         WindowController controller = loader.getController();
-        controller.setWindow(stage);
+        controller.initWindow(stage);
         // アイコンの設定
         Tools.Windows.setIcon(stage);
         // 最前面に表示する

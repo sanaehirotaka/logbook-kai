@@ -76,7 +76,7 @@ public final class InternalFXMLLoader {
         }
 
         WindowController controller = loader.getController();
-        controller.setWindow(stage);
+        controller.initWindow(stage);
 
         if (windowConsumer != null) {
             windowConsumer.accept(stage);
