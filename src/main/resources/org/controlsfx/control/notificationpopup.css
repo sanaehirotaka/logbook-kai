@@ -1,0 +1,70 @@
+.root {
+    -fx-font-family: "Meiryo UI";
+    -fx-font-weight: normal;
+}
+
+/******************************************************************************
+ * 
+ * Light theme
+ * 
+ *****************************************************************************/
+
+.notification-bar > .pane {
+    -fx-background-color: white;
+    -fx-padding: .25em;
+    -fx-stroke: linear-gradient(to bottom, rgba(0, 0, 0, .3), rgba(0, 0, 0, .7)) ;
+    -fx-stroke-width: 0.5;
+    -fx-fill: rgba(255.0, 255.0, 255.0, .95);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, .2), 10.0, 0.5, 2.0, 2.0);
+}
+
+.notification-bar > .pane .label {
+    -fx-font-size: 1.166667em; /*15px;*/
+    -fx-text-fill: #292929;
+    -fx-alignment: top-left;
+}
+
+.notification-bar > .pane .title {
+    -fx-font-size: 1.166667em; /*15px;*/
+    -fx-text-fill: green;
+    -fx-font-weight: bold;
+}
+
+/******************************************************************************
+ * 
+ * Close button
+ * 
+ *****************************************************************************/
+ .notification-bar > .pane .close-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: center;
+}
+
+.notification-bar > .pane .close-button:hover {
+    -fx-background-color: linear-gradient(#a3a3a3, #8b8b8b 34%, #777777 36%, #777777 63%, #8b8b8b 65%, #adadad);
+}
+
+.notification-bar > .pane .close-button:pressed {
+    -fx-background-color: linear-gradient(#a3a3a3, #8b8b8b 34%, #777777 36%, #777777 63%, #8b8b8b 65%, #adadad);
+}
+
+.notification-bar > .pane .close-button > .graphic {
+    -fx-background-color: #949494;
+    -fx-scale-shape: false;
+    -fx-padding: 4.5 4.5 4.5 4.5; /* Graphic is 9x9 px */
+}
+
+.notification-bar > .pane .close-button:hover > .graphic {
+    -fx-background-color: #fefeff;
+}
+
+.notification-bar > .pane .close-button:pressed > .graphic {
+    -fx-background-color: #cfcfcf;
+}
+
+.notification-bar > .pane .close-button > .graphic {
+    -fx-shape: "M395.992,296.758l1.794-1.794l7.292,7.292l-1.795,1.794 L395.992,296.758z M403.256,294.992l1.794,1.794l-7.292,7.292l-1.794-1.795 L403.256,294.992z";
+}
