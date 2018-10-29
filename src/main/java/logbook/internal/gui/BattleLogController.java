@@ -357,8 +357,11 @@ public class BattleLogController extends WindowController {
 
             unitRoot.getChildren().add(areaRoot);
         }
-
-        this.collect.getRoot().getChildren().add(unitRoot);
+        if (unit instanceof Unit) {
+            this.collect.getRoot().getChildren().add(unitRoot);
+        } else {
+            this.collect.getRoot().getChildren().add(0, unitRoot);
+        }
     }
 
     /**
