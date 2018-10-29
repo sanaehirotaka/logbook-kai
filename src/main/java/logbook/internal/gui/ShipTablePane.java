@@ -503,6 +503,7 @@ public class ShipTablePane extends VBox {
             this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
             this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
             this.ship.setCellFactory(p -> new ShipImageCell());
+            this.ship.setComparator(Comparator.comparing(Ships::toName, String::compareTo));
             this.type.setCellValueFactory(new PropertyValueFactory<>("type"));
             this.lv.setCellValueFactory(new PropertyValueFactory<>("lv"));
             this.exp.setCellValueFactory(new PropertyValueFactory<>("exp"));
