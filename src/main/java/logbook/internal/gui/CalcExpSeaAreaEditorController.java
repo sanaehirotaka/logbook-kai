@@ -15,7 +15,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 import logbook.bean.AppSeaAreaExp;
@@ -90,15 +89,12 @@ public class CalcExpSeaAreaEditorController extends WindowController {
     }
 
     @Override
-    public void setWindow(Stage window) {
-        super.setWindow(window);
-        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> {
-            AppSeaAreaExpCollection.get()
-                    .setList(this.table.getItems().stream()
-                            .map(SeaAreaExpItem::toBean)
-                            .collect(Collectors.toList()));
-            this.apply.run();
-        });
+    protected void onWindowHidden(WindowEvent e) {
+        AppSeaAreaExpCollection.get()
+                .setList(this.table.getItems().stream()
+                        .map(SeaAreaExpItem::toBean)
+                        .collect(Collectors.toList()));
+        this.apply.run();
     }
 
     /**

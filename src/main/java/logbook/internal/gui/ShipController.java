@@ -15,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logbook.bean.AppConfig;
@@ -171,8 +170,9 @@ public class ShipController extends WindowController {
     }
 
     @Override
-    public void setWindow(Stage window) {
-        super.setWindow(window);
-        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
+    protected void onWindowHidden(WindowEvent e) {
+        if (this.timeline != null) {
+            this.timeline.stop();
+        }
     }
 }

@@ -20,7 +20,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
@@ -248,8 +247,9 @@ public class RequireNdockController extends WindowController {
     }
 
     @Override
-    public void setWindow(Stage window) {
-        super.setWindow(window);
-        window.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> this.timeline.stop());
+    protected void onWindowHidden(WindowEvent e) {
+        if (this.timeline != null) {
+            this.timeline.stop();
+        }
     }
 }

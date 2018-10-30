@@ -321,8 +321,6 @@ public class CaptureController extends WindowController {
     public void setWindow(Stage window) {
         super.setWindow(window);
         this.detectAction();
-        // 閉じる時に止める
-        this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onclose);
     }
 
     /**
@@ -459,7 +457,8 @@ public class CaptureController extends WindowController {
      *
      * @param event WindowEvent
      */
-    private void onclose(WindowEvent event) {
+    @Override
+    protected void onWindowHidden(WindowEvent e) {
         this.images.clear();
         this.timeline.stop();
         this.stopProcess();

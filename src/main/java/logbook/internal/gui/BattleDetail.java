@@ -17,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes;
@@ -683,19 +682,16 @@ public class BattleDetail extends WindowController {
         phases.add(phasePane);
     }
 
-    @Override
-    public void setWindow(Stage window) {
-        super.setWindow(window);
-        this.getWindow().addEventHandler(WindowEvent.WINDOW_HIDDEN, this::onClose);
-    }
-
     /**
      * ウインドウを閉じる時のアクション
      *
-     * @param event WindowEvent
+     * @param e WindowEvent
      */
-    private void onClose(WindowEvent event) {
-        this.timeline.stop();
+    @Override
+    protected void onWindowHidden(WindowEvent e) {
+        if (this.timeline != null) {
+            this.timeline.stop();
+        }
     }
 
     /**
