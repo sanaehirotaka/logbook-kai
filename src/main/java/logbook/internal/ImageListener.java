@@ -91,7 +91,7 @@ public class ImageListener implements ContentListenerSpi {
     private void storeShipImage(String name, RequestMetaData request, ResponseMetaData response) throws IOException {
         String uri = URI.create(request.getRequestURI()).getPath();
         int nameIndex = uri.lastIndexOf('/');
-        int extIndex = uri.lastIndexOf('_');
+        int extIndex = uri.indexOf('_', nameIndex);
         String shipid = uri.substring(nameIndex + 1, extIndex);
 
         ShipMst shipMst = ShipMstCollection.get()
