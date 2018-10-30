@@ -114,13 +114,21 @@ public class BattleLogs {
         String name = fileNameSafeDateString(dateString);
         return Arrays.asList(
                 dir.resolve(Paths.get(name.substring(0, 7), name + ".json")),
-                dir.resolve(Paths.get(name + ".json")));
+                dir.resolve(Paths.get(name.substring(0, 7), name + ".json.gz")),
+                dir.resolve(Paths.get(name + ".json")),
+                dir.resolve(Paths.get(name + ".json.gz")));
     }
 
     private static Path writePath(String dateString) {
         Path dir = Paths.get(AppConfig.get().getBattleLogDir());
         String name = fileNameSafeDateString(dateString);
-        return dir.resolve(Paths.get(name.substring(0, 7), name + ".json"));
+        String ext;
+        if (AppConfig.get().isCompressBattleLogs()) {
+            ext = ".json.gz";
+        } else {
+            ext = ".json";
+        }
+        return dir.resolve(Paths.get(name.substring(0, 7), name + ext));
     }
 
     private static void write0(BattleLog log) {
@@ -154,7 +162,7 @@ public class BattleLogs {
         if (!Files.exists(dir)) {
             return;
         }
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir, "*.{json}")) {
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir, "*.{json,json.gz}")) {
             ds.forEach(fromPath -> {
                 try {
                     // yyyy-MM
@@ -202,7 +210,7 @@ public class BattleLogs {
             // 比較するためのファイル名(拡張子を含まない)
             String expired = fileNameSafeDateString(Logs.DATE_FORMAT.format(exp));
 
-            Files.walkFileTree(dir, EnumSet.noneOf(FileVisitOption.class), 2,
+            Files.walkFileTree(dir, EnumSet.of(FileVisitOption.FOLLOW_LINKS), 2,
                     new DeleteExpiredVisitor(dir, expired));
         } catch (Exception e) {
             LoggerHolder.get().warn("戦闘ログの削除中に例外", e);
@@ -273,7 +281,7 @@ public class BattleLogs {
             try {
                 String fileName = path.getFileName().toString();
                 // 削除できるのはjsonファイルのみ
-                if (!fileName.endsWith(".json"))
+                if (!fileName.endsWith(".json") && !fileName.endsWith(".json.gz"))
                     return false;
                 // ファイル名チェック
                 String fileTime = stripExtention(fileName);
