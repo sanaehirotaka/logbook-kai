@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -92,16 +93,27 @@
                               <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <CheckBox fx:id="applyBattle" mnemonicParsing="false" text="戦闘開始時に結果を反映" GridPane.columnSpan="2147483647" />
+                              <CheckBox fx:id="applyBattle" mnemonicParsing="false" text="戦闘開始時に結果を反映" />
                               <CheckBox fx:id="applyResult" mnemonicParsing="false" text="戦闘結果時に結果を反映" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                              <CheckBox fx:id="compressBattleLogs" mnemonicParsing="false" text="戦闘ログを圧縮する" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                              <TextField fx:id="battleLogExpires" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="compressBattleLogs" mnemonicParsing="false" text="戦闘ログの詳細を圧縮する" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <Label text="戦闘ログ詳細の保存日数" GridPane.rowIndex="2" />
+                              <Label text="日" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="indefiniteExpires" mnemonicParsing="false" text="保存期間を無期限にする" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="3.0" />
+                                 </GridPane.margin>
+                              </CheckBox>
                            </children>
                         </GridPane>
                         <Label styleClass="bold" text="艦隊・艦娘" />

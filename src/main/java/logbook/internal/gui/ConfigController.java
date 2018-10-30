@@ -85,6 +85,14 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox applyResult;
 
+    /** 戦闘ログの保存期限 */
+    @FXML
+    private TextField battleLogExpires;
+
+    /** 戦闘ログの保存期間無期限 */
+    @FXML
+    private CheckBox indefiniteExpires;
+
     /** 戦闘ログを圧縮する */
     @FXML
     private CheckBox compressBattleLogs;
@@ -228,6 +236,9 @@ public class ConfigController extends WindowController {
         this.materialLogInterval.setText(Integer.toString(conf.getMaterialLogInterval()));
         this.applyBattle.setSelected(conf.isApplyBattle());
         this.applyResult.setSelected(conf.isApplyResult());
+        this.battleLogExpires.disableProperty().bind(this.indefiniteExpires.selectedProperty());
+        this.battleLogExpires.setText(Integer.toString(conf.getBattleLogExpires()));
+        this.indefiniteExpires.setSelected(conf.isIndefiniteExpires());
         this.compressBattleLogs.setSelected(conf.isCompressBattleLogs());
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
@@ -314,6 +325,8 @@ public class ConfigController extends WindowController {
         conf.setMaterialLogInterval(this.toInt(this.materialLogInterval.getText()));
         conf.setApplyBattle(this.applyBattle.isSelected());
         conf.setApplyResult(this.applyResult.isSelected());
+        conf.setBattleLogExpires(this.toInt(this.battleLogExpires.getText()));
+        conf.setIndefiniteExpires(this.indefiniteExpires.isSelected());
         conf.setCompressBattleLogs(this.compressBattleLogs.isSelected());
         conf.setShipFullyThreshold(this.toInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(this.toInt(this.itemFullyThreshold.getText()));

@@ -120,6 +120,9 @@ public final class AppConfig implements Serializable {
     /** 戦闘ログの保存期限 */
     private int battleLogExpires = 60;
 
+    /** 戦闘ログの保存期間無期限 */
+    private boolean indefiniteExpires = false;
+
     /** 戦闘ログの圧縮 */
     private boolean compressBattleLogs = false;
 

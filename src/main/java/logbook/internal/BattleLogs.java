@@ -188,7 +188,7 @@ public class BattleLogs {
             Path dir = Paths.get(AppConfig.get().getBattleLogDir());
             int expires = AppConfig.get().getBattleLogExpires();
             // 期限が無期限の場合終了
-            if (expires == Integer.MAX_VALUE) {
+            if (AppConfig.get().isIndefiniteExpires()) {
                 return;
             }
             // フォルダが存在しない場合終了
