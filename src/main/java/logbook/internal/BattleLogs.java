@@ -5,10 +5,15 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.ParsePosition;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -22,11 +27,12 @@ import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -51,6 +57,8 @@ import lombok.Getter;
  */
 public class BattleLogs {
 
+    private static final DateTimeFormatter DIR_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM");
+
     private static final ObjectMapper mapper;
 
     static {
@@ -64,73 +72,9 @@ public class BattleLogs {
      * @param log 戦闘ログ
      */
     public static void write(BattleLog log) {
-        // 書き込み
-        try {
-            Path path = jsonPath(log.getTime());
-
-            Path parent = path.getParent();
-            if (parent != null && !Files.exists(parent)) {
-                Files.createDirectories(parent);
-            }
-            OutputStream out = new BufferedOutputStream(Files.newOutputStream(path));
-            try {
-                if (AppConfig.get().isCompressBattleLogs()) {
-                    out = new GZIPOutputStream(out);
-                }
-                ObjectMapper mapper = getObjectMapper();
-                mapper.writeValue(out, log);
-            } finally {
-                out.close();
-            }
-        } catch (Exception e) {
-            LoggerHolder.get().warn("戦闘ログの書き込み中に例外", e);
-        }
-        // 期限切れの削除
-        deleteExpiration();
-    }
-
-    private static ObjectMapper getObjectMapper() {
-        return mapper;
-    }
-
-    private static void deleteExpiration() {
-        try {
-            Path dir = Paths.get(AppConfig.get().getBattleLogDir());
-
-            // 期限(自身を含まない)
-            ZonedDateTime exp = unitToday()
-                    .minusDays(AppConfig.get().getBattleLogExpires())
-                    .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
-            // 比較するためのファイル名(拡張子を含まない)
-            String expName = fileNameSafeDateString(Logs.DATE_FORMAT.format(exp));
-
-            PathMatcher logFilter = dir.getFileSystem()
-                    .getPathMatcher("glob:*.{json}");
-
-            Consumer<Path> deleteAction = p -> {
-                try {
-                    Files.deleteIfExists(p);
-                } catch (IOException e) {
-                    LoggerHolder.get().warn("戦闘ログの削除中に例外", e);
-                }
-            };
-            Predicate<Path> compareAction = p -> {
-                String fname = p.getFileName().toString();
-                int idx = fname.lastIndexOf('.');
-                if (idx != -1) {
-                    return fname.substring(0, idx).compareTo(expName) < 0;
-                }
-                return false;
-            };
-
-            try (Stream<Path> ds = Files.list(dir)) {
-                ds.filter(p -> logFilter.matches(p.getFileName()))
-                        .filter(compareAction)
-                        .forEach(deleteAction);
-            }
-        } catch (Exception e) {
-            LoggerHolder.get().warn("戦闘ログの削除中に例外", e);
-        }
+        write0(log);
+        move();
+        delete();
     }
 
     /**
@@ -141,21 +85,22 @@ public class BattleLogs {
      */
     public static BattleLog read(String dateString) {
         try {
-            Path path = jsonPath(dateString);
-            if (Files.isReadable(path)) {
-                InputStream in = new BufferedInputStream(Files.newInputStream(path));
-                try {
-                    // Check header
-                    in.mark(1024);
-                    int header = (in.read() | (in.read() << 8));
-                    in.reset();
-                    if (header == GZIPInputStream.GZIP_MAGIC) {
-                        in = new GZIPInputStream(in);
+            List<Path> paths = tryReadPaths(dateString);
+            for (Path path : paths) {
+                if (Files.isReadable(path)) {
+                    InputStream in = new BufferedInputStream(Files.newInputStream(path));
+                    try {
+                        // Check header
+                        in.mark(1024);
+                        int header = (in.read() | (in.read() << 8));
+                        in.reset();
+                        if (header == GZIPInputStream.GZIP_MAGIC) {
+                            in = new GZIPInputStream(in);
+                        }
+                        return mapper.readValue(in, BattleLog.class);
+                    } finally {
+                        in.close();
                     }
-                    ObjectMapper mapper = getObjectMapper();
-                    return mapper.readValue(in, BattleLog.class);
-                } finally {
-                    in.close();
                 }
             }
         } catch (Exception e) {
@@ -164,9 +109,199 @@ public class BattleLogs {
         return null;
     }
 
-    private static Path jsonPath(String dateString) {
+    private static List<Path> tryReadPaths(String dateString) {
         Path dir = Paths.get(AppConfig.get().getBattleLogDir());
-        return dir.resolve(fileNameSafeDateString(dateString) + ".json");
+        String name = fileNameSafeDateString(dateString);
+        return Arrays.asList(
+                dir.resolve(Paths.get(name.substring(0, 7), name + ".json")),
+                dir.resolve(Paths.get(name + ".json")));
+    }
+
+    private static Path writePath(String dateString) {
+        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
+        String name = fileNameSafeDateString(dateString);
+        return dir.resolve(Paths.get(name.substring(0, 7), name + ".json"));
+    }
+
+    private static void write0(BattleLog log) {
+        try {
+            Path path = writePath(log.getTime());
+
+            Path parent = path.getParent();
+            if (parent != null && !Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(path));
+            try {
+                if (AppConfig.get().isCompressBattleLogs()) {
+                    out = new GZIPOutputStream(out);
+                }
+                mapper.writeValue(out, log);
+            } finally {
+                out.close();
+            }
+        } catch (Exception e) {
+            LoggerHolder.get().warn("戦闘ログの書き込み中に例外", e);
+        }
+    }
+
+    /**
+     * 戦闘ログを年月のフォルダに移動する
+     */
+    private static void move() {
+        Path dir = Paths.get(AppConfig.get().getBattleLogDir());
+        // フォルダが存在しない場合終了
+        if (!Files.exists(dir)) {
+            return;
+        }
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir, "*.{json}")) {
+            ds.forEach(fromPath -> {
+                try {
+                    // yyyy-MM
+                    String dirName = fromPath.getFileName().toString().substring(0, 7);
+                    if (!isExpectedDirectoryName(dirName)) {
+                        return;
+                    }
+                    // yyyy-MM-dd HH-mm-ss.json
+                    String fileName = fromPath.getFileName().toString();
+
+                    Path toPath = dir.resolve(Paths.get(dirName, fileName));
+                    Path parent = toPath.getParent();
+                    if (parent != null && !Files.exists(parent)) {
+                        Files.createDirectories(parent);
+                    }
+                    Files.move(fromPath, toPath);
+                } catch (Exception e) {
+                    LoggerHolder.get().warn("戦闘ログの移動に失敗しました(file=" + fromPath + ")", e);
+                }
+            });
+        } catch (Exception e) {
+            LoggerHolder.get().warn("戦闘ログの移動中に例外", e);
+        }
+    }
+
+    /**
+     * 戦闘ログを削除する
+     */
+    private static void delete() {
+        try {
+            Path dir = Paths.get(AppConfig.get().getBattleLogDir());
+            int expires = AppConfig.get().getBattleLogExpires();
+            // 期限が無期限の場合終了
+            if (expires == Integer.MAX_VALUE) {
+                return;
+            }
+            // フォルダが存在しない場合終了
+            if (!Files.exists(dir)) {
+                return;
+            }
+            // 期限(自身を含まない)
+            ZonedDateTime exp = unitToday()
+                    .minusDays(expires)
+                    .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
+            // 比較するためのファイル名(拡張子を含まない)
+            String expired = fileNameSafeDateString(Logs.DATE_FORMAT.format(exp));
+
+            Files.walkFileTree(dir, EnumSet.noneOf(FileVisitOption.class), 2,
+                    new DeleteExpiredVisitor(dir, expired));
+        } catch (Exception e) {
+            LoggerHolder.get().warn("戦闘ログの削除中に例外", e);
+        }
+    }
+
+    /**
+     * 戦闘ログを削除するためのFileVisitor
+     */
+    private static class DeleteExpiredVisitor extends SimpleFileVisitor<Path> {
+
+        private final Path baseDir;
+
+        private final String expired;
+
+        public DeleteExpiredVisitor(Path baseDir, String expired) {
+            this.baseDir = baseDir;
+            this.expired = expired;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            // ルートディレクトリかチェック
+            if (this.baseDir.equals(dir)) {
+                return FileVisitResult.CONTINUE;
+            }
+            // 年月のフォルダかチェック
+            String dirName = dir.getFileName().toString();
+            if (!isExpectedDirectoryName(dirName)) {
+                return FileVisitResult.SKIP_SUBTREE;
+            }
+            // 年月部分を比較
+            if (dirName.compareTo(this.expired.substring(0, dirName.length())) > 0) {
+                return FileVisitResult.SKIP_SUBTREE;
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            // 削除対象かをテストする
+            if (this.test(file)) {
+                Files.deleteIfExists(file);
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            // 空フォルダチェック
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
+                if (ds.iterator().hasNext()) {
+                    return FileVisitResult.CONTINUE;
+                }
+            }
+            // 空フォルダなら削除
+            Files.deleteIfExists(dir);
+            return FileVisitResult.CONTINUE;
+        }
+
+        /**
+         * 削除対象かをテストする
+         *
+         * @param path ファイル
+         * @return 削除できる場合true
+         */
+        private boolean test(Path path) {
+            try {
+                String fileName = path.getFileName().toString();
+                // 削除できるのはjsonファイルのみ
+                if (!fileName.endsWith(".json"))
+                    return false;
+                // ファイル名チェック
+                String fileTime = stripExtention(fileName);
+                if (fileTime.length() != this.expired.length())
+                    return false;
+                // 期限切れチェック
+                return fileTime.compareTo(this.expired) < 0;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        private static String stripExtention(String name) {
+            int idx = name.indexOf('.');
+            if (idx != -1) {
+                return name.substring(0, idx);
+            }
+            return name;
+        }
+    }
+
+    private static boolean isExpectedDirectoryName(String dirName) {
+        ParsePosition position = new ParsePosition(0);
+        DIR_FORMAT.parseUnresolved(dirName, position);
+        if (position.getErrorIndex() != -1 || dirName.length() != position.getIndex()) {
+            return false;
+        }
+        return true;
     }
 
     private static String fileNameSafeDateString(String dateString) {
