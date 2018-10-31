@@ -279,6 +279,9 @@ public class BattleLogs {
          */
         private boolean test(Path path) {
             try {
+                // フォルダは削除しない
+                if (Files.isDirectory(path))
+                    return false;
                 String fileName = path.getFileName().toString();
                 // 削除できるのはjsonファイルのみ
                 if (!fileName.endsWith(".json") && !fileName.endsWith(".json.gz"))
