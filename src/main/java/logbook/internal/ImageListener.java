@@ -162,9 +162,16 @@ public class ImageListener implements ContentListenerSpi {
                 Spritesmith.Rect rect = v.getFrame();
                 BufferedImage subimage = image.getSubimage(rect.getX(), rect.getY(), rect.getW(), rect.getH());
                 try {
-                    try (OutputStream out = new BufferedOutputStream(
-                            Files.newOutputStream(storeDir.resolve(k + ".png")))) {
+                    Path temp = tempFile();
+                    Path to = storeDir.resolve(k + ".png");
+                    try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(temp))) {
                         ImageIO.write(subimage, "png", out);
+                    }
+                    try {
+                        this.move(temp, to);
+                    } catch (IOException e) {
+                        Files.deleteIfExists(temp);
+                        throw e;
                     }
                 } catch (Exception e) {
                     LoggerHolder.get().warn("画像ファイル処理中に例外が発生しました[src=" + imageSrc + "]", e);
@@ -174,16 +181,28 @@ public class ImageListener implements ContentListenerSpi {
         }
     }
 
+    private Path tempFile() throws IOException {
+        return Files.createTempFile("ImageListener-", "");
+    }
+
     private void write(InputStream from, Path to) throws IOException {
+        Path temp = this.tempFile();
+        Files.copy(from, temp, StandardCopyOption.REPLACE_EXISTING);
+        try {
+            this.move(temp, to);
+        } catch (IOException e) {
+            Files.deleteIfExists(temp);
+        }
+    }
+
+    private void move(Path from, Path to) throws IOException {
         Path parent = to.getParent();
         if (parent != null) {
             if (!Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
         }
-        Path temp = Files.createTempFile("ImageListener-", "");
-        Files.copy(from, temp, StandardCopyOption.REPLACE_EXISTING);
-        Files.move(temp, to, StandardCopyOption.REPLACE_EXISTING);
+        Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
