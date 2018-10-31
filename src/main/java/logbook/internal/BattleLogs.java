@@ -115,8 +115,7 @@ public class BattleLogs {
         return Arrays.asList(
                 dir.resolve(Paths.get(name.substring(0, 7), name + ".json")),
                 dir.resolve(Paths.get(name.substring(0, 7), name + ".json.gz")),
-                dir.resolve(Paths.get(name + ".json")),
-                dir.resolve(Paths.get(name + ".json.gz")));
+                dir.resolve(Paths.get(name + ".json")));
     }
 
     private static Path writePath(String dateString) {
@@ -156,7 +155,7 @@ public class BattleLogs {
     /**
      * 戦闘ログを年月のフォルダに移動する
      */
-    private static void move() {
+    private synchronized static void move() {
         Path dir = Paths.get(AppConfig.get().getBattleLogDir());
         // フォルダが存在しない場合終了
         if (!Files.exists(dir)) {
