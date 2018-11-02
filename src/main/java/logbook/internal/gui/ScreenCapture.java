@@ -3,6 +3,7 @@ package logbook.internal.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -10,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -322,6 +324,17 @@ class ScreenCapture {
      */
     static byte[] encodeOther(BufferedImage image, String format) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        if ("png".equals(format)) {
+            int width = image.getWidth(), height = image.getHeight();
+            BufferedImage newImg = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+            Graphics2D gd = newImg.createGraphics();
+            gd.drawImage(image, 0, 0, null);
+            gd.dispose();
+            WritableRaster r = newImg.getAlphaRaster();
+            int[] alpha = new int[] { 0xfe };
+            r.setPixel(0, 0, alpha);
+            image = newImg;
+        }
         try (ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
             ImageWriter writer = ImageIO.getImageWritersByFormatName(format).next();
             try {
