@@ -45,12 +45,12 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="画像の形式">
                      <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setJpeg" selected="true" text="JPEG">
+                        <RadioMenuItem mnemonicParsing="false" fx:id="jpeg" onAction="#setJpeg" selected="true" text="JPEG">
                            <toggleGroup>
                               <ToggleGroup fx:id="type" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setPng" text="PNG" toggleGroup="$type" />
+                        <RadioMenuItem mnemonicParsing="false" fx:id="png" onAction="#setPng" text="PNG" toggleGroup="$type" />
                      </items>
                   </Menu>
               </items>

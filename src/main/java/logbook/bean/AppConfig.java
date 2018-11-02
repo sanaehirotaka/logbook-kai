@@ -147,6 +147,9 @@ public final class AppConfig implements Serializable {
     /** キャプチャの保存先 */
     private String captureDir;
 
+    /** キャプチャの画像形式 */
+    private String captureFormat = "jpg";
+
     /** FFmpeg 実行ファイル */
     private String ffmpegPath;
 

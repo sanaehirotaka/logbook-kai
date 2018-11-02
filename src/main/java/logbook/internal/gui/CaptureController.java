@@ -46,6 +46,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -86,6 +87,18 @@ public class CaptureController extends WindowController {
     /** ラジオボタングループ */
     @FXML
     private ToggleGroup cut;
+
+    /** 画像形式jpeg */
+    @FXML
+    private RadioMenuItem jpeg;
+
+    /** 画像形式png */
+    @FXML
+    private RadioMenuItem png;
+
+    /** 画像形式ボタングループ */
+    @FXML
+    private ToggleGroup type;
 
     /** キャプチャ */
     @FXML
@@ -164,6 +177,8 @@ public class CaptureController extends WindowController {
                 }
             }
         });
+        this.jpeg.setSelected("jpg".equals(AppConfig.get().getCaptureFormat()));
+        this.png.setSelected("png".equals(AppConfig.get().getCaptureFormat()));
     }
 
     @FXML
@@ -310,11 +325,13 @@ public class CaptureController extends WindowController {
     @FXML
     void setJpeg(ActionEvent event) {
         this.sc.setType("jpg");
+        AppConfig.get().setCaptureFormat("jpg");
     }
 
     @FXML
     void setPng(ActionEvent event) {
         this.sc.setType("png");
+        AppConfig.get().setCaptureFormat("png");
     }
 
     @Override
