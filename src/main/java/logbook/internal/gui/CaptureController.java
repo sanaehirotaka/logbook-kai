@@ -457,6 +457,11 @@ public class CaptureController extends WindowController {
     private void captureAction(ActionEvent event) {
         try {
             if (this.sc != null) {
+                if (this.jpeg.isSelected())
+                    this.sc.setType("jpg");
+                if (this.png.isSelected())
+                    this.sc.setType("png");
+
                 boolean isDirect = this.direct.isSelected() && this.directPath != null;
                 if (isDirect) {
                     this.sc.captureDirect(this.directPath);
