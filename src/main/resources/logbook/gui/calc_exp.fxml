@@ -9,13 +9,12 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -23,169 +22,171 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CalcExpController">
    <children>
-      <HBox VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.6" orientation="VERTICAL" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets />
          </VBox.margin>
-         <children>
+         <items>
+            <HBox>
+               <children>
+                  <VBox>
+                     <children>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <ComboBox fx:id="shipList" prefWidth="150.0">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                              <Button mnemonicParsing="false" onAction="#reloadAction" text="更新">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                                 </padding>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                           </padding>
+                        </HBox>
+                        <GridPane>
+                          <columnConstraints>
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints />
+                              <RowConstraints />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="今のレベル" GridPane.rowIndex="2" />
+                              <Spinner fx:id="nowLv" editable="true" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Lv" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <TextField fx:id="nowExp" editable="false" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Label text="Exp" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                              <Label text="目標レベル" GridPane.rowIndex="3" />
+                              <Spinner fx:id="goalLv" editable="true" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label text="Lv" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <TextField fx:id="goalExp" editable="false" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <Label text="Exp" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="海域" />
+                              <ChoiceBox fx:id="sea" prefWidth="150.0">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </HBox.margin>
+                              </ChoiceBox>
+                              <Button mnemonicParsing="false" onAction="#edit" text="海域を編集">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                                 </padding>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="海域Exp" />
+                              <TextField fx:id="baseExp" onKeyReleased="#changeExp" prefWidth="70.0" text="100">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="評価" />
+                              <ChoiceBox fx:id="rank" prefWidth="120.0">
+                                 <HBox.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </HBox.margin>
+                              </ChoiceBox>
+                              <CheckBox fx:id="flagShip" mnemonicParsing="false" onAction="#update" selected="true" text="旗艦" />
+                              <CheckBox fx:id="mvp" mnemonicParsing="false" onAction="#update" text="MVP" />
+                           </children>
+                           <padding>
+                              <Insets top="3.0" />
+                           </padding>
+                        </HBox>
+                        <GridPane>
+                          <columnConstraints>
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                              <ColumnConstraints minWidth="10.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="1回あたり" />
+                              <TextField fx:id="getExp" editable="false" prefWidth="70.0" GridPane.columnIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <Label text="必要経験値" GridPane.rowIndex="1" />
+                              <TextField fx:id="needExp" editable="false" prefWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                              <Label text="戦闘回数" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <TextField fx:id="battleCount" editable="false" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </GridPane.margin>
+                              </TextField>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+                  <LineChart fx:id="expChart" animated="false" createSymbols="false" legendVisible="false" prefHeight="300.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
+                      <xAxis>
+                        <NumberAxis side="BOTTOM" fx:id="xAxis" />
+                      </xAxis>
+                      <yAxis>
+                        <NumberAxis fx:id="yAxis" label="経験値" side="LEFT" />
+                      </yAxis>
+                  </LineChart>
+               </children>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </HBox>
             <VBox>
                <children>
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <ComboBox fx:id="shipList" prefWidth="150.0">
-                           <HBox.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </HBox.margin></ComboBox>
-                        <Button mnemonicParsing="false" onAction="#reloadAction" text="更新">
-                           <HBox.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </HBox.margin>
-                           <padding>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
-                           </padding></Button>
-                     </children>
-                     <padding>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                     </padding>
-                  </HBox>
-                  <GridPane>
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                    </rowConstraints>
-                     <children>
-                        <Label text="今のレベル" GridPane.rowIndex="2" />
-                        <Spinner fx:id="nowLv" editable="true" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Label text="Lv" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <TextField fx:id="nowExp" editable="false" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Label text="Exp" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <Label text="目標レベル" GridPane.rowIndex="3" />
-                        <Spinner fx:id="goalLv" editable="true" prefWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Label text="Lv" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <TextField fx:id="goalExp" editable="false" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <Label text="Exp" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                     </children>
-                  </GridPane>
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <Label text="海域" />
-                        <ChoiceBox fx:id="sea" prefWidth="150.0">
-                           <HBox.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </HBox.margin></ChoiceBox>
-                        <Button mnemonicParsing="false" onAction="#edit" text="海域を編集">
-                           <HBox.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </HBox.margin>
-                           <padding>
-                              <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
-                           </padding>
-                        </Button>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <Label text="海域Exp" />
-                        <TextField fx:id="baseExp" onKeyReleased="#changeExp" prefWidth="70.0" text="100">
-                           <HBox.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </HBox.margin>
-                        </TextField>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT">
-                     <children>
-                        <Label text="評価" />
-                        <ChoiceBox fx:id="rank" prefWidth="120.0">
-                           <HBox.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </HBox.margin></ChoiceBox>
-                     </children>
-                     <padding>
-                        <Insets top="3.0" />
-                     </padding>
-                  </HBox>
-                  <HBox>
-                     <children>
-                        <CheckBox fx:id="flagShip" mnemonicParsing="false" onAction="#update" selected="true" text="旗艦" />
-                        <CheckBox fx:id="mvp" mnemonicParsing="false" onAction="#update" text="MVP" />
-                     </children>
-                     <padding>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-                     </padding>
-                  </HBox>
-                  <GridPane>
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                        <ColumnConstraints minWidth="10.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" />
-                    </rowConstraints>
-                     <children>
-                        <Label text="1回あたり" />
-                        <TextField fx:id="getExp" editable="false" prefWidth="70.0" GridPane.columnIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </GridPane.margin></TextField>
-                        <Label text="必要経験値" GridPane.rowIndex="1" />
-                        <TextField fx:id="needExp" editable="false" prefWidth="70.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </GridPane.margin></TextField>
-                        <Label text="戦闘回数" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <TextField fx:id="battleCount" editable="false" prefWidth="70.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </GridPane.margin></TextField>
-                     </children>
-                  </GridPane>
+                  <Label text="改装レベル不足の艦娘" />
+                  <TableView fx:id="shortageShip" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="ship" prefWidth="260.0" text="艦娘" />
+                        <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
+                        <TableColumn fx:id="afterLv" prefWidth="50.0" text="改装Lv" />
+                     </columns>
+                  </TableView>
                </children>
             </VBox>
-            <LineChart fx:id="expChart" animated="false" createSymbols="false" legendVisible="false" prefHeight="300.0" prefWidth="300.0" HBox.hgrow="ALWAYS">
-                <xAxis>
-                  <NumberAxis side="BOTTOM" fx:id="xAxis" />
-                </xAxis>
-                <yAxis>
-                  <NumberAxis fx:id="yAxis" label="経験値" side="LEFT" />
-                </yAxis>
-            </LineChart>
-         </children>
+         </items>
          <padding>
-            <Insets top="2.0" />
+            <Insets top="3.0" />
          </padding>
-      </HBox>
-      <Separator />
-      <FlowPane>
-         <children>
-            <Label text="改装レベル不足の艦娘" />
-         </children>
-      </FlowPane>
-      <TableView fx:id="shortageShip" prefHeight="200.0">
-         <columns>
-            <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
-            <TableColumn fx:id="ship" prefWidth="260.0" text="艦娘" />
-            <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
-            <TableColumn fx:id="afterLv" prefWidth="50.0" text="改装Lv" />
-         </columns>
-      </TableView>
-      <FlowPane />
+      </SplitPane>
    </children>
-   <padding>
-      <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-   </padding>
    <stylesheets>
       <URL value="@application.css" />
       <URL value="@calc_exp.css" />
