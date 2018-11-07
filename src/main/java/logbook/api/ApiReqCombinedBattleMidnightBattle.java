@@ -32,6 +32,10 @@ public class ApiReqCombinedBattleMidnightBattle implements APIListenerSpi {
             BattleLog log = AppCondition.get().getBattleResult();
             if (log != null) {
                 log.setMidnight(CombinedBattleMidnightBattle.toBattle(data));
+                // ローデータを設定する
+                if (AppConfig.get().isIncludeRawData()) {
+                    BattleLog.setRawData(log, BattleLog.RawData::setMidnight, data, req);
+                }
                 if (AppConfig.get().isApplyBattle()) {
                     // 艦隊を更新
                     PhaseState p = new PhaseState(log);

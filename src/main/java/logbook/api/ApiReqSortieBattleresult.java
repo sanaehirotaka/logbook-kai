@@ -41,6 +41,10 @@ public class ApiReqSortieBattleresult implements APIListenerSpi {
                 AppCondition.get().setBattleResultConfirm(log);
 
                 log.setResult(BattleResult.toBattleResult(data));
+                // ローデータを設定する
+                if (AppConfig.get().isIncludeRawData()) {
+                    BattleLog.setRawData(log, BattleLog.RawData::setResult, data, req);
+                }
                 log.setTime(Logs.nowString());
                 // 出撃艦隊
                 Integer dockId = Optional.ofNullable(log.getBattle())

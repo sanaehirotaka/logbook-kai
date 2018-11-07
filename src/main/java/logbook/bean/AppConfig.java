@@ -126,6 +126,9 @@ public final class AppConfig implements Serializable {
     /** 戦闘ログの圧縮 */
     private boolean compressBattleLogs = false;
 
+    /** 戦闘ログにローデータを含める */
+    private boolean includeRawData = false;
+
     /** レベリング海域 */
     private int seaAreaIndex = 0;
 

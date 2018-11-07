@@ -42,6 +42,10 @@ public class ApiReqCombinedBattleBattleresult implements APIListenerSpi {
                 AppCondition.get().setBattleResultConfirm(log);
 
                 log.setResult(BattleResult.toBattleResult(data));
+                // ローデータを設定する
+                if (AppConfig.get().isIncludeRawData()) {
+                    BattleLog.setRawData(log, BattleLog.RawData::setResult, data, req);
+                }
                 log.setTime(Logs.nowString());
                 // 艦隊スナップショットを作る
                 if (log.getCombinedType() != CombinedType.未結成 && AppCondition.get().getDeckId() == 1) {

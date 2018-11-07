@@ -32,6 +32,10 @@ public class ApiReqCombinedBattleAirbattle implements APIListenerSpi {
             BattleLog log = AppCondition.get().getBattleResult();
             if (log != null) {
                 log.setBattle(CombinedBattleAirbattle.toBattle(data));
+                // ローデータを設定する
+                if (AppConfig.get().isIncludeRawData()) {
+                    BattleLog.setRawData(log, BattleLog.RawData::setBattle, data, req);
+                }
                 // 艦隊スナップショットを作る
                 BattleLog.snapshot(log, 1, 2);
                 if (AppConfig.get().isApplyBattle()) {

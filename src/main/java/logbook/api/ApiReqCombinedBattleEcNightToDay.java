@@ -33,6 +33,10 @@ public class ApiReqCombinedBattleEcNightToDay implements APIListenerSpi {
             BattleLog log = AppCondition.get().getBattleResult();
             if (log != null) {
                 log.setBattle(CombinedBattleEcNightToDay.toBattle(data));
+                // ローデータを設定する
+                if (AppConfig.get().isIncludeRawData()) {
+                    BattleLog.setRawData(log, BattleLog.RawData::setBattle, data, req);
+                }
                 // 艦隊スナップショットを作る
                 if (log.getCombinedType() != CombinedType.未結成 && AppCondition.get().getDeckId() == 1) {
                     BattleLog.snapshot(log, 1, 2);
