@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
@@ -144,7 +145,9 @@ public class BattleLog implements Serializable {
      * ローデータ
      */
     @Data
-    public static class RawData {
+    public static class RawData implements Serializable {
+
+        private static final long serialVersionUID = 4291532219144781718L;
 
         /** 戦闘(昼戦、特殊夜戦) */
         private ApiData battle;
@@ -160,7 +163,9 @@ public class BattleLog implements Serializable {
      * ローデータ
      */
     @Data
-    public static class ApiData {
+    public static class ApiData implements Serializable {
+
+        private static final long serialVersionUID = 8729885890089448397L;
 
         /** URI */
         private String uri;
