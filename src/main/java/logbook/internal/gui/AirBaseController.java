@@ -264,7 +264,9 @@ public class AirBaseController extends WindowController {
                     baseRow.setName(airBase.getName());
                     baseRow.setActionKind(this.actionKind(airBase.getActionKind()));
                     baseRow.setSeiku(Integer.toString(AirBases.airSuperiority(airBase)));
-                    baseRow.setDistance(Integer.toString(airBase.getDistance()));
+
+                    Mapinfo.Distance distance = airBase.getDistance();
+                    baseRow.setDistance(Integer.toString(distance.getBase() + distance.getBonus()));
 
                     for (PlaneInfo planeInfo : airBase.getPlaneInfo()) {
                         Plane plane = new Plane();
