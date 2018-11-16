@@ -85,7 +85,7 @@ public class Mapinfo implements Serializable {
         private String name;
 
         /** api_distance */
-        private Integer distance;
+        private Distance distance;
 
         /** api_action_kind */
         private Integer actionKind;
@@ -105,9 +105,38 @@ public class Mapinfo implements Serializable {
                     .setInteger("api_area_id", bean::setAreaId)
                     .setInteger("api_rid", bean::setRid)
                     .setString("api_name", bean::setName)
-                    .setInteger("api_distance", bean::setDistance)
+                    .set("api_distance", bean::setDistance, Distance::toDistance)
                     .setInteger("api_action_kind", bean::setActionKind)
                     .set("api_plane_info", bean::setPlaneInfo, JsonHelper.toList(PlaneInfo::toPlaneInfo));
+            return bean;
+        }
+    }
+
+    /**
+     * api_distance
+     */
+    @Data
+    public static class Distance implements Serializable {
+
+        private static final long serialVersionUID = -6938404167175752929L;
+
+        /** api_base */
+        private Integer base;
+
+        /** api_bonus */
+        private Integer bonus;
+
+        /**
+         * JsonObjectから{@link Distance}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link Distance}
+         */
+        public static Distance toDistance(JsonValue json) {
+            Distance bean = new Distance();
+            JsonHelper.bind((JsonObject) json)
+                    .setInteger("api_base", bean::setBase)
+                    .setInteger("api_bonus", bean::setBonus);
             return bean;
         }
     }
