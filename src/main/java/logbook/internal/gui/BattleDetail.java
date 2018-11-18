@@ -1,5 +1,7 @@
 package logbook.internal.gui;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 import logbook.bean.BattleLog;
+import logbook.bean.BattleResult;
 import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.AirBaseAttack;
 import logbook.bean.BattleTypes.CombinedType;
@@ -54,6 +57,9 @@ import lombok.Getter;
  */
 public class BattleDetail extends WindowController {
 
+    /** 戦闘ログ */
+    private BattleLog log;
+
     /** 出撃/進撃 */
     private MapStartNext last;
 
@@ -74,6 +80,9 @@ public class BattleDetail extends WindowController {
 
     /** 夜戦 */
     private IMidnightBattle midnight;
+
+    /** 戦果報告 */
+    private BattleResult result;
 
     /** ルート要素 */
     @FXML
@@ -131,6 +140,18 @@ public class BattleDetail extends WindowController {
     @FXML
     private Label judge;
 
+    /** 基本経験値 */
+    @FXML
+    private Label baseExp;
+
+    /** 獲得経験値 */
+    @FXML
+    private Label shipExp;
+
+    /** 提督経験値 */
+    @FXML
+    private Label exp;
+
     /** 周期タイマー */
     private Timeline timeline = new Timeline();
 
@@ -156,20 +177,18 @@ public class BattleDetail extends WindowController {
      */
     void setData(BattleLog log) {
         if (log != null && log.getBattle() != null) {
-            int hashCode = log.hashCode();
-            if (this.hashCode == hashCode) {
-                return;
-            }
-            this.hashCode = hashCode;
-
-            MapStartNext last = log.getNext().get(log.getNext().size() - 1);
-            CombinedType combinedType = log.getCombinedType();
-            Map<Integer, List<Ship>> deckMap = log.getDeckMap();
-            Map<Integer, SlotItem> itemMap = log.getItemMap();
-            IFormation battle = log.getBattle();
-            IMidnightBattle midnight = log.getMidnight();
-            Set<Integer> escape = log.getEscape();
-            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight);
+            this.log = log;
+        }
+        if (this.log != null) {
+            MapStartNext last = this.log.getNext().get(this.log.getNext().size() - 1);
+            CombinedType combinedType = this.log.getCombinedType();
+            Map<Integer, List<Ship>> deckMap = this.log.getDeckMap();
+            Map<Integer, SlotItem> itemMap = this.log.getItemMap();
+            IFormation battle = this.log.getBattle();
+            IMidnightBattle midnight = this.log.getMidnight();
+            Set<Integer> escape = this.log.getEscape();
+            BattleResult result = this.log.getResult();
+            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight, result);
         }
     }
 
@@ -182,9 +201,16 @@ public class BattleDetail extends WindowController {
      * @param itemMap 装備
      * @param battle 戦闘
      * @param midnight 夜戦
+     * @param result 戦果報告
      */
     void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap, Set<Integer> escape,
-            Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight) {
+            Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight, BattleResult result) {
+        int hashCode = Objects.hash(last, battle, midnight, result);
+        if (this.hashCode == hashCode) {
+            return;
+        }
+        this.hashCode = hashCode;
+
         this.last = last;
         this.combinedType = combinedType;
         this.deckMap = deckMap;
@@ -192,6 +218,7 @@ public class BattleDetail extends WindowController {
         this.escape = escape;
         this.battle = battle;
         this.midnight = midnight;
+        this.result = result;
         this.update();
     }
 
@@ -380,6 +407,22 @@ public class BattleDetail extends WindowController {
                 + "(味方損害率:" + (int) judge.getFriendDamageRatio()
                 + "/敵損害率:" + (int) judge.getEnemyDamageRatio() + ")");
 
+        // 経験値
+        if (this.result != null) {
+            this.baseExp.setText(String.valueOf(this.result.getGetBaseExp()));
+            this.shipExp.setText(String.valueOf(this.result.getGetShipExp().stream()
+                    .mapToInt(Integer::intValue)
+                    .sum()));
+            this.exp.setText(this.result.getGetExp()
+                    + "(" + BigDecimal.valueOf(this.result.getGetExp())
+                            .divide(BigDecimal.valueOf(1428.57), 2, RoundingMode.FLOOR)
+                            .toPlainString()
+                    + ")");
+        } else {
+            this.baseExp.setText("?");
+            this.shipExp.setText("?");
+            this.exp.setText("?");
+        }
         ((BattleDetailPhase) phases.get(phases.size() - 1)).setExpanded(true);
     }
 
