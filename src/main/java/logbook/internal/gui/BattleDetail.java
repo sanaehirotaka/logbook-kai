@@ -415,7 +415,7 @@ public class BattleDetail extends WindowController {
                     .sum()));
             this.exp.setText(this.result.getGetExp()
                     + "(" + BigDecimal.valueOf(this.result.getGetExp())
-                            .divide(BigDecimal.valueOf(1428.57), 2, RoundingMode.FLOOR)
+                            .divide(BigDecimal.valueOf(1428.571), 3, RoundingMode.FLOOR)
                             .toPlainString()
                     + ")");
         } else {
