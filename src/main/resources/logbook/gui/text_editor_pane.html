@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title></title>
+<style type="text/css" media="screen">
+#editor { position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+</style>
+</head>
+<body>
+<div id="editor"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ext-language_tools.js" charset="utf-8"></script>
+<script>
+function start(lang) {
+    window.editor = ace.edit("editor");
+    window.editor.setTheme("ace/theme/chrome");
+    window.editor.session.setTabSize(4);
+    window.editor.session.setUseSoftTabs(true);
+    window.editor.session.setMode("ace/mode/" + lang);
+    window.editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
+}
+function set(text) {
+    window.editor.setValue(text);
+}
+function get() {
+    return window.editor.getValue();
+}
+function setReadOnly(readOnly) {
+    window.editor.setReadOnly(true);
+}
+</script>
+</body>
+</html>
