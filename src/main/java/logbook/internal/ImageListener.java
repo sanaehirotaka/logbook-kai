@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.FileTime;
+import java.time.Duration;
 import java.util.function.BiConsumer;
 
 import javax.imageio.IIOImage;
@@ -149,6 +151,18 @@ public class ImageListener implements ContentListenerSpi {
         if (!Files.exists(storeDir)) {
             Files.createDirectories(storeDir);
         }
+        // 画像ファイルとスプライト情報のFileTimeを比較し、双方の時間が近い場合だけ画像ファイルを分解します。
+        try {
+            FileTime imageTime = Files.getLastModifiedTime(imageSrc);
+            FileTime jsonTime = Files.getLastModifiedTime(jsonSrc);
+            if (Duration.between(imageTime.toInstant(), jsonTime.toInstant())
+                    .abs()
+                    .compareTo(Duration.ofMinutes(10)) > 0) {
+                return;
+            }
+        } catch (Exception e) {
+            LoggerHolder.get().warn("画像ファイル処理中に例外が発生しました[src=" + imageSrc + "]", e);
+        }
         Spritesmith sprite;
         try (BufferedInputStream is = new BufferedInputStream(Files.newInputStream(jsonSrc))) {
             ObjectMapper mapper = new ObjectMapper();
@@ -162,7 +176,7 @@ public class ImageListener implements ContentListenerSpi {
                 Spritesmith.Rect rect = v.getFrame();
                 BufferedImage subimage = image.getSubimage(rect.getX(), rect.getY(), rect.getW(), rect.getH());
                 try {
-                    Path temp = tempFile();
+                    Path temp = this.tempFile();
                     Path to = storeDir.resolve(k + ".png");
                     try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(temp))) {
                         ImageIO.write(subimage, "png", out);
