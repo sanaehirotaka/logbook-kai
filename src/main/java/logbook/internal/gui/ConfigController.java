@@ -97,6 +97,10 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox compressBattleLogs;
 
+    /** 戦闘ログにローデータを含める */
+    @FXML
+    private CheckBox includeRawData;
+
     /** 母港枠 */
     @FXML
     private TextField shipFullyThreshold;
@@ -240,6 +244,7 @@ public class ConfigController extends WindowController {
         this.battleLogExpires.setText(Integer.toString(conf.getBattleLogExpires()));
         this.indefiniteExpires.setSelected(conf.isIndefiniteExpires());
         this.compressBattleLogs.setSelected(conf.isCompressBattleLogs());
+        this.includeRawData.setSelected(conf.isIncludeRawData());
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
@@ -328,6 +333,7 @@ public class ConfigController extends WindowController {
         conf.setBattleLogExpires(this.toInt(this.battleLogExpires.getText()));
         conf.setIndefiniteExpires(this.indefiniteExpires.isSelected());
         conf.setCompressBattleLogs(this.compressBattleLogs.isSelected());
+        conf.setIncludeRawData(this.includeRawData.isSelected());
         conf.setShipFullyThreshold(this.toInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(this.toInt(this.itemFullyThreshold.getText()));
         conf.setImageZoomRate(this.toInt(this.imageZoomRate.getText()));

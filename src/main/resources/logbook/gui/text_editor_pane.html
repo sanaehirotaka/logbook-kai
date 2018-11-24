@@ -3,7 +3,8 @@
 <head>
 <title></title>
 <style type="text/css" media="screen">
-#editor { position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+body { font-family: -apple-system, "Yu Gothic", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif; }
+#editor { position: absolute; top: 0; right: 0; bottom: 0; left: 0; font-size: 0.9em; }
 </style>
 </head>
 <body>
@@ -30,7 +31,7 @@ function get() {
     return window.editor.getValue();
 }
 function setReadOnly(readOnly) {
-    window.editor.setReadOnly(true);
+    window.editor.setReadOnly(readOnly);
 }
 </script>
 </body>

@@ -101,6 +101,7 @@
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
                               <CheckBox fx:id="applyBattle" mnemonicParsing="false" text="戦闘開始時に結果を反映" />
@@ -114,6 +115,7 @@
                                     <Insets left="3.0" />
                                  </GridPane.margin>
                               </CheckBox>
+                              <CheckBox fx:id="includeRawData" mnemonicParsing="false" text="戦闘ログにローデータを追加する" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                         <Label styleClass="bold" text="艦隊・艦娘" />

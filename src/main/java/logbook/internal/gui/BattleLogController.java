@@ -457,6 +457,21 @@ public class BattleLogController extends WindowController {
     }
 
     /**
+     * 高度な集計
+     */
+    @FXML
+    void script() {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/battlelog_script.fxml", this.getWindow(),
+                    "高度な集計", c -> {
+                        ((BattleLogScriptController) c).setData(this.filteredDetails);
+                    }, null);
+        } catch (Exception e) {
+            LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    /**
      * 右ペインに詳細表示するリスナー
      *
      * @param observable 値が変更されたObservableValue
