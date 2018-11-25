@@ -162,7 +162,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="6" GridPane.rowIndex="4">
                            <children>
-                              <Label text="提督経験値(戦果):" />
+                              <Label text="提督経験値:" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="7" GridPane.rowIndex="4">
@@ -172,7 +172,7 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="6" GridPane.rowIndex="3">
                            <children>
-                              <Label text="総獲得経験値:" />
+                              <Label text="艦娘経験値:" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="7" GridPane.rowIndex="3">
@@ -185,7 +185,7 @@
                         <Insets top="3.0" />
                      </HBox.margin>
                   </GridPane>
-                  <Button mnemonicParsing="false" onAction="#storeImageAction" text="画像ファイルに保存..." />
+                  <Button focusTraversable="false" mnemonicParsing="false" onAction="#storeImageAction" text="画像ファイルに保存..." />
                </children>
                <VBox.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

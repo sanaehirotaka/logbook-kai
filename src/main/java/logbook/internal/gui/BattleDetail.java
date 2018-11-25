@@ -16,6 +16,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -230,7 +231,17 @@ public class BattleDetail extends WindowController {
      */
     @FXML
     void storeImageAction(ActionEvent event) {
+        Control source = null;
+        if (event.getSource() instanceof Control) {
+            source = (Control) event.getSource();
+        }
+        if (source != null) {
+            source.setVisible(false);
+        }
         Tools.Conrtols.storeSnapshot(this.detail, "戦闘ログのスナップショット", this.getWindow());
+        if (source != null) {
+            source.setVisible(true);
+        }
     }
 
     private void update() {
