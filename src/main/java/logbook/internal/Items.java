@@ -267,6 +267,7 @@ public class Items {
         case 水上偵察機:
         case 大型飛行艇:
         case 噴式偵察機:
+        case 陸上偵察機:
             return true;
         default:
             return false;
@@ -336,6 +337,7 @@ public class Items {
         case 水上偵察機:
         case 大型飛行艇:
         case 噴式偵察機:
+        case 陸上偵察機:
             return true;
         default:
             return false;
