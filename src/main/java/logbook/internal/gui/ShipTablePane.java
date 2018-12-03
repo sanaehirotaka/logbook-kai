@@ -236,6 +236,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private TableColumn<ShipItem, Integer> id;
 
+    /** 艦隊 */
+    @FXML
+    private TableColumn<ShipItem, String> fleet;
+
     /** 艦娘 */
     @FXML
     private TableColumn<ShipItem, Ship> ship;
@@ -501,6 +505,7 @@ public class ShipTablePane extends VBox {
                 return cell;
             });
             this.id.setCellValueFactory(new PropertyValueFactory<>("id"));
+            this.fleet.setCellValueFactory(new PropertyValueFactory<>("fleet"));
             this.ship.setCellValueFactory(new PropertyValueFactory<>("ship"));
             this.ship.setCellFactory(p -> new ShipImageCell());
             this.ship.setComparator(Comparator.comparing(Ships::toName, String::compareTo));

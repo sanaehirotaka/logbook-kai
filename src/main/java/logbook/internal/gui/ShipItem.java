@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import logbook.bean.DeckPort;
 import logbook.bean.Ship;
 import logbook.bean.ShipLabelCollection;
 import logbook.bean.ShipMst;
@@ -35,6 +36,9 @@ public class ShipItem {
 
     /** ID */
     private IntegerProperty id = new SimpleIntegerProperty();
+
+    /** 艦隊 */
+    private StringProperty fleet = new SimpleStringProperty();
 
     /** 艦娘 */
     private ObjectProperty<Ship> ship = new SimpleObjectProperty<>();
@@ -145,6 +149,30 @@ public class ShipItem {
      */
     public void setId(Integer id) {
         this.id.set(id);
+    }
+
+    /**
+     * 艦隊を取得します。
+     * @return 艦隊
+     */
+    public StringProperty fleetProperty() {
+        return this.fleet;
+    }
+
+    /**
+     * 艦隊を取得します。
+     * @return 艦隊
+     */
+    public String getFleet() {
+        return this.fleet.get();
+    }
+
+    /**
+     * 艦隊を設定します。
+     * @param fleet 艦隊
+     */
+    public void setFleet(String fleet) {
+        this.fleet.set(fleet);
     }
 
     /**
@@ -901,6 +929,7 @@ public class ShipItem {
                 .orElse("");
         ShipItem shipItem = new ShipItem();
         shipItem.setId(ship.getId());
+        shipItem.setFleet(Ships.deckPort(ship).map(DeckPort::getId).map(Object::toString).orElse(""));
         shipItem.setShip(ship);
         shipItem.setType(type);
         shipItem.setLv(ship.getLv());

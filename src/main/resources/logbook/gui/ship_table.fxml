@@ -104,6 +104,7 @@
         <columns>
           <TableColumn fx:id="row" prefWidth="50.0" sortable="false" text="行番号" />
           <TableColumn fx:id="id" prefWidth="50.0" text="ID" />
+          <TableColumn fx:id="fleet" prefWidth="50.0" text="艦隊" />
           <TableColumn fx:id="ship" prefWidth="340.0" text="艦娘" />
           <TableColumn fx:id="type" prefWidth="75.0" text="艦種" />
           <TableColumn fx:id="lv" prefWidth="50.0" text="Lv" />
