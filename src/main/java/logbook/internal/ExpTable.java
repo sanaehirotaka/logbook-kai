@@ -208,6 +208,6 @@ public class ExpTable {
      * @return 最大Lv
      */
     public static int maxLv() {
-        return 165;
+        return 175;
     }
 }
