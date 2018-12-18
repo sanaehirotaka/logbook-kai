@@ -1,9 +1,9 @@
 package logbook.internal.proxy;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
@@ -46,8 +46,6 @@ public final class ReverseProxyServlet extends ProxyServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private static final int BUFFER_SIZE = 4096;
-
     /** リスナー */
     private List<ContentListenerSpi> listeners;
 
@@ -89,13 +87,13 @@ public final class ReverseProxyServlet extends ProxyServlet {
             Response proxyResponse,
             byte[] buffer, int offset, int length) throws IOException {
 
-        ByteArrayOutputStream stream = (ByteArrayOutputStream) request.getAttribute(Filter.RESPONSE_BODY);
-        if (stream == null) {
-            stream = new ByteArrayOutputStream(512);
-            request.setAttribute(Filter.RESPONSE_BODY, stream);
+        CaptureHolder holder = (CaptureHolder) request.getAttribute(Filter.CONTENT_HOLDER);
+        if (holder == null) {
+            holder = new CaptureHolder();
+            request.setAttribute(Filter.CONTENT_HOLDER, holder);
         }
         // ストリームに書き込む
-        stream.write(buffer, offset, length);
+        holder.putResponse(buffer);
 
         super.onResponseContent(request, response, proxyResponse, buffer, offset, length);
     }
@@ -107,18 +105,17 @@ public final class ReverseProxyServlet extends ProxyServlet {
     protected void onResponseSuccess(HttpServletRequest request, HttpServletResponse response,
             Response proxyResponse) {
         try {
-            byte[] postField = (byte[]) request.getAttribute(Filter.REQUEST_BODY);
-            ByteArrayOutputStream stream = (ByteArrayOutputStream) request.getAttribute(Filter.RESPONSE_BODY);
-            if (stream != null) {
+            CaptureHolder holder = (CaptureHolder) request.getAttribute(Filter.CONTENT_HOLDER);
+            if (holder != null) {
                 if (this.listeners == null) {
                     this.listeners = PluginServices.instances(ContentListenerSpi.class).collect(Collectors.toList());
                 }
 
                 for (ContentListenerSpi listener : this.listeners) {
-                    RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request, postField);
+                    RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request, holder.getRequest());
                     if (listener.test(requestMetaData)) {
                         ResponseMetaData responseMetaData = ResponseMetaDataWrapper.build(response,
-                                stream.toByteArray());
+                                holder.getResponse());
                         Runnable task = () -> {
                             try {
                                 listener.accept(requestMetaData, responseMetaData);
@@ -130,12 +127,12 @@ public final class ReverseProxyServlet extends ProxyServlet {
                     }
                 }
             }
+            holder.clear();
         } catch (Exception e) {
             LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生 req=" + request, e);
         } finally {
             // Help GC
-            request.removeAttribute(Filter.REQUEST_BODY);
-            request.removeAttribute(Filter.RESPONSE_BODY);
+            request.removeAttribute(Filter.CONTENT_HOLDER);
         }
         super.onResponseSuccess(request, response, proxyResponse);
     }
@@ -244,7 +241,7 @@ public final class ReverseProxyServlet extends ProxyServlet {
             this.requestBody = requestBody;
         }
 
-        static RequestMetaData build(HttpServletRequest req, byte[] body)
+        static RequestMetaData build(HttpServletRequest req, InputStream body)
                 throws UnsupportedEncodingException, URISyntaxException {
             RequestMetaDataWrapper meta = new RequestMetaDataWrapper();
 
@@ -265,17 +262,20 @@ public final class ReverseProxyServlet extends ProxyServlet {
                             return l1;
                         }));
             };
-            if (body == null) {
-                body = new byte[0];
+            String bodystr = "";
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8))) {
+                bodystr = URLDecoder.decode(reader.readLine(), "UTF-8");
+            } catch (Exception e) {
+                // NOP
             }
-            String bodystr = URLDecoder.decode(new String(body, StandardCharsets.UTF_8), "UTF-8");
+
             meta.setParameterMap(Arrays.stream(bodystr.split("&"))
                     .map(kv -> kv.split("="))
                     .collect(LinkedHashMap::new, accumulator, combiner));
 
             meta.setQueryString(req.getQueryString());
             meta.setRequestURI(req.getRequestURI());
-            meta.setRequestBody(Optional.of(new ByteArrayInputStream(body)));
+            meta.setRequestBody(Optional.of(body));
 
             return meta;
         }
@@ -316,40 +316,27 @@ public final class ReverseProxyServlet extends ProxyServlet {
             this.responseBody = responseBody;
         }
 
-        static ResponseMetaData build(HttpServletResponse res, byte[] body) throws IOException {
+        static ResponseMetaData build(HttpServletResponse res, InputStream body) throws IOException {
             ResponseMetaDataWrapper meta = new ResponseMetaDataWrapper();
 
             meta.setStatus(res.getStatus());
             meta.setContentType(res.getContentType());
-            meta.setResponseBody(Optional.of(new ByteArrayInputStream(ungzip(body))));
+            meta.setResponseBody(Optional.of(ungzip(body)));
 
             return meta;
         }
 
-        private static byte[] ungzip(byte[] data) throws IOException {
-            try (InputStream in = new ByteArrayInputStream(data)) {
-                if (in.available() > 1) {
-                    in.mark(Short.BYTES);
-                    int magicbyte = in.read() << 8 ^ in.read();
-                    in.reset();
-                    InputStream wrap;
-                    if (magicbyte == 0x1f8b) {
-                        ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        wrap = new GZIPInputStream(in);
-                        try {
-                            byte[] buffer = new byte[BUFFER_SIZE];
-                            int n;
-                            while (-1 != (n = wrap.read(buffer))) {
-                                out.write(buffer, 0, n);
-                            }
-                        } finally {
-                            wrap.close();
-                        }
-                        return out.toByteArray();
-                    }
+        private static InputStream ungzip(InputStream body) throws IOException {
+            if (body.available() > 1) {
+                body.mark(Short.BYTES);
+                int magicbyte = body.read() << 8 ^ body.read();
+                body.reset();
+                if (magicbyte == 0x1f8b) {
+                    return new GZIPInputStream(body);
                 }
             }
-            return data;
+            body.reset();
+            return body;
         }
     }
 

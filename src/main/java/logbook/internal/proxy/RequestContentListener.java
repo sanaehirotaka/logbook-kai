@@ -1,7 +1,6 @@
 package logbook.internal.proxy;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,8 +27,18 @@ public final class RequestContentListener implements ContentListener {
      */
     @Override
     public void onContent(Request request, ByteBuffer buffer) {
-        if (((buffer.limit() > 0) && (buffer.limit() <= Filter.MAX_POST_FIELD_SIZE))) {
-            this.httpRequest.setAttribute(Filter.REQUEST_BODY, Arrays.copyOf(buffer.array(), buffer.limit()));
+        int length = buffer.remaining();
+
+        if (((length > 0) && (length <= Filter.MAX_POST_FIELD_SIZE))) {
+            byte[] bytes = new byte[length];
+            buffer.get(bytes);
+
+            CaptureHolder holder = (CaptureHolder) this.httpRequest.getAttribute(Filter.CONTENT_HOLDER);
+            if (holder == null) {
+                holder = new CaptureHolder();
+                this.httpRequest.setAttribute(Filter.CONTENT_HOLDER, holder);
+            }
+            holder.putRequest(bytes);
         }
     }
 }
