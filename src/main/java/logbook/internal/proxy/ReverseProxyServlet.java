@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -107,26 +105,16 @@ public final class ReverseProxyServlet extends ProxyServlet {
         try {
             CaptureHolder holder = (CaptureHolder) request.getAttribute(Filter.CONTENT_HOLDER);
             if (holder != null) {
-                if (this.listeners == null) {
-                    this.listeners = PluginServices.instances(ContentListenerSpi.class).collect(Collectors.toList());
-                }
+                RequestMetaDataWrapper req = new RequestMetaDataWrapper();
+                req.set(request);
 
-                for (ContentListenerSpi listener : this.listeners) {
-                    RequestMetaData requestMetaData = RequestMetaDataWrapper.build(request, holder.getRequest());
-                    if (listener.test(requestMetaData)) {
-                        ResponseMetaData responseMetaData = ResponseMetaDataWrapper.build(response,
-                                holder.getResponse());
-                        Runnable task = () -> {
-                            try {
-                                listener.accept(requestMetaData, responseMetaData);
-                            } catch (Exception e) {
-                                LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生", e);
-                            }
-                        };
-                        ThreadManager.getExecutorService().submit(task);
-                    }
-                }
-                holder.clear();
+                ResponseMetaDataWrapper res = new ResponseMetaDataWrapper();
+                res.set(response);
+
+                Runnable task = () -> {
+                    this.invoke(req, res, holder);
+                };
+                ThreadManager.getExecutorService().submit(task);
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生 req=" + request, e);
@@ -173,7 +161,36 @@ public final class ReverseProxyServlet extends ProxyServlet {
         }
     }
 
-    static class RequestMetaDataWrapper implements RequestMetaData {
+    private void invoke(RequestMetaDataWrapper baseReq, ResponseMetaDataWrapper baseRes, CaptureHolder holder) {
+        try {
+            if (this.listeners == null) {
+                this.listeners = PluginServices.instances(ContentListenerSpi.class).collect(Collectors.toList());
+            }
+            for (ContentListenerSpi listener : this.listeners) {
+                RequestMetaDataWrapper req = baseReq.clone();
+                req.set(holder.getRequest());
+
+                if (listener.test(req)) {
+                    ResponseMetaDataWrapper res = baseRes.clone();
+                    res.set(holder.getResponse());
+
+                    Runnable task = () -> {
+                        try {
+                            listener.accept(req, res);
+                        } catch (Exception e) {
+                            LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生", e);
+                        }
+                    };
+                    ThreadManager.getExecutorService().submit(task);
+                }
+            }
+            holder.clear();
+        } catch (Exception e) {
+            LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生 req=" + baseReq.getRequestURI(), e);
+        }
+    }
+
+    static class RequestMetaDataWrapper implements RequestMetaData, Cloneable {
 
         private String contentType;
 
@@ -241,13 +258,14 @@ public final class ReverseProxyServlet extends ProxyServlet {
             this.requestBody = requestBody;
         }
 
-        static RequestMetaData build(HttpServletRequest req, InputStream body)
-                throws UnsupportedEncodingException, URISyntaxException {
-            RequestMetaDataWrapper meta = new RequestMetaDataWrapper();
+        void set(HttpServletRequest req) {
+            this.setContentType(req.getContentType());
+            this.setMethod(req.getMethod().toString());
+            this.setQueryString(req.getQueryString());
+            this.setRequestURI(req.getRequestURI());
+        }
 
-            meta.setContentType(req.getContentType());
-            meta.setMethod(req.getMethod().toString());
-
+        void set(InputStream body) {
             BiConsumer<Map<String, List<String>>, String[]> accumulator = (m, v) -> {
                 if (v.length == 2) {
                     m.computeIfAbsent(v[0], k -> new ArrayList<>())
@@ -274,20 +292,26 @@ public final class ReverseProxyServlet extends ProxyServlet {
             } catch (Exception e) {
                 // NOP
             }
-
-            meta.setParameterMap(Arrays.stream(bodystr.split("&"))
+            this.setParameterMap(Arrays.stream(bodystr.split("&"))
                     .map(kv -> kv.split("="))
                     .collect(LinkedHashMap::new, accumulator, combiner));
+            this.setRequestBody(Optional.of(body));
+        }
 
-            meta.setQueryString(req.getQueryString());
-            meta.setRequestURI(req.getRequestURI());
-            meta.setRequestBody(Optional.of(body));
-
-            return meta;
+        @Override
+        public RequestMetaDataWrapper clone() {
+            RequestMetaDataWrapper clone = new RequestMetaDataWrapper();
+            clone.setContentType(this.getContentType());
+            clone.setMethod(this.getMethod());
+            clone.setQueryString(this.getQueryString());
+            clone.setRequestURI(this.getRequestURI());
+            clone.setParameterMap(this.getParameterMap());
+            clone.setRequestBody(this.getRequestBody());
+            return clone;
         }
     }
 
-    static class ResponseMetaDataWrapper implements ResponseMetaData {
+    static class ResponseMetaDataWrapper implements ResponseMetaData, Cloneable {
 
         private int status;
 
@@ -322,14 +346,22 @@ public final class ReverseProxyServlet extends ProxyServlet {
             this.responseBody = responseBody;
         }
 
-        static ResponseMetaData build(HttpServletResponse res, InputStream body) throws IOException {
-            ResponseMetaDataWrapper meta = new ResponseMetaDataWrapper();
+        void set(HttpServletResponse res) {
+            this.setStatus(res.getStatus());
+            this.setContentType(res.getContentType());
+        }
 
-            meta.setStatus(res.getStatus());
-            meta.setContentType(res.getContentType());
-            meta.setResponseBody(Optional.of(ungzip(body)));
+        void set(InputStream body) throws IOException {
+            this.setResponseBody(Optional.of(ungzip(body)));
+        }
 
-            return meta;
+        @Override
+        public ResponseMetaDataWrapper clone() {
+            ResponseMetaDataWrapper clone = new ResponseMetaDataWrapper();
+            clone.setStatus(this.getStatus());
+            clone.setContentType(this.getContentType());
+            clone.setResponseBody(this.getResponseBody());
+            return clone;
         }
 
         private static InputStream ungzip(InputStream body) throws IOException {
