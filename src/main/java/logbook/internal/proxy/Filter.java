@@ -14,7 +14,4 @@ public class Filter {
 
     /** setAttribute用のキー(Request) */
     public static final String REQUEST_BODY = "req-body";
-
-    /** setAttribute用のキー(Content-Encoding) */
-    public static final String CONTENT_ENCODING = "logbook.content-encoding";
 }

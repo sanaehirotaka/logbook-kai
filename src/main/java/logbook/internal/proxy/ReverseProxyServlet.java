@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +19,6 @@ import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,26 +48,8 @@ public final class ReverseProxyServlet extends ProxyServlet {
 
     private static final int BUFFER_SIZE = 4096;
 
-    /** ライブラリバグ対応 (HttpRequest#queryを上書きする) */
-    private static final Field QUERY_FIELD = getDeclaredField(HttpRequest.class, "query");
-
     /** リスナー */
-    transient private List<ContentListenerSpi> listeners;
-
-    /*
-     * リモートホストがローカルループバックアドレス以外の場合400を返し通信しない
-     */
-    @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-            IOException {
-        if (AppConfig.get().isAllowOnlyFromLocalhost()) {
-            if (!InetAddress.getByName(request.getRemoteAddr()).isLoopbackAddress()) {
-                response.setStatus(400);
-                return;
-            }
-        }
-        super.service(request, response);
-    }
+    private List<ContentListenerSpi> listeners;
 
     /*
      * Hop-by-Hop ヘッダーを除去します
@@ -101,17 +81,6 @@ public final class ReverseProxyServlet extends ProxyServlet {
         super.customizeProxyRequest(proxyRequest, request);
     }
 
-    @Override
-    protected String filterResponseHeader(HttpServletRequest request,
-            String headerName,
-            String headerValue) {
-        // Content Encoding を取得する
-        if (headerName.compareToIgnoreCase("Content-Encoding") == 0) {
-            request.setAttribute(Filter.CONTENT_ENCODING, headerValue);
-        }
-        return super.filterResponseHeader(request, headerName, headerValue);
-    }
-
     /*
      * レスポンスが帰ってきた
      */
@@ -122,7 +91,7 @@ public final class ReverseProxyServlet extends ProxyServlet {
 
         ByteArrayOutputStream stream = (ByteArrayOutputStream) request.getAttribute(Filter.RESPONSE_BODY);
         if (stream == null) {
-            stream = new ByteArrayOutputStream();
+            stream = new ByteArrayOutputStream(512);
             request.setAttribute(Filter.RESPONSE_BODY, stream);
         }
         // ストリームに書き込む
@@ -142,8 +111,7 @@ public final class ReverseProxyServlet extends ProxyServlet {
             ByteArrayOutputStream stream = (ByteArrayOutputStream) request.getAttribute(Filter.RESPONSE_BODY);
             if (stream != null) {
                 if (this.listeners == null) {
-                    this.listeners = PluginServices.instances(ContentListenerSpi.class)
-                            .collect(Collectors.toList());
+                    this.listeners = PluginServices.instances(ContentListenerSpi.class).collect(Collectors.toList());
                 }
 
                 for (ContentListenerSpi listener : this.listeners) {
@@ -164,6 +132,10 @@ public final class ReverseProxyServlet extends ProxyServlet {
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生 req=" + request, e);
+        } finally {
+            // Help GC
+            request.removeAttribute(Filter.REQUEST_BODY);
+            request.removeAttribute(Filter.RESPONSE_BODY);
         }
         super.onResponseSuccess(request, response, proxyResponse);
     }
@@ -187,22 +159,6 @@ public final class ReverseProxyServlet extends ProxyServlet {
     }
 
     /**
-     * private フィールドを取得する
-     * @param clazz クラス
-     * @param string フィールド名
-     * @return フィールドオブジェクト
-     */
-    private static <T> Field getDeclaredField(Class<T> clazz, String string) {
-        try {
-            Field field = clazz.getDeclaredField(string);
-            field.setAccessible(true);
-            return field;
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
      * <p>
      * ライブラリのバグを修正します<br>
      * URLにマルチバイト文字が含まれている場合にURLが正しく組み立てられないバグを修正します
@@ -212,7 +168,7 @@ public final class ReverseProxyServlet extends ProxyServlet {
         if (queryString != null && !queryString.isEmpty()) {
             if (proxyRequest instanceof HttpRequest) {
                 try {
-                    QUERY_FIELD.set(proxyRequest, queryString);
+                    FieldHolder.QUERY_FIELD.set(proxyRequest, queryString);
                 } catch (IllegalArgumentException | IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
@@ -394,6 +350,27 @@ public final class ReverseProxyServlet extends ProxyServlet {
                 }
             }
             return data;
+        }
+    }
+
+    private static class FieldHolder {
+        /** ライブラリバグ対応 (HttpRequest#queryを上書きする) */
+        static final Field QUERY_FIELD = getDeclaredField(HttpRequest.class, "query");
+
+        /**
+         * private フィールドを取得する
+         * @param clazz クラス
+         * @param string フィールド名
+         * @return フィールドオブジェクト
+         */
+        private static <T> Field getDeclaredField(Class<T> clazz, String string) {
+            try {
+                Field field = clazz.getDeclaredField(string);
+                field.setAccessible(true);
+                return field;
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

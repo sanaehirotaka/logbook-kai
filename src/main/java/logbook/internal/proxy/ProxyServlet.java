@@ -691,17 +691,10 @@ public class ProxyServlet extends HttpServlet {
 
         @Override
         public void onContent(Response proxyResponse, ByteBuffer content) {
-            byte[] buffer;
-            int offset;
+            int offset = 0;
             int length = content.remaining();
-            if (content.hasArray()) {
-                buffer = content.array();
-                offset = content.arrayOffset();
-            } else {
-                buffer = new byte[length];
-                content.get(buffer);
-                offset = 0;
-            }
+            byte[] buffer = new byte[length];
+            content.get(buffer);
 
             try {
                 ProxyServlet.this.onResponseContent(this.request, this.response, proxyResponse, buffer, offset, length);
