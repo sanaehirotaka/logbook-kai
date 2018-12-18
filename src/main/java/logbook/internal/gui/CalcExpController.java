@@ -123,8 +123,8 @@ public class CalcExpController extends WindowController {
     @FXML
     void initialize() {
         // Spinnerに最小値最大値現在値を設定
-        this.nowLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 165, 1, 1));
-        this.goalLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 165, 100, 1));
+        this.nowLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 175, 1, 1));
+        this.goalLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 175, 100, 1));
         // コンボボックス
         this.shipList.setItems(this.ships);
         this.shipList();
