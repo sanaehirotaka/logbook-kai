@@ -63,6 +63,7 @@ public class ApiReqHenseiChange implements APIListenerSpi {
                     if (from == -1) {
                         ships2.removeIf(id -> id.equals(shipId));
                         ships2.add(-1);
+                        shipIdx = deckMap.get(portId).getShip().indexOf(-1);
                     } else {
                         ships2.set(ships2.indexOf(shipId), from);
                     }
