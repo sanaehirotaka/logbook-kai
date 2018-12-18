@@ -47,7 +47,7 @@ public final class ReverseProxyServlet extends ProxyServlet {
     private static final long serialVersionUID = 1L;
 
     /** リスナー */
-    private List<ContentListenerSpi> listeners;
+    private transient List<ContentListenerSpi> listeners;
 
     /*
      * Hop-by-Hop ヘッダーを除去します
@@ -126,8 +126,8 @@ public final class ReverseProxyServlet extends ProxyServlet {
                         ThreadManager.getExecutorService().submit(task);
                     }
                 }
+                holder.clear();
             }
-            holder.clear();
         } catch (Exception e) {
             LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生 req=" + request, e);
         } finally {

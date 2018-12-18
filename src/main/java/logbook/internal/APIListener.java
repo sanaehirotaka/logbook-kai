@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.zip.GZIPInputStream;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -62,12 +61,6 @@ public final class APIListener implements ContentListenerSpi {
         try {
             // レスポンスのJSONを復号します
             InputStream stream = responseMetaData.getResponseBody().get();
-            // Check header
-            int header = (stream.read() | (stream.read() << 8));
-            stream.reset();
-            if (header == GZIPInputStream.GZIP_MAGIC) {
-                stream = new GZIPInputStream(stream);
-            }
             // レスポンスボディのJSONはsvdata=から始まるので除去します
             int read;
             while (((read = stream.read()) != -1) && (read != '=')) {

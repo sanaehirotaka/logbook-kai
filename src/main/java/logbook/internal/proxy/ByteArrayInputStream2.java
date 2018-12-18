@@ -53,6 +53,7 @@ public class ByteArrayInputStream2 extends InputStream {
     public void reset() throws IOException {
         this.e = this.l.iterator();
         this.in = null;
+        this.nextStream();
     }
 
     @Override
