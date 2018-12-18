@@ -264,7 +264,13 @@ public final class ReverseProxyServlet extends ProxyServlet {
             };
             String bodystr = "";
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8))) {
-                bodystr = URLDecoder.decode(reader.readLine(), "UTF-8");
+                int len;
+                char[] cbuf = new char[128];
+                StringBuilder sb = new StringBuilder();
+                while ((len = reader.read(cbuf)) > 0) {
+                    sb.append(cbuf, 0, len);
+                }
+                bodystr = URLDecoder.decode(sb.toString(), "UTF-8");
             } catch (Exception e) {
                 // NOP
             }
