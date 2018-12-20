@@ -130,7 +130,12 @@ public final class ReverseProxyServlet extends ProxyServlet {
      */
     @Override
     protected HttpClient newHttpClient() {
-        HttpClient client = super.newHttpClient();
+        HttpClient client = new HttpClient() {
+            @Override
+            protected String normalizeHost(String host) {
+                return host;
+            }
+        };
         // プロキシを設定する
         if (AppConfig.get().isUseProxy()) {
             // ポート
@@ -365,15 +370,12 @@ public final class ReverseProxyServlet extends ProxyServlet {
         }
 
         private static InputStream ungzip(InputStream body) throws IOException {
-            if (body.available() > 1) {
-                body.mark(Short.BYTES);
-                int magicbyte = body.read() << 8 ^ body.read();
-                body.reset();
-                if (magicbyte == 0x1f8b) {
-                    return new GZIPInputStream(body);
-                }
-            }
+            body.mark(Short.BYTES);
+            int magicbyte = body.read() << 8 ^ body.read();
             body.reset();
+            if (magicbyte == 0x1f8b) {
+                return new GZIPInputStream(body);
+            }
             return body;
         }
     }
