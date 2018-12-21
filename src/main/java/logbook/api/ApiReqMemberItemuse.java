@@ -38,14 +38,16 @@ public class ApiReqMemberItemuse implements APIListenerSpi {
             Map<Integer, SlotItem> map = SlotItemCollection.get()
                     .getSlotitemMap();
             for (JsonValue value : array) {
-                JsonObject obj = (JsonObject) value;
-                Optional.ofNullable(obj.getJsonObject("api_slotitem"))
-                        .map(SlotItem::toSlotItem)
-                        .ifPresent(item -> {
-                            item.setLevel(0);
-                            item.setLocked(false);
-                            map.put(item.getId(), item);
-                        });
+                if (value != null && !JsonValue.NULL.equals(value)) {
+                    JsonObject obj = (JsonObject) value;
+                    Optional.ofNullable(obj.getJsonObject("api_slotitem"))
+                            .map(SlotItem::toSlotItem)
+                            .ifPresent(item -> {
+                                item.setLevel(0);
+                                item.setLocked(false);
+                                map.put(item.getId(), item);
+                            });
+                }
             }
         }
     }
