@@ -883,6 +883,7 @@ public class ShipItem {
 
         return new StringJoiner("\t")
                 .add(Integer.toString(this.id.get()))
+                .add(this.fleet.get())
                 .add(Optional.ofNullable(this.ship.get())
                         .map(s -> Ships.shipMst(s).map(ShipMst::getName).orElse(""))
                         .orElse(""))
