@@ -28,7 +28,7 @@ function FindProxyForURL(url, host) {
       return "PROXY 127.0.0.1:{port}";
     }
 
-    if ( isInNet(host, "203.104.248.135","255.255.255.255") ) {
+    if ( isInNet(host, "203.104.209.199","255.255.255.255") ) {
       return "PROXY 127.0.0.1:{port}";
     }
 
