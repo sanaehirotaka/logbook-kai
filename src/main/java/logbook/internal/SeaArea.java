@@ -6,12 +6,10 @@ package logbook.internal;
  */
 public enum SeaArea {
 
-    警戒部隊("警戒部隊", 1),
-    海峡派遣艦隊("海峡派遣艦隊", 2),
-    西方作戦部隊("西方作戦部隊", 3),
-    欧州特務艦隊("欧州特務艦隊", 4),
-    ForceH("ForceH", 5),
-    ライン演習部隊("ライン演習部隊", 6);
+    鼠輸送部隊("鼠輸送部隊", 1),
+    ラバウル艦隊("ラバウル艦隊", 2),
+    連合艦隊("連合艦隊", 3),
+    ブイン派遣隊("ブイン派遣隊", 4);
 
     /** 名前 */
     private String name;
@@ -54,17 +52,13 @@ public enum SeaArea {
     public static SeaArea fromArea(int area) {
         switch (area) {
         case 1:
-            return SeaArea.警戒部隊;
+            return SeaArea.鼠輸送部隊;
         case 2:
-            return SeaArea.海峡派遣艦隊;
+            return SeaArea.ラバウル艦隊;
         case 3:
-            return SeaArea.西方作戦部隊;
+            return SeaArea.連合艦隊;
         case 4:
-            return SeaArea.欧州特務艦隊;
-        case 5:
-            return SeaArea.ForceH;
-        case 6:
-            return SeaArea.ライン演習部隊;
+            return SeaArea.ブイン派遣隊;
         default:
             return null;
         }
