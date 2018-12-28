@@ -14,6 +14,7 @@ import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -159,22 +160,47 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         // ドロップ艦娘
         joiner.add(Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipName).orElse(""));
         // 味方艦
-        List<Ship> friendFleet = log.getDeckMap().get(battle.getDockId());
-        for (int i = 0; i < 12; i++) {
-            if (friendFleet.size() > i) {
-                Ship ship = friendFleet.get(i);
-                if (ship != null) {
-                    // 名前
-                    joiner.add(Ships.toName(ship));
-                    // HP
-                    joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
+        if (log.getCombinedType() == CombinedType.未結成) {
+            // 通常艦隊はDockIdの艦隊
+            List<Ship> friendFleet = log.getDeckMap().get(battle.getDockId());
+            for (int i = 0; i < 12; i++) {
+                if (friendFleet.size() > i) {
+                    Ship ship = friendFleet.get(i);
+                    if (ship != null) {
+                        // 名前
+                        joiner.add(Ships.toName(ship));
+                        // HP
+                        joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
+                    } else {
+                        joiner.add("");
+                        joiner.add("");
+                    }
                 } else {
                     joiner.add("");
                     joiner.add("");
                 }
-            } else {
-                joiner.add("");
-                joiner.add("");
+            }
+        } else {
+            // 連合艦隊は 1(第一艦隊),2(第二艦隊) で固定
+            for (int j = 1; j <= 2; j++) {
+                List<Ship> friendFleet = log.getDeckMap().get(j);
+                for (int i = 0; i < 6; i++) {
+                    if (friendFleet.size() > i) {
+                        Ship ship = friendFleet.get(i);
+                        if (ship != null) {
+                            // 名前
+                            joiner.add(Ships.toName(ship));
+                            // HP
+                            joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
+                        } else {
+                            joiner.add("");
+                            joiner.add("");
+                        }
+                    } else {
+                        joiner.add("");
+                        joiner.add("");
+                    }
+                }
             }
         }
         // 敵艦
