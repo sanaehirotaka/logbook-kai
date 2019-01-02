@@ -160,7 +160,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         // ドロップ艦娘
         joiner.add(Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipName).orElse(""));
         // 味方艦
-        if (log.getCombinedType() == CombinedType.未結成) {
+        if (log.getCombinedType() == CombinedType.未結成 || battle.getDockId() > 2) {
             // 通常艦隊はDockIdの艦隊
             List<Ship> friendFleet = log.getDeckMap().get(battle.getDockId());
             for (int i = 0; i < 12; i++) {
