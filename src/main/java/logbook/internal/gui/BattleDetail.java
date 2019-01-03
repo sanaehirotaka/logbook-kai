@@ -32,6 +32,7 @@ import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IFormation;
 import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.ILdAirbattle;
+import logbook.bean.BattleTypes.ILdShooting;
 import logbook.bean.BattleTypes.IMidnightBattle;
 import logbook.bean.BattleTypes.INSupport;
 import logbook.bean.BattleTypes.INightToDayBattle;
@@ -814,7 +815,7 @@ public class BattleDetail extends WindowController {
          * @return ランク
          */
         private Rank judge(PhaseState ps, IFormation battle) {
-            if (battle instanceof ILdAirbattle) {
+            if (battle instanceof ILdAirbattle || battle instanceof ILdShooting) {
                 if (this.friendDamageRatio <= 0) {
                     return Rank.S完全勝利;
                 }

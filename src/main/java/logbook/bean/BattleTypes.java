@@ -405,6 +405,12 @@ public class BattleTypes {
     }
 
     /**
+     * レーダー射撃(マーカーインターフェイス)
+     */
+    public interface ILdShooting {
+    }
+
+    /**
      * 砲撃フェイズ
      */
     public interface IHougeki {
