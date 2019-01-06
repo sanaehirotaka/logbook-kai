@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.util.Duration;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
@@ -40,6 +41,17 @@ public class ApiReqMissionStart implements APIListenerSpi {
             Integer missionId = Integer.valueOf(req.getParameter("api_mission_id"));
 
             try {
+                Mission mission = MissionCollection.get()
+                        .getMissionMap()
+                        .get(missionId);
+                if (mission != null) {
+                    if ("前衛支援任務".equals(mission.getName())) {
+                        missionId = 33;
+                    } else if ("艦隊決戦支援任務".equals(mission.getName())) {
+                        missionId = 34;
+                    }
+                }
+
                 InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + missionId + ".json");
                 if (is == null)
                     return;
@@ -61,7 +73,8 @@ public class ApiReqMissionStart implements APIListenerSpi {
                         .collect(Collectors.toList());
 
                 if (!condition.test(fleet)) {
-                    Platform.runLater(() -> displayAlert(deckId, missionId));
+                    Integer id = missionId;
+                    Platform.runLater(() -> displayAlert(deckId, id));
                 }
             } catch (Exception e) {
                 LoggerHolder.get().error("遠征開始で例外", e);

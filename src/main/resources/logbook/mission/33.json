@@ -1,0 +1,99 @@
+/*MO作戦*/
+{
+    "operator": "AND",
+    "conditions": [
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]}
+            ]
+        },
+        {
+            "operator": "OR",
+            "conditions": [
+                {
+                    "operator": "OR",
+                    "description": "航空支援",
+                    "conditions": [
+                        {
+                            "operator": "AND",
+                            "conditions": [
+                                {
+                                    "operator": "NOR",
+                                    "conditions": [
+                                        {"type": "艦娘", "ship_type" :["戦艦", "重巡洋艦"]}
+                                    ]
+                                },
+                                {
+                                    "operator": "OR",
+                                    "conditions": [
+                                        {
+                                            "operator": "AND",
+                                            "conditions": [
+                                                {"type": "艦娘", "ship_type" :["軽空母", "正規空母", "装甲空母"]}
+                                            ]
+                                        },
+                                        {
+                                            "operator": "AND",
+                                            "conditions": [
+                                                {"type": "艦娘", "ship_type" :["水上機母艦", "揚陸艦"]},
+                                                {"type": "艦娘", "ship_type" :["水上機母艦", "揚陸艦"]}
+                                            ]
+                                        },
+                                        {
+                                            "operator": "AND",
+                                            "conditions": [
+                                                {"type": "艦娘", "ship_type" :["航空戦艦", "航空巡洋艦", "補給艦"]},
+                                                {"type": "艦娘", "ship_type" :["航空戦艦", "航空巡洋艦", "補給艦"]}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "operator": "AND",
+                            "conditions": [
+                                {"type": "艦娘", "ship_type" :["戦艦", "重巡洋艦"]},
+                                {"type": "艦娘", "ship_type" :["軽空母", "正規空母", "装甲空母", "水上機母艦", "揚陸艦"]},
+                                {"type": "艦娘", "ship_type" :["軽空母", "正規空母", "装甲空母", "水上機母艦", "揚陸艦"]}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "operator": "OR",
+                    "description": "砲撃支援",
+                    "conditions": [
+                        {
+                            "operator": "AND",
+                            "conditions": [
+                                {"type": "艦娘", "ship_type" :["戦艦", "航空戦艦"]},
+                                {"type": "艦娘", "ship_type" :["戦艦", "航空戦艦"]}
+                            ]
+                        },
+                        {
+                            "operator": "AND",
+                            "conditions": [
+                                {"type": "艦娘", "ship_type" :["戦艦", "航空戦艦"]},
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]},
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]},
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]}
+                            ]
+                        },
+                        {
+                            "operator": "AND",
+                            "conditions": [
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]},
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]},
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]},
+                                {"type": "艦娘", "ship_type" :["重巡洋艦", "航空巡洋艦"]}
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

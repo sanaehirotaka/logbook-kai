@@ -97,7 +97,14 @@ public class MissionCheck extends WindowController {
 
     private TreeItem<String> buildTree0(Mission mission, List<Ship> fleet) {
         try {
-            InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + mission.getId() + ".json");
+            Integer missionId = mission.getId();
+            if ("前衛支援任務".equals(mission.getName())) {
+                missionId = 33;
+            } else if ("艦隊決戦支援任務".equals(mission.getName())) {
+                missionId = 34;
+            }
+
+            InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + missionId + ".json");
             if (is == null) {
                 return null;
             }
@@ -108,9 +115,14 @@ public class MissionCheck extends WindowController {
                 condition.test(fleet);
                 item = this.buildLeaf(condition);
                 String area = Optional.ofNullable(MapareaCollection.get().getMaparea().get(mission.getMapareaId()))
+                        .filter(map -> map.getId() != null && map.getId() <= 40)
                         .map(Maparea::getName)
-                        .map(s -> s + " : ").orElse("");
-                item.setValue(area + mission.getName());
+                        .orElse(null);
+                if (area != null) {
+                    item.setValue(area + mission.getName());
+                } else {
+                    item.setValue("イベント海域 : " + mission.getName());
+                }
             } finally {
                 is.close();
             }
@@ -125,7 +137,7 @@ public class MissionCheck extends WindowController {
         TreeItem<String> item = new TreeItem<>(condition.toString());
         this.setIcon(item, condition.getResult());
         if (condition.getConditions() != null) {
-            if (condition.getConditions().size() == 1) {
+            if (condition.getConditions().size() == 1 && !condition.getOperator().startsWith("N")) {
                 item.setValue(condition.getConditions().get(0).toString());
             } else {
                 for (MissionCondition subcondition : condition.getConditions()) {

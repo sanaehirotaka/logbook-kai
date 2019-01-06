@@ -239,6 +239,9 @@ public class MissionCondition implements Predicate<List<Ship>> {
         if (this.item != null) {
             sb.append("かつ" + this.item + "を装備");
         }
+        if (this.description != null) {
+            sb.append("(" + this.description + ")");
+        }
         return sb.toString();
     }
 
@@ -251,21 +254,33 @@ public class MissionCondition implements Predicate<List<Ship>> {
         }
         sb.append(this.value);
         sb.append("以上");
+        if (this.description != null) {
+            sb.append("(" + this.description + ")");
+        }
         return sb.toString();
     }
 
     private String toStringOperator() {
+        StringBuilder sb = new StringBuilder();
         switch (this.operator) {
         case "AND":
-            return "次の条件を全て満たす";
+            sb.append("次の条件を全て満たす");
+            break;
         case "OR":
-            return "次の条件のいずれか少なくとも1つを満たす";
+            sb.append("次の条件のいずれか少なくとも1つを満たす");
+            break;
         case "NAND":
-            return "次の条件のいずれか少なくとも1つを満たさない";
+            sb.append("次の条件のいずれか少なくとも1つを満たさない");
+            break;
         case "NOR":
-            return "次の条件を全て満たさない";
+            sb.append("次の条件を全て満たさない");
+            break;
         default:
-            return "";
+            break;
         }
+        if (this.description != null) {
+            sb.append("(" + this.description + ")");
+        }
+        return sb.toString();
     }
 }
