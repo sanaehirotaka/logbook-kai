@@ -2,6 +2,7 @@ package logbook.internal.gui;
 
 import java.io.InputStream;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -82,15 +83,37 @@ public class MissionCheck extends WindowController {
                     .map(shipMap::get)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
-            MissionCollection.get().getMissionMap().values().stream()
+
+            Map<Integer, List<Mission>> missionMap = MissionCollection.get().getMissionMap().values().stream()
                     .sorted(Comparator.comparing(Mission::getMapareaId, Comparator.nullsLast(Comparator.naturalOrder()))
                             .thenComparing(Mission::getId, Comparator.nullsLast(Comparator.naturalOrder())))
-                    .forEach(mission -> {
-                        TreeItem<String> sub = this.buildTree0(mission, fleet);
-                        if (sub != null) {
-                            root.getChildren().add(sub);
-                        }
-                    });
+                    .collect(Collectors.groupingBy(Mission::getMapareaId, LinkedHashMap::new, Collectors.toList()));
+
+            for (Map.Entry<Integer, List<Mission>> missionEntry : missionMap.entrySet()) {
+                TreeItem<String> subTree = new TreeItem<>();
+                subTree.setExpanded(true);
+
+                List<Mission> missions = missionEntry.getValue();
+                Integer mapareaId = missions.get(0).getMapareaId();
+
+                String area = Optional.ofNullable(MapareaCollection.get().getMaparea().get(mapareaId))
+                        .filter(map -> map.getId() != null && map.getId() <= 40)
+                        .map(Maparea::getName)
+                        .orElse("イベント海域");
+                subTree.setValue(area);
+
+                for (Mission mission : missions) {
+
+                    TreeItem<String> sub = this.buildTree0(mission, fleet);
+                    if (sub != null) {
+                        subTree.getChildren().add(sub);
+                    }
+                }
+
+                if (!subTree.getChildren().isEmpty()) {
+                    root.getChildren().add(subTree);
+                }
+            }
         }
         this.conditionTree.setRoot(root);
     }
@@ -114,15 +137,7 @@ public class MissionCheck extends WindowController {
                 condition = this.mapper.readValue(is, MissionCondition.class);
                 condition.test(fleet);
                 item = this.buildLeaf(condition);
-                String area = Optional.ofNullable(MapareaCollection.get().getMaparea().get(mission.getMapareaId()))
-                        .filter(map -> map.getId() != null && map.getId() <= 40)
-                        .map(Maparea::getName)
-                        .orElse(null);
-                if (area != null) {
-                    item.setValue(area + mission.getName());
-                } else {
-                    item.setValue("イベント海域 : " + mission.getName());
-                }
+                item.setValue(mission.getName());
             } finally {
                 is.close();
             }
