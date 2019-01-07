@@ -2,10 +2,14 @@ package logbook.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import logbook.internal.Ships;
 import lombok.Data;
 
 /**
@@ -57,4 +61,21 @@ public class DeckPort implements Serializable, Cloneable {
                 .set("api_ship", bean::setShip, JsonHelper::toIntegerList);
         return bean;
     }
+
+    /**
+     * 大破した艦娘を返します
+     *
+     * @return 大破した艦娘
+     */
+    public List<Ship> getBadlyShips() {
+        Map<Integer, Ship> shipMap = ShipCollection.get().getShipMap();
+        return this.getShip()
+                .stream()
+                .map(shipMap::get)
+                .filter(Objects::nonNull)
+                .filter(Ships::isBadlyDamage)
+                .filter(s -> !Ships.isEscape(s))
+                .collect(Collectors.toList());
+    }
+
 }

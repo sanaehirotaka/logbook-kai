@@ -105,6 +105,7 @@ public class ApiReqMapNext implements APIListenerSpi {
      *
      * @param port 艦隊
      * @return 大破した艦娘
+     * @deprecated DeckPort.getBadlyShipsを使う
      */
     private static List<Ship> badlyShips(DeckPort port) {
         Map<Integer, Ship> shipMap = ShipCollection.get()
