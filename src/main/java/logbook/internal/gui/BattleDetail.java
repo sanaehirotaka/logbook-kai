@@ -43,6 +43,7 @@ import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.BattleTypes.Stage2;
 import logbook.bean.BattleTypes.SupportAiratack;
 import logbook.bean.BattleTypes.SupportInfo;
+import logbook.bean.CombinedBattleEachBattle;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
@@ -267,10 +268,22 @@ public class BattleDetail extends WindowController {
         // 敵陣形
         this.eFormation.setText(BattleTypes.Formation.toFormation(this.battle.getFormation().get(1)).toString());
         // 制空値計
-        this.seiku.setText(Integer.toString(ps.getAfterFriend().stream()
-                .filter(Objects::nonNull)
-                .mapToInt(Ships::airSuperiority)
-                .sum()));
+        if (this.battle instanceof CombinedBattleEachBattle) {
+            int friend = ps.getAfterFriend().stream()
+                    .filter(Objects::nonNull)
+                    .mapToInt(Ships::airSuperiority)
+                    .sum();
+            int friendCombined = ps.getAfterFriendCombined().stream()
+                    .filter(Objects::nonNull)
+                    .mapToInt(Ships::airSuperiority)
+                    .sum();
+            this.seiku.setText((friend + friendCombined) + "(" + friend + "+" + friendCombined + ")");
+        } else {
+            this.seiku.setText(Integer.toString(ps.getAfterFriend().stream()
+                    .filter(Objects::nonNull)
+                    .mapToInt(Ships::airSuperiority)
+                    .sum()));
+        }
 
         // 初期化
         this.dispSeiku.setText("");
