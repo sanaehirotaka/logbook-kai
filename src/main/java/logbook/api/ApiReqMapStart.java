@@ -3,18 +3,22 @@ package logbook.api;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
+
 import javax.json.JsonObject;
+
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import logbook.Messages;
-import logbook.bean.*;
-
+import logbook.bean.AppCondition;
+import logbook.bean.AppConfig;
+import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.CombinedType;
+import logbook.bean.DeckPortCollection;
+import logbook.bean.MapStartNext;
+import logbook.bean.Ship;
+import logbook.bean.ShipMst;
 import logbook.internal.Audios;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
@@ -45,21 +49,23 @@ public class ApiReqMapStart implements APIListenerSpi {
             AppCondition.get()
                     .setDeckId(Integer.parseInt(req.getParameter("api_deck_id")));
 
-            // 大破した艦娘
-            List<Ship> badlyShips = DeckPortCollection.get()
-                    .getDeckPortMap()
-                    .get(AppCondition.get().getDeckId())
-                    .getBadlyShips();
-
-            // 連合艦隊時は第2艦隊も見る
-            if (AppCondition.get().isCombinedFlag()) {
-                badlyShips.addAll(DeckPortCollection.get()
+            if (AppConfig.get().isAlertBadlyStart()) {
+                // 大破した艦娘
+                List<Ship> badlyShips = DeckPortCollection.get()
                         .getDeckPortMap()
-                        .get(2).getBadlyShips());
-            }
+                        .get(AppCondition.get().getDeckId())
+                        .getBadlyShips();
 
-            if (!badlyShips.isEmpty()) {
-                Platform.runLater(() -> displayAlert(badlyShips));
+                // 連合艦隊時は第2艦隊も見る
+                if (AppCondition.get().isCombinedFlag()) {
+                    badlyShips.addAll(DeckPortCollection.get()
+                            .getDeckPortMap()
+                            .get(2).getBadlyShips());
+                }
+
+                if (!badlyShips.isEmpty()) {
+                    Platform.runLater(() -> displayAlert(badlyShips));
+                }
             }
         }
     }

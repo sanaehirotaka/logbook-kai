@@ -43,6 +43,8 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -63,20 +65,22 @@
                                  </children>
                               </HBox>
                               <CheckBox fx:id="useNotification" mnemonicParsing="false" text="遠征・入渠完了時に通知をする" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                              <CheckBox fx:id="useSound" mnemonicParsing="false" text="通知でサウンドを鳴らす" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
-                              <CheckBox fx:id="useToast" mnemonicParsing="false" text="通知でトーストを表示" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
-                              <CheckBox fx:id="useRemind" mnemonicParsing="false" text="遠征完了時のリマインド(秒)" GridPane.rowIndex="4" />
-                              <TextField fx:id="remind" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Label text="音量(%)" GridPane.rowIndex="5" />
-                              <TextField fx:id="soundLevel" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label text="資材ログ保存間隔(秒)" GridPane.rowIndex="6" />
-                              <TextField fx:id="materialLogInterval" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                              <CheckBox fx:id="onTop" mnemonicParsing="false" text="最前面に表示する*" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
-                              <CheckBox fx:id="checkDoit" mnemonicParsing="false" text="終了時に確認する" GridPane.rowIndex="8" />
-                              <CheckBox fx:id="checkUpdate" mnemonicParsing="false" text="起動時にアップデートチェック*" GridPane.columnSpan="2147483647" GridPane.rowIndex="9" />
-                              <Label text="報告書の保存先" GridPane.rowIndex="10" />
-                              <TextField fx:id="reportDir" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-                              <Button mnemonicParsing="false" onAction="#selectReportDir" text="参照..." GridPane.columnIndex="2" GridPane.rowIndex="10" />
+                              <CheckBox fx:id="useSound" mnemonicParsing="false" text="通知でサウンドを鳴らす" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+                              <CheckBox fx:id="useToast" mnemonicParsing="false" text="通知でトーストを表示" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="useRemind" mnemonicParsing="false" text="遠征完了時のリマインド(秒)" GridPane.rowIndex="6" />
+                              <TextField fx:id="remind" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Label text="音量(%)" GridPane.rowIndex="7" />
+                              <TextField fx:id="soundLevel" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <Label text="資材ログ保存間隔(秒)" GridPane.rowIndex="8" />
+                              <TextField fx:id="materialLogInterval" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                              <CheckBox fx:id="onTop" mnemonicParsing="false" text="最前面に表示する*" GridPane.columnSpan="2147483647" GridPane.rowIndex="9" />
+                              <CheckBox fx:id="checkDoit" mnemonicParsing="false" text="終了時に確認する" GridPane.rowIndex="10" />
+                              <CheckBox fx:id="checkUpdate" mnemonicParsing="false" text="起動時にアップデートチェック*" GridPane.columnSpan="2147483647" GridPane.rowIndex="11" />
+                              <Label text="報告書の保存先" GridPane.rowIndex="12" />
+                              <TextField fx:id="reportDir" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                              <Button mnemonicParsing="false" onAction="#selectReportDir" text="参照..." GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                              <CheckBox fx:id="alertBadlyStart" mnemonicParsing="false" text="出撃時に大破艦がいる場合に通知をする" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="alertBadlyNext" mnemonicParsing="false" text="進撃時に大破艦がいる場合に通知をする" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
                      </children>

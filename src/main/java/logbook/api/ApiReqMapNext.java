@@ -3,9 +3,6 @@ package logbook.api;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 
@@ -18,11 +15,9 @@ import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
 import logbook.bean.BattleTypes.CombinedType;
-import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
-import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.internal.Audios;
 import logbook.internal.LoggerHolder;
@@ -53,21 +48,23 @@ public class ApiReqMapNext implements APIListenerSpi {
             log.setCombinedType(CombinedType.toCombinedType(AppCondition.get().getCombinedType()));
             log.getNext().add(MapStartNext.toMapStartNext(data));
 
-            // 大破した艦娘
-            List<Ship> badlyShips = badlyShips(DeckPortCollection.get()
-                    .getDeckPortMap()
-                    .get(AppCondition.get()
-                            .getDeckId()));
-
-            // 連合艦隊時は第2艦隊も見る
-            if (AppCondition.get().isCombinedFlag()) {
-                badlyShips.addAll(badlyShips(DeckPortCollection.get()
+            if (AppConfig.get().isAlertBadlyNext()) {
+                // 大破した艦娘
+                List<Ship> badlyShips = DeckPortCollection.get()
                         .getDeckPortMap()
-                        .get(2)));
-            }
+                        .get(AppCondition.get().getDeckId())
+                        .getBadlyShips();
 
-            if (!badlyShips.isEmpty()) {
-                Platform.runLater(() -> displayAlert(badlyShips));
+                // 連合艦隊時は第2艦隊も見る
+                if (AppCondition.get().isCombinedFlag()) {
+                    badlyShips.addAll(DeckPortCollection.get()
+                            .getDeckPortMap()
+                            .get(2).getBadlyShips());
+                }
+
+                if (!badlyShips.isEmpty()) {
+                    Platform.runLater(() -> displayAlert(badlyShips));
+                }
             }
         }
     }
@@ -98,24 +95,5 @@ public class ApiReqMapNext implements APIListenerSpi {
 
             Tools.Conrtols.showNotify(node, "大破警告", message, Duration.seconds(30));
         }
-    }
-
-    /**
-     * 大破した艦娘を返します
-     *
-     * @param port 艦隊
-     * @return 大破した艦娘
-     * @deprecated DeckPort.getBadlyShipsを使う
-     */
-    private static List<Ship> badlyShips(DeckPort port) {
-        Map<Integer, Ship> shipMap = ShipCollection.get()
-                .getShipMap();
-        return port.getShip()
-                .stream()
-                .map(shipMap::get)
-                .filter(Objects::nonNull)
-                .filter(Ships::isBadlyDamage)
-                .filter(s -> !Ships.isEscape(s))
-                .collect(Collectors.toList());
     }
 }

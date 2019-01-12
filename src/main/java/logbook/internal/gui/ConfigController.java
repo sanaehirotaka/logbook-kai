@@ -53,6 +53,14 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox useNotification;
 
+    /** 出撃時に大破艦がいる場合に通知をする */
+    @FXML
+    private CheckBox alertBadlyStart;
+
+    /** 進撃時に大破艦がいる場合に通知をする */
+    @FXML
+    private CheckBox alertBadlyNext;
+
     /** 通知でサウンドを鳴らす */
     @FXML
     private CheckBox useSound;
@@ -232,6 +240,8 @@ public class ConfigController extends WindowController {
         this.windowStyleSmart.setSelected("main".equals(conf.getWindowStyle()));
         this.windowStyleWide.setSelected("main_wide".equals(conf.getWindowStyle()));
         this.useNotification.setSelected(conf.isUseNotification());
+        this.alertBadlyStart.setSelected(conf.isAlertBadlyStart());
+        this.alertBadlyNext.setSelected(conf.isAlertBadlyNext());
         this.useSound.setSelected(conf.isUseSound());
         this.useToast.setSelected(conf.isUseToast());
         this.useRemind.setSelected(conf.isUseRemind());
@@ -322,6 +332,8 @@ public class ConfigController extends WindowController {
             windowStyle = "main_wide";
         conf.setWindowStyle(windowStyle);
         conf.setUseNotification(this.useNotification.isSelected());
+        conf.setAlertBadlyStart(this.alertBadlyStart.isSelected());
+        conf.setAlertBadlyNext(this.alertBadlyNext.isSelected());
         conf.setUseSound(this.useSound.isSelected());
         conf.setUseToast(this.useToast.isSelected());
         conf.setUseRemind(this.useRemind.isSelected());

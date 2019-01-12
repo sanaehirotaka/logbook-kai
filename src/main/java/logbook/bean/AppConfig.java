@@ -27,6 +27,12 @@ public final class AppConfig implements Serializable {
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;
 
+    /** 出撃時に大破艦がいる場合に通知をする */
+    private boolean alertBadlyStart = true;
+
+    /** 進撃時に大破艦がいる場合に通知をする */
+    private boolean alertBadlyNext = true;
+
     /** 通知でサウンドを鳴らす */
     private boolean useSound = true;
 
