@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
@@ -124,7 +125,7 @@ public class CalcExpController extends WindowController {
     void initialize() {
         // Spinnerに最小値最大値現在値を設定
         this.nowLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 175, 1, 1));
-        this.goalLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 175, 100, 1));
+        this.goalLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 175, 1, 1));
         // コンボボックス
         this.shipList.setItems(this.ships);
         this.shipList();
@@ -240,16 +241,25 @@ public class CalcExpController extends WindowController {
     /**
      * 艦娘を変えたとき
      */
-    private void changeShip(Ship ship) {
-        this.nowLv.getValueFactory().setValue(ship.getLv());
+    private void changeShip(Ship oldShip, Ship newShip) {
+        if (newShip == null) {
+            return;
+        }
+        this.nowLv.getValueFactory().setValue(newShip.getLv());
 
-        this.nowExpValue = ship.getExp().get(0);
+        this.nowExpValue = newShip.getExp().get(0);
         this.nowExp.setText(Integer.toString(this.nowExpValue));
 
-        int afterLv = Ships.shipMst(ship)
+        int afterLv = Ships.shipMst(newShip)
                 .map(ShipMst::getAfterlv)
                 .orElse(0);
-        int goal = Math.min(Math.max(afterLv, ship.getLv() + 1), ExpTable.maxLv());
+        int goal;
+        if ((oldShip != null && !oldShip.getId().equals(newShip.getId())) || afterLv > newShip.getLv()) {
+            goal = Math.min(Math.max(afterLv, newShip.getLv() + 1), ExpTable.maxLv());
+        } else {
+            int nowGoalLv = Optional.ofNullable(this.goalLv.getValue()).orElse(0);
+            goal = Math.min(Math.max(Math.max(afterLv, newShip.getLv() + 1), nowGoalLv), ExpTable.maxLv());
+        }
 
         this.goalExpValue = ExpTable.get().get(goal);
         this.goalLv.getValueFactory().setValue(goal);
@@ -263,8 +273,9 @@ public class CalcExpController extends WindowController {
     private void changeShip(ObservableValue<? extends ShipWrapper> observable, ShipWrapper oldValue,
             ShipWrapper value) {
         if (value != null) {
+            Ship oldShip = Optional.ofNullable(oldValue).map(ShipWrapper::getShip).orElse(null);
             Ship ship = value.getShip();
-            this.changeShip(ship);
+            this.changeShip(oldShip, ship);
             // Table の同じものを選択
             for (ShortageShipItem ss : this.item.filtered(ss -> ss.shipProperty().get().equals(ship))) {
                 ShortageShipItem selected = this.shortageShip.getSelectionModel().getSelectedItem();
@@ -283,10 +294,12 @@ public class CalcExpController extends WindowController {
     private void changeShip(ObservableValue<? extends ShortageShipItem> observable, ShortageShipItem oldValue,
             ShortageShipItem value) {
         if (value != null) {
-            Ship ship = value.shipProperty().get();
-            this.changeShip(ship);
+            Ship oldShip = Optional.ofNullable(oldValue).map(ShortageShipItem::getShip).orElse(null);
+            Ship ship = value.getShip();
+            this.changeShip(oldShip, ship);
             // Combo の同じものを選択
-            this.ships.filtered(sw -> sw.getShip().equals(ship)).forEach(this.shipList.getSelectionModel()::select);
+            this.ships.filtered(sw -> sw.getShip().equals(this.ship))
+                    .forEach(this.shipList.getSelectionModel()::select);
         }
     }
 
