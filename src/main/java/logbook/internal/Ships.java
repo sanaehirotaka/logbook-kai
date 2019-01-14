@@ -571,6 +571,69 @@ public class Ships {
     }
 
     /**
+     * 加重対空値
+     *
+     * @param ship 艦娘
+     * @return 加重対空値
+     */
+    public static double weightAntiAircraft(Ship ship) {
+        // 装備マスタ
+        Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
+                .getSlotitemMap();
+        // 装備
+        Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
+                .getSlotitemMap();
+
+        // 装備から加重対空値を取り出すFunction
+        ToDoubleFunction<SlotItem> weightAA = item -> {
+            SlotitemMst mst = itemMstMap.get(item.getSlotitemId());
+            if (mst == null) return 0D;
+
+            boolean isGun = Optional.ofNullable(mst)
+                    .map(SlotitemMst::getType)
+                    .map(type -> SlotItemType.小口径主砲.equals(type)
+                            || SlotItemType.副砲.equals(type))
+                    .orElse(false);
+            if (mst.getType().get(3) != 16 && isGun) return 0D;
+
+            SlotItemType type = SlotItemType.toSlotItemType(mst);
+            int taikuu = mst.getTyku();
+
+            // 裝備係数× 装備対空値
+            double ic = AA_COEFFICIENT.getOrDefault(type, 0D) * taikuu;
+            // 改修係数(索敵)
+            double aalvCoefficient = AALV_COEFFICIENT.getOrDefault(type, 0D);
+            if (aalvCoefficient == 2D && taikuu > 7) {
+                aalvCoefficient = 3D;
+            }
+            // 改修係数(索敵)×√★
+            double v = aalvCoefficient * Math.sqrt(item.getLevel());
+
+            return ic + v;
+        };
+
+        // 装備加重対空値＝裝備係数(対空)×装備対空値+改修係数(対空)×√★
+        double itemWeightAA = ship.getSlot()
+                .stream()
+                .map(itemMap::get)
+                .filter(Objects::nonNull)
+                .mapToDouble(weightAA)
+                .sum();
+
+        int itemTyku = getSlotitemMst(ship).mapToInt(SlotitemMst::getTyku).sum();
+
+        SlotItem exItem = itemMap.get(ship.getSlotEx());
+        if (exItem != null) {
+            itemWeightAA += weightAA.applyAsDouble(exItem);
+            SlotitemMst exItemMst = itemMstMap.get(exItem.getSlotitemId());
+            itemTyku += exItemMst.getTyku();
+        }
+
+        int shipAA = ship.getTaiku().get(0) - itemTyku;
+        return itemWeightAA + (double)shipAA;
+    }
+
+    /**
      * 判定式(33)
      *
      * @param ships 艦娘達
