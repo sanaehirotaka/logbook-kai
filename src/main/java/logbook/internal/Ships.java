@@ -62,6 +62,10 @@ public class Ships {
     private static final Map<SlotItemType, Double> VIEW_COEFFICIENT = new EnumMap<>(SlotItemType.class);
     /** 改修係数 */
     private static final Map<SlotItemType, Double> LV_COEFFICIENT = new EnumMap<>(SlotItemType.class);
+    /** 対空係数 */
+    private static final Map<SlotItemType, Double> AA_COEFFICIENT = new EnumMap<>(SlotItemType.class);
+    /** 対空改修係数 */
+    private static final Map<SlotItemType, Double> AALV_COEFFICIENT = new EnumMap<>(SlotItemType.class);
 
     static {
         // 索敵係数
@@ -113,6 +117,26 @@ public class Ships {
         LV_COEFFICIENT.put(SlotItemType.大型電探, 1.25D);
         // 水上偵察機：1.2
         LV_COEFFICIENT.put(SlotItemType.水上偵察機, 1.2D);
+
+        // 対空係数
+        // 対空機銃：6
+        AA_COEFFICIENT.put(SlotItemType.対空機銃, 6D);
+        // 高角砲・高射装置：4
+        AA_COEFFICIENT.put(SlotItemType.小口径主砲, 4D);
+        AA_COEFFICIENT.put(SlotItemType.副砲, 4D);
+        AA_COEFFICIENT.put(SlotItemType.高射装置, 4D);
+        // 対空電探：3
+        AA_COEFFICIENT.put(SlotItemType.小型電探, 3D);
+        AA_COEFFICIENT.put(SlotItemType.大型電探, 3D);
+        AA_COEFFICIENT.put(SlotItemType.大型電探II, 3D);
+
+        // 対空改修係数
+        // 機銃：4
+        AALV_COEFFICIENT.put(SlotItemType.対空機銃, 4D);
+        // 高角砲・高射装置：2
+        AALV_COEFFICIENT.put(SlotItemType.小口径主砲, 2D);
+        AALV_COEFFICIENT.put(SlotItemType.副砲, 2D);
+        AALV_COEFFICIENT.put(SlotItemType.高射装置, 2D);
     }
 
     private Ships() {
