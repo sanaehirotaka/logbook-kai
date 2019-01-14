@@ -634,6 +634,62 @@ public class Ships {
     }
 
     /**
+     * 対空噴進弾幕発動率
+     *
+     * @param ship 艦娘
+     * @return 噴進弾幕発動率
+     */
+    public static double rocketBarrageActivationRate(Ship ship) {
+        List<SlotitemMst> items = getSlotitemMst(ship).collect(Collectors.toList());
+        SlotItem exItem = SlotItemCollection.get()
+                .getSlotitemMap()
+                .get(ship.getSlotEx());
+        if (exItem != null) {
+            SlotitemMst exItemMst = SlotitemMstCollection.get()
+                    .getSlotitemMap()
+                    .get(exItem.getSlotitemId());
+            items.add(exItemMst);
+        }
+        long rocketCount = items.stream()
+                .filter(e -> e.getId() == 274) // 噴進砲改二
+                .count();
+        if (rocketCount == 0) return 0D;
+
+        boolean canRocketBarrage = shipMst(ship)
+                .map(ShipMst::getStype)
+                .map(stype -> ShipType.水上機母艦.equals(stype)
+                        || ShipType.航空巡洋艦.equals(stype)
+                        || ShipType.航空戦艦.equals(stype)
+                        || ShipType.軽空母.equals(stype)
+                        || ShipType.正規空母.equals(stype)
+                        || ShipType.装甲空母.equals(stype))
+                .orElse(false);
+        if (!canRocketBarrage) return 0D;
+
+        double bonus = 0D;
+
+        if (rocketCount > 1) bonus += 15D;
+
+        Integer shipMstId = shipMst(ship)
+                .map(ShipMst::getId)
+                .orElse(0);
+        List<Integer> iseClass = new ArrayList<Integer>();
+        iseClass.add(82); // 伊勢改
+        iseClass.add(553); // 伊勢改二
+        iseClass.add(88); // 日向改
+
+        if (iseClass.contains(shipMstId)) bonus += 25D;
+
+        int antiAircraft = (int)Math.floor(weightAntiAircraft(ship));
+        if (antiAircraft % 2 != 0) antiAircraft -= 1;
+
+        double baseActivationRate = (antiAircraft + ship.getLucky().get(0)) / 282D;
+        double activationRate = Math.floor(baseActivationRate * 1000) / 10;
+
+        return activationRate + bonus;
+    }
+
+    /**
      * 判定式(33)
      *
      * @param ships 艦娘達
