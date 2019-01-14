@@ -1,0 +1,8 @@
+.popup-item {
+    -fx-alignment: CENTER;
+}
+.rate {
+    -fx-min-width: 4.5em;
+    -fx-padding: 0 0.5em 0 0;
+    -fx-alignment: CENTER_RIGHT;
+}
