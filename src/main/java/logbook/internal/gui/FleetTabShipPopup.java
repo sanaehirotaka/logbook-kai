@@ -61,6 +61,14 @@ public class FleetTabShipPopup extends VBox {
                     this.getChildren().add(new FleetTabShipPopupItem(this.chara));
                 }
             }
+            double barrageRate = Ships.rocketBarrageActivationRate(ship);
+            if (barrageRate != 0D) {
+                Label rateLabel = new Label();
+                rateLabel.setText("発動率");
+                rateLabel.getStyleClass().add("title");
+                this.getChildren().add(rateLabel);
+                this.getChildren().add(new FleetTabShipPopupRate(barrageRate, "対空噴進弾幕"));
+            }
         } else {
             for (int i = 0; i < this.chara.getSlot().size(); i++) {
                 if (this.chara.getSlot().get(i) > 0) {
@@ -189,6 +197,50 @@ public class FleetTabShipPopup extends VBox {
                 this.image.setImage(Items.itemImage(item));
                 this.name.setText(item.getName());
             }
+        }
+    }
+
+    /**
+     * 艦隊タブポップアップの発動率
+     *
+     */
+    private static class FleetTabShipPopupRate extends HBox {
+
+        @FXML
+        private Label kind;
+
+        @FXML
+        private Label percent;
+
+        /** 発動率 */
+        private double rate;
+
+        /** 種類 */
+        private String name;
+
+        /**
+         * 艦隊タブポップアップのコンストラクタ
+         *
+         * @param rate 発動率
+         * @param name 種類
+         */
+        public FleetTabShipPopupRate(double rate, String name) {
+            this.rate = rate;
+            this.name = name;
+            try {
+                FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/fleet_tab_popup_rate.fxml");
+                loader.setRoot(this);
+                loader.setController(this);
+                loader.load();
+            } catch (IOException e) {
+                LoggerHolder.get().error("FXMLのロードに失敗しました", e);
+            }
+        }
+
+        @FXML
+        void initialize() {
+            this.kind.setText(this.name);
+            this.percent.setText(String.valueOf(this.rate) + "%");
         }
     }
 }
