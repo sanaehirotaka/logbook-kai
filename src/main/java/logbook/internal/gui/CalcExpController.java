@@ -298,7 +298,7 @@ public class CalcExpController extends WindowController {
             Ship ship = value.getShip();
             this.changeShip(oldShip, ship);
             // Combo の同じものを選択
-            this.ships.filtered(sw -> sw.getShip().equals(this.ship))
+            this.ships.filtered(sw -> sw.getShip().equals(ship))
                     .forEach(this.shipList.getSelectionModel()::select);
         }
     }
