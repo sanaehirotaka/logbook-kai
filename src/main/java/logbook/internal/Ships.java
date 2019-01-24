@@ -590,7 +590,6 @@ public class Ships {
             if (mst == null) return 0D;
 
             boolean isGun = Optional.ofNullable(mst)
-                    .map(SlotitemMst::getType)
                     .map(type -> SlotItemType.小口径主砲.equals(type)
                             || SlotItemType.副砲.equals(type))
                     .orElse(false);
