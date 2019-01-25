@@ -1,8 +1,7 @@
-package logbook.internal;
+package logbook.internal.gui;
 
 import java.util.function.Predicate;
 
-import logbook.internal.gui.Item;
 import lombok.Builder;
 
 /**
