@@ -47,15 +47,18 @@ public class AirBases {
             if (Items.isAircraft(itemMst)) {
                 tyku += airSuperiority(item, plane.getCount(), isIntercept);
             }
-            if (isIntercept && (Items.isReconAircraft(itemMst))) {
-                magnification = Math.max(magnification, magnification(itemMst));
+            if (Items.isReconAircraft(itemMst)) {
+                if (isIntercept) {
+                    // 防空時の偵察機補正
+                    magnification = Math.max(magnification, interceptMagnification(itemMst));
+                } else {
+                    // 出撃時の偵察機補正
+                    magnification = Math.max(magnification, magnification(itemMst));
+                }
             }
         }
-        // 防空の場合
         //  [各中隊の制空値(防空) の総計 × 偵察機補正]
-        if (isIntercept) {
-            tyku = (int) (tyku * magnification);
-        }
+        tyku = (int) (tyku * magnification);
         return tyku;
     }
 
@@ -107,7 +110,12 @@ public class AirBases {
         return (int) Math.round(Math.min(Math.sqrt(reconDistance - distance), 3));
     }
 
-    private static double magnification(SlotitemMst itemMst) {
+    /**
+     * 防空時の偵察機補正
+     * @param itemMst 装備
+     * @return 乗算値
+     */
+    private static double interceptMagnification(SlotitemMst itemMst) {
         int saku = itemMst.getSaku();
 
         if (SlotItemType.水上偵察機.equals(itemMst)
@@ -127,7 +135,21 @@ public class AirBases {
                 return 1.25D;
             return 1.2D;
         }
+        if (SlotItemType.陸上偵察機.equals(itemMst)) {
+            return 1.18D;
+        }
+        return 1.0D;
+    }
 
+    /**
+     * 出撃時の偵察機補正
+     * @param itemMst 装備
+     * @return 乗算値
+     */
+    private static double magnification(SlotitemMst itemMst) {
+        if (SlotItemType.陸上偵察機.equals(itemMst)) {
+            return 1.15D;
+        }
         return 1.0D;
     }
 }
