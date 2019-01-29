@@ -603,7 +603,7 @@ public class AirBaseItem implements Comparable<AirBaseItem> {
         abitem.setDistanceCatalina(distance + AirBases.distanceAdditional(distance, 10));
         abitem.setCost(Optional.ofNullable(slotitem.getCost()).map(c -> c * onslot).orElse(0));
         abitem.setTyku(slotitem.getTyku());
-        if (SlotItemType.局地戦闘機.equals(slotitem)) {
+        if (slotitem.is(SlotItemType.局地戦闘機)) {
             abitem.setHoum(slotitem.getHoum());
             abitem.setHouk(slotitem.getHouk());
         } else {

@@ -765,7 +765,7 @@ public class PhaseState {
                     .map(Items::slotitemMst)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .filter(SlotItemType.応急修理要員::equals)
+                    .filter(i -> i.is(SlotItemType.応急修理要員))
                     .findFirst();
             if (mst.isPresent()) {
                 if (mst.get().getName().equals("応急修理女神")) {

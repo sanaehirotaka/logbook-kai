@@ -80,18 +80,18 @@ public enum SlotItemType {
      * @param item 装備
      * @return 装備がこの定数と同じ場合はtrue
      */
+    @Deprecated
     public boolean equals(SlotitemMst item) {
         return item != null && this.item == item.getType().get(2);
     }
-
+    
     /**
-     * この定数がitemと等しい場合trueを返します
-     *
-     * @param item 装備(api_type[2])
-     * @return 装備がこの定数と同じ場合はtrue
+     * 装備種定数を返します
+     * 
+     * @return 装備種定数
      */
-    public boolean equals(Integer item) {
-        return item != null && this.item == item;
+    public int getType() {
+        return this.item;
     }
 
     /**

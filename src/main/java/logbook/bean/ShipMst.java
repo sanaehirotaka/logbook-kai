@@ -8,6 +8,8 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import logbook.internal.ShipType;
+import logbook.internal.SlotItemType;
 import lombok.Data;
 
 /**
@@ -97,6 +99,56 @@ public class ShipMst implements Serializable {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    /**
+     * この艦船定義が指定された艦種であるかを返します。
+     * @param shipType 艦種定数
+     * @return この艦船定義が指定された艦種である場合true
+     */
+    public boolean is(ShipType shipType) {
+        if (this.getStype() == null)
+            return false;
+        return shipType.getStype() == this.getStype();
+    }
+
+    /**
+     * この艦船定義が指定された艦種であるかを返します。
+     * @param shipType1 艦種定数
+     * @param shipType2 艦種定数
+     * @return この艦船定義が指定された艦種である場合true
+     */
+    public boolean is(ShipType shipType1, ShipType shipType2) {
+        if (this.getStype() == null)
+            return false;
+        int stype = this.getStype();
+        return shipType1.getStype() == stype || shipType2.getStype() == stype;
+    }
+
+    /**
+     * この艦船定義が指定された艦種であるかを返します。
+     * @param shipTypes 艦種定数
+     * @return この艦船定義が指定された艦種である場合true
+     */
+    public boolean is(ShipType... shipTypes) {
+        if (this.getStype() == null)
+            return false;
+        int stype = this.getStype();
+        for (ShipType shipType : shipTypes) {
+            if (shipType.getStype() == stype) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * この装備定義から{@link SlotItemType}を返します。
+     * 
+     * @return {@link SlotItemType}
+     */
+    public ShipType asShipType() {
+        return ShipType.toShipType(this);
     }
 
     /**

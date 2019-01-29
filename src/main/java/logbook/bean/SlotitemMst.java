@@ -6,6 +6,7 @@ import java.util.List;
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import logbook.internal.SlotItemType;
 import lombok.Data;
 
 /**
@@ -95,6 +96,56 @@ public class SlotitemMst implements Serializable {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    /**
+     * この装備定義が指定された装備種定数であるかを返します。
+     * @param itemType 装備種定数
+     * @return この装備定義が指定された装備種定数である場合true
+     */
+    public boolean is(SlotItemType itemType) {
+        if (this.getType() == null)
+            return false;
+        return itemType.getType() == this.getType().get(2);
+    }
+
+    /**
+     * この装備定義が指定されたいずれかの装備種定数であるかを返します。
+     * @param itemType1 装備種定数
+     * @param itemType2 装備種定数
+     * @return この装備定義が指定されたいずれかの装備種定数である場合true
+     */
+    public boolean is(SlotItemType itemType1, SlotItemType itemType2) {
+        if (this.getType() == null)
+            return false;
+        int type2 = this.getType().get(2);
+        return itemType1.getType() == type2 || itemType2.getType() == type2;
+    }
+
+    /**
+     * この装備定義が指定されたいずれかの装備種定数であるかを返します。
+     * @param itemTypes 装備種定数
+     * @return この装備定義が指定されたいずれかの装備種定数である場合true
+     */
+    public boolean is(SlotItemType... itemTypes) {
+        if (this.getType() == null)
+            return false;
+        int type2 = this.getType().get(2);
+        for (SlotItemType itemType : itemTypes) {
+            if (itemType.getType() == type2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * この装備定義から{@link SlotItemType}を返します。
+     * 
+     * @return {@link SlotItemType}
+     */
+    public SlotItemType asSlotItemType() {
+        return SlotItemType.toSlotItemType(this);
     }
 
     /**

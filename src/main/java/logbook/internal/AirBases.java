@@ -84,7 +84,7 @@ public class AirBases {
         // 出撃の場合
         // [(対空 ＋ 迎撃 × 1.5) × √(搭載数) ＋ 熟練度補正]
         double slotLocal = itemMst.getTyku() + Ships.airSuperiorityTykuAdditional(itemMst, item);
-        if (SlotItemType.局地戦闘機.equals(itemMst)) {
+        if (itemMst.is(SlotItemType.局地戦闘機)) {
             if (isIntercept) {
                 slotLocal += itemMst.getHouk() + itemMst.getHoum() * 2D;
             } else {
@@ -118,24 +118,21 @@ public class AirBases {
     private static double interceptMagnification(SlotitemMst itemMst) {
         int saku = itemMst.getSaku();
 
-        if (SlotItemType.水上偵察機.equals(itemMst)
-                || SlotItemType.大型飛行艇.equals(itemMst)) {
+        if (itemMst.is(SlotItemType.水上偵察機, SlotItemType.大型飛行艇)) {
             if (saku >= 9)
                 return 1.16D;
             if (saku >= 8)
                 return 1.13D;
             return 1.1D;
         }
-        if (SlotItemType.艦上偵察機.equals(itemMst)
-                || SlotItemType.艦上偵察機II.equals(itemMst)
-                || SlotItemType.噴式偵察機.equals(itemMst)) {
+        if (itemMst.is(SlotItemType.艦上偵察機, SlotItemType.艦上偵察機II, SlotItemType.噴式偵察機)) {
             if (saku >= 9)
                 return 1.3D;
             if (saku >= 8)
                 return 1.25D;
             return 1.2D;
         }
-        if (SlotItemType.陸上偵察機.equals(itemMst)) {
+        if (itemMst.is(SlotItemType.陸上偵察機)) {
             return 1.18D;
         }
         return 1.0D;
@@ -147,7 +144,7 @@ public class AirBases {
      * @return 乗算値
      */
     private static double magnification(SlotitemMst itemMst) {
-        if (SlotItemType.陸上偵察機.equals(itemMst)) {
+        if (itemMst.is(SlotItemType.陸上偵察機)) {
             return 1.15D;
         }
         return 1.0D;

@@ -2,10 +2,14 @@ package logbook.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
+import logbook.internal.ShipType;
+import logbook.internal.Ships;
+import logbook.internal.SlotItemType;
 import lombok.Data;
 
 /**
@@ -120,6 +124,49 @@ public class Ship implements Chara, Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * この艦娘が指定された艦種であるかを返します。
+     * @param shipType 艦種定数
+     * @return この艦娘が指定された艦種である場合true
+     */
+    public boolean is(ShipType shipType) {
+        return Ships.shipMst(this)
+                .map(mst -> mst.is(shipType))
+                .orElse(false);
+    }
+
+    /**
+     * この艦娘が指定された艦種であるかを返します。
+     * @param shipType1 艦種定数
+     * @param shipType2 艦種定数
+     * @return この艦娘が指定された艦種である場合true
+     */
+    public boolean is(ShipType shipType1, ShipType shipType2) {
+        return Ships.shipMst(this)
+                .map(mst -> mst.is(shipType1, shipType2))
+                .orElse(false);
+    }
+
+    /**
+     * この艦娘が指定された艦種であるかを返します。
+     * @param shipTypes 艦種定数
+     * @return この艦娘が指定された艦種である場合true
+     */
+    public boolean is(ShipType... shipTypes) {
+        return Ships.shipMst(this)
+                .map(mst -> mst.is(shipTypes))
+                .orElse(false);
+    }
+
+    /**
+     * この装備定義から{@link SlotItemType}を返します。
+     * 
+     * @return {@link SlotItemType}
+     */
+    public Optional<ShipType> asShipType() {
+        return Ships.shipMst(this).map(ShipType::toShipType);
     }
 
     /**

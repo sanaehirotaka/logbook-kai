@@ -30,7 +30,9 @@ public enum ShipType {
     工作艦(19),
     潜水母艦(20),
     練習巡洋艦(21),
-    補給艦(22);
+    補給艦(22),
+
+    不明(-1);
 
     private final int stype;
 
@@ -44,6 +46,7 @@ public enum ShipType {
      * @param stype 艦種
      * @return 艦種がこの定数と同じ場合はtrue
      */
+    @Deprecated
     public boolean equals(Stype stype) {
         return stype != null && this.stype == stype.getId();
     }
@@ -54,6 +57,7 @@ public enum ShipType {
      * @param stype 艦種
      * @return 艦種がこの定数と同じ場合はtrue
      */
+    @Deprecated
     public boolean equals(Integer stype) {
         return stype != null && this.stype == stype;
     }
@@ -64,7 +68,33 @@ public enum ShipType {
      * @param shipMst 艦船
      * @return 艦船がこの定数と同じ場合はtrue
      */
+    @Deprecated
     public boolean equals(ShipMst shipMst) {
         return shipMst != null && this.stype == shipMst.getStype();
+    }
+    
+    /**
+     * 艦種定数を返します
+     * 
+     * @return 艦種定数
+     */
+    public int getStype() {
+        return this.stype;
+    }
+
+    /**
+     * 艦種定数を返します
+     *
+     * @param shipMst 艦船
+     * @return 艦種定数
+     */
+    public static ShipType toShipType(ShipMst shipMst) {
+        int type = shipMst.getStype();
+        for (ShipType e : values()) {
+            if (e.stype == type) {
+                return e;
+            }
+        }
+        return 不明;
     }
 }

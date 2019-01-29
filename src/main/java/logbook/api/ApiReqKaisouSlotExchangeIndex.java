@@ -6,7 +6,6 @@ import javax.json.JsonObject;
 
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
-import logbook.internal.JsonHelper;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
