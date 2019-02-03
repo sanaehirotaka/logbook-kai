@@ -9,16 +9,20 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.Deck">
+<HBox prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.Deck">
    <children>
       <VBox fx:id="left" styleClass="left">
          <children>
             <ToolBar>
               <items>
                 <Button mnemonicParsing="false" onAction="#addNewDeck" text="新しい編成" />
+                  <Pane prefHeight="0.0" prefWidth="10.0" />
+                  <Button mnemonicParsing="false" onAction="#up" text="↑" />
+                  <Button mnemonicParsing="false" onAction="#down" text="↓" />
               </items>
             </ToolBar>
             <ListView fx:id="deckList" styleClass="deckList" VBox.vgrow="ALWAYS" />
