@@ -109,6 +109,8 @@ public class Ships {
         VIEW_COEFFICIENT.put(SlotItemType.艦上偵察機II, 1.0D);
         // 噴式戦闘爆撃機：0.6
         VIEW_COEFFICIENT.put(SlotItemType.噴式戦闘爆撃機, 0.6D);
+        // 潜水艦装備：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.潜水艦装備, 0.6D);
 
         // 改修係数
         // 小型電探：1.25
