@@ -2,82 +2,16 @@
 
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox prefHeight="455.0" prefWidth="300.0" styleClass="mainWindow" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MainController">
    <children>
-      <MenuBar>
-        <menus>
-          <Menu fx:id="command" mnemonicParsing="false" text="コマンド">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#capture" text="キャプチャ" />
-              <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#battleStatus" text="現在の戦闘" />
-              <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-              <MenuItem mnemonicParsing="false" onAction="#missionlog" text="遠征ログ">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#createitemlog" text="開発ログ" />
-              <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#airBase" text="基地航空隊">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator>
-                  </MenuItem>
-              <MenuItem mnemonicParsing="false" onAction="#items" text="所有装備一覧">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-              <MenuItem mnemonicParsing="false" onAction="#ships" text="所有艦娘一覧">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-              <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#ndock" text="お風呂に入りたい艦娘">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-            </items>
-          </Menu>
-          <Menu fx:id="calc" mnemonicParsing="false" text="計算機">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#calcExp" text="経験値計算機">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                     </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#missionCheck" text="遠征条件確認" />
-               </items>
-          </Menu>
-          <Menu fx:id="ext" mnemonicParsing="false" text="その他">
-            <items>
-                  <MenuItem mnemonicParsing="false" onAction="#resourceChart" text="資材チャート" />
-                  <MenuItem mnemonicParsing="false" onAction="#deck" text="編成記録" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" onAction="#createPacFile" text="自動プロキシ構成スクリプト" />
-                  <MenuItem mnemonicParsing="false" onAction="#config" text="設定">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="COMMA" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#updateCheck" text="更新を確認" />
-                  <MenuItem mnemonicParsing="false" onAction="#version" text="バージョン情報" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+      <fx:include fx:id="mainMenu" source="main_menu.fxml"/>
       <HBox styleClass="buttons">
          <children>
             <Button fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" styleClass="itemButton" text="所有装備({0}/{1})" HBox.hgrow="ALWAYS" />
