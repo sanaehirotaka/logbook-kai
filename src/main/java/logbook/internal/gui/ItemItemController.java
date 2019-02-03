@@ -11,6 +11,9 @@ import java.util.stream.Stream;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.TextFields;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,6 +29,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import logbook.Messages;
@@ -38,6 +43,7 @@ import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 import logbook.plugin.PluginServices;
+import lombok.Data;
 
 /**
  * 所有装備一覧のUIコントローラー
@@ -392,6 +398,29 @@ public class ItemItemController extends WindowController {
     }
 
     /**
+     * 艦隊分析
+     */
+    @FXML
+    void kancolleFleetanalysis() {
+        try {
+            List<KancolleFleetanalysisItem> list = SlotItemCollection.get().getSlotitemMap().values().stream()
+                    .filter(item -> item.getLocked())
+                    .map(KancolleFleetanalysisItem::toItem)
+                    .sorted(Comparator.comparing(KancolleFleetanalysisItem::getId)
+                            .thenComparing(Comparator.comparing(KancolleFleetanalysisItem::getLv)))
+                    .collect(Collectors.toList());
+            ObjectMapper mapper = new ObjectMapper();
+            String input = mapper.writeValueAsString(list);
+
+            ClipboardContent content = new ClipboardContent();
+            content.putString(input);
+            Clipboard.getSystemClipboard().setContent(content);
+        } catch (Exception e) {
+            LoggerHolder.get().error("艦隊分析のロック装備をクリップボードにコピーに失敗しました", e);
+        }
+    }
+
+    /**
      * (装備一覧)テーブル列の表示・非表示の設定
      */
     @FXML
@@ -430,6 +459,23 @@ public class ItemItemController extends WindowController {
                     this.getWindow());
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    @Data
+    private static class KancolleFleetanalysisItem {
+
+        @JsonProperty("api_slotitem_id")
+        private int id;
+
+        @JsonProperty("api_level")
+        private int lv;
+
+        public static KancolleFleetanalysisItem toItem(SlotItem item) {
+            KancolleFleetanalysisItem kfi = new KancolleFleetanalysisItem();
+            kfi.id = item.getSlotitemId();
+            kfi.lv = item.getLevel();
+            return kfi;
         }
     }
 }
