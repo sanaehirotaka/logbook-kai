@@ -1,6 +1,8 @@
 package logbook.internal;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,6 +75,35 @@ public final class APIListener implements ContentListenerSpi {
             }
         } catch (Exception e) {
             LoggerHolder.get().warn(Messages.getString("APIListener.2"), e); //$NON-NLS-1$
+            // 例外発生時のレスポンスの内容をログに出力する
+            StringBuilder sb = new StringBuilder();
+            sb.append("uri=");
+            try {
+                if (requestMetaData != null) {
+                    sb.append(requestMetaData.getRequestURI());
+                }
+            } catch (Exception e2) {
+                sb.append(e2.toString());
+            }
+            sb.append(",body=");
+            try {
+                if (responseMetaData != null) {
+                    InputStream in = responseMetaData.getResponseBody().orElse(null);
+                    if (in != null) {
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                        sb.append(new String(out.toByteArray(), StandardCharsets.UTF_8));
+                        in.close();
+                    }
+                }
+            } catch (Exception e2) {
+                sb.append(e2.toString());
+            }
+            LoggerHolder.get().warn(sb.toString());
         }
     }
 
