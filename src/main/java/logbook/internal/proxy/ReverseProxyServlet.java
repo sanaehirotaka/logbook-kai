@@ -103,18 +103,20 @@ public final class ReverseProxyServlet extends ProxyServlet {
     protected void onResponseSuccess(HttpServletRequest request, HttpServletResponse response,
             Response proxyResponse) {
         try {
-            CaptureHolder holder = (CaptureHolder) request.getAttribute(Filter.CONTENT_HOLDER);
-            if (holder != null) {
-                RequestMetaDataWrapper req = new RequestMetaDataWrapper();
-                req.set(request);
+            if(response.getStatus() == HttpServletResponse.SC_OK) {
+                CaptureHolder holder = (CaptureHolder) request.getAttribute(Filter.CONTENT_HOLDER);
+                if (holder != null) {
+                    RequestMetaDataWrapper req = new RequestMetaDataWrapper();
+                    req.set(request);
 
-                ResponseMetaDataWrapper res = new ResponseMetaDataWrapper();
-                res.set(response);
+                    ResponseMetaDataWrapper res = new ResponseMetaDataWrapper();
+                    res.set(response);
 
-                Runnable task = () -> {
-                    this.invoke(req, res, holder);
-                };
-                ThreadManager.getExecutorService().submit(task);
+                    Runnable task = () -> {
+                        this.invoke(req, res, holder);
+                    };
+                    ThreadManager.getExecutorService().submit(task);
+                }
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("リバースプロキシ サーブレットで例外が発生 req=" + request, e);
