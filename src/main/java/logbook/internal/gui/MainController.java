@@ -1,16 +1,13 @@
 package logbook.internal.gui;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -19,26 +16,18 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
-import javafx.stage.StageStyle;
 import logbook.Messages;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCollection;
 import logbook.bean.Basic;
-import logbook.bean.BattleLog;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ndock;
@@ -48,19 +37,10 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
-import logbook.internal.BattleLogs;
-import logbook.internal.BattleLogs.SimpleBattleLog;
-import logbook.internal.CheckUpdate;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
-import logbook.internal.log.BattleResultLogFormat;
-import logbook.internal.log.LogWriter;
 import logbook.internal.proxy.ProxyHolder;
 import logbook.plugin.PluginServices;
-import logbook.plugin.gui.MainCalcMenu;
-import logbook.plugin.gui.MainCommandMenu;
-import logbook.plugin.gui.MainExtMenu;
-import logbook.plugin.gui.Plugin;
 import logbook.plugin.lifecycle.StartUp;
 
 /**
@@ -94,17 +74,8 @@ public class MainController extends WindowController {
     /** 入渠通知のタイムスタンプ */
     private Map<Integer, Long> timeStampNdock = new HashMap<>();
 
-    /** コマンドメニュー */
     @FXML
-    private Menu command;
-
-    /** 計算機 */
-    @FXML
-    private Menu calc;
-
-    /** その他 */
-    @FXML
-    private Menu ext;
+    private MainMenuController mainMenuController;
 
     @FXML
     private Button item;
@@ -138,10 +109,8 @@ public class MainController extends WindowController {
             this.itemFormat = this.item.getText();
             this.shipFormat = this.ship.getText();
 
-            // プラグインによるメニューの追加
-            this.addMenuItem(MainCommandMenu.class, this.command.getItems());
-            this.addMenuItem(MainCalcMenu.class, this.calc.getItems());
-            this.addMenuItem(MainExtMenu.class, this.ext.getItems());
+            // メニューにメイン画面のコントローラを渡す
+            mainMenuController.setParentController(this);
 
             Timeline timeline = new Timeline(1);
             timeline.setCycleCount(Animation.INDEFINITE);
@@ -162,117 +131,6 @@ public class MainController extends WindowController {
                     .forEach(Thread::start);
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
-        }
-    }
-
-    /**
-     * キャプチャ
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void capture(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/capture.fxml", this.getWindow(), "キャプチャ");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("キャプチャの初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 現在の戦闘
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void battleStatus(ActionEvent e) {
-        try {
-            BattleLog log = AppCondition.get()
-                    .getBattleResult();
-            if (log == null || log.getBattle() == null) {
-                Path dir = Paths.get(AppConfig.get().getReportPath());
-                Path path = dir.resolve(new BattleResultLogFormat().fileName());
-                if (Files.exists(path)) {
-                    try (Stream<String> lines = Files.lines(path, LogWriter.DEFAULT_CHARSET)) {
-                        SimpleBattleLog battleLog = lines.skip(1).reduce((first, second) -> second)
-                                .map(SimpleBattleLog::new)
-                                .orElse(null);
-                        if (battleLog != null) {
-                            log = BattleLogs.read(BattleLogDetail.toBattleLogDetail(battleLog).getDate());
-                        }
-                    } catch (Exception ex) {
-                        log = null;
-                    }
-                }
-            }
-            if (log != null && log.getBattle() != null) {
-                BattleLog sendlog = log;
-                InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.getWindow(),
-                        "現在の戦闘", c -> {
-                            ((BattleDetail) c).setInterval(() -> AppCondition.get().getBattleResult());
-                            ((BattleDetail) c).setData(sendlog);
-                        }, null);
-            } else {
-                Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.getWindow());
-            }
-        } catch (Exception ex) {
-            LoggerHolder.get().error("詳細の表示に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 戦闘ログ
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void battlelog(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/battlelog.fxml", this.getWindow(), "戦闘ログ");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("戦闘ログの初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 遠征ログ
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void missionlog(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/missionlog.fxml", this.getWindow(), "遠征ログ");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("遠征ログの初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 開発ログ
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void createitemlog(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/createitemlog.fxml", this.getWindow(), "開発ログ");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("開発ログの初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 基地航空隊
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void airBase(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/airbase.fxml", this.getWindow(), "基地航空隊");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("基地航空隊の初期化に失敗しました", ex);
         }
     }
 
@@ -301,142 +159,6 @@ public class MainController extends WindowController {
             InternalFXMLLoader.showWindow("logbook/gui/ship.fxml", this.getWindow(), "所有艦娘一覧");
         } catch (Exception ex) {
             LoggerHolder.get().error("所有艦娘一覧の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * お風呂に入りたい艦娘
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void ndock(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/require_ndock.fxml", this.getWindow(), "お風呂に入りたい艦娘");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("お風呂に入りたい艦娘の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 経験値計算機
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void calcExp(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/calc_exp.fxml", this.getWindow(), "経験値計算機");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("経験値計算機の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 遠征条件確認
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void missionCheck(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/missioncheck.fxml", this.getWindow(), "遠征条件確認");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("遠征条件確認の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 資材チャート
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void resourceChart(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/resource_chart.fxml", this.getWindow(), "資材チャート");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("資材チャートの初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 編成記録
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void deck(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/deck.fxml", this.getWindow(), "編成記録");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("編成記録の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 自動プロキシ構成スクリプトファイル生成
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void createPacFile(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/create_pac_file.fxml", this.getWindow(), "自動プロキシ構成スクリプトファイル生成");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("自動プロキシ構成スクリプトファイル生成の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 設定
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void config(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/config.fxml", this.getWindow(), "設定");
-        } catch (Exception ex) {
-            LoggerHolder.get().error("設定の初期化に失敗しました", ex);
-        }
-    }
-
-    /**
-     * 更新を確認
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void updateCheck(ActionEvent e) {
-        try {
-            CheckUpdate.run(this.getWindow());
-        } catch (Exception ex) {
-            LoggerHolder.get().error("更新情報の取得に失敗しました", ex);
-        }
-    }
-
-    /**
-     * バージョン情報
-     *
-     * @param e ActionEvent
-     */
-    @FXML
-    void version(ActionEvent e) {
-        try {
-            InternalFXMLLoader.showWindow("logbook/gui/version.fxml", this.getWindow(), "バージョン情報",
-                    root -> new Scene(root, Color.TRANSPARENT),
-                    null,
-                    stage -> {
-                        stage.initStyle(StageStyle.TRANSPARENT);
-                        stage.focusedProperty().addListener((ob, o, n) -> {
-                            if (!n) {
-                                stage.close();
-                            }
-                        });
-                    });
-        } catch (Exception ex) {
-            LoggerHolder.get().error("設定の初期化に失敗しました", ex);
         }
     }
 
@@ -804,20 +526,6 @@ public class MainController extends WindowController {
             } catch (Exception e) {
                 LoggerHolder.get().warn("サウンド通知に失敗しました", e);
             }
-        }
-    }
-
-    /**
-     * プラグインのMenuItemを追加します
-     *
-     * @param serviceClass サービスプロバイダインターフェイス
-     * @param items MenuItemの追加先
-     */
-    private <S extends Plugin<MenuItem>> void addMenuItem(Class<S> serviceClass, ObservableList<MenuItem> items) {
-        List<MenuItem> addItem = Plugin.getContent(serviceClass);
-        if (!addItem.isEmpty()) {
-            items.add(new SeparatorMenuItem());
-            addItem.forEach(items::add);
         }
     }
 

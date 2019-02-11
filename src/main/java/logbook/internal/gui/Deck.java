@@ -1,5 +1,7 @@
 package logbook.internal.gui;
 
+import java.util.List;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -136,6 +138,38 @@ public class Deck extends WindowController {
     void storeImage(ActionEvent event) {
         if (this.currentDeck.get() != null) {
             Tools.Conrtols.storeSnapshot(this.deck, "編成記録_" + this.currentDeck.get().getName(), this.getWindow());
+        }
+    }
+
+    @FXML
+    void up(ActionEvent event) {
+        AppDeck selectedDeck = this.deckList.getSelectionModel()
+                .getSelectedItem();
+        if (selectedDeck != null) {
+            List<AppDeck> decks = this.deckList.getItems();
+            int index = decks.indexOf(selectedDeck);
+            if (index > 0) {
+                decks.remove(index);
+                decks.add(index - 1, selectedDeck);
+                this.deckList.getSelectionModel().select(selectedDeck);
+                this.deckList.requestFocus();
+            }
+        }
+    }
+
+    @FXML
+    void down(ActionEvent event) {
+        AppDeck selectedDeck = this.deckList.getSelectionModel()
+                .getSelectedItem();
+        if (selectedDeck != null) {
+            List<AppDeck> decks = this.deckList.getItems();
+            int index = decks.indexOf(selectedDeck);
+            if (index > -1 && (decks.size() - 1) > index) {
+                decks.remove(index);
+                decks.add(index + 1, selectedDeck);
+                this.deckList.getSelectionModel().select(selectedDeck);
+                this.deckList.requestFocus();
+            }
         }
     }
 

@@ -3,6 +3,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
@@ -56,6 +57,12 @@
                              <MenuItem mnemonicParsing="false" onAction="#copyType" text="クリップボードにコピー" />
                              <MenuItem mnemonicParsing="false" onAction="#selectAllType" text="すべてを選択" />
                              <MenuItem mnemonicParsing="false" onAction="#storeType" text="CSVファイルとして保存" />
+                             <SeparatorMenuItem mnemonicParsing="false" />
+                             <Menu mnemonicParsing="false" text="艦隊分析">
+                               <items>
+                                 <MenuItem mnemonicParsing="false" onAction="#kancolleFleetanalysis" text="ロック装備をクリップボードにコピー" />
+                               </items>
+                             </Menu>
                              <SeparatorMenuItem mnemonicParsing="false" />
                              <MenuItem mnemonicParsing="false" onAction="#columnVisibleType" text="列の表示・非表示" />
                            </items>
