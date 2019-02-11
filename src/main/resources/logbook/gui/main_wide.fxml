@@ -6,6 +6,8 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
@@ -14,14 +16,16 @@
       <fx:include fx:id="mainMenu" source="main_menu.fxml"/>
       <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
          <items>
-            <VBox>
-               <children>
+           <BorderPane>
+               <top>
                   <HBox styleClass="buttons">
                      <children>
                         <Button fx:id="item" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#items" styleClass="itemButton" text="所有装備({0}/{1})" HBox.hgrow="ALWAYS" />
                         <Button fx:id="ship" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#ships" styleClass="shipButton" text="所有艦娘({0}/{1})" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
+               </top>
+               <center>
                   <ScrollPane fitToWidth="true">
                      <content>
                         <VBox fx:id="infobox">
@@ -50,8 +54,8 @@
                         </VBox>
                      </content>
                   </ScrollPane>
-               </children>
-            </VBox>
+               </center>
+            </BorderPane>
             <TabPane fx:id="fleetTab" />
          </items>
       </SplitPane>
