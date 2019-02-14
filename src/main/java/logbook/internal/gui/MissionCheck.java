@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.controlsfx.control.SegmentedButton;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -16,11 +17,10 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
@@ -35,7 +35,6 @@ import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.internal.LoggerHolder;
-import logbook.internal.ToStringConverter;
 import logbook.plugin.PluginServices;
 
 /**
@@ -45,7 +44,7 @@ import logbook.plugin.PluginServices;
 public class MissionCheck extends WindowController {
 
     @FXML
-    private ChoiceBox<DeckPort> fleet;
+    private SegmentedButton fleet;
 
     @FXML
     private TreeView<String> conditionTree;
@@ -58,19 +57,32 @@ public class MissionCheck extends WindowController {
 
     @FXML
     void initialize() {
-        this.fleet.getSelectionModel().selectedItemProperty().addListener((ChangeListener<DeckPort>) this::buildTree);
-        this.fleet.getItems().addAll(DeckPortCollection.get().getDeckPortMap().values());
-        this.fleet.getSelectionModel().select(1);
-        this.fleet.setConverter(ToStringConverter.of(DeckPort::getName));
+        for (DeckPort deck : DeckPortCollection.get().getDeckPortMap().values()) {
+            ToggleButton button = new ToggleButton(deck.getName());
+            button.setUserData(deck);
+            this.fleet.getButtons().add(button);
+        }
+        this.fleet.getToggleGroup().selectedToggleProperty().addListener((ob, o, n) -> {
+            DeckPort deck = null;
+            if (n != null) {
+                deck = (DeckPort) n.getUserData();
+            }
+            this.buildTree(deck);
+        });
+        this.fleet.getButtons().stream()
+                .skip(1)
+                .findFirst()
+                .ifPresent(b -> b.setSelected(true));
     }
 
     @FXML
     void update(ActionEvent event) {
-        this.buildTree(this.fleet.getSelectionModel().getSelectedItem());
-    }
-
-    private void buildTree(ObservableValue<? extends DeckPort> observable, DeckPort oldValue, DeckPort newValue) {
-        this.buildTree(newValue);
+        Toggle toggle = this.fleet.getToggleGroup().getSelectedToggle();
+        DeckPort deck = null;
+        if (toggle != null) {
+            deck = (DeckPort) toggle.getUserData();
+        }
+        this.buildTree(deck);
     }
 
     private void buildTree(DeckPort deck) {
