@@ -30,8 +30,11 @@ import logbook.plugin.PluginServices;
 
 class ShipImage {
 
-    /** 画像キャッシュ */
-    private static final ReferenceCache<String, Image> CACHE = new ReferenceCache<>(200);
+    /** 画像キャッシュ(艦) */
+    private static final ReferenceCache<String, Image> BASE_CACHE = new ReferenceCache<>(200);
+
+    /** 画像キャッシュ(アイコン類) */
+    private static final ReferenceCache<String, Image> COMMON_CACHE = new ReferenceCache<>(32);
 
     /** 艦娘画像ファイル名(健在・小破) */
     private static final String[] NORMAL = { "1.png", "1.jpg" };
@@ -139,7 +142,7 @@ class ShipImage {
         if (chara != null) {
             Path base = getBaseImagePath(chara);
             if (base != null) {
-                return CACHE.get(base.toUri().toString(), Image::new);
+                return BASE_CACHE.get(base.toUri().toString(), Image::new);
             }
         }
         return null;
@@ -363,9 +366,7 @@ class ShipImage {
             Image img = null;
             if (layer.path != null) {
                 Path p = dir.resolve(layer.path);
-                if (Files.isReadable(p)) {
-                    img = CACHE.get(p.toUri().toString(), Image::new);
-                }
+                img = COMMON_CACHE.get(p.toUri().toString(), Image::new);
             }
             if (layer.img != null) {
                 img = layer.img;
