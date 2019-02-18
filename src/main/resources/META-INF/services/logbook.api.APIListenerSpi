@@ -32,6 +32,7 @@ logbook.api.ApiReqCombinedBattleSpMidnight
 logbook.api.ApiReqHenseiChange
 logbook.api.ApiReqHenseiPresetSelect
 logbook.api.ApiReqHokyuCharge
+logbook.api.ApiReqKaisouMarriage
 logbook.api.ApiReqKaisouPowerup
 logbook.api.ApiReqKaisouSlotDeprive
 logbook.api.ApiReqKaisouSlotExchangeIndex
