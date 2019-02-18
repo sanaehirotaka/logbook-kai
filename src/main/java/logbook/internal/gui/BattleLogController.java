@@ -20,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -244,7 +245,10 @@ public class BattleLogController extends WindowController {
                 });
                 return r;
             });
-            this.detail.setItems(this.filteredDetails);
+
+            SortedList<BattleLogDetail> sortedDetails = new SortedList<>(this.filteredDetails);
+            this.detail.setItems(sortedDetails);
+            sortedDetails.comparatorProperty().bind(this.detail.comparatorProperty());
             this.detail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.detail.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
 
