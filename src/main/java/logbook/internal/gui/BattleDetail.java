@@ -436,9 +436,16 @@ public class BattleDetail extends WindowController {
         // 経験値
         if (this.result != null) {
             this.baseExp.setText(String.valueOf(this.result.getGetBaseExp()));
-            this.shipExp.setText(String.valueOf(this.result.getGetShipExp().stream().mapToInt(Integer::intValue).sum()
+            this.shipExp.setText(String.valueOf(this.result.getGetShipExp().stream()
+                    .mapToInt(Integer::intValue)
+                    .filter(i -> i > 0)
+                    .sum()
                     + Optional.ofNullable(this.result.getGetShipExpCombined())
-                            .map(v -> v.stream().mapToInt(Integer::intValue).sum()).orElse(0)));
+                            .map(v -> v.stream()
+                                    .mapToInt(Integer::intValue)
+                                    .filter(i -> i > 0)
+                                    .sum())
+                            .orElse(0)));
             this.exp.setText(this.result.getGetExp()
                     + "(" + BigDecimal.valueOf(this.result.getGetExp())
                             .divide(BigDecimal.valueOf(1428.571), 3, RoundingMode.FLOOR)
