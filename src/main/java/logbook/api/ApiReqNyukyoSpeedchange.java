@@ -35,6 +35,9 @@ public class ApiReqNyukyoSpeedchange implements APIListenerSpi {
         // 艦娘を修理完了状態にする
         ship.setNowhp(ship.getMaxhp());
         ship.setNdockTime(0);
+        if (ship.getCond() < 40) {
+            ship.setCond(40);
+        }
 
         shipMap.put(shipId, ship);
 

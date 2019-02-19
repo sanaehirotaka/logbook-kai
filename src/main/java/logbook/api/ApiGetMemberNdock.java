@@ -49,6 +49,9 @@ public class ApiGetMemberNdock implements APIListenerSpi {
                     .forEach(ship -> {
                         ship.setNowhp(ship.getMaxhp());
                         ship.setNdockTime(0);
+                        if (ship.getCond() < 40) {
+                            ship.setCond(40);
+                        }
                     });
         }
     }

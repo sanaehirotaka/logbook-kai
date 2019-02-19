@@ -27,6 +27,9 @@ public class ApiReqNyukyoStart implements APIListenerSpi {
         if ("1".equals(req.getParameter("api_highspeed"))) {
             ship.setNowhp(ship.getMaxhp());
             ship.setNdockTime(0);
+            if (ship.getCond() < 40) {
+                ship.setCond(40);
+            }
         }
         // 高速修復材未使用時でも入れ替える(艦隊タブを更新するため)
         map.put(shipId, ship);
