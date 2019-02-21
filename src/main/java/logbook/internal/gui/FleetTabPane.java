@@ -33,6 +33,9 @@ import logbook.bean.ShipMst;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
+import logbook.plugin.gui.FleetTabRemark;
+import logbook.plugin.gui.Plugin;
+import logbook.plugin.gui.Updateable;
 import lombok.val;
 
 /**
@@ -110,6 +113,10 @@ public class FleetTabPane extends ScrollPane {
     @FXML
     private Label cond;
 
+    /** 注釈 */
+    @FXML
+    private VBox remark;
+
     /**
      * 艦隊ペインのコンストラクタ
      *
@@ -131,6 +138,8 @@ public class FleetTabPane extends ScrollPane {
     void initialize() {
         this.update();
         this.setIcon();
+        this.initializeRemarkPlugin();
+        this.updateRemarkPlugin(this.port);
     }
 
     /**
@@ -276,6 +285,7 @@ public class FleetTabPane extends ScrollPane {
         } else {
             this.cond.setText("");
         }
+        this.updateRemarkPlugin(this.port);
     }
 
     /**
@@ -290,7 +300,7 @@ public class FleetTabPane extends ScrollPane {
         PopOver<Ships.Decision33> popover = new PopOver<>((node, data) -> {
             String content = new StringJoiner("\n")
                     .add("判定式(33):" + data.get() + "(分岐点係数:" + data.getBranchCoefficient() + ")")
-                    .add("裝備索敵:" + data.getItemView())
+                    .add("装備索敵:" + data.getItemView())
                     .add("艦娘索敵:" + data.getShipView())
                     .add("司令部スコア:" + data.getLevelScore())
                     .add("艦隊スコア:" + data.getFleetScore())
@@ -306,5 +316,53 @@ public class FleetTabPane extends ScrollPane {
         this.touchPlaneStartProbabilityImg.setImage(Items.itemImageByType(10));
         this.decision33Img.setImage(Items.itemImageByType(9));
         this.lvsumImg.setImage(Items.itemImageByType(28));
+    }
+
+    /**
+     * 注釈プラグインの初期化
+     */
+    private void initializeRemarkPlugin() {
+        for (Updateable<DeckPort> plugin : Plugin.getContent(FleetTabRemark.class)) {
+            Node node;
+            if (plugin instanceof Node) {
+                node = ((Node) plugin);
+            } else {
+                node = new RemarkLabel(plugin);
+            }
+            this.remark.getChildren().add(node);
+        }
+    }
+
+    /**
+     * 注釈プラグインを更新する
+     * 
+     * @param port 艦隊
+     */
+    @SuppressWarnings("unchecked")
+    private void updateRemarkPlugin(DeckPort port) {
+        for (Node node : this.remark.getChildren()) {
+            if (node instanceof Updateable) {
+                ((Updateable<DeckPort>) node).updateItem(port);
+            }
+        }
+    }
+
+    /**
+     * Labelを使う注釈の実装
+     */
+    private static class RemarkLabel extends Label implements Updateable<DeckPort> {
+
+        private Updateable<DeckPort> plugin;
+
+        public RemarkLabel(Updateable<DeckPort> plugin) {
+            this.plugin = plugin;
+            this.setText(this.plugin.toString());
+        }
+
+        @Override
+        public void updateItem(DeckPort item) {
+            this.plugin.updateItem(item);
+            this.setText(this.plugin.toString());
+        }
     }
 }

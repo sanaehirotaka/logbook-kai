@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1">
    <content>
       <VBox fx:id="infobox">
          <children>
@@ -81,6 +81,11 @@
                   </GridPane>
                </children>
             </HBox>
+            <VBox fx:id="remark" spacing="2.0">
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </VBox>
          </children>
       </VBox>
    </content>

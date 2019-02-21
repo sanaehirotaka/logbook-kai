@@ -15,6 +15,9 @@
  * [logbook.plugin.gui.MainCommandMenu](src/main/java/logbook/plugin/gui/MainCommandMenu.java)
  * [logbook.plugin.gui.MainExtMenu](src/main/java/logbook/plugin/gui/MainExtMenu.java)
 
+艦隊タブの注釈へのGUI要素の追加
+ * [logbook.plugin.gui.FleetTabRemark](src/main/java/logbook/plugin/gui/FleetTabRemark.java)
+
 通信のキャプチャ
  * [logbook.proxy.ContentListenerSpi](src/main/java/logbook/proxy/ContentListenerSpi.java)
   * 関連クラス

@@ -46,6 +46,22 @@ public class DeckPort implements Serializable, Cloneable {
     }
 
     /**
+     * 大破した艦娘を返します
+     *
+     * @return 大破した艦娘
+     */
+    public List<Ship> getBadlyShips() {
+        Map<Integer, Ship> shipMap = ShipCollection.get().getShipMap();
+        return this.getShip()
+                .stream()
+                .map(shipMap::get)
+                .filter(Objects::nonNull)
+                .filter(Ships::isBadlyDamage)
+                .filter(s -> !Ships.isEscape(s))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * JsonObjectから{@link DeckPort}を構築します
      *
      * @param json JsonObject
@@ -60,22 +76,6 @@ public class DeckPort implements Serializable, Cloneable {
                 .setString("api_name", bean::setName)
                 .set("api_ship", bean::setShip, JsonHelper::toIntegerList);
         return bean;
-    }
-
-    /**
-     * 大破した艦娘を返します
-     *
-     * @return 大破した艦娘
-     */
-    public List<Ship> getBadlyShips() {
-        Map<Integer, Ship> shipMap = ShipCollection.get().getShipMap();
-        return this.getShip()
-                .stream()
-                .map(shipMap::get)
-                .filter(Objects::nonNull)
-                .filter(Ships::isBadlyDamage)
-                .filter(s -> !Ships.isEscape(s))
-                .collect(Collectors.toList());
     }
 
 }
