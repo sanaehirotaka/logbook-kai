@@ -46,7 +46,10 @@ public class ApiGetMemberNdock implements APIListenerSpi {
                     .map(ShipCollection.get().getShipMap()::get)
                     .filter(Objects::nonNull)
                     .filter(ship -> ship.getNowhp() < ship.getMaxhp())
-                    .forEach(ship -> ship.setNowhp(ship.getMaxhp()));
+                    .forEach(ship -> {
+                        ship.setNowhp(ship.getMaxhp());
+                        ship.setNdockTime(0);
+                    });
         }
     }
 
