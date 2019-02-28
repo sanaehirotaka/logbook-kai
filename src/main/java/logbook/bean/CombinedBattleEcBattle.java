@@ -1,6 +1,3 @@
-/**
- *
- */
 package logbook.bean;
 
 import java.io.Serializable;
