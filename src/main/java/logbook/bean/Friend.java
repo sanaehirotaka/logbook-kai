@@ -30,6 +30,16 @@ public class Friend implements Chara, Serializable, Cloneable {
     private List<Integer> slot;
 
     @Override
+    public boolean isFriend() {
+        return true;
+    }
+
+    @Override
+    public Friend asFriend() {
+        return this;
+    }
+
+    @Override
     public Friend clone() {
         try {
             return (Friend) super.clone();

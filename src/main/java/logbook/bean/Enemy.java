@@ -33,6 +33,16 @@ public class Enemy implements Chara, Serializable, Cloneable {
     private Integer order;
 
     @Override
+    public boolean isEnemy() {
+        return true;
+    }
+
+    @Override
+    public Enemy asEnemy() {
+        return this;
+    }
+
+    @Override
     public Enemy clone() {
         try {
             return (Enemy) super.clone();

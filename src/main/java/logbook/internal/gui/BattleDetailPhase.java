@@ -122,14 +122,14 @@ public class BattleDetailPhase extends TitledPane {
                         if (chara.getClass() != e.getAttacker().getClass()) {
                             return false;
                         }
-                        if (chara instanceof Ship) {
-                            return ((Ship) chara).getId() == ((Ship) e.getAttacker()).getId();
+                        if (chara.isShip()) {
+                            return chara.asShip().getId() == e.getAttacker().asShip().getId();
                         }
-                        if (chara instanceof Friend) {
+                        if (chara.isFriend()) {
                             return chara.getShipId() == e.getAttacker().getShipId();
                         }
-                        if (chara instanceof Enemy) {
-                            return ((Enemy) chara).getOrder() == ((Enemy) e.getAttacker()).getOrder();
+                        if (chara.isEnemy()) {
+                            return chara.asEnemy().getOrder() == e.getAttacker().asEnemy().getOrder();
                         }
                         return false;
                     })

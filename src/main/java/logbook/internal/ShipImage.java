@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import logbook.bean.AppConfig;
 import logbook.bean.Chara;
 import logbook.bean.DeckPortCollection;
-import logbook.bean.Friend;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
@@ -203,18 +202,18 @@ class ShipImage {
             List<Layer> layers = new ArrayList<>();
 
             // 艦娘
-            boolean isShip = chara instanceof Ship;
+            boolean isShip = chara.isShip();
 
             // 入渠中
             boolean isOnNdock = applyState && isShip && NdockCollection.get()
                     .getNdockSet()
-                    .contains(((Ship) chara).getId());
+                    .contains(chara.asShip().getId());
             // 遠征中
             boolean isMission = applyState && isShip && DeckPortCollection.get()
                     .getMissionShips()
-                    .contains(((Ship) chara).getId());
+                    .contains(chara.asShip().getId());
             // 退避
-            boolean isEscape = isShip && Ships.isEscape((Ship) chara, escape);
+            boolean isEscape = isShip && Ships.isEscape(chara.asShip(), escape);
 
             // バッチ
             if (banner) {
@@ -241,17 +240,17 @@ class ShipImage {
             }
             // 疲労
             if (cond) {
-                if (isShip && Ships.isOrange((Ship) chara)) {
+                if (isShip && Ships.isOrange(chara.asShip())) {
                     layers.add(ORANGE_BACKGROUND);
                     layers.add(ORANGE_FACE);
-                } else if (isShip && Ships.isRed((Ship) chara)) {
+                } else if (isShip && Ships.isRed(chara.asShip())) {
                     layers.add(RED_BACKGROUND);
                     layers.add(RED_FACE);
                 }
             }
             // 出撃札
             if (isShip) {
-                Ship ship = (Ship) chara;
+                Ship ship = chara.asShip();
                 Integer sallyArea = ship.getSallyArea();
                 if (sallyArea != null && sallyArea.intValue() != 0) {
                     Path p = Paths.get("common", JOIN_BANNER.replace("{0}", Integer.toString(sallyArea - 1)));
@@ -263,13 +262,13 @@ class ShipImage {
                 int x = 17;
                 int y = 24;
                 if (isShip) {
-                    Ship ship = (Ship) chara;
+                    Ship ship = chara.asShip();
                     for (Integer itemId : ship.getSlot()) {
                         // 装備アイコン
                         layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId, itemMap)));
                         x += ITEM_ICON_SIZE + 2;
                     }
-                    if (((Ship) chara).getSlotEx() != 0) {
+                    if (ship.getSlotEx() != 0) {
                         // 補強増設は0(未開放)以外の場合
                         layers.add(
                                 new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(ship.getSlotEx(), itemMap)));
@@ -392,7 +391,7 @@ class ShipImage {
         if (mst.isPresent()) {
             Path dir = ShipMst.getResourcePathDir(mst.get());
             String[] names;
-            if ((chara instanceof Ship || chara instanceof Friend)
+            if ((chara.isShip() || chara.isFriend())
                     && (Ships.isHalfDamage(chara) || Ships.isBadlyDamage(chara) || Ships.isLost(chara))) {
                 names = DAMAGED;
             } else {

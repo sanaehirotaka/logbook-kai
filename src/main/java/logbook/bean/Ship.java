@@ -169,6 +169,16 @@ public class Ship implements Chara, Serializable, Cloneable {
         return Ships.shipMst(this).map(ShipType::toShipType);
     }
 
+    @Override
+    public boolean isShip() {
+        return true;
+    }
+
+    @Override
+    public Ship asShip() {
+        return this;
+    }
+
     /**
      * JsonObjectから{@link Ship}を構築します
      *

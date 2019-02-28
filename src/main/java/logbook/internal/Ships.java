@@ -24,7 +24,6 @@ import logbook.bean.Basic;
 import logbook.bean.Chara;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
-import logbook.bean.Friend;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
@@ -796,7 +795,7 @@ public class Ships {
         if (chara == null) {
             return "";
         }
-        if (chara instanceof Ship || chara instanceof Friend) {
+        if (chara.isShip() || chara.isFriend()) {
             // 艦娘
             return Messages.getString("ship.name", shipMst(chara)
                     .map(ShipMst::getName)
@@ -948,8 +947,8 @@ public class Ships {
         Map<Integer, SlotitemMst> itemMstMap = SlotitemMstCollection.get()
                 .getSlotitemMap();
         Stream<Integer> stream = chara.getSlot().stream();
-        if (chara instanceof Ship) {
-            stream = Stream.concat(stream, Stream.of(((Ship) chara).getSlotEx()));
+        if (chara.isShip()) {
+            stream = Stream.concat(stream, Stream.of(chara.asShip().getSlotEx()));
         }
         return stream.map(itemMap::get)
                 .filter(Objects::nonNull)

@@ -46,8 +46,8 @@ public class FleetTabShipPopup extends VBox {
 
     @FXML
     void initialize() {
-        if (this.chara instanceof Ship) {
-            Ship ship = (Ship) this.chara;
+        if (this.chara.isShip()) {
+            Ship ship = this.chara.asShip();
 
             for (int i = 0; i < ship.getSlotnum(); i++) {
                 this.getChildren().add(new FleetTabShipPopupItem(this.chara, i));
@@ -133,8 +133,8 @@ public class FleetTabShipPopup extends VBox {
 
         @FXML
         void initialize() {
-            if (this.chara instanceof Ship) {
-                Ship ship = (Ship) this.chara;
+            if (this.chara.isShip()) {
+                Ship ship = this.chara.asShip();
 
                 Integer itemId = this.slotIndex == SLOT_EX
                         ? ship.getSlotEx() : this.chara.getSlot().get(this.slotIndex);

@@ -54,4 +54,53 @@ public interface Chara extends Cloneable {
      * @return キャラクター
      */
     Chara clone();
+
+    /**
+     * このオブジェクトが{@link Ship}のインスタンスである場合trueを返します。
+     * @return このオブジェクトが{@link Ship}のインスタンスである場合true
+     */
+    default boolean isShip() {
+        return false;
+    }
+
+    /**
+     * このオブジェクトを{@link Ship}のインスタンスとして返します。
+     * @return {@link Ship}
+     */
+    default Ship asShip() {
+        throw new IllegalStateException(this + " is not an Ship");
+    }
+
+    /**
+     * このオブジェクトが{@link Friend}のインスタンスである場合trueを返します。
+     * @return このオブジェクトが{@link Friend}のインスタンスである場合true
+     */
+    default boolean isFriend() {
+        return false;
+    }
+
+    /**
+     * このオブジェクトを{@link Friend}のインスタンスとして返します。
+     * @return {@link Friend}
+     */
+    default Friend asFriend() {
+        throw new IllegalStateException(this + " is not an Friend");
+    }
+
+    /**
+     * このオブジェクトが{@link Enemy}のインスタンスである場合trueを返します。
+     * @return このオブジェクトが{@link Enemy}のインスタンスである場合true
+     */
+    default boolean isEnemy() {
+        return false;
+    }
+
+    /**
+     * このオブジェクトを{@link Enemy}のインスタンスとして返します。
+     * @return {@link Enemy}
+     */
+    default Enemy asEnemy() {
+        throw new IllegalStateException(this + " is not an Enemy");
+    }
+
 }

@@ -757,8 +757,8 @@ public class PhaseState {
      */
     private void damage(Chara defender, int damage) {
         int nowHp;
-        if (defender.getNowhp() - damage <= 0 && defender instanceof Ship) {
-            Ship ship = (Ship) defender;
+        if (defender.getNowhp() - damage <= 0 && defender.isShip()) {
+            Ship ship = defender.asShip();
             // 最初に消費される応急修理要員
             Optional<SlotitemMst> mst = Stream.concat(Stream.of(ship.getSlotEx()), ship.getSlot().stream())
                     .map(this.itemMap::get)
