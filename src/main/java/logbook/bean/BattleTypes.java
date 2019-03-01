@@ -84,6 +84,126 @@ public class BattleTypes {
          * @return api_eParam
          */
         List<List<Integer>> getEParam();
+
+        default boolean isIAirBaseAttack() {
+            return false;
+        }
+
+        default IAirBaseAttack asIAirBaseAttack() {
+            throw new IllegalStateException(this + " is not an AirBaseAttack");
+        }
+
+        default boolean isIAirbattle() {
+            return false;
+        }
+
+        default IAirbattle asIAirbattle() {
+            throw new IllegalStateException(this + " is not an IAirbattle");
+        }
+
+        default boolean isICombinedBattle() {
+            return false;
+        }
+
+        default ICombinedBattle asICombinedBattle() {
+            throw new IllegalStateException(this + " is not an ICombinedBattle");
+        }
+
+        default boolean isICombinedEcBattle() {
+            return false;
+        }
+
+        default ICombinedEcBattle asICombinedEcBattle() {
+            throw new IllegalStateException(this + " is not an ICombinedEcBattle");
+        }
+
+        default boolean isICombinedEcMidnightBattle() {
+            return false;
+        }
+
+        default ICombinedEcMidnightBattle asICombinedEcMidnightBattle() {
+            throw new IllegalStateException(this + " is not an ICombinedEcMidnightBattle");
+        }
+
+        default boolean isIFormation() {
+            return false;
+        }
+
+        default IFormation asIFormation() {
+            throw new IllegalStateException(this + " is not an IFormation");
+        }
+
+        default boolean isIKouku() {
+            return false;
+        }
+
+        default IKouku asIKouku() {
+            throw new IllegalStateException(this + " is not an IKouku");
+        }
+
+        default boolean isILdAirbattle() {
+            return false;
+        }
+
+        default ILdAirbattle asILdAirbattle() {
+            throw new IllegalStateException(this + " is not an ILdAirbattle");
+        }
+
+        default boolean isILdShooting() {
+            return false;
+        }
+
+        default ILdShooting asILdShooting() {
+            throw new IllegalStateException(this + " is not an ILdShooting");
+        }
+
+        default boolean isIMidnightBattle() {
+            return false;
+        }
+
+        default IMidnightBattle asIMidnightBattle() {
+            throw new IllegalStateException(this + " is not an IMidnightBattle");
+        }
+
+        default boolean isINSupport() {
+            return false;
+        }
+
+        default INSupport asINSupport() {
+            throw new IllegalStateException(this + " is not an INSupport");
+        }
+
+        default boolean isINightToDayBattle() {
+            return false;
+        }
+
+        default INightToDayBattle asINightToDayBattle() {
+            throw new IllegalStateException(this + " is not an INightToDayBattle");
+        }
+
+        default boolean isISortieBattle() {
+            return false;
+        }
+
+        default ISortieBattle asISortieBattle() {
+            throw new IllegalStateException(this + " is not an ISortieBattle");
+        }
+
+        default boolean isISortieHougeki() {
+            return false;
+        }
+
+        default ISortieHougeki asISortieHougeki() {
+            throw new IllegalStateException(this + " is not an ISortieHougeki");
+        }
+
+        default boolean isISupport() {
+            return false;
+        }
+
+        default ISupport asISupport() {
+            throw new IllegalStateException(this + " is not an ISupport");
+        }
     }
 
     /**
@@ -108,6 +228,14 @@ public class BattleTypes {
          * @return api_fParam_combined
          */
         List<List<Integer>> getFParamCombined();
+
+        default boolean isICombinedBattle() {
+            return true;
+        }
+
+        default ICombinedBattle asICombinedBattle() {
+            return this;
+        }
     }
 
     /**
@@ -150,6 +278,14 @@ public class BattleTypes {
          * @return api_eParam_combined
          */
         List<List<Integer>> getEParamCombined();
+
+        default boolean isICombinedEcBattle() {
+            return true;
+        }
+
+        default ICombinedEcBattle asICombinedEcBattle() {
+            return this;
+        }
     }
 
     /**
@@ -162,6 +298,14 @@ public class BattleTypes {
          * @return api_active_deck
          */
         List<Integer> getActiveDeck();
+
+        default boolean isICombinedEcMidnightBattle() {
+            return true;
+        }
+
+        default ICombinedEcMidnightBattle asICombinedEcMidnightBattle() {
+            return this;
+        }
     }
 
     /**
@@ -186,6 +330,14 @@ public class BattleTypes {
          * @return api_stage_flag
          */
         List<Integer> getStageFlag();
+
+        default boolean isISortieBattle() {
+            return true;
+        }
+
+        default ISortieBattle asISortieBattle() {
+            return this;
+        }
     }
 
     /**
@@ -246,6 +398,14 @@ public class BattleTypes {
          * @return api_raigeki
          */
         BattleTypes.Raigeki getRaigeki();
+
+        default boolean isISortieHougeki() {
+            return true;
+        }
+
+        default ISortieHougeki asISortieHougeki() {
+            return this;
+        }
     }
 
     /**
@@ -282,6 +442,14 @@ public class BattleTypes {
          * @return api_hougeki
          */
         BattleTypes.MidnightHougeki getHougeki();
+
+        default boolean isIMidnightBattle() {
+            return true;
+        }
+
+        default IMidnightBattle asIMidnightBattle() {
+            return this;
+        }
     }
 
     /**
@@ -318,6 +486,14 @@ public class BattleTypes {
          * @return api_day_flag
          */
         Boolean getDayFlag();
+
+        default boolean isINightToDayBattle() {
+            return true;
+        }
+
+        default INightToDayBattle asINightToDayBattle() {
+            return this;
+        }
     }
 
     /**
@@ -330,6 +506,14 @@ public class BattleTypes {
          * @return api_formation
          */
         List<Integer> getFormation();
+
+        default boolean isIFormation() {
+            return true;
+        }
+
+        default IFormation asIFormation() {
+            return this;
+        }
     }
 
     /**
@@ -348,6 +532,14 @@ public class BattleTypes {
          * @return api_kouku
          */
         BattleTypes.Kouku getKouku();
+
+        default boolean isIKouku() {
+            return true;
+        }
+
+        default IKouku asIKouku() {
+            return this;
+        }
     }
 
     /**
@@ -360,6 +552,14 @@ public class BattleTypes {
          * @return api_kouku2
          */
         BattleTypes.Kouku getKouku2();
+
+        default boolean isIAirbattle() {
+            return true;
+        }
+
+        default IAirbattle asIAirbattle() {
+            return this;
+        }
     }
 
     /**
@@ -378,6 +578,14 @@ public class BattleTypes {
          * @return api_support_info
          */
         BattleTypes.SupportInfo getSupportInfo();
+
+        default boolean isISupport() {
+            return true;
+        }
+
+        default ISupport asISupport() {
+            return this;
+        }
     }
 
     /**
@@ -396,18 +604,68 @@ public class BattleTypes {
          * @return api_n_support_info
          */
         BattleTypes.SupportInfo getNSupportInfo();
+
+        default boolean isINSupport() {
+            return true;
+        }
+
+        default INSupport asINSupport() {
+            return this;
+        }
     }
 
     /**
      * 長距離空襲戦(マーカーインターフェイス)
      */
-    public interface ILdAirbattle {
+    public interface ILdAirbattle extends IBattle {
+
+        default boolean isILdAirbattle() {
+            return true;
+        }
+
+        default ILdAirbattle asILdAirbattle() {
+            return this;
+        }
     }
 
     /**
      * レーダー射撃(マーカーインターフェイス)
      */
-    public interface ILdShooting {
+    public interface ILdShooting extends IBattle {
+
+        default boolean isILdShooting() {
+            return true;
+        }
+
+        default ILdShooting asILdShooting() {
+            return this;
+        }
+    }
+
+    /**
+     * 基地航空隊
+     */
+    public interface IAirBaseAttack extends IBattle {
+
+        /**
+         * api_air_base_injectionを取得します。
+         * @return api_air_base_injection
+         */
+        AirBaseAttack getAirBaseInjection();
+
+        /**
+         * api_air_base_attackを取得します。
+         * @return api_air_base_attack
+         */
+        List<AirBaseAttack> getAirBaseAttack();
+
+        default boolean isIAirBaseAttack() {
+            return true;
+        }
+
+        default IAirBaseAttack asIAirBaseAttack() {
+            return this;
+        }
     }
 
     /**
@@ -456,24 +714,6 @@ public class BattleTypes {
          * @return api_at_eflag
          */
         List<Integer> getAtEflag();
-    }
-
-    /**
-     * 基地航空隊
-     */
-    public interface IAirBaseAttack {
-
-        /**
-         * api_air_base_injectionを取得します。
-         * @return api_air_base_injection
-         */
-        AirBaseAttack getAirBaseInjection();
-
-        /**
-         * api_air_base_attackを取得します。
-         * @return api_air_base_attack
-         */
-        List<AirBaseAttack> getAirBaseAttack();
     }
 
     /**

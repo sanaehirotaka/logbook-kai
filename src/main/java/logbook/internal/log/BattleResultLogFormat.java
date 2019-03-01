@@ -13,7 +13,6 @@ import logbook.bean.BattleTypes;
 import logbook.bean.BattleTypes.ICombinedBattle;
 import logbook.bean.BattleTypes.ICombinedEcBattle;
 import logbook.bean.BattleTypes.IFormation;
-import logbook.bean.BattleTypes.IKouku;
 import logbook.bean.BattleTypes.Kouku;
 import logbook.bean.BattleTypes.Stage1;
 import logbook.bean.MapStartNext;
@@ -120,8 +119,8 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         // 敵陣形
         joiner.add(BattleTypes.Formation.toFormation(battle.getFormation().get(1)).toString());
 
-        if (battle instanceof IKouku) {
-            Kouku kouku = ((IKouku) battle).getKouku();
+        if (battle.isIKouku()) {
+            Kouku kouku = battle.asIKouku().getKouku();
 
             if (kouku != null && kouku.getStage1() != null) {
                 Stage1 stage1 = kouku.getStage1();
@@ -161,7 +160,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         // ドロップ艦娘
         joiner.add(Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipName).orElse(""));
         // 味方艦
-        if (!(battle instanceof ICombinedBattle)) {
+        if (!(battle.isICombinedBattle())) {
             // 通常艦隊はDockIdの艦隊
             List<Ship> friendFleet = log.getDeckMap().get(battle.getDockId());
             for (int i = 0; i < 6; i++) {
@@ -183,7 +182,7 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
             }
         } else {
             List<Ship> friendFleet;
-            ICombinedBattle combinedBattle = (ICombinedBattle) battle;
+            ICombinedBattle combinedBattle = battle.asICombinedBattle();
             // 連合艦隊は 1(第一艦隊),2(第二艦隊) で固定
             friendFleet = log.getDeckMap().get(1);
             for (int i = 0; i < 6; i++) {
@@ -249,8 +248,8 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 joiner.add("");
             }
         }
-        if (battle instanceof ICombinedEcBattle) {
-            List<Integer> enemyFleetCombined = ((ICombinedEcBattle) battle).getShipKeCombined();
+        if (battle.isICombinedEcBattle()) {
+            List<Integer> enemyFleetCombined = battle.asICombinedEcBattle().getShipKeCombined();
             for (int i = 0; i < 6; i++) {
                 if (enemyFleetCombined.size() > i) {
                     ShipMst shipMst = ShipMstCollection.get()

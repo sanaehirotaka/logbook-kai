@@ -22,7 +22,6 @@ import logbook.bean.BattleTypes.FriendlyInfo;
 import logbook.bean.BattleTypes.IAirBaseAttack;
 import logbook.bean.BattleTypes.IAirbattle;
 import logbook.bean.BattleTypes.IBattle;
-import logbook.bean.BattleTypes.ICombinedBattle;
 import logbook.bean.BattleTypes.ICombinedEcBattle;
 import logbook.bean.BattleTypes.ICombinedEcMidnightBattle;
 import logbook.bean.BattleTypes.IHougeki;
@@ -91,6 +90,7 @@ public class PhaseState {
 
     /**
      * 戦闘から新規フェイズを作成します
+     * 
      * @param log 戦闘ログ
      */
     public PhaseState(BattleLog log) {
@@ -99,11 +99,12 @@ public class PhaseState {
 
     /**
      * 戦闘から新規フェイズを作成します
+     * 
      * @param combinedType 連合艦隊
-     * @param b 戦闘
-     * @param deckMap 艦隊スナップショット
-     * @param itemMap 装備スナップショット
-     * @param escape 退避艦IDスナップショット
+     * @param b            戦闘
+     * @param deckMap      艦隊スナップショット
+     * @param itemMap      装備スナップショット
+     * @param escape       退避艦IDスナップショット
      */
     public PhaseState(CombinedType combinedType, IBattle b,
             Map<Integer, List<Ship>> deckMap, Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
@@ -112,11 +113,10 @@ public class PhaseState {
 
         // 連合艦隊
         this.combinedType = combinedType;
-        this.combined = combinedType != CombinedType.未結成 &&
-                (b instanceof ICombinedBattle || b instanceof ICombinedEcMidnightBattle);
+        this.combined = combinedType != CombinedType.未結成 && (b.isICombinedBattle() || b.isICombinedEcMidnightBattle());
 
         // 味方
-        if ((b instanceof ICombinedBattle || b instanceof ICombinedEcMidnightBattle)
+        if ((b.isICombinedBattle() || b.isICombinedEcMidnightBattle())
                 && this.combinedType != CombinedType.未結成 && b.getDockId() == 1) {
             for (Ship ship : deckMap.get(1)) {
                 this.afterFriend.add(Optional.ofNullable(ship).map(Ship::clone).orElse(null));
@@ -126,8 +126,8 @@ public class PhaseState {
             }
         } else {
             List<Ship> ships;
-            if (b instanceof ICombinedEcMidnightBattle) {
-                ICombinedEcMidnightBattle ecmb = (ICombinedEcMidnightBattle) b;
+            if (b.isICombinedEcMidnightBattle()) {
+                ICombinedEcMidnightBattle ecmb = b.asICombinedEcMidnightBattle();
                 ships = deckMap.get(ecmb.getActiveDeck().get(0));
             } else {
                 ships = deckMap.get(b.getDockId());
@@ -149,8 +149,8 @@ public class PhaseState {
             }
         }
         // 敵(第2艦隊)
-        if (b instanceof ICombinedEcBattle) {
-            ICombinedEcBattle ecb = (ICombinedEcBattle) b;
+        if (b.isICombinedEcBattle()) {
+            ICombinedEcBattle ecb = b.asICombinedEcBattle();
             for (int i = 0, s = ecb.getShipKeCombined().size(); i < s; i++) {
                 if (ecb.getShipKeCombined().get(i) != -1) {
                     Enemy e = new Enemy();
@@ -218,6 +218,7 @@ public class PhaseState {
 
     /**
      * 航空戦フェイズ(噴式強襲)を適用します
+     * 
      * @param battle 航空戦
      */
     public void applyInjectionKouku(IKouku battle) {
@@ -226,6 +227,7 @@ public class PhaseState {
 
     /**
      * 航空戦フェイズを適用します
+     * 
      * @param battle 航空戦
      */
     public void applyKouku(IKouku battle) {
@@ -234,6 +236,7 @@ public class PhaseState {
 
     /**
      * 支援フェイズを適用します
+     * 
      * @param battle 支援フェイズ
      */
     public void applySupport(ISupport battle) {
@@ -242,6 +245,7 @@ public class PhaseState {
 
     /**
      * 昼戦砲雷撃戦フェイズを適用します
+     * 
      * @param battle 昼戦砲雷撃戦フェイズ
      */
     public void applySortieHougeki(ISortieHougeki battle) {
@@ -249,7 +253,7 @@ public class PhaseState {
         this.applyHougeki(battle.getOpeningTaisen());
         // 開幕雷撃
         this.applyRaigeki(battle.getOpeningAtack());
-        if (!this.combined && battle instanceof ICombinedEcBattle) {
+        if (!this.combined && battle.isICombinedEcBattle()) {
             // 1巡目
             this.applyHougeki(battle.getHougeki1());
             // 雷撃
@@ -291,6 +295,7 @@ public class PhaseState {
 
     /**
      * 航空戦を適用します
+     * 
      * @param battle 航空戦
      */
     public void applyAirbattle(IAirbattle battle) {
@@ -299,6 +304,7 @@ public class PhaseState {
 
     /**
      * 支援フェイズを適用します
+     * 
      * @param battle 支援フェイズ
      */
     public void applySupport(INSupport battle) {
@@ -307,6 +313,7 @@ public class PhaseState {
 
     /**
      * 友軍艦隊の砲撃戦フェイズを適用します
+     * 
      * @param battle 夜戦
      */
     public void applyFriendlyHougeki(IMidnightBattle battle) {
@@ -331,6 +338,7 @@ public class PhaseState {
 
     /**
      * 夜戦を適用します
+     * 
      * @param battle 夜戦
      */
     public void applyMidnightBattle(IMidnightBattle battle) {
@@ -340,6 +348,7 @@ public class PhaseState {
 
     /**
      * 夜戦を適用します
+     * 
      * @param battle 夜戦
      */
     public void applyMidnightBattle(INightToDayBattle battle) {
@@ -351,6 +360,7 @@ public class PhaseState {
 
     /**
      * 全てのフェイズを適用します
+     * 
      * @param battle 戦闘
      */
     public void apply(IBattle battle) {
@@ -358,80 +368,80 @@ public class PhaseState {
             return;
         }
 
-        if (!(battle instanceof INightToDayBattle)) {
+        if (!(battle.isINightToDayBattle())) {
             // 夜戦→昼戦以外
 
             // 基地航空隊戦フェイズ(噴式強襲)
-            if (battle instanceof IAirBaseAttack) {
-                this.applyAirBaseInject((IAirBaseAttack) battle);
+            if (battle.isIAirBaseAttack()) {
+                this.applyAirBaseInject(battle.asIAirBaseAttack());
             }
             // 航空戦フェイズ(噴式強襲)
-            if (battle instanceof IKouku) {
-                this.applyInjectionKouku((IKouku) battle);
+            if (battle.isIKouku()) {
+                this.applyInjectionKouku(battle.asIKouku());
             }
             // 基地航空隊戦フェイズ
-            if (battle instanceof IAirBaseAttack) {
-                this.applyAirBaseAttack((IAirBaseAttack) battle);
+            if (battle.isIAirBaseAttack()) {
+                this.applyAirBaseAttack(battle.asIAirBaseAttack());
             }
             // 航空戦フェイズ
-            if (battle instanceof IKouku) {
-                this.applyKouku((IKouku) battle);
+            if (battle.isIKouku()) {
+                this.applyKouku(battle.asIKouku());
             }
             // 支援フェイズ
-            if (battle instanceof ISupport) {
-                this.applySupport((ISupport) battle);
+            if (battle.isISupport()) {
+                this.applySupport(battle.asISupport());
             }
             // 砲雷撃戦フェイズ
-            if (battle instanceof ISortieHougeki) {
-                this.applySortieHougeki((ISortieHougeki) battle);
+            if (battle.isISortieHougeki()) {
+                this.applySortieHougeki(battle.asISortieHougeki());
             }
             // 航空戦
-            if (battle instanceof IAirbattle) {
-                this.applyAirbattle((IAirbattle) battle);
+            if (battle.isIAirbattle()) {
+                this.applyAirbattle(battle.asIAirbattle());
             }
             // 夜戦支援
-            if (battle instanceof INSupport) {
-                this.applySupport((INSupport) battle);
+            if (battle.isINSupport()) {
+                this.applySupport(battle.asINSupport());
             }
             // 夜戦
-            if (battle instanceof IMidnightBattle) {
-                this.applyFriendlyHougeki((IMidnightBattle) battle);
-                this.applyMidnightBattle((IMidnightBattle) battle);
+            if (battle.isIMidnightBattle()) {
+                this.applyFriendlyHougeki(battle.asIMidnightBattle());
+                this.applyMidnightBattle(battle.asIMidnightBattle());
             }
         } else {
             // 夜戦→昼戦
 
             // 夜戦支援
-            if (battle instanceof INSupport) {
-                this.applySupport((INSupport) battle);
+            if (battle.isINSupport()) {
+                this.applySupport(battle.asINSupport());
             }
             // 夜戦
-            if (battle instanceof INightToDayBattle) {
-                this.applyMidnightBattle((INightToDayBattle) battle);
+            if (battle.isINightToDayBattle()) {
+                this.applyMidnightBattle(battle.asINightToDayBattle());
             }
             // 基地航空隊戦フェイズ(噴式強襲)
-            if (battle instanceof IAirBaseAttack) {
-                this.applyAirBaseInject((IAirBaseAttack) battle);
+            if (battle.isIAirBaseAttack()) {
+                this.applyAirBaseInject(battle.asIAirBaseAttack());
             }
             // 航空戦フェイズ(噴式強襲)
-            if (battle instanceof IKouku) {
-                this.applyInjectionKouku((IKouku) battle);
+            if (battle.isIKouku()) {
+                this.applyInjectionKouku(battle.asIKouku());
             }
             // 基地航空隊戦フェイズ
-            if (battle instanceof IAirBaseAttack) {
-                this.applyAirBaseAttack((IAirBaseAttack) battle);
+            if (battle.isIAirBaseAttack()) {
+                this.applyAirBaseAttack(battle.asIAirBaseAttack());
             }
             // 航空戦フェイズ
-            if (battle instanceof IKouku) {
-                this.applyKouku((IKouku) battle);
+            if (battle.isIKouku()) {
+                this.applyKouku(battle.asIKouku());
             }
             // 支援フェイズ
-            if (battle instanceof ISupport) {
-                this.applySupport((ISupport) battle);
+            if (battle.isISupport()) {
+                this.applySupport(battle.asISupport());
             }
             // 砲雷撃戦フェイズ
-            if (battle instanceof ISortieHougeki) {
-                this.applySortieHougeki((ISortieHougeki) battle);
+            if (battle.isISortieHougeki()) {
+                this.applySortieHougeki(battle.asISortieHougeki());
             }
         }
     }
@@ -464,6 +474,7 @@ public class PhaseState {
 
     /**
      * 航空戦フェイズを適用します
+     * 
      * @param kouku 航空戦フェイズ
      */
     private void applyKouku(Kouku kouku) {
@@ -489,6 +500,7 @@ public class PhaseState {
 
     /**
      * 支援フェイズを適用します
+     * 
      * @param support 支援
      */
     private void applySupport(SupportInfo support) {
@@ -509,6 +521,7 @@ public class PhaseState {
 
     /**
      * 雷撃戦フェイズを適用します
+     * 
      * @param raigeki 雷撃戦フェイズ
      */
     private void applyRaigeki(Raigeki raigeki) {
@@ -524,6 +537,7 @@ public class PhaseState {
 
     /**
      * 砲撃戦フェイズを適用します
+     * 
      * @param hougeki 砲撃戦フェイズ
      */
     private void applyHougeki(IHougeki hougeki) {
@@ -532,6 +546,7 @@ public class PhaseState {
 
     /**
      * 友軍艦隊の砲撃戦フェイズを適用します
+     * 
      * @param friendlyBattle 砲撃戦フェイズ
      */
     private void applyFriendlyHougeki(FriendlyBattle friendlyBattle) {
@@ -542,7 +557,8 @@ public class PhaseState {
 
     /**
      * 砲撃戦フェイズを適用します
-     * @param hougeki 砲撃戦フェイズ
+     * 
+     * @param hougeki          砲撃戦フェイズ
      * @param isFriendlyBattle 友軍艦隊フラグ
      */
     private void applyHougeki(IHougeki hougeki, boolean isFriendlyBattle) {
@@ -628,6 +644,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(味方第1,2艦隊)
+     * 
      * @param damages ダメージ(zero-based)
      */
     private void applyFriendDamage(List<Double> damages) {
@@ -646,6 +663,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(味方第2艦隊)
+     * 
      * @param damages ダメージ(zero-based)
      */
     private void applyFriendDamageCombined(List<Double> damages) {
@@ -662,6 +680,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(敵第1,2艦隊)
+     * 
      * @param damages ダメージ
      */
     private void applyEnemyDamage(List<Double> damages) {
@@ -680,6 +699,7 @@ public class PhaseState {
 
     /**
      * ダメージを適用します(敵第2艦隊)
+     * 
      * @param damages ダメージ
      */
     private void applyEnemyDamageCombined(List<Double> damages) {
@@ -696,6 +716,7 @@ public class PhaseState {
 
     /**
      * HPをセットします
+     * 
      * @param b 戦闘
      */
     private void setInitialHp(IBattle b) {
@@ -717,8 +738,8 @@ public class PhaseState {
                 this.afterEnemy.get(i).setNowhp(b.getENowhps().get(i));
             }
         }
-        if (b instanceof ICombinedBattle) {
-            List<Integer> fNowHps = ((ICombinedBattle) b).getFNowhpsCombined();
+        if (b.isICombinedBattle()) {
+            List<Integer> fNowHps = b.asICombinedBattle().getFNowhpsCombined();
             if (fNowHps != null) {
                 for (int i = 0, s = fNowHps.size(); i < s; i++) {
                     if (fNowHps.get(i) == -1) {
@@ -731,9 +752,9 @@ public class PhaseState {
                 }
             }
         }
-        if (b instanceof ICombinedEcBattle) {
-            List<Integer> eMaxHps = ((ICombinedEcBattle) b).getEMaxhpsCombined();
-            List<Integer> eNowHps = ((ICombinedEcBattle) b).getENowhpsCombined();
+        if (b.isICombinedEcBattle()) {
+            List<Integer> eMaxHps = b.asICombinedEcBattle().getEMaxhpsCombined();
+            List<Integer> eNowHps = b.asICombinedEcBattle().getENowhpsCombined();
             if (eNowHps != null) {
                 for (int i = 0, s = eNowHps.size(); i < s; i++) {
                     if (eNowHps.get(i) == -1) {
@@ -753,7 +774,7 @@ public class PhaseState {
      * ダメージ計算
      *
      * @param defender 防御側
-     * @param damage ダメージ
+     * @param damage   ダメージ
      */
     private void damage(Chara defender, int damage) {
         int nowHp;
@@ -804,12 +825,12 @@ public class PhaseState {
     /**
      * ダメージ詳細(雷撃)
      *
-     * @param attackerFleet 攻撃側艦隊
+     * @param attackerFleet         攻撃側艦隊
      * @param attackerFleetCombined 攻撃側艦隊(第2艦隊)
-     * @param defenderFleet 防御側艦隊
+     * @param defenderFleet         防御側艦隊
      * @param defenderFleetCombined 防御側艦隊(第2艦隊)
-     * @param index 攻撃対象インデックス
-     * @param ydam 与ダメージ
+     * @param index                 攻撃対象インデックス
+     * @param ydam                  与ダメージ
      */
     private void addDetailRaigeki0(List<? extends Chara> attackerFleet, List<? extends Chara> attackerFleetCombined,
             List<? extends Chara> defenderFleet, List<? extends Chara> defenderFleetCombined,
@@ -845,8 +866,8 @@ public class PhaseState {
      *
      * @param attacker 攻撃側
      * @param defender 防御側
-     * @param damage ダメージ
-     * @param atType 攻撃種別
+     * @param damage   ダメージ
+     * @param atType   攻撃種別
      */
     private void addDetail(Chara attacker, Chara defender, int damage, AtType atType) {
         this.attackDetails.add(new AttackDetail(
@@ -856,6 +877,7 @@ public class PhaseState {
 
     /**
      * 味方のHP合計を取得する
+     * 
      * @return 味方のHP合計
      */
     public double friendTotalHp() {
@@ -868,6 +890,7 @@ public class PhaseState {
 
     /**
      * 敵のHP合計を取得する
+     * 
      * @return 敵のHP合計
      */
     public double enemyTotalHp() {
@@ -880,6 +903,7 @@ public class PhaseState {
 
     /**
      * 味方のHP1以上の隻数を取得する
+     * 
      * @return 味方のHP1以上の隻数
      */
     public int friendAliveCount() {
@@ -892,6 +916,7 @@ public class PhaseState {
 
     /**
      * 敵のHP1以上の隻数を取得する
+     * 
      * @return 敵のHP1以上の隻数
      */
     public int enemydAliveCount() {
