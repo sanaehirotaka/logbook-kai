@@ -1515,16 +1515,28 @@ public class BattleTypes {
      *
      */
     public enum SortieAtType implements AtType {
-        通常攻撃,
-        レーザー攻撃,
-        連撃,
-        主砲副砲CI,
-        主砲電探CI,
-        主砲徹甲弾CI,
-        主砲主砲CI,
-        戦爆連合CI,
-        NelsonTouch,
-        胸熱CI;
+        通常攻撃("通常攻撃"),
+        レーザー攻撃("レーザー攻撃"),
+        連撃("連撃"),
+        主砲副砲CI("主砲副砲CI"),
+        主砲電探CI("主砲電探CI"),
+        主砲徹甲弾CI("主砲徹甲弾CI"),
+        主砲主砲CI("主砲主砲CI"),
+        戦爆連合CI("戦爆連合CI"),
+        NelsonTouch("NelsonTouch"),
+        胸熱CI("一斉射かッ…胸が熱いな！"),
+        陸奥タッチ("長門、いい？ いくわよ！ 主砲一斉射ッ！");
+
+        private String name;
+
+        private SortieAtType(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
 
         public static SortieAtType toSortieAtType(int i) {
             switch (i) {
@@ -1548,6 +1560,8 @@ public class BattleTypes {
                 return NelsonTouch;
             case 101:
                 return 胸熱CI;
+            case 102:
+                return 陸奥タッチ;
             default:
                 return 通常攻撃;
             }
@@ -1567,17 +1581,29 @@ public class BattleTypes {
      *
      */
     public enum MidnightSpList implements AtType {
-        通常攻撃,
-        連撃,
-        主砲魚雷CI,
-        魚雷魚雷CI,
-        主砲副砲CI,
-        主砲主砲CI,
-        夜襲CI,
-        主砲魚雷電探CI,
-        魚雷見張員電探CI,
-        NelsonTouch,
-        胸熱CI;
+        通常攻撃("通常攻撃"),
+        連撃("連撃"),
+        主砲魚雷CI("主砲魚雷CI"),
+        魚雷魚雷CI("魚雷魚雷CI"),
+        主砲副砲CI("主砲副砲CI"),
+        主砲主砲CI("主砲主砲CI"),
+        夜襲CI("夜襲CI"),
+        主砲魚雷電探CI("主砲魚雷電探CI"),
+        魚雷見張員電探CI("魚雷見張員電探CI"),
+        NelsonTouch("NelsonTouch"),
+        胸熱CI("一斉射かッ…胸が熱いな！"),
+        陸奥タッチ("長門、いい？ いくわよ！ 主砲一斉射ッ！");
+
+        private String name;
+
+        private MidnightSpList(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
 
         public static MidnightSpList toMidnightSpList(int i) {
             switch (i) {
@@ -1603,6 +1629,8 @@ public class BattleTypes {
                 return NelsonTouch;
             case 101:
                 return 胸熱CI;
+            case 102:
+                return 陸奥タッチ;
             default:
                 return 通常攻撃;
             }
