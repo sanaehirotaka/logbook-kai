@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import logbook.internal.JsonHelper;
 import logbook.internal.Ships;
 import lombok.Data;
@@ -50,6 +52,7 @@ public class DeckPort implements Serializable, Cloneable {
      *
      * @return 大破した艦娘
      */
+    @JsonIgnore
     public List<Ship> getBadlyShips() {
         Map<Integer, Ship> shipMap = ShipCollection.get().getShipMap();
         return this.getShip()

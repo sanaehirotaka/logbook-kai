@@ -2,6 +2,8 @@ package logbook.bean;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 艦娘・敵などのキャラクターを表す
  */
@@ -67,6 +69,7 @@ public interface Chara extends Cloneable {
      * このオブジェクトを{@link Ship}のインスタンスとして返します。
      * @return {@link Ship}
      */
+    @JsonIgnore
     default Ship asShip() {
         throw new IllegalStateException(this + " is not an Ship");
     }
@@ -75,6 +78,7 @@ public interface Chara extends Cloneable {
      * このオブジェクトが{@link Friend}のインスタンスである場合trueを返します。
      * @return このオブジェクトが{@link Friend}のインスタンスである場合true
      */
+    @JsonIgnore
     default boolean isFriend() {
         return false;
     }
@@ -83,6 +87,7 @@ public interface Chara extends Cloneable {
      * このオブジェクトを{@link Friend}のインスタンスとして返します。
      * @return {@link Friend}
      */
+    @JsonIgnore
     default Friend asFriend() {
         throw new IllegalStateException(this + " is not an Friend");
     }
@@ -91,6 +96,7 @@ public interface Chara extends Cloneable {
      * このオブジェクトが{@link Enemy}のインスタンスである場合trueを返します。
      * @return このオブジェクトが{@link Enemy}のインスタンスである場合true
      */
+    @JsonIgnore
     default boolean isEnemy() {
         return false;
     }
@@ -99,6 +105,7 @@ public interface Chara extends Cloneable {
      * このオブジェクトを{@link Enemy}のインスタンスとして返します。
      * @return {@link Enemy}
      */
+    @JsonIgnore
     default Enemy asEnemy() {
         throw new IllegalStateException(this + " is not an Enemy");
     }

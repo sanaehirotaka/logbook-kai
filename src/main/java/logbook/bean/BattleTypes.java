@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import logbook.internal.JsonHelper;
@@ -85,122 +86,152 @@ public class BattleTypes {
          */
         List<List<Integer>> getEParam();
 
+        @JsonIgnore
         default boolean isIAirBaseAttack() {
             return false;
         }
 
+        @JsonIgnore
         default IAirBaseAttack asIAirBaseAttack() {
             throw new IllegalStateException(this + " is not an AirBaseAttack");
         }
 
+        @JsonIgnore
         default boolean isIAirbattle() {
             return false;
         }
 
+        @JsonIgnore
         default IAirbattle asIAirbattle() {
             throw new IllegalStateException(this + " is not an IAirbattle");
         }
 
+        @JsonIgnore
         default boolean isICombinedBattle() {
             return false;
         }
 
+        @JsonIgnore
         default ICombinedBattle asICombinedBattle() {
             throw new IllegalStateException(this + " is not an ICombinedBattle");
         }
 
+        @JsonIgnore
         default boolean isICombinedEcBattle() {
             return false;
         }
 
+        @JsonIgnore
         default ICombinedEcBattle asICombinedEcBattle() {
             throw new IllegalStateException(this + " is not an ICombinedEcBattle");
         }
 
+        @JsonIgnore
         default boolean isICombinedEcMidnightBattle() {
             return false;
         }
 
+        @JsonIgnore
         default ICombinedEcMidnightBattle asICombinedEcMidnightBattle() {
             throw new IllegalStateException(this + " is not an ICombinedEcMidnightBattle");
         }
 
+        @JsonIgnore
         default boolean isIFormation() {
             return false;
         }
 
+        @JsonIgnore
         default IFormation asIFormation() {
             throw new IllegalStateException(this + " is not an IFormation");
         }
 
+        @JsonIgnore
         default boolean isIKouku() {
             return false;
         }
 
+        @JsonIgnore
         default IKouku asIKouku() {
             throw new IllegalStateException(this + " is not an IKouku");
         }
 
+        @JsonIgnore
         default boolean isILdAirbattle() {
             return false;
         }
 
+        @JsonIgnore
         default ILdAirbattle asILdAirbattle() {
             throw new IllegalStateException(this + " is not an ILdAirbattle");
         }
 
+        @JsonIgnore
         default boolean isILdShooting() {
             return false;
         }
 
+        @JsonIgnore
         default ILdShooting asILdShooting() {
             throw new IllegalStateException(this + " is not an ILdShooting");
         }
 
+        @JsonIgnore
         default boolean isIMidnightBattle() {
             return false;
         }
 
+        @JsonIgnore
         default IMidnightBattle asIMidnightBattle() {
             throw new IllegalStateException(this + " is not an IMidnightBattle");
         }
 
+        @JsonIgnore
         default boolean isINSupport() {
             return false;
         }
 
+        @JsonIgnore
         default INSupport asINSupport() {
             throw new IllegalStateException(this + " is not an INSupport");
         }
 
+        @JsonIgnore
         default boolean isINightToDayBattle() {
             return false;
         }
 
+        @JsonIgnore
         default INightToDayBattle asINightToDayBattle() {
             throw new IllegalStateException(this + " is not an INightToDayBattle");
         }
 
+        @JsonIgnore
         default boolean isISortieBattle() {
             return false;
         }
 
+        @JsonIgnore
         default ISortieBattle asISortieBattle() {
             throw new IllegalStateException(this + " is not an ISortieBattle");
         }
 
+        @JsonIgnore
         default boolean isISortieHougeki() {
             return false;
         }
 
+        @JsonIgnore
         default ISortieHougeki asISortieHougeki() {
             throw new IllegalStateException(this + " is not an ISortieHougeki");
         }
 
+        @JsonIgnore
         default boolean isISupport() {
             return false;
         }
 
+        @JsonIgnore
         default ISupport asISupport() {
             throw new IllegalStateException(this + " is not an ISupport");
         }
