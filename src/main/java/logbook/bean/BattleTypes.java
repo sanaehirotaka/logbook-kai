@@ -260,10 +260,12 @@ public class BattleTypes {
          */
         List<List<Integer>> getFParamCombined();
 
+        @Override
         default boolean isICombinedBattle() {
             return true;
         }
 
+        @Override
         default ICombinedBattle asICombinedBattle() {
             return this;
         }
@@ -310,10 +312,12 @@ public class BattleTypes {
          */
         List<List<Integer>> getEParamCombined();
 
+        @Override
         default boolean isICombinedEcBattle() {
             return true;
         }
 
+        @Override
         default ICombinedEcBattle asICombinedEcBattle() {
             return this;
         }
@@ -330,10 +334,12 @@ public class BattleTypes {
          */
         List<Integer> getActiveDeck();
 
+        @Override
         default boolean isICombinedEcMidnightBattle() {
             return true;
         }
 
+        @Override
         default ICombinedEcMidnightBattle asICombinedEcMidnightBattle() {
             return this;
         }
@@ -362,10 +368,12 @@ public class BattleTypes {
          */
         List<Integer> getStageFlag();
 
+        @Override
         default boolean isISortieBattle() {
             return true;
         }
 
+        @Override
         default ISortieBattle asISortieBattle() {
             return this;
         }
@@ -430,10 +438,12 @@ public class BattleTypes {
          */
         BattleTypes.Raigeki getRaigeki();
 
+        @Override
         default boolean isISortieHougeki() {
             return true;
         }
 
+        @Override
         default ISortieHougeki asISortieHougeki() {
             return this;
         }
@@ -474,10 +484,12 @@ public class BattleTypes {
          */
         BattleTypes.MidnightHougeki getHougeki();
 
+        @Override
         default boolean isIMidnightBattle() {
             return true;
         }
 
+        @Override
         default IMidnightBattle asIMidnightBattle() {
             return this;
         }
@@ -518,10 +530,12 @@ public class BattleTypes {
          */
         Boolean getDayFlag();
 
+        @Override
         default boolean isINightToDayBattle() {
             return true;
         }
 
+        @Override
         default INightToDayBattle asINightToDayBattle() {
             return this;
         }
@@ -538,10 +552,12 @@ public class BattleTypes {
          */
         List<Integer> getFormation();
 
+        @Override
         default boolean isIFormation() {
             return true;
         }
 
+        @Override
         default IFormation asIFormation() {
             return this;
         }
@@ -564,10 +580,12 @@ public class BattleTypes {
          */
         BattleTypes.Kouku getKouku();
 
+        @Override
         default boolean isIKouku() {
             return true;
         }
 
+        @Override
         default IKouku asIKouku() {
             return this;
         }
@@ -584,10 +602,12 @@ public class BattleTypes {
          */
         BattleTypes.Kouku getKouku2();
 
+        @Override
         default boolean isIAirbattle() {
             return true;
         }
 
+        @Override
         default IAirbattle asIAirbattle() {
             return this;
         }
@@ -610,10 +630,12 @@ public class BattleTypes {
          */
         BattleTypes.SupportInfo getSupportInfo();
 
+        @Override
         default boolean isISupport() {
             return true;
         }
 
+        @Override
         default ISupport asISupport() {
             return this;
         }
@@ -636,10 +658,12 @@ public class BattleTypes {
          */
         BattleTypes.SupportInfo getNSupportInfo();
 
+        @Override
         default boolean isINSupport() {
             return true;
         }
 
+        @Override
         default INSupport asINSupport() {
             return this;
         }
@@ -650,10 +674,12 @@ public class BattleTypes {
      */
     public interface ILdAirbattle extends IBattle {
 
+        @Override
         default boolean isILdAirbattle() {
             return true;
         }
 
+        @Override
         default ILdAirbattle asILdAirbattle() {
             return this;
         }
@@ -664,10 +690,12 @@ public class BattleTypes {
      */
     public interface ILdShooting extends IBattle {
 
+        @Override
         default boolean isILdShooting() {
             return true;
         }
 
+        @Override
         default ILdShooting asILdShooting() {
             return this;
         }
@@ -690,10 +718,12 @@ public class BattleTypes {
          */
         List<AirBaseAttack> getAirBaseAttack();
 
+        @Override
         default boolean isIAirBaseAttack() {
             return true;
         }
 
+        @Override
         default IAirBaseAttack asIAirBaseAttack() {
             return this;
         }
