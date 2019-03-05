@@ -1,5 +1,6 @@
 package logbook.internal.log;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -101,23 +102,15 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
             return joiner.toString();
         };
 
-        StringJoiner joiner = new StringJoiner(",");
-        // 日付
-        joiner.add(log.getTime());
-        // 海域
-        joiner.add(result.getQuestName());
-        // マス
-        joiner.add(String.valueOf(log.getNext().get(log.getNext().size() - 1).getNo()));
-        // ボス
-        joiner.add(bossText.apply(log));
-        // ランク
-        joiner.add(result.getWinRank());
-        // 艦隊行動
-        joiner.add(BattleTypes.Intercept.toIntercept(battle.getFormation().get(2)).toString());
-        // 味方陣形
-        joiner.add(BattleTypes.Formation.toFormation(battle.getFormation().get(0)).toString());
-        // 敵陣形
-        joiner.add(BattleTypes.Formation.toFormation(battle.getFormation().get(1)).toString());
+        Format format = new Format();
+        format.日付 = log.getTime();
+        format.海域 = result.getQuestName();
+        format.マス = String.valueOf(log.getNext().get(log.getNext().size() - 1).getNo());
+        format.ボス = bossText.apply(log);
+        format.ランク = result.getWinRank();
+        format.艦隊行動 = BattleTypes.Intercept.toIntercept(battle.getFormation().get(2)).toString();
+        format.味方陣形 = BattleTypes.Formation.toFormation(battle.getFormation().get(0)).toString();
+        format.敵陣形 = BattleTypes.Formation.toFormation(battle.getFormation().get(1)).toString();
 
         if (battle.isIKouku()) {
             Kouku kouku = battle.asIKouku().getKouku();
@@ -126,39 +119,18 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 Stage1 stage1 = kouku.getStage1();
                 Map<Integer, SlotitemMst> slotitemMst = SlotitemMstCollection.get()
                         .getSlotitemMap();
-                // 制空権
-                joiner.add(BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString());
-                // 味方触接
-                joiner.add(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(0)))
+                format.制空権 = BattleTypes.DispSeiku.toDispSeiku(stage1.getDispSeiku()).toString();
+                format.味方触接 = Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(0)))
                         .map(SlotitemMst::getName)
-                        .orElse(""));
-                // 敵触接
-                joiner.add(Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(1)))
+                        .orElse("");
+                format.敵触接 = Optional.ofNullable(slotitemMst.get(stage1.getTouchPlane().get(1)))
                         .map(SlotitemMst::getName)
-                        .orElse(""));
-            } else {
-                // 制空権
-                joiner.add("");
-                // 味方触接
-                joiner.add("");
-                // 敵触接
-                joiner.add("");
+                        .orElse("");
             }
-        } else {
-            // 制空権
-            joiner.add("");
-            // 味方触接
-            joiner.add("");
-            // 敵触接
-            joiner.add("");
         }
-
-        // 敵艦隊
-        joiner.add(result.getEnemyInfo().getDeckName());
-        // ドロップ艦種
-        joiner.add(Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipType).orElse(""));
-        // ドロップ艦娘
-        joiner.add(Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipName).orElse(""));
+        format.敵艦隊 = result.getEnemyInfo().getDeckName();
+        format.ドロップ艦種 = Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipType).orElse("");
+        format.ドロップ艦娘 = Optional.ofNullable(result.getGetShip()).map(BattleResult.GetShip::getShipName).orElse("");
         // 味方艦
         if (!(battle.isICombinedBattle())) {
             // 通常艦隊はDockIdの艦隊
@@ -167,17 +139,9 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 if (friendFleet.size() > i) {
                     Ship ship = friendFleet.get(i);
                     if (ship != null) {
-                        // 名前
-                        joiner.add(Ships.toName(ship));
-                        // HP
-                        joiner.add(battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i));
-                    } else {
-                        joiner.add("");
-                        joiner.add("");
+                        format.味方艦[i] = Ships.toName(ship);
+                        format.味方艦HP[i] = battle.getFNowhps().get(i) + "/" + battle.getFMaxhps().get(i);
                     }
-                } else {
-                    joiner.add("");
-                    joiner.add("");
                 }
             }
         } else {
@@ -189,18 +153,9 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 if (friendFleet.size() > i) {
                     Ship ship = friendFleet.get(i);
                     if (ship != null) {
-                        // 名前
-                        joiner.add(Ships.toName(ship));
-                        // HP
-                        joiner.add(combinedBattle.getFNowhps().get(i) + "/"
-                                + combinedBattle.getFMaxhps().get(i));
-                    } else {
-                        joiner.add("");
-                        joiner.add("");
+                        format.味方艦[i] = Ships.toName(ship);
+                        format.味方艦HP[i] = combinedBattle.getFNowhps().get(i) + "/" + combinedBattle.getFMaxhps().get(i);
                     }
-                } else {
-                    joiner.add("");
-                    joiner.add("");
                 }
             }
             friendFleet = log.getDeckMap().get(2);
@@ -208,18 +163,10 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 if (friendFleet.size() > i) {
                     Ship ship = friendFleet.get(i);
                     if (ship != null) {
-                        // 名前
-                        joiner.add(Ships.toName(ship));
-                        // HP
-                        joiner.add(combinedBattle.getFNowhpsCombined().get(i) + "/"
-                                + combinedBattle.getFMaxhpsCombined().get(i));
-                    } else {
-                        joiner.add("");
-                        joiner.add("");
+                        format.味方艦[i + 6] = Ships.toName(ship);
+                        format.味方艦HP[i + 6] = combinedBattle.getFNowhpsCombined().get(i) + "/"
+                                + combinedBattle.getFMaxhpsCombined().get(i);
                     }
-                } else {
-                    joiner.add("");
-                    joiner.add("");
                 }
             }
         }
@@ -233,19 +180,15 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
 
                 if (shipMst != null) {
                     String flagship = shipMst.getYomi();
+                    String name;
                     if ("".equals(flagship) || "-".equals(flagship)) {
-                        joiner.add(shipMst.getName());
+                        name = shipMst.getName();
                     } else {
-                        joiner.add(shipMst.getName() + "(" + flagship + ")");
+                        name = shipMst.getName() + "(" + flagship + ")";
                     }
-                    joiner.add(battle.getENowhps().get(i) + "/" + battle.getEMaxhps().get(i));
-                } else {
-                    joiner.add("");
-                    joiner.add("");
+                    format.敵艦[i] = name;
+                    format.敵艦HP[i] = battle.getENowhps().get(i) + "/" + battle.getEMaxhps().get(i);
                 }
-            } else {
-                joiner.add("");
-                joiner.add("");
             }
         }
         if (battle.isICombinedEcBattle()) {
@@ -258,35 +201,83 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
 
                     if (shipMst != null) {
                         String flagship = shipMst.getYomi();
+                        String name;
                         if ("".equals(flagship) || "-".equals(flagship)) {
-                            joiner.add(shipMst.getName());
+                            name = shipMst.getName();
                         } else {
-                            joiner.add(shipMst.getName() + "(" + flagship + ")");
+                            name = shipMst.getName() + "(" + flagship + ")";
                         }
-                        joiner.add(((ICombinedEcBattle) battle).getENowhpsCombined().get(i) + "/"
-                                + ((ICombinedEcBattle) battle).getEMaxhpsCombined().get(i));
-                    } else {
-                        joiner.add("");
-                        joiner.add("");
+                        format.敵艦[i + 6] = name;
+                        format.敵艦HP[i + 6] = ((ICombinedEcBattle) battle).getENowhpsCombined().get(i) + "/"
+                                + ((ICombinedEcBattle) battle).getEMaxhpsCombined().get(i);
                     }
-                } else {
-                    joiner.add("");
-                    joiner.add("");
                 }
             }
-        } else {
-            for (int i = 0; i < 6; i++) {
-                joiner.add("");
-                joiner.add("");
-            }
         }
-        //ドロップアイテム
-        joiner.add(Optional.ofNullable(result.getGetUseitem())
+        // ドロップアイテム
+        format.ドロップアイテム = Optional.ofNullable(result.getGetUseitem())
                 .map(BattleResult.Useitem::getUseitemId)
                 .map(id -> Optional.ofNullable(UseitemCollection.get().getUseitemMap().get(id)))
                 .map(o -> o.map(Useitem::getName).orElse("不明"))
-                .orElse(""));
-        return joiner.toString();
+                .orElse("");
+        return format.toString();
     }
 
+    private static class Format {
+        String 日付 = "";
+        String 海域 = "";
+        String マス = "";
+        String ボス = "";
+        String ランク = "";
+        String 艦隊行動 = "";
+        String 味方陣形 = "";
+        String 敵陣形 = "";
+        String 制空権 = "";
+        String 味方触接 = "";
+        String 敵触接 = "";
+        String 敵艦隊 = "";
+        String ドロップ艦種 = "";
+        String ドロップ艦娘 = "";
+        String[] 味方艦 = new String[12];
+        String[] 味方艦HP = new String[12];
+        String[] 敵艦 = new String[12];
+        String[] 敵艦HP = new String[12];
+        String ドロップアイテム = "";
+
+        public Format() {
+            Arrays.fill(this.味方艦, "");
+            Arrays.fill(this.味方艦HP, "");
+            Arrays.fill(this.敵艦, "");
+            Arrays.fill(this.敵艦HP, "");
+        }
+
+        @Override
+        public String toString() {
+            StringJoiner joiner = new StringJoiner(",");
+            joiner.add(this.日付);
+            joiner.add(this.海域);
+            joiner.add(this.マス);
+            joiner.add(this.ボス);
+            joiner.add(this.ランク);
+            joiner.add(this.艦隊行動);
+            joiner.add(this.味方陣形);
+            joiner.add(this.敵陣形);
+            joiner.add(this.制空権);
+            joiner.add(this.味方触接);
+            joiner.add(this.敵触接);
+            joiner.add(this.敵艦隊);
+            joiner.add(this.ドロップ艦種);
+            joiner.add(this.ドロップ艦娘);
+            for (int i = 0; i < this.味方艦.length; i++) {
+                joiner.add(this.味方艦[i]);
+                joiner.add(this.味方艦HP[i]);
+            }
+            for (int i = 0; i < this.敵艦.length; i++) {
+                joiner.add(this.敵艦[i]);
+                joiner.add(this.敵艦HP[i]);
+            }
+            joiner.add(this.ドロップアイテム);
+            return joiner.toString();
+        }
+    }
 }
