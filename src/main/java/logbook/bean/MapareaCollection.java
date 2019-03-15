@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,7 +12,9 @@ import lombok.Data;
  *
  */
 @Data
-public class MapareaCollection {
+public class MapareaCollection implements Serializable {
+
+    private static final long serialVersionUID = -5052707686530360461L;
 
     private Map<Integer, Maparea> maparea = new LinkedHashMap<>();
 

@@ -33,6 +33,7 @@ import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.bean.Stype;
 import logbook.bean.StypeCollection;
+import logbook.internal.Tuple.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -609,7 +610,7 @@ public class Ships {
         int itemTyku = getSlotitemMst(ship).mapToInt(SlotitemMst::getTyku).sum();
 
         int shipAA = ship.getTaiku().get(0) - itemTyku;
-        return itemWeightAA + (double) shipAA;
+        return itemWeightAA + shipAA;
     }
 
     /**
@@ -739,7 +740,7 @@ public class Ships {
                 if (item != null) {
                     SlotitemMst mst = itemMstMap.get(item.getSlotitemId());
                     if (mst != null) {
-                        pair.add(new Pair<>(mst, onslot.get(i)));
+                        pair.add(Tuple.of(mst, onslot.get(i)));
                     }
                 }
             }
@@ -964,32 +965,6 @@ public class Ships {
      */
     private static double hpPer(Chara chara) {
         return (double) chara.getNowhp() / (double) chara.getMaxhp();
-    }
-
-    /**
-     * Key-Value Pair
-     *
-     * @param <K> Key Type
-     * @param <V> Value Type
-     */
-    private static final class Pair<K, V> {
-
-        private K key;
-
-        private V value;
-
-        private Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        private K getKey() {
-            return this.key;
-        }
-
-        private V getValue() {
-            return this.value;
-        }
     }
 
     /**

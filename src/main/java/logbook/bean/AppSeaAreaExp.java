@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,7 +10,9 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class AppSeaAreaExp {
+public class AppSeaAreaExp implements Serializable {
+
+    private static final long serialVersionUID = 380470177565807966L;
 
     public AppSeaAreaExp() {
     }

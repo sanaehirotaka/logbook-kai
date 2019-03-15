@@ -20,13 +20,13 @@ public class ShipLabelCollection implements Serializable {
     private Map<Integer, Set<String>> labels = new HashMap<>();
 
     /**
-     * アプリケーションのデフォルト設定ディレクトリから<code>MissionCollection</code>を取得します、
+     * アプリケーションのデフォルト設定ディレクトリから<code>ShipLabelCollection</code>を取得します、
      * これは次の記述と同等です
      * <blockquote>
-     *     <code>Config.getDefault().get(MissionCollection.class)</code>
+     *     <code>Config.getDefault().get(ShipLabelCollection.class)</code>
      * </blockquote>
      *
-     * @return <code>MissionCollection</code>
+     * @return <code>ShipLabelCollection</code>
      */
     public static ShipLabelCollection get() {
         return Config.getDefault().get(ShipLabelCollection.class, ShipLabelCollection::new);

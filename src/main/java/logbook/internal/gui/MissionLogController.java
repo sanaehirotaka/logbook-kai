@@ -41,9 +41,10 @@ import logbook.bean.AppConfig;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Logs;
+import logbook.internal.Tuple;
+import logbook.internal.Tuple.Pair;
 import logbook.internal.log.LogWriter;
 import logbook.internal.log.MissionResultLogFormat;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -270,10 +271,10 @@ public class MissionLogController extends WindowController {
                     .map(MissionLogDetail::toMissionLogDetail)
                     .collect(Collectors.toList()));
 
-            List<Pair> aggregateBase = this.aggregateBase(subLog);
+            List<Pair<String, Integer>> aggregateBase = this.aggregateBase(subLog);
 
-            BiConsumer<Map<String, Integer>, Pair> accumulator = (map, pair) -> {
-                map.merge(pair.getName(), pair.getValue(), Integer::sum);
+            BiConsumer<Map<String, Integer>, Pair<String, Integer>> accumulator = (map, pair) -> {
+                map.merge(pair.getKey(), pair.getValue(), Integer::sum);
             };
             BiConsumer<Map<String, Integer>, Map<String, Integer>> combiner = (map1, map2) -> {
                 for (Entry<String, Integer> entry : map2.entrySet()) {
@@ -326,8 +327,8 @@ public class MissionLogController extends WindowController {
 
                 for (Entry<String, List<SimpleMissionLog>> entry : subLog.entrySet()) {
                     int sum = this.aggregateBase(entry.getValue()).stream()
-                            .filter(p -> p.getName().equals(value.resourceProperty().get()))
-                            .mapToInt(Pair::getValue)
+                            .filter(p -> p.getKey().equals(value.resourceProperty().get()))
+                            .mapToInt(Pair<String, Integer>::getValue)
                             .sum();
                     if (sum > 0) {
                         this.chart.getData().add(new PieChart.Data(entry.getKey(), sum));
@@ -451,19 +452,19 @@ public class MissionLogController extends WindowController {
         return row;
     }
 
-    private List<Pair> aggregateBase(List<SimpleMissionLog> log) {
+    private List<Pair<String, Integer>> aggregateBase(List<SimpleMissionLog> log) {
         return log.stream()
                 .flatMap(e -> {
-                    List<Pair> pairs = new ArrayList<>();
-                    pairs.add(new Pair("燃料", e.getFuel()));
-                    pairs.add(new Pair("弾薬", e.getAmmo()));
-                    pairs.add(new Pair("鋼材", e.getMetal()));
-                    pairs.add(new Pair("ボーキ", e.getBauxite()));
+                    List<Pair<String, Integer>> pairs = new ArrayList<>();
+                    pairs.add(Tuple.of("燃料", e.getFuel()));
+                    pairs.add(Tuple.of("弾薬", e.getAmmo()));
+                    pairs.add(Tuple.of("鋼材", e.getMetal()));
+                    pairs.add(Tuple.of("ボーキ", e.getBauxite()));
                     if (!e.getItem1name().isEmpty()) {
-                        pairs.add(new Pair(e.getItem1name(), e.getItem1count()));
+                        pairs.add(Tuple.of(e.getItem1name(), e.getItem1count()));
                     }
                     if (!e.getItem2name().isEmpty()) {
-                        pairs.add(new Pair(e.getItem2name(), e.getItem2count()));
+                        pairs.add(Tuple.of(e.getItem2name(), e.getItem2count()));
                     }
                     return pairs.stream();
                 })
@@ -536,17 +537,5 @@ public class MissionLogController extends WindowController {
             if (columns.length > 12)
                 this.setExp(columns[12].isEmpty() ? 0 : Integer.parseInt(columns[12]));
         }
-    }
-
-    /**
-     * 名前と値のペア
-     */
-    @Data
-    @AllArgsConstructor
-    private static class Pair {
-
-        private String name;
-
-        private int value;
     }
 }

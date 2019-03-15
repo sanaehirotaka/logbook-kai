@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,9 @@ import lombok.Data;
  * 海域経験値
  */
 @Data
-public class AppSeaAreaExpCollection {
+public class AppSeaAreaExpCollection implements Serializable {
+
+    private static final long serialVersionUID = -4153584079101950354L;
 
     private List<AppSeaAreaExp> list = new ArrayList<>();
 

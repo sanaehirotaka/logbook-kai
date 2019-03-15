@@ -28,6 +28,7 @@ import javafx.scene.text.Text;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.Stype;
+import logbook.internal.ExpTable;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
 
@@ -179,7 +180,7 @@ public class StatisticsPane extends VBox {
                 .collect(Collectors.groupingBy(TypeGroup::toTypeGroup, Collectors.mapping(this::tickLevel,
                         Collectors.groupingBy(Function.identity(), Collectors.counting()))));
         this.spectrumCategory.setCategories(
-                IntStream.rangeClosed(1, 175)
+                IntStream.rangeClosed(1, ExpTable.maxLv())
                         .map(i -> i / 10 * 10)
                         .distinct()
                         .mapToObj(Integer::valueOf)

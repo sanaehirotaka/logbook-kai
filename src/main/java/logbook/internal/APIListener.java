@@ -3,13 +3,11 @@ package logbook.internal;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -21,6 +19,7 @@ import javax.json.JsonReader;
 import logbook.Messages;
 import logbook.api.API;
 import logbook.api.APIListenerSpi;
+import logbook.internal.Tuple.Pair;
 import logbook.plugin.PluginServices;
 import logbook.proxy.ContentListenerSpi;
 import logbook.proxy.RequestMetaData;
@@ -32,18 +31,18 @@ import logbook.proxy.ResponseMetaData;
  */
 public final class APIListener implements ContentListenerSpi {
 
-    private final Map<String, List<Pair>> services;
+    private final Map<String, List<Pair<String, APIListenerSpi>>> services;
 
-    private final List<Pair> all = new ArrayList<>();
+    private final List<Pair<String, APIListenerSpi>> all = new ArrayList<>();
 
     public APIListener() {
-        Function<APIListenerSpi, Stream<Pair>> mapper = impl -> {
+        Function<APIListenerSpi, Stream<Pair<String, APIListenerSpi>>> mapper = impl -> {
             API target = impl.getClass().getAnnotation(API.class);
             if (target != null) {
                 return Arrays.stream(target.value())
-                        .map(k -> new Pair(k, impl));
+                        .map(k -> Tuple.of(k, impl));
             } else {
-                this.all.add(new Pair(null, impl));
+                this.all.add(Tuple.of(null, impl));
             }
             return Stream.empty();
         };
@@ -109,20 +108,21 @@ public final class APIListener implements ContentListenerSpi {
 
     void send(RequestMetaData req, ResponseMetaData res, JsonObject json) {
         String uri = req.getRequestURI();
-        List<Pair> pairs = this.services.getOrDefault(uri, Collections.emptyList());
+        List<Pair<String, APIListenerSpi>> pairs = this.services.getOrDefault(uri, Collections.emptyList());
 
-        for (Pair pair : pairs) {
+        for (Pair<String, APIListenerSpi> pair : pairs) {
             Runnable task = () -> this.createTask(pair, json, req, res);
             ThreadManager.getExecutorService().submit(task);
         }
 
-        for (Pair pair : this.all) {
+        for (Pair<String, APIListenerSpi> pair : this.all) {
             Runnable task = () -> this.createTask(pair, json, req, res);
             ThreadManager.getExecutorService().submit(task);
         }
     }
 
-    private void createTask(Pair pair, JsonObject json, RequestMetaData req, ResponseMetaData res) {
+    private void createTask(Pair<String, APIListenerSpi> pair, JsonObject json, RequestMetaData req,
+            ResponseMetaData res) {
         try {
             if (LoggerHolder.get().isDebugEnabled()) {
                 String className = pair.getValue().getClass().getName();
@@ -133,16 +133,6 @@ public final class APIListener implements ContentListenerSpi {
         } catch (Exception e) {
             LoggerHolder.get().warn(Messages.getString("APIListener.1"), e); //$NON-NLS-1$
             LoggerHolder.get().warn(json);
-        }
-    }
-
-    private static final class Pair extends SimpleImmutableEntry<String, APIListenerSpi>
-            implements Entry<String, APIListenerSpi> {
-
-        private static final long serialVersionUID = 1L;
-
-        public Pair(String key, APIListenerSpi value) {
-            super(key, value);
         }
     }
 }
