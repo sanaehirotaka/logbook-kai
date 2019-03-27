@@ -9,8 +9,8 @@ body { font-family: -apple-system, "Yu Gothic", YuGothic, "ヒラギノ角ゴ Pr
 </head>
 <body>
 <div id="editor"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ace.js" charset="utf-8"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.1/ext-language_tools.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ace.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.3/ext-language_tools.js" charset="utf-8"></script>
 <script>
 function start(lang) {
     window.editor = ace.edit("editor");
@@ -32,6 +32,9 @@ function get() {
 }
 function setReadOnly(readOnly) {
     window.editor.setReadOnly(readOnly);
+}
+function getCopyText() {
+    return window.editor.getCopyText();
 }
 </script>
 </body>

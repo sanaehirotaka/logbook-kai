@@ -2,9 +2,16 @@ package logbook.internal.gui;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -47,6 +54,21 @@ class TextEditorPane extends AnchorPane {
                         this.setting();
                     }
                 });
+
+        KeyCombination copy = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+        KeyCombination cut = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
+
+        this.webview.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (copy.match(event) || cut.match(event)) {
+                String text = String.valueOf(engine.executeScript("getCopyText()"));
+
+                Platform.runLater(() -> {
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(text);
+                    Clipboard.getSystemClipboard().setContent(content);
+                });
+            }
+        });
     }
 
     private void setting() {
