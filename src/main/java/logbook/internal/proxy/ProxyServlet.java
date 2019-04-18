@@ -24,9 +24,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -102,7 +100,6 @@ public class ProxyServlet extends HttpServlet {
 
     transient protected Logger _log;
     private String _hostHeader;
-    private String _viaHost;
     transient private HttpClient _client;
     private long _timeout;
     protected boolean _isDebugEnabled;
@@ -115,10 +112,6 @@ public class ProxyServlet extends HttpServlet {
         ServletConfig config = this.getServletConfig();
 
         this._hostHeader = config.getInitParameter("hostHeader");
-
-        this._viaHost = config.getInitParameter("viaHost");
-        if (this._viaHost == null)
-            this._viaHost = viaHost();
 
         try {
             this._client = this.createHttpClient();
@@ -137,14 +130,6 @@ public class ProxyServlet extends HttpServlet {
 
     public void setTimeout(long timeout) {
         this._timeout = timeout;
-    }
-
-    protected static String viaHost() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException x) {
-            return "localhost";
-        }
     }
 
     /**

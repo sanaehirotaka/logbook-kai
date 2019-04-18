@@ -35,6 +35,8 @@ public final class APIListener implements ContentListenerSpi {
 
     private final List<Pair<String, APIListenerSpi>> all = new ArrayList<>();
 
+    private final boolean isDebugEnabled;
+
     public APIListener() {
         Function<APIListenerSpi, Stream<Pair<String, APIListenerSpi>>> mapper = impl -> {
             API target = impl.getClass().getAnnotation(API.class);
@@ -49,6 +51,7 @@ public final class APIListener implements ContentListenerSpi {
         this.services = PluginServices.instances(APIListenerSpi.class)
                 .flatMap(mapper)
                 .collect(Collectors.groupingBy(Pair::getKey));
+        this.isDebugEnabled = LoggerHolder.get().isDebugEnabled();
     }
 
     @Override
@@ -124,7 +127,7 @@ public final class APIListener implements ContentListenerSpi {
     private void createTask(Pair<String, APIListenerSpi> pair, JsonObject json, RequestMetaData req,
             ResponseMetaData res) {
         try {
-            if (LoggerHolder.get().isDebugEnabled()) {
+            if (this.isDebugEnabled) {
                 String className = pair.getValue().getClass().getName();
                 LoggerHolder.get().debug(Messages.getString("APIListener.0"), //$NON-NLS-1$
                         className, req.getRequestURI());

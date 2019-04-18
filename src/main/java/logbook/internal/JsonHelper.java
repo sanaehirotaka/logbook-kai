@@ -93,12 +93,10 @@ public final class JsonHelper {
      * @return String
      */
     public static String toString(JsonValue val) {
-        return toObject(val, v -> {
-            if (v instanceof JsonString) {
-                return ((JsonString) v).getString();
-            }
-            return v.toString();
-        });
+        if (val instanceof JsonString) {
+            return ((JsonString) val).getString();
+        }
+        return toObject(val, Object::toString);
     }
 
     /**
