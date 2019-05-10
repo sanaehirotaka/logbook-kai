@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import logbook.Messages;
+import logbook.bean.AppBouyomiConfig;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.AppQuest;
@@ -30,6 +31,8 @@ import logbook.bean.AppQuestCollection;
 import logbook.bean.Basic;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
+import logbook.bean.Mission;
+import logbook.bean.MissionCollection;
 import logbook.bean.Ndock;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
@@ -37,8 +40,11 @@ import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Audios;
+import logbook.internal.BouyomiChanUtils;
+import logbook.internal.BouyomiChanUtils.Type;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
+import logbook.internal.Tuple;
 import logbook.internal.proxy.ProxyHolder;
 import logbook.plugin.PluginServices;
 import logbook.plugin.lifecycle.StartUp;
@@ -110,7 +116,7 @@ public class MainController extends WindowController {
             this.shipFormat = this.ship.getText();
 
             // メニューにメイン画面のコントローラを渡す
-            mainMenuController.setParentController(this);
+            this.mainMenuController.setParentController(this);
 
             Timeline timeline = new Timeline(1);
             timeline.setCycleCount(Animation.INDEFINITE);
@@ -436,6 +442,10 @@ public class MainController extends WindowController {
         if (AppConfig.get().isUseSound()) {
             this.soundNotify(Paths.get(AppConfig.get().getMissionSoundDir()));
         }
+        // 棒読みちゃん連携
+        if (AppBouyomiConfig.get().isEnable()) {
+            this.sendBouyomiMissionComplete(port);
+        }
     }
 
     /**
@@ -487,6 +497,10 @@ public class MainController extends WindowController {
         if (AppConfig.get().isUseSound()) {
             this.soundNotify(Paths.get(AppConfig.get().getNdockSoundDir()));
         }
+        // 棒読みちゃん連携
+        if (AppBouyomiConfig.get().isEnable()) {
+            this.sendBouyomiNdockComplete(ndock);
+        }
     }
 
     /**
@@ -527,6 +541,46 @@ public class MainController extends WindowController {
                 LoggerHolder.get().warn("サウンド通知に失敗しました", e);
             }
         }
+    }
+
+    /**
+     * 棒読みちゃん連携
+     *
+     * @param port 艦隊
+     */
+    private void sendBouyomiMissionComplete(DeckPort port) {
+        int target = port.getMission().get(1).intValue();
+        Optional<Mission> mission = Optional.ofNullable(MissionCollection.get()
+                .getMissionMap()
+                .get(target));
+        String missionName = mission.map(Mission::getName).orElse("");
+
+        BouyomiChanUtils.speak(Type.MissionComplete,
+                Tuple.of("${fleetName}", port.getName()),
+                Tuple.of("${fleetNumber}", String.valueOf(port.getId())),
+                Tuple.of("${missionName}", missionName));
+    }
+
+    /**
+     * 棒読みちゃん連携
+     *
+     * @param ndock 入渠ドック
+     */
+    private void sendBouyomiNdockComplete(Ndock ndock) {
+        Ship ship = ShipCollection.get()
+                .getShipMap()
+                .get(ndock.getShipId());
+
+        String hiragana = Ships.shipMst(ship)
+                .map(ShipMst::getYomi)
+                .orElse("");
+        String kanji = Ships.shipMst(ship)
+                .map(ShipMst::getName)
+                .orElse("");
+
+        BouyomiChanUtils.speak(Type.NdockComplete,
+                Tuple.of("${hiraganaName}", hiragana),
+                Tuple.of("${kanjiName}", kanji));
     }
 
     private static long hashCode(Map<?, ?> map) {

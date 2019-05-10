@@ -1,0 +1,72 @@
+{
+    "settings": [
+        {
+            "id": "MapStartNextAlert",
+            "label": "大破での進撃",
+            "text": "${hiraganaNames} が大破しています",
+            "params": [
+                {
+                    "tag": "${hiraganaNames}",
+                    "comment": "艦娘の名前（ひらがな）"
+                },
+                {
+                    "tag": "${kanjiNames}",
+                    "comment": "艦娘の名前（漢字）"
+                }
+            ]
+        },
+        {
+            "id": "MissionStartAlert",
+            "label": "遠征編成の誤り",
+            "text": "${fleetName} は ${missionName} の条件を満たしていません",
+            "params": [
+                {
+                    "tag": "${fleetName}",
+                    "comment": "艦隊名称"
+                },
+                {
+                    "tag": "${fleetNumber}",
+                    "comment": "艦隊番号"
+                },
+                {
+                    "tag": "${missionName}",
+                    "comment": "遠征名称"
+                }
+            ]
+        },
+        {
+            "id": "MissionComplete",
+            "label": "遠征の完了",
+            "text": "${fleetName} がまもなく ${missionName} から帰還します",
+            "params": [
+                {
+                    "tag": "${fleetName}",
+                    "comment": "艦隊名称"
+                },
+                {
+                    "tag": "${fleetNumber}",
+                    "comment": "艦隊番号"
+                },
+                {
+                    "tag": "${missionName}",
+                    "comment": "遠征名称"
+                }
+            ]
+        },
+        {
+            "id": "NdockComplete",
+            "label": "入渠の完了",
+            "text": "${hiraganaName} の入渠がまもなく完了します",
+            "params": [
+                {
+                    "tag": "${hiraganaName}",
+                    "comment": "艦娘の名前（ひらがな）"
+                },
+                {
+                    "tag": "${kanjiName}",
+                    "comment": "艦娘の名前（漢字）"
+                }
+            ]
+        }
+    ]
+}

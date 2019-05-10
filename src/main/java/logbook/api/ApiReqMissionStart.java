@@ -13,13 +13,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Platform;
 import javafx.util.Duration;
+import logbook.bean.AppBouyomiConfig;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.internal.BouyomiChanUtils;
+import logbook.internal.BouyomiChanUtils.Type;
 import logbook.internal.LoggerHolder;
+import logbook.internal.Tuple;
 import logbook.internal.gui.Tools;
 import logbook.plugin.PluginServices;
 import logbook.proxy.RequestMetaData;
@@ -75,6 +79,8 @@ public class ApiReqMissionStart implements APIListenerSpi {
                 if (!condition.test(fleet)) {
                     Integer id = missionId;
                     Platform.runLater(() -> displayAlert(deckId, id));
+                    // 棒読みちゃん連携
+                    sendBouyomi(deckId, missionId);
                 }
             } catch (Exception e) {
                 LoggerHolder.get().error("遠征開始で例外", e);
@@ -100,5 +106,20 @@ public class ApiReqMissionStart implements APIListenerSpi {
                 .append("の条件を満たしていません");
 
         Tools.Conrtols.showNotify(null, "遠征警告", sb.toString(), Duration.seconds(10));
+    }
+
+    /**
+     * 棒読みちゃん連携
+     *
+     * @param deckId デッキID
+     * @param missionId 遠征ID
+     */
+    private static void sendBouyomi(Integer deckId, Integer missionId) {
+        if (AppBouyomiConfig.get().isEnable()) {
+            BouyomiChanUtils.speak(Type.MissionStartAlert,
+                    Tuple.of("${fleetName}", DeckPortCollection.get().getDeckPortMap().get(deckId).getName()),
+                    Tuple.of("${fleetNumber}", String.valueOf(deckId)),
+                    Tuple.of("${missionName}", MissionCollection.get().getMissionMap().get(missionId).getName()));
+        }
     }
 }

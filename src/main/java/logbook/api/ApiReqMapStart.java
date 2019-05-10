@@ -3,6 +3,8 @@ package logbook.api;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
 
@@ -11,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 import logbook.Messages;
+import logbook.bean.AppBouyomiConfig;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.BattleLog;
@@ -20,8 +23,11 @@ import logbook.bean.MapStartNext;
 import logbook.bean.Ship;
 import logbook.bean.ShipMst;
 import logbook.internal.Audios;
+import logbook.internal.BouyomiChanUtils;
+import logbook.internal.BouyomiChanUtils.Type;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
+import logbook.internal.Tuple;
 import logbook.internal.gui.Tools;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
@@ -49,7 +55,7 @@ public class ApiReqMapStart implements APIListenerSpi {
             AppCondition.get()
                     .setDeckId(Integer.parseInt(req.getParameter("api_deck_id")));
 
-            if (AppConfig.get().isAlertBadlyStart()) {
+            if (AppConfig.get().isAlertBadlyStart() || AppBouyomiConfig.get().isEnable()) {
                 // 大破した艦娘
                 List<Ship> badlyShips = DeckPortCollection.get()
                         .getDeckPortMap()
@@ -65,6 +71,8 @@ public class ApiReqMapStart implements APIListenerSpi {
 
                 if (!badlyShips.isEmpty()) {
                     Platform.runLater(() -> displayAlert(badlyShips));
+                    // 棒読みちゃん連携
+                    sendBouyomi(badlyShips);
                 }
             }
         }
@@ -95,6 +103,32 @@ public class ApiReqMapStart implements APIListenerSpi {
                     .orElse(""), ship.getLv());
 
             Tools.Conrtols.showNotify(node, "大破警告", message, Duration.seconds(30));
+        }
+    }
+
+    /**
+     * 棒読みちゃん連携
+     *
+     * @param badlyShips 大破艦
+     */
+    private static void sendBouyomi(List<Ship> badlyShips) {
+        if (AppBouyomiConfig.get().isEnable()) {
+
+            List<ShipMst> shipMsts = badlyShips.stream()
+                    .map(ship -> Ships.shipMst(ship).orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            String hiragana = shipMsts.stream()
+                    .map(ShipMst::getYomi)
+                    .collect(Collectors.joining("、"));
+            String kanji = shipMsts.stream()
+                    .map(ShipMst::getName)
+                    .collect(Collectors.joining("、"));
+
+            BouyomiChanUtils.speak(Type.MapStartNextAlert,
+                    Tuple.of("${hiraganaNames}", hiragana),
+                    Tuple.of("${kanjiNames}", kanji));
         }
     }
 
