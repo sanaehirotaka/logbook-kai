@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
    <children>
       <TabPane VBox.vgrow="ALWAYS">
          <tabs>
@@ -282,6 +282,53 @@
                               <TableColumn fx:id="pluginLocation" prefWidth="150.0" text="場所" />
                           </columns>
                         </TableView>
+                     </children>
+                  </VBox>
+               </content>
+            </Tab>
+            <Tab closable="false" text="棒読みちゃん連携">
+               <content>
+                  <VBox styleClass="configInner">
+                     <children>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <CheckBox fx:id="enableBouyomi" mnemonicParsing="false" text="棒読みちゃん連携を使用する" GridPane.columnSpan="2147483647" />
+                              <Label text="ホスト" GridPane.rowIndex="1" />
+                              <TextField fx:id="bouyomiHost" prefWidth="150.0" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="ポート番号" GridPane.rowIndex="2" />
+                              <TextField fx:id="bouyomiPort" prefWidth="150.0" text="50001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="棒読みちゃん側で設定を変更していない場合はホスト・ポート番号の変更する必要はありません。" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                        <Separator prefWidth="200.0" />
+                        <GridPane fx:id="bouyomiTexts">
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                           </children>
+                        </GridPane>
                      </children>
                   </VBox>
                </content>

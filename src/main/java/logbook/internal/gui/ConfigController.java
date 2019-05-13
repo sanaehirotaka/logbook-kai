@@ -2,9 +2,11 @@ package logbook.internal.gui;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -14,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,9 +24,18 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import logbook.bean.AppBouyomiConfig;
+import logbook.bean.AppBouyomiConfig.AppBouyomiText;
 import logbook.bean.AppConfig;
+import logbook.internal.BouyomiChanUtils;
+import logbook.internal.BouyomiChanUtils.BouyomiDefaultSettings;
+import logbook.internal.BouyomiChanUtils.BouyomiSetting;
+import logbook.internal.BouyomiChanUtils.Params;
 import logbook.internal.Config;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ShipImageCacheStrategy;
@@ -232,7 +244,25 @@ public class ConfigController extends WindowController {
     @FXML
     private TableColumn<DetailPlugin, String> pluginLocation;
 
+    @FXML
+    private CheckBox enableBouyomi;
+
+    @FXML
+    private TextField bouyomiHost;
+
+    @FXML
+    private TextField bouyomiPort;
+
+    @FXML
+    private GridPane bouyomiTexts;
+
     private ObservableList<DetailPlugin> plugins = FXCollections.observableArrayList();
+
+    private EnumMap<BouyomiChanUtils.Type, Supplier<Boolean>> enableBouyomiTextMap = new EnumMap<>(
+            BouyomiChanUtils.Type.class);
+
+    private EnumMap<BouyomiChanUtils.Type, Supplier<String>> bouyomiTextMap = new EnumMap<>(
+            BouyomiChanUtils.Type.class);
 
     @FXML
     void initialize() {
@@ -305,6 +335,8 @@ public class ConfigController extends WindowController {
                 .map(DetailPlugin::toDetailPlugin)
                 .forEach(this.plugins::add);
         this.pluginTable.setItems(this.plugins);
+
+        this.bouyomiChanInit();
     }
 
     /**
@@ -375,6 +407,8 @@ public class ConfigController extends WindowController {
         conf.setFfmpegExt(this.ffmpegExt.getText());
         conf.setUsePlugin(this.usePlugin.isSelected());
 
+        this.bouyomiChanStore();
+
         ThreadManager.getExecutorService()
                 .execute(Config.getDefault()::store);
         this.getWindow().close();
@@ -424,6 +458,65 @@ public class ConfigController extends WindowController {
             });
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
+        }
+    }
+
+    private void bouyomiChanInit() {
+        AppBouyomiConfig config = AppBouyomiConfig.get();
+
+        this.bouyomiHost.setText(config.getHost());
+        this.bouyomiPort.setText(Integer.toString(config.getPort()));
+
+        BouyomiDefaultSettings settings = BouyomiChanUtils.getDefaultSettings();
+        int row = 0;
+        for (BouyomiSetting setting : settings.getSettings()) {
+            BouyomiChanUtils.Type type = BouyomiChanUtils.Type.valueOf(setting.getId());
+
+            AppBouyomiText bouyomiConfig = config.getText()
+                    .get(setting.getId());
+
+            CheckBox checkBox = new CheckBox(setting.getLabel());
+            checkBox.setSelected(true);
+
+            TextField text = new TextField(setting.getText());
+            TextFlow params = new TextFlow();
+            for (Params param : setting.getParams()) {
+                Hyperlink link = new Hyperlink(param.getComment());
+                link.setFocusTraversable(false);
+                link.setOnAction(ev -> {
+                    text.replaceSelection(param.getTag());
+                });
+                params.getChildren().add(link);
+            }
+            if (bouyomiConfig != null) {
+                checkBox.setSelected(bouyomiConfig.isEnable());
+                text.setText(bouyomiConfig.getText());
+            }
+
+            this.bouyomiTexts.add(checkBox, 0, row);
+            this.bouyomiTexts.add(text, 1, row);
+            GridPane.setHgrow(text, Priority.ALWAYS);
+            this.bouyomiTexts.add(params, 1, ++row);
+            row++;
+
+            this.enableBouyomiTextMap.put(type, checkBox::isSelected);
+            this.bouyomiTextMap.put(type, text::getText);
+        }
+    }
+
+    private void bouyomiChanStore() {
+        AppBouyomiConfig config = AppBouyomiConfig.get();
+        Map<String, AppBouyomiText> textMap = config.getText();
+        textMap.clear();
+        for (BouyomiChanUtils.Type type : BouyomiChanUtils.Type.values()) {
+            boolean enable = this.enableBouyomiTextMap.get(type).get();
+            String text = this.bouyomiTextMap.get(type).get();
+
+            AppBouyomiText bouyomiText = new AppBouyomiText();
+            bouyomiText.setEnable(enable);
+            bouyomiText.setText(text);
+
+            textMap.put(type.toString(), bouyomiText);
         }
     }
 
