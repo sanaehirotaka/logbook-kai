@@ -464,6 +464,7 @@ public class ConfigController extends WindowController {
     private void bouyomiChanInit() {
         AppBouyomiConfig config = AppBouyomiConfig.get();
 
+        this.enableBouyomi.setSelected(config.isEnable());
         this.bouyomiHost.setText(config.getHost());
         this.bouyomiPort.setText(Integer.toString(config.getPort()));
 
@@ -506,6 +507,10 @@ public class ConfigController extends WindowController {
 
     private void bouyomiChanStore() {
         AppBouyomiConfig config = AppBouyomiConfig.get();
+        config.setEnable(this.enableBouyomi.isSelected());
+        config.setHost(this.bouyomiHost.getText());
+        config.setPort(this.toInt(this.bouyomiPort.getText()));
+
         Map<String, AppBouyomiText> textMap = config.getText();
         textMap.clear();
         for (BouyomiChanUtils.Type type : BouyomiChanUtils.Type.values()) {

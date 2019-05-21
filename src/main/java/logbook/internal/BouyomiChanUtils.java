@@ -29,7 +29,9 @@ public class BouyomiChanUtils {
         if (config != null && !config.isEnable()) {
             return;
         }
-        if (config == null) {
+        if (config != null) {
+            text = config.getText();
+        } else {
             BouyomiDefaultSettings settings = getDefaultSettings();
             for (BouyomiSetting setting : settings.getSettings()) {
                 if (id.equals(setting.getId())) {

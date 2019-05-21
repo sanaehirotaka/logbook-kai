@@ -307,7 +307,7 @@
                               <TextField fx:id="bouyomiHost" prefWidth="150.0" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="ポート番号" GridPane.rowIndex="2" />
                               <TextField fx:id="bouyomiPort" prefWidth="150.0" text="50001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Label text="棒読みちゃん側で設定を変更していない場合はホスト・ポート番号の変更する必要はありません。" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                              <Label text="棒読みちゃん側で設定を変更していない場合はホスト・ポート番号を変更する必要はありません。" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                            </children>
                         </GridPane>
                         <Separator prefWidth="200.0" />
