@@ -9,9 +9,9 @@ public enum SeaArea {
     第百四戦隊("第百四戦隊", 1),
     第二艦隊("第二艦隊", 2),
     北方部隊("北方部隊", 3),
-    出撃識別札４("出撃識別札４", 4),
-    出撃識別札５("出撃識別札５", 5),
-    出撃識別札６("出撃識別札６", 6);
+    機動部隊("機動部隊", 4),
+    攻略部隊("攻略部隊", 5),
+    ハワイ派遣艦隊("ハワイ派遣艦隊", 6);
 
     /** 名前 */
     private String name;
@@ -60,11 +60,11 @@ public enum SeaArea {
         case 3:
             return SeaArea.北方部隊;
         case 4:
-            return SeaArea.出撃識別札４;
+            return SeaArea.機動部隊;
         case 5:
-            return SeaArea.出撃識別札５;
+            return SeaArea.攻略部隊;
         case 6:
-            return SeaArea.出撃識別札６;
+            return SeaArea.ハワイ派遣艦隊;
         default:
             return null;
         }
