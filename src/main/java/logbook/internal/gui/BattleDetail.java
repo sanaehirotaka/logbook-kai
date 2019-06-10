@@ -425,8 +425,8 @@ public class BattleDetail extends WindowController {
         // 評価判定
         judge.setAfter(ps, this.battle);
         this.judge.setText(String.valueOf(judge.getRank())
-                + "(味方損害率:" + (int) judge.getFriendDamageRatio()
-                + "/敵損害率:" + (int) judge.getEnemyDamageRatio() + ")");
+                + "(味方損害率:" + BigDecimal.valueOf(judge.getFriendDamageRatio()).setScale(3, RoundingMode.FLOOR)
+                + "/敵損害率:" + BigDecimal.valueOf(judge.getEnemyDamageRatio()).setScale(3, RoundingMode.FLOOR) + ")");
 
         // 経験値
         if (this.result != null) {
@@ -889,7 +889,7 @@ public class BattleDetail extends WindowController {
          * @return 損害率
          */
         private double damageRatio(double before, double after) {
-            return (int) ((before - after) / before * 100);
+            return (before - after) / before * 100;
         }
     }
 }
