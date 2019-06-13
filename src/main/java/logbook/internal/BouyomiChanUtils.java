@@ -72,7 +72,7 @@ public class BouyomiChanUtils {
         try {
             bouyomiChan.speak(text);
         } catch (Exception e) {
-            LoggerHolder.get().warn("棒読みちゃんとの接続で例外が発生しました", e);
+            LoggerHolder.get().info("棒読みちゃんとの接続で例外が発生しました", e);
         }
     }
 
