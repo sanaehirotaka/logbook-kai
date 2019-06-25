@@ -494,6 +494,8 @@ public class Ships {
             if (item == null)
                 continue;
             SlotitemMst itemMst = itemMstMap.get(item.getSlotitemId());
+            if (itemMst == null)
+                continue;
 
             // 制空状態に関係するのは対空値を持つ艦戦、艦攻、艦爆、水爆、水戦のみ
             if (itemMst.is(SlotItemType.艦上戦闘機, SlotItemType.艦上攻撃機, SlotItemType.艦上爆撃機, SlotItemType.水上爆撃機,
@@ -641,16 +643,12 @@ public class Ships {
         if (rocketCount > 1)
             bonus += 15D;
 
-        Integer shipMstId = shipMst(ship)
-                .map(ShipMst::getId)
-                .orElse(0);
-        List<Integer> iseClass = new ArrayList<Integer>();
-        iseClass.add(82); // 伊勢改
-        iseClass.add(553); // 伊勢改二
-        iseClass.add(88); // 日向改
-
-        if (iseClass.contains(shipMstId))
+        if (shipMst(ship)
+                .map(ShipMst::getName)
+                .filter(name -> name.contains("伊勢") || name.contains("日向"))
+                .isPresent()) {
             bonus += 25D;
+        }
 
         int antiAircraft = (int) Math.floor(weightAntiAircraft(ship));
         if (antiAircraft % 2 != 0)
