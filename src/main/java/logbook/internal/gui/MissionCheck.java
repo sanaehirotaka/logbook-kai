@@ -36,6 +36,7 @@ import logbook.bean.MissionCollection;
 import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.StypeCollection;
 import logbook.internal.LoggerHolder;
 import logbook.plugin.PluginServices;
 
@@ -151,19 +152,41 @@ public class MissionCheck extends WindowController {
                 missionId = 34;
             }
 
+            TreeItem<String> item;
             InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + missionId + ".json");
-            if (is == null) {
+            if (is != null) {
+                MissionCondition condition;
+                try {
+                    condition = this.mapper.readValue(is, MissionCondition.class);
+                    condition.test(fleet);
+                    item = this.buildLeaf(condition);
+                } finally {
+                    is.close();
+                }
+            } else if (mission.getSampleFleet() != null) {
+                item = new TreeItem<>();
+            } else {
                 return null;
             }
-            MissionCondition condition;
-            TreeItem<String> item;
-            try {
-                condition = this.mapper.readValue(is, MissionCondition.class);
-                condition.test(fleet);
-                item = this.buildLeaf(condition);
-                item.setValue(mission.toString());
-            } finally {
-                is.close();
+            item.setValue(mission.toString());
+            if (mission.getSampleFleet() != null) {
+                TreeItem<String> sample = new TreeItem<>("サンプル編成");
+
+                GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+
+                StackPane pane = new StackPane();
+                pane.setPrefWidth(18);
+                pane.getChildren().add(fontAwesome.create(FontAwesome.Glyph.INFO));
+                sample.setGraphic(pane);
+
+                for (Integer type : mission.getSampleFleet()) {
+                    String name = StypeCollection.get()
+                            .getStypeMap()
+                            .get(type)
+                            .getName();
+                    sample.getChildren().add(new TreeItem<>(name));
+                }
+                item.getChildren().add(sample);
             }
             return item;
         } catch (Exception e) {
