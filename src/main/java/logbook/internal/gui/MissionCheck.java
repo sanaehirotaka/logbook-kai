@@ -2,11 +2,13 @@ package logbook.internal.gui;
 
 import java.io.InputStream;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.SegmentedButton;
@@ -50,6 +52,8 @@ public class MissionCheck extends WindowController {
     private TreeView<String> conditionTree;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    private Set<Mission> expanded = new HashSet<>();
 
     public MissionCheck() {
         this.mapper.configure(Feature.ALLOW_COMMENTS, true);
@@ -118,6 +122,14 @@ public class MissionCheck extends WindowController {
 
                     TreeItem<String> sub = this.buildTree0(mission, fleet);
                     if (sub != null) {
+                        sub.setExpanded(this.expanded.contains(mission));
+                        sub.expandedProperty().addListener((ob, ov, nv) -> {
+                            if (nv != null && nv) {
+                                this.expanded.add(mission);
+                            } else {
+                                this.expanded.remove(mission);
+                            }
+                        });
                         subTree.getChildren().add(sub);
                     }
                 }
@@ -149,7 +161,7 @@ public class MissionCheck extends WindowController {
                 condition = this.mapper.readValue(is, MissionCondition.class);
                 condition.test(fleet);
                 item = this.buildLeaf(condition);
-                item.setValue(mission.getName());
+                item.setValue(mission.toString());
             } finally {
                 is.close();
             }
