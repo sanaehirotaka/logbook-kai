@@ -1,6 +1,5 @@
 package logbook.internal.gui;
 
-import java.io.InputStream;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -38,7 +37,7 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.StypeCollection;
 import logbook.internal.LoggerHolder;
-import logbook.plugin.PluginServices;
+import logbook.internal.Missions;
 
 /**
  * 遠征確認画面
@@ -145,24 +144,12 @@ public class MissionCheck extends WindowController {
 
     private TreeItem<String> buildTree0(Mission mission, List<Ship> fleet) {
         try {
-            Integer missionId = mission.getId();
-            if ("前衛支援任務".equals(mission.getName())) {
-                missionId = 33;
-            } else if ("艦隊決戦支援任務".equals(mission.getName())) {
-                missionId = 34;
-            }
-
             TreeItem<String> item;
-            InputStream is = PluginServices.getResourceAsStream("logbook/mission/" + missionId + ".json");
-            if (is != null) {
-                MissionCondition condition;
-                try {
-                    condition = this.mapper.readValue(is, MissionCondition.class);
-                    condition.test(fleet);
-                    item = this.buildLeaf(condition);
-                } finally {
-                    is.close();
-                }
+            Optional<MissionCondition> condition = Missions.getMissionCondition(mission.getId());
+            if (condition.isPresent()) {
+                MissionCondition cond = condition.get();
+                cond.test(fleet);
+                item = this.buildLeaf(cond);
             } else if (mission.getSampleFleet() != null) {
                 item = new TreeItem<>();
             } else {
