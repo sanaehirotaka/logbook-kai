@@ -49,19 +49,20 @@
                                     "operator": "AND",
                                     "conditions": [
                                         {"type": "艦娘", "ship_type" :["海防艦"]},
-                                        {"type": "艦娘", "ship_type" :["海防艦"]}
+                                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                                        {"type": "艦娘"}
                                     ]
                                 },
                                 {
                                     "operator": "AND",
                                     "conditions": [
                                         {"type": "艦娘", "ship_type" :["駆逐艦"]},
-                                        {"type": "艦娘", "ship_type" :["駆逐艦"]}
+                                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                                        {"type": "艦娘"}
                                     ]
                                 }
                             ]
-                        },
-                        {"type": "艦娘"}
+                        }
                     ]
                 }
             ]
