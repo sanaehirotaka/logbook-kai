@@ -1,1 +1,24 @@
 /*南西諸島離島哨戒作戦*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "火力", "value": 400},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 50, "order": 1}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                {"type": "艦娘", "ship_type" :["水上機母艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]}
+            ]
+        }
+    ]
+}

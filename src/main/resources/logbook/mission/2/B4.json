@@ -1,1 +1,30 @@
 /*南西諸島離島防衛作戦*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "火力", "value": 500},
+        {"type": "艦隊", "count_type": "対潜", "value": 280},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 55, "order": 1}
+            ]
+        },
+        {
+            "operator": "OR",
+            "conditions": [
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["重巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["重巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["潜水艦", "潜水空母"]}
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,1 +1,27 @@
 /*ブルネイ泊地沖哨戒*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "レベル", "value": 100},
+        {"type": "艦隊", "count_type": "対潜", "value": 210},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 30, "order": 1}
+            ]
+        },
+        {
+            "operator": "OR",
+            "conditions": [
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["駆逐艦", "海防艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦", "海防艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦", "海防艦"]}
+                    ]
+                }
+            ]
+        }
+    ]
+}

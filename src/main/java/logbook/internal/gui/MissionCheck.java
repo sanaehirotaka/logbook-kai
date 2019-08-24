@@ -35,6 +35,7 @@ import logbook.bean.MissionCollection;
 import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.bean.Stype;
 import logbook.bean.StypeCollection;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Missions;
@@ -167,11 +168,11 @@ public class MissionCheck extends WindowController {
                 sample.setGraphic(pane);
 
                 for (Integer type : mission.getSampleFleet()) {
-                    String name = StypeCollection.get()
+                    Optional.ofNullable(StypeCollection.get()
                             .getStypeMap()
-                            .get(type)
-                            .getName();
-                    sample.getChildren().add(new TreeItem<>(name));
+                            .get(type))
+                            .map(Stype::getName)
+                            .ifPresent(name -> sample.getChildren().add(new TreeItem<>(name)));
                 }
                 item.getChildren().add(sample);
             }

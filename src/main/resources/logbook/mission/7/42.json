@@ -1,1 +1,72 @@
 /*ミ船団護衛(一号船団)*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "レベル", "value": 200},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 50, "order": 1}
+            ]
+        },
+        {
+            "operator": "OR",
+            "conditions": [
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦","海防艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦","海防艦"]},
+                        {"type": "艦娘"}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["練習巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘"}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["護衛空母"]},
+                        {
+                            "operator": "OR",
+                            "conditions": [
+                                {
+                                    "operator": "AND",
+                                    "conditions": [
+                                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                                        {"type": "艦娘"}
+                                    ]
+                                },
+                                {
+                                    "operator": "AND",
+                                    "conditions": [
+                                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                                        {"type": "艦娘"}
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
