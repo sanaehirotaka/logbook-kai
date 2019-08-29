@@ -1040,7 +1040,11 @@ public class ShipTablePane extends VBox {
             super.updateItem(ship, empty);
 
             if (!empty) {
-                this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Ships.shipWithItemImage(ship))));
+                if (AppConfig.get().isHideShipImageFromShipTablePane()) {
+                    this.setGraphic(null);
+                } else {
+                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Ships.shipWithItemImage(ship))));
+                }
                 this.setText(Ships.shipMst(ship)
                         .map(ShipMst::getName)
                         .orElse(""));
@@ -1072,15 +1076,19 @@ public class ShipTablePane extends VBox {
                 }
                 SlotItem item = this.itemMap.get(itemId);
                 if (item != null) {
-                    ImageView img = new ImageView(Items.itemImage(item));
-                    int percent = AppConfig.get().getImageZoomRate();
-                    int size = 32;
-                    if (percent > 0) {
-                        size = (int) Math.min(size, 60 * ((double) percent / 100));
+                    if (AppConfig.get().isHideItemImageFromShipTablePane()) {
+                        ImageView img = new ImageView(Items.itemImage(item));
+                        int percent = AppConfig.get().getImageZoomRate();
+                        int size = 32;
+                        if (percent > 0) {
+                            size = (int) Math.min(size, 60 * ((double) percent / 100));
+                        }
+                        img.setFitWidth(size);
+                        img.setFitHeight(size);
+                        this.setGraphic(img);
+                    } else {
+                        this.setGraphic(null);
                     }
-                    img.setFitWidth(size);
-                    img.setFitHeight(size);
-                    this.setGraphic(img);
                     this.setText(Items.name(item));
                 } else {
                     this.setGraphic(null);

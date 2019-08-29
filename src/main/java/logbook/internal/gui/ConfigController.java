@@ -176,6 +176,14 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox shipImageCompress;
 
+    /** 所有艦娘一覧から艦娘画像を隠す */
+    @FXML
+    private CheckBox hideShipImageFromShipTablePane;
+
+    /** 所有艦娘一覧から装備画像を隠す */
+    @FXML
+    private CheckBox hideItemImageFromShipTablePane;
+
     /** 通信エラーの抑止 */
     @FXML
     private CheckBox connectionClose;
@@ -311,6 +319,8 @@ public class ConfigController extends WindowController {
             this.shipImageCacheStrategyAll.setSelected(true);
         }
         this.shipImageCompress.setSelected(conf.isShipImageCompress());
+        this.hideShipImageFromShipTablePane.setSelected(conf.isHideShipImageFromShipTablePane());
+        this.hideItemImageFromShipTablePane.setSelected(conf.isHideItemImageFromShipTablePane());
         this.connectionClose.setSelected(conf.isConnectionClose());
         this.listenPort.setText(Integer.toString(conf.getListenPort()));
         this.allowOnlyFromLocalhost.setSelected(conf.isAllowOnlyFromLocalhost());
@@ -396,6 +406,8 @@ public class ConfigController extends WindowController {
             shipImageCacheStrategy = ShipImageCacheStrategy.LIMIT;
         conf.setShipImageCacheStrategy(shipImageCacheStrategy);
         conf.setShipImageCompress(this.shipImageCompress.isSelected());
+        conf.setHideShipImageFromShipTablePane(this.hideShipImageFromShipTablePane.isSelected());
+        conf.setHideItemImageFromShipTablePane(this.hideItemImageFromShipTablePane.isSelected());
         conf.setConnectionClose(this.connectionClose.isSelected());
         conf.setListenPort(this.toInt(this.listenPort.getText()));
         conf.setAllowOnlyFromLocalhost(this.allowOnlyFromLocalhost.isSelected());

@@ -167,6 +167,8 @@
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
                                 <Label text="保存される艦娘の画像の種類" GridPane.columnIndex="1" />
@@ -182,6 +184,8 @@
                                    </children>
                                 </TextFlow>
                                 <CheckBox fx:id="shipImageCompress" mnemonicParsing="false" text="PNG形式のファイルをJPEG形式に再圧縮する" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <CheckBox fx:id="hideShipImageFromShipTablePane" mnemonicParsing="false" text="所有艦娘一覧から艦娘の画像を隠す" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <CheckBox fx:id="hideItemImageFromShipTablePane" mnemonicParsing="false" text="所有艦娘一覧から装備の画像を隠す" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </children>

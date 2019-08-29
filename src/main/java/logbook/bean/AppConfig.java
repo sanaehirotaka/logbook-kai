@@ -174,6 +174,12 @@ public final class AppConfig implements Serializable {
     /** 画像ファイルを再圧縮 */
     private boolean shipImageCompress = false;
 
+    /** 所有艦娘一覧から艦娘画像を隠す */
+    private boolean hideShipImageFromShipTablePane = false;
+
+    /** 所有艦娘一覧から装備画像を隠す */
+    private boolean hideItemImageFromShipTablePane = false;
+
     /**
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、
      * これは次の記述と同等です
