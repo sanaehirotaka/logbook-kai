@@ -1077,6 +1077,8 @@ public class ShipTablePane extends VBox {
                 SlotItem item = this.itemMap.get(itemId);
                 if (item != null) {
                     if (AppConfig.get().isHideItemImageFromShipTablePane()) {
+                        this.setGraphic(null);
+                    } else {
                         ImageView img = new ImageView(Items.itemImage(item));
                         int percent = AppConfig.get().getImageZoomRate();
                         int size = 32;
@@ -1086,8 +1088,6 @@ public class ShipTablePane extends VBox {
                         img.setFitWidth(size);
                         img.setFitHeight(size);
                         this.setGraphic(img);
-                    } else {
-                        this.setGraphic(null);
                     }
                     this.setText(Items.name(item));
                 } else {
