@@ -2,6 +2,7 @@ package logbook.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -586,21 +587,34 @@ public class PhaseState {
             // 攻撃側が味方の場合true
             boolean atkfriend = hougeki.getAtEflag().get(i) == 0;
 
-            Map<Integer, Integer> dfMap = new LinkedHashMap<>();
+            Map<Integer, List<Integer>> dfMap = new LinkedHashMap<>();
+            Map<Integer, List<Integer>> clMap = new LinkedHashMap<>();
             List<Integer> dfList = hougeki.getDfList().get(i);
             List<Double> damageList = hougeki.getDamage().get(i);
+            List<Integer> clList = hougeki.getClList().get(i);
             for (int j = 0; j < dfList.size(); j++) {
                 if (dfList.get(j) >= 0) {
                     int damage = Math.max(damageList.get(j).intValue(), 0);
-                    dfMap.compute(dfList.get(j), (k, v) -> v != null ? v + damage : damage);
+                    int critical = clList.get(j).intValue();
+                    // ダメージ
+                    List<Integer> df = dfMap.computeIfAbsent(dfList.get(j), (k) -> new ArrayList<>());
+                    df.add(damage);
+                    // クリティカル
+                    List<Integer> cl = clMap.computeIfAbsent(dfList.get(j), (k) -> new ArrayList<>());
+                    cl.add(critical);
                 }
             }
 
-            for (Entry<Integer, Integer> dfDamage : dfMap.entrySet()) {
+            for (Entry<Integer, List<Integer>> dfDamage : dfMap.entrySet()) {
                 // 防御側インデックス
                 int df = dfDamage.getKey();
                 // ダメージ
-                int damage = dfDamage.getValue();
+                int damage = dfDamage.getValue().stream()
+                        .mapToInt(Integer::intValue)
+                        .filter(d -> d > 0)
+                        .sum();
+                List<Integer> damages = dfDamage.getValue();
+                List<Integer> critical = clMap.get(dfDamage.getKey());
                 Chara attacker = null;
                 Chara defender = null;
 
@@ -637,7 +651,7 @@ public class PhaseState {
                 }
 
                 this.damage(defender, damage);
-                this.addDetail(attacker, defender, damage, atType);
+                this.addDetail(attacker, defender, damage, damages, critical, atType);
             }
         }
     }
@@ -816,10 +830,10 @@ public class PhaseState {
         // 敵→味方
         this.addDetailRaigeki0(this.afterEnemy, this.afterEnemyCombined, this.afterFriend,
                 this.afterFriendCombined,
-                raigeki.getErai(), raigeki.getEydam());
+                raigeki.getErai(), raigeki.getEydam(), raigeki.getEcl());
         // 味方→敵
         this.addDetailRaigeki0(this.afterFriend, this.afterFriendCombined, this.afterEnemy, this.afterEnemyCombined,
-                raigeki.getFrai(), raigeki.getFydam());
+                raigeki.getFrai(), raigeki.getFydam(), raigeki.getFcl());
     }
 
     /**
@@ -831,10 +845,11 @@ public class PhaseState {
      * @param defenderFleetCombined 防御側艦隊(第2艦隊)
      * @param index                 攻撃対象インデックス
      * @param ydam                  与ダメージ
+     * @param critical              クリティカル
      */
     private void addDetailRaigeki0(List<? extends Chara> attackerFleet, List<? extends Chara> attackerFleetCombined,
             List<? extends Chara> defenderFleet, List<? extends Chara> defenderFleetCombined,
-            List<Integer> index, List<Double> ydam) {
+            List<Integer> index, List<Double> ydam, List<Integer> critical) {
 
         if (defenderFleet != null)
             defenderFleet = defenderFleet.stream()
@@ -856,7 +871,8 @@ public class PhaseState {
 
                 defender.setNowhp(defender.getNowhp() - damage);
 
-                this.addDetail(attacker, defender, damage, SortieAtTypeRaigeki.通常雷撃);
+                this.addDetail(attacker, defender, damage, Collections.singletonList(damage), critical,
+                        SortieAtTypeRaigeki.通常雷撃);
             }
         }
     }
@@ -867,12 +883,15 @@ public class PhaseState {
      * @param attacker 攻撃側
      * @param defender 防御側
      * @param damage   ダメージ
+     * @param damages  ダメージ(各)
+     * @param critical クリティカル(各)
      * @param atType   攻撃種別
      */
-    private void addDetail(Chara attacker, Chara defender, int damage, AtType atType) {
+    private void addDetail(Chara attacker, Chara defender, int damage, List<Integer> damages, List<Integer> critical,
+            AtType atType) {
         this.attackDetails.add(new AttackDetail(
                 Optional.ofNullable(attacker).map(Chara::clone).orElse(null),
-                Optional.ofNullable(defender).map(Chara::clone).orElse(null), damage, atType));
+                Optional.ofNullable(defender).map(Chara::clone).orElse(null), damage, damages, critical, atType));
     }
 
     /**
@@ -939,6 +958,12 @@ public class PhaseState {
 
         /** ダメージ */
         private int damage;
+
+        /** ダメージ(各) */
+        private List<Integer> damages;
+
+        /** クリティカル(各) */
+        private List<Integer> critical;
 
         /** 攻撃種別 */
         private AtType atType;
