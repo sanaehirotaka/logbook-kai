@@ -2,6 +2,9 @@
     -fx-font-family: "Meiryo UI";
     -fx-font-weight: normal;
 }
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
 .table-cell {
     -fx-alignment: center-left;
 }

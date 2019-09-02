@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root fitToWidth="true" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.191" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fitToWidth="true" styleClass="image" stylesheets="@fleet_tab.css" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <VBox fx:id="infobox">
+      <VBox fx:id="infobox" styleClass="content">
          <children>
             <Label fx:id="message" styleClass="message" />
             <VBox fx:id="ships" styleClass="ships" />

@@ -1,5 +1,6 @@
 package logbook.internal;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -276,6 +277,26 @@ public class Ships {
      */
     public static boolean isRed(Ship ship) {
         return ship.getCond() <= RED;
+    }
+
+    /**
+     * キャラクターの画像を取得します
+     *
+     * @param chara キャラクター
+     * @return 艦娘の画像
+     */
+    public static Path shipImagePath(Chara chara) {
+        return ShipImage.getPath(chara);
+    }
+
+    /**
+     * キャラクターの画像を取得します(立ち絵)
+     *
+     * @param chara キャラクター
+     * @return 艦娘の画像(立ち絵)
+     */
+    public static Path shipStandingPoseImagePath(Chara chara) {
+        return ShipImage.getStandingPosePath(chara);
     }
 
     /**

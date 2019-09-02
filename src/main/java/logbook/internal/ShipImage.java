@@ -41,6 +41,12 @@ class ShipImage {
     /** 艦娘画像ファイル名(中破・大破) */
     private static final String[] DAMAGED = { "3.png", "3.jpg", "1.png", "1.jpg" };
 
+    /** 艦娘画像ファイル名(健在・小破) */
+    private static final String[] STANDING_NORMAL = { "17.png", "17.jpg" };
+
+    /** 艦娘画像ファイル名(中破・大破) */
+    private static final String[] STANDING_DAMAGED = { "19.png", "19.jpg" };
+
     /** 小破バナーアイコン */
     private static final String MC_BANNER_ICON0 = "common_misc/common_misc_105.png";
 
@@ -139,7 +145,7 @@ class ShipImage {
      */
     static Image get(Chara chara) {
         if (chara != null) {
-            Path base = getBaseImagePath(chara);
+            Path base = getPath(chara);
             if (base != null) {
                 return BASE_CACHE.get(base.toUri().toString(), Image::new);
             }
@@ -155,7 +161,7 @@ class ShipImage {
      */
     static Image getBackgroundLoading(Chara chara) {
         if (chara != null) {
-            Path base = getBaseImagePath(chara);
+            Path base = getPath(chara);
             if (base != null) {
                 return new Image(base.toUri().toString(), true);
             }
@@ -381,21 +387,39 @@ class ShipImage {
     }
 
     /**
+     * キャラクター画像へのパスを返します。
+     * @param chara キャラクター
+     * @return キャラクター画像へのパス
+     */
+    static Path getPath(Chara chara) {
+        return getBaseImagePath(chara, NORMAL, DAMAGED);
+    }
+
+    /**
+     * キャラクター画像へのパスを返します(立ち絵)。
+     * @param chara キャラクター
+     * @return キャラクター画像へのパス(立ち絵)
+     */
+    static Path getStandingPosePath(Chara chara) {
+        return getBaseImagePath(chara, STANDING_NORMAL, STANDING_DAMAGED);
+    }
+
+    /**
      * キャラクターのベースとなる画像を取得します。
      *
      * @param chara キャラクター
      * @return 艦娘のベースとなる画像
      */
-    private static Path getBaseImagePath(Chara chara) {
+    private static Path getBaseImagePath(Chara chara, String[] normal, String[] damaged) {
         Optional<ShipMst> mst = Ships.shipMst(chara);
         if (mst.isPresent()) {
             Path dir = ShipMst.getResourcePathDir(mst.get());
             String[] names;
             if ((chara.isShip() || chara.isFriend())
                     && (Ships.isHalfDamage(chara) || Ships.isBadlyDamage(chara) || Ships.isLost(chara))) {
-                names = DAMAGED;
+                names = damaged;
             } else {
-                names = NORMAL;
+                names = normal;
             }
             for (String name : names) {
                 Path p = dir.resolve(name);

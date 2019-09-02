@@ -3,6 +3,7 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -216,6 +217,17 @@ public class FleetTabPane extends ScrollPane {
     }
 
     private void updateShips() {
+        if (!this.shipList.isEmpty()) {
+            Path path = Ships.shipStandingPoseImagePath(this.shipList.get(0));
+            if (path != null) {
+                this.setStyle("-fx-background-image: url('" + path.toUri() +"')");
+            } else {
+                this.setStyle("-fx-background-image: null");
+            }
+        } else {
+            this.setStyle("-fx-background-image: null");
+        }
+
         this.message.setText(this.port.getName());
 
         List<Ship> withoutEscape = this.shipList.stream()

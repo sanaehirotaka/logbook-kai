@@ -3,6 +3,7 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
@@ -223,6 +224,23 @@ public class BattleDetailPhase extends TitledPane {
             sb.append(detail.getDamage()).append("ダメージ");
             sb.append("(").append(detail.getAtType()).append(")");
             content.getChildren().add(new Label(sb.toString()));
+
+            StringJoiner sj = new StringJoiner("/");
+            for (int i = 0; i < detail.getDamages().size(); i++) {
+                if (detail.getDamages().get(i) > -1) {
+                    StringBuilder sb2 = new StringBuilder();
+                    sb2.append((i + 1) + "回目");
+                    sb2.append(detail.getDamages().get(i) + "ダメージ");
+                    sb2.append("");
+                    switch (detail.getCritical().get(i)) {
+                    case 2:
+                        sb2.append("(クリティカル)");
+                        break;
+                    }
+                    sj.add(sb2);
+                }
+            }
+            content.getChildren().add(new Label(sj.toString()));
 
             HBox graphic = new HBox();
             graphic.getChildren().add(new BattleDetailPhaseShip(attacker,
