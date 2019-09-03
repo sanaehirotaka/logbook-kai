@@ -14,77 +14,81 @@
 
 <fx:root fitToWidth="true" styleClass="image" stylesheets="@fleet_tab.css" type="ScrollPane" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <VBox fx:id="infobox" styleClass="content">
+      <VBox styleClass="content">
          <children>
-            <Label fx:id="message" styleClass="message" />
-            <VBox fx:id="ships" styleClass="ships" />
-            <Separator />
-            <HBox>
+            <VBox fx:id="infobox">
                <children>
-                  <GridPane>
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  <Label fx:id="message" styleClass="message" />
+                  <VBox fx:id="ships" styleClass="ships" />
+                  <Separator />
+                  <HBox>
                      <children>
-                        <HBox alignment="CENTER_LEFT">
+                        <GridPane>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <ImageView fx:id="airSuperiorityImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label text="制空値:" />
+                              <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                    <ImageView fx:id="airSuperiorityImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="制空値:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="airSuperiority" styleClass="value" GridPane.columnIndex="1" />
+                              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2">
+                                 <children>
+                                    <ImageView fx:id="touchPlaneStartProbabilityImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="触接開始率:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="touchPlaneStartProbability" styleClass="value" GridPane.columnIndex="3" />
+                              <HBox alignment="CENTER_LEFT" GridPane.rowIndex="1">
+                                 <children>
+                                    <ImageView fx:id="decision33Img" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="判定式(33):" />
+                                 </children>
+                              </HBox>
+                              <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label fx:id="decision33" styleClass="value" />
+                                    <Button fx:id="branchCoefficientButton" mnemonicParsing="false" onAction="#changeBranchCoefficient" text="分岐点係数:1" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" GridPane.rowIndex="2">
+                                 <children>
+                                    <ImageView fx:id="lvsumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="艦娘レベル合計:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="lvsum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <children>
+                                    <Label prefHeight="24.0" text="疲労回復:">
+                                       <padding>
+                                          <Insets left="24.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <Label fx:id="cond" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                            </children>
-                        </HBox>
-                        <Label fx:id="airSuperiority" styleClass="value" GridPane.columnIndex="1" />
-                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2">
-                           <children>
-                              <ImageView fx:id="touchPlaneStartProbabilityImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label text="触接開始率:" />
-                           </children>
-                        </HBox>
-                        <Label fx:id="touchPlaneStartProbability" styleClass="value" GridPane.columnIndex="3" />
-                        <HBox alignment="CENTER_LEFT" GridPane.rowIndex="1">
-                           <children>
-                              <ImageView fx:id="decision33Img" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label text="判定式(33):" />
-                           </children>
-                        </HBox>
-                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
-                           <children>
-                              <Label fx:id="decision33" styleClass="value" />
-                              <Button fx:id="branchCoefficientButton" mnemonicParsing="false" onAction="#changeBranchCoefficient" text="分岐点係数:1" />
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" GridPane.rowIndex="2">
-                           <children>
-                              <ImageView fx:id="lvsumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
-                              <Label text="艦娘レベル合計:" />
-                           </children>
-                        </HBox>
-                        <Label fx:id="lvsum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
-                           <children>
-                              <Label prefHeight="24.0" text="疲労回復:">
-                                 <padding>
-                                    <Insets left="24.0" />
-                                 </padding>
-                              </Label>
-                           </children>
-                        </HBox>
-                        <Label fx:id="cond" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </HBox>
+                  <VBox fx:id="remark" spacing="2.0">
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </VBox>
                </children>
-            </HBox>
-            <VBox fx:id="remark" spacing="2.0">
-               <padding>
-                  <Insets left="3.0" />
-               </padding>
             </VBox>
          </children>
       </VBox>

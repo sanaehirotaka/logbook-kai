@@ -15,6 +15,7 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import logbook.bean.AppCondition;
+import logbook.bean.AppConfig;
 import logbook.bean.DeckPort;
 import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
@@ -217,15 +219,18 @@ public class FleetTabPane extends ScrollPane {
     }
 
     private void updateShips() {
-        if (!this.shipList.isEmpty()) {
+        if (AppConfig.get().isVisiblePoseImageOnFleetTab() && !this.shipList.isEmpty()) {
             Path path = Ships.shipStandingPoseImagePath(this.shipList.get(0));
             if (path != null) {
-                this.setStyle("-fx-background-image: url('" + path.toUri() +"')");
+                this.setStyle("-fx-background-image: url('" + path.toUri() + "')");
+                this.pseudoClassStateChanged(PseudoClass.getPseudoClass("enablebgimage"), true);
             } else {
                 this.setStyle("-fx-background-image: null");
+                this.pseudoClassStateChanged(PseudoClass.getPseudoClass("enablebgimage"), false);
             }
         } else {
             this.setStyle("-fx-background-image: null");
+            this.pseudoClassStateChanged(PseudoClass.getPseudoClass("enablebgimage"), false);
         }
 
         this.message.setText(this.port.getName());

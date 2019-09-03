@@ -180,6 +180,9 @@ public final class AppConfig implements Serializable {
     /** 所有艦娘一覧から装備画像を隠す */
     private boolean hideItemImageFromShipTablePane = false;
 
+    /** 艦隊タブに旗艦の立ち絵を表示 */
+    private boolean visiblePoseImageOnFleetTab = false;
+
     /**
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、
      * これは次の記述と同等です

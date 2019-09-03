@@ -1,7 +1,13 @@
-.image {
-	-fx-background-position: 35% 5%;
+:enablebgimage.image {
+    -fx-background-position: 35% 5%;
+    -fx-background-size: auto 150%;
 }
 
-.content {
-	-fx-background-color: rgba(255, 255, 255, 0.8);
+:enablebgimage.image .content {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-padding: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255, 0.6), 6, 0.6, 0, 0);
+}
+:enablebgimage.image .label,:enablebgimage.image .hyperlink {
+    -fx-effect: dropshadow(gaussian, white, 3, 0.8, 0, 0);
 }
