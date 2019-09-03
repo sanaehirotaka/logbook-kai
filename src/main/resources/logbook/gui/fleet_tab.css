@@ -1,10 +1,9 @@
 :enablebgimage.image {
-    -fx-background-position: 35% 5%;
-    -fx-background-size: auto 150%;
+	-fx-background-repeat: no-repeat;
 }
 
 :enablebgimage.image .content {
-    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-color: rgba(255, 255, 255, 0.3);
     -fx-padding: 6px;
     -fx-effect: dropshadow(gaussian, rgba(255,255,255, 0.6), 6, 0.6, 0, 0);
 }

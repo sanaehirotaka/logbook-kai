@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ import logbook.bean.NdockCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipMst;
+import logbook.bean.ShipgraphCollection;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Ships;
@@ -220,9 +222,20 @@ public class FleetTabPane extends ScrollPane {
 
     private void updateShips() {
         if (AppConfig.get().isVisiblePoseImageOnFleetTab() && !this.shipList.isEmpty()) {
-            Path path = Ships.shipStandingPoseImagePath(this.shipList.get(0));
+            Ship ship = this.shipList.get(0);
+
+            Path path = Ships.shipStandingPoseImagePath(ship);
             if (path != null) {
-                this.setStyle("-fx-background-image: url('" + path.toUri() + "')");
+                StringBuilder sb = new StringBuilder();
+                sb.append("-fx-background-image: url('" + path.toUri() + "');");
+                sb.append("-fx-background-position: ");
+                sb.append(Ships.shipMst(ship)
+                        .map(ShipMst::getId)
+                        .flatMap(id -> Optional.ofNullable(ShipgraphCollection.get().getShipgraphMap().get(id)))
+                        .map(g -> ((g.getWeda().get(0) * -1) + 100) + "px " + (g.getWeda().get(1) * -1) + "px")
+                        .orElse("center top"));
+                sb.append(";");
+                this.setStyle(sb.toString());
                 this.pseudoClassStateChanged(PseudoClass.getPseudoClass("enablebgimage"), true);
             } else {
                 this.setStyle("-fx-background-image: null");

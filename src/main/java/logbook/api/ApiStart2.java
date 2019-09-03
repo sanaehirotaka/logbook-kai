@@ -14,6 +14,8 @@ import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.ShipMstCollection;
+import logbook.bean.Shipgraph;
+import logbook.bean.ShipgraphCollection;
 import logbook.bean.SlotitemEquiptype;
 import logbook.bean.SlotitemEquiptypeCollection;
 import logbook.bean.SlotitemMst;
@@ -77,6 +79,8 @@ public class ApiStart2 implements APIListenerSpi {
                 bean.setGraph(json.getString("api_filename"));
             }
         }
+        ShipgraphCollection.get()
+                .setShipgraphMap(JsonHelper.toMap(array, Shipgraph::getId, Shipgraph::toShipgraph));
     }
 
     /**
