@@ -54,11 +54,11 @@ public class Stype implements Serializable {
 
         Stype bean = new Stype();
         JsonHelper.bind(json)
-                .set("api_id", bean::setId, JsonHelper::toInteger)
-                .set("api_sortno", bean::setSortno, JsonHelper::toInteger)
-                .set("api_name", bean::setName, JsonHelper::toString)
-                .set("api_scnt", bean::setScnt, JsonHelper::toInteger)
-                .set("api_kcnt", bean::setKcnt, JsonHelper::toInteger)
+                .setInteger("api_id", bean::setId)
+                .setInteger("api_sortno", bean::setSortno)
+                .setString("api_name", bean::setName)
+                .setInteger("api_scnt", bean::setScnt)
+                .setInteger("api_kcnt", bean::setKcnt)
                 .set("api_equip_type", bean::setEquipType, equipTypeFunc);
         return bean;
     }

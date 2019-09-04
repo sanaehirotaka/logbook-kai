@@ -9,9 +9,9 @@ import lombok.Data;
 
 @Data
 public class ShipgraphCollection implements Serializable {
-    
+
     private static final long serialVersionUID = 3318926490130170935L;
-    
+
     /** 艦娘画像設定 */
     private Map<Integer, Shipgraph> shipgraphMap = new LinkedHashMap<>();
 

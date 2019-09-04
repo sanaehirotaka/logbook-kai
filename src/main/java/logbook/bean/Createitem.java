@@ -68,9 +68,9 @@ public class Createitem implements Serializable {
                 .setBoolean("api_create_flag", bean::setCreateFlag)
                 .setBoolean("api_shizai_flag", bean::setShizaiFlag)
                 .set("api_slot_item", bean::setSlotItem, SlotItem::toSlotItem)
-                .set("api_material", bean::setMaterial, JsonHelper::toIntegerList)
+                .setIntegerList("api_material", bean::setMaterial)
                 .setInteger("api_type3", bean::setType3)
-                .set("api_unsetslot", bean::setUnsetslot, JsonHelper::toIntegerList)
+                .setIntegerList("api_unsetslot", bean::setUnsetslot)
                 .setString("api_fdata", bean::setFdata);
 
         Ship secretary = null;

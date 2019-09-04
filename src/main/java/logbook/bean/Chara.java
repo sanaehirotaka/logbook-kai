@@ -61,6 +61,7 @@ public interface Chara extends Cloneable {
      * このオブジェクトが{@link Ship}のインスタンスである場合trueを返します。
      * @return このオブジェクトが{@link Ship}のインスタンスである場合true
      */
+    @JsonIgnore
     default boolean isShip() {
         return false;
     }

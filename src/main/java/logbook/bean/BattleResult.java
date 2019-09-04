@@ -230,8 +230,8 @@ public class BattleResult implements Serializable {
         public static Escape toEscape(JsonObject json) {
             Escape bean = new Escape();
             JsonHelper.bind(json)
-                    .set("api_escape_idx", bean::setEscapeIdx, JsonHelper::toIntegerList)
-                    .set("api_tow_idx", bean::setTowIdx, JsonHelper::toIntegerList);
+                    .setIntegerList("api_escape_idx", bean::setEscapeIdx)
+                    .setIntegerList("api_tow_idx", bean::setTowIdx);
             return bean;
         }
     }
@@ -313,7 +313,7 @@ public class BattleResult implements Serializable {
                 .setInteger("api_member_lv", bean::setMemberLv)
                 .setInteger("api_member_exp", bean::setMemberExp)
                 .setInteger("api_get_base_exp", bean::setGetBaseExp)
-                .set("api_get_ship_exp", bean::setGetShipExp, JsonHelper::toIntegerList)
+                .setIntegerList("api_get_ship_exp", bean::setGetShipExp)
                 .set("api_get_exp_lvup", bean::setGetExpLvup, JsonHelper.toList(JsonHelper::toIntegerList))
                 .setInteger("api_dests", bean::setDests)
                 .setInteger("api_destsf", bean::setDestsf)
@@ -322,14 +322,14 @@ public class BattleResult implements Serializable {
                 .set("api_enemy_info", bean::setEnemyInfo, EnemyInfo::toEnemyInfo)
                 .setInteger("api_first_clear", bean::setFirstClear)
                 .setBoolean("api_mapcell_incentive", bean::setMapcellIncentive)
-                .set("api_get_flag", bean::setGetFlag, JsonHelper::toIntegerList)
+                .setIntegerList("api_get_flag", bean::setGetFlag)
                 .set("api_get_useitem", bean::setGetUseitem, Useitem::toUseitem)
                 .set("api_get_ship", bean::setGetShip, GetShip::toGetShip)
                 .set("api_get_eventitem", bean::setGetEventitem, JsonHelper.toList(GetEventitem::toGetEventitem))
                 .setInteger("api_get_exmap_rate", bean::setGetExmapRate)
                 .setInteger("api_get_exmap_useitem_id", bean::setGetExmapUseitemId)
                 .setInteger("api_mvp_combined", bean::setMvpCombined)
-                .set("api_get_ship_exp_combined", bean::setGetShipExpCombined, JsonHelper::toIntegerList)
+                .setIntegerList("api_get_ship_exp_combined", bean::setGetShipExpCombined)
                 .set("api_get_exp_lvup_combined", bean::setGetExpLvupCombined,
                         JsonHelper.toList(JsonHelper::toIntegerList))
                 .setInteger("api_get_eventflag", bean::setGetEventflag)

@@ -89,7 +89,7 @@ public class QuestList implements Serializable {
                         .setInteger("api_state", bean::setState)
                         .setString("api_title", bean::setTitle)
                         .setString("api_detail", bean::setDetail)
-                        .set("api_get_material", bean::setGetMaterial, JsonHelper::toIntegerList)
+                        .setIntegerList("api_get_material", bean::setGetMaterial)
                         .setInteger("api_bonus_flag", bean::setBonusFlag)
                         .setInteger("api_progress_flag", bean::setProgressFlag)
                         .setInteger("api_invalid_flag", bean::setInvalidFlag);

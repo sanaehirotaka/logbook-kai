@@ -66,10 +66,10 @@ public class MapinfoMst implements Serializable {
                 .setInteger("api_level", bean::setLevel)
                 .setString("api_opetext", bean::setOpetext)
                 .setString("api_infotext", bean::setInfotext)
-                .set("api_item", bean::setItem, JsonHelper::toIntegerList)
+                .setIntegerList("api_item", bean::setItem)
                 .setInteger("api_max_maphp", bean::setMaxMaphp)
                 .setInteger("api_required_defeat_count", bean::setRequiredDefeatCount)
-                .set("api_sally_flag", bean::setSallyFlag, JsonHelper::toIntegerList);
+                .setIntegerList("api_sally_flag", bean::setSallyFlag);
         return bean;
     }
 }

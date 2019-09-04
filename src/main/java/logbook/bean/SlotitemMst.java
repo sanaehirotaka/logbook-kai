@@ -160,7 +160,7 @@ public class SlotitemMst implements Serializable {
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_sortno", bean::setSortno)
                 .setString("api_name", bean::setName)
-                .set("api_type", bean::setType, JsonHelper::toIntegerList)
+                .setIntegerList("api_type", bean::setType)
                 .setInteger("api_taik", bean::setTaik)
                 .setInteger("api_souk", bean::setSouk)
                 .setInteger("api_houg", bean::setHoug)

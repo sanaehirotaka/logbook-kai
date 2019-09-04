@@ -118,14 +118,14 @@ public class MissionResult implements Serializable {
                         return Arrays.asList(0, 0, 0, 0);
                     }
                 })
-                .set("api_get_ship_exp", bean::setGetShipExp, JsonHelper::toIntegerList)
+                .setIntegerList("api_get_ship_exp", bean::setGetShipExp)
                 .setString("api_maparea_name", bean::setMapareaName)
                 .setInteger("api_member_exp", bean::setMemberExp)
                 .setString("api_member_lv", bean::setMemberLv)
                 .setInteger("api_quest_level", bean::setQuestLevel)
                 .setString("api_quest_name", bean::setQuestName)
-                .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
-                .set("api_useitem_flag", bean::setUseitemFlag, JsonHelper::toIntegerList)
+                .setIntegerList("api_ship_id", bean::setShipId)
+                .setIntegerList("api_useitem_flag", bean::setUseitemFlag)
                 .set("api_get_item1", bean::setGetItem1, GetItem::toGetItem)
                 .set("api_get_item2", bean::setGetItem2, GetItem::toGetItem);
         return bean;

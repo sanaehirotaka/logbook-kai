@@ -75,9 +75,9 @@ public class DeckPort implements Serializable, Cloneable {
         JsonHelper.bind(json)
                 .setInteger("api_flagship", bean::setFlagship)
                 .setInteger("api_id", bean::setId)
-                .set("api_mission", bean::setMission, JsonHelper::toLongList)
+                .setLongList("api_mission", bean::setMission)
                 .setString("api_name", bean::setName)
-                .set("api_ship", bean::setShip, JsonHelper::toIntegerList);
+                .setIntegerList("api_ship", bean::setShip);
         return bean;
     }
 

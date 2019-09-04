@@ -605,6 +605,54 @@ public final class JsonHelper {
         }
 
         /**
+         * keyで取得したJsonValueをList<Integer>に変換したものをconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer List<Integer>を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonArray> Bind setIntegerList(String key, Consumer<List<Integer>> consumer) {
+            return this.set(key, consumer, JsonHelper::toIntegerList);
+        }
+
+        /**
+         * keyで取得したJsonValueをList<Long>に変換したものをconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer List<Long>を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonArray> Bind setLongList(String key, Consumer<List<Long>> consumer) {
+            return this.set(key, consumer, JsonHelper::toLongList);
+        }
+
+        /**
+         * keyで取得したJsonValueをList<Double>に変換したものをconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer List<Double>を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonArray> Bind setDoubleList(String key, Consumer<List<Double>> consumer) {
+            return this.set(key, consumer, JsonHelper::toDoubleList);
+        }
+
+        /**
+         * keyで取得したJsonValueをList<String>に変換したものをconsumerへ設定します<br>
+         *
+         * @param <T> JsonObject#get(Object) の戻り値の型
+         * @param key JsonObjectから取得するキー
+         * @param consumer List<Integer>を消費するConsumer
+         * @return {@link Bind}
+         */
+        public <T extends JsonArray> Bind setStringList(String key, Consumer<List<String>> consumer) {
+            return this.set(key, consumer, JsonHelper::toStringList);
+        }
+
+        /**
          * keyで取得したJsonValueをStringに変換しconsumerへ設定します<br>
          *
          * @param key JsonObjectから取得するキー

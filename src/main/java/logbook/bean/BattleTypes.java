@@ -858,7 +858,7 @@ public class BattleTypes {
                     .setInteger("api_e_count", bean::setECount)
                     .setInteger("api_e_lostcount", bean::setELostcount)
                     .setInteger("api_disp_seiku", bean::setDispSeiku)
-                    .set("api_touch_plane", bean::setTouchPlane, JsonHelper::toIntegerList);
+                    .setIntegerList("api_touch_plane", bean::setTouchPlane);
             return bean;
         }
     }
@@ -932,7 +932,7 @@ public class BattleTypes {
             JsonHelper.bind(json)
                     .setInteger("api_idx", bean::setIdx)
                     .setInteger("api_kind", bean::setKind)
-                    .set("api_use_items", bean::setUseItems, JsonHelper::toIntegerList);
+                    .setIntegerList("api_use_items", bean::setUseItems);
             return bean;
         }
     }
@@ -978,14 +978,14 @@ public class BattleTypes {
         public static Stage3 toStage3(JsonObject json) {
             Stage3 bean = new Stage3();
             JsonHelper.bind(json)
-                    .set("api_frai_flag", bean::setFraiFlag, JsonHelper::toIntegerList)
-                    .set("api_erai_flag", bean::setEraiFlag, JsonHelper::toIntegerList)
-                    .set("api_fbak_flag", bean::setFbakFlag, JsonHelper::toIntegerList)
-                    .set("api_ebak_flag", bean::setEbakFlag, JsonHelper::toIntegerList)
-                    .set("api_fcl_flag", bean::setFclFlag, JsonHelper::toIntegerList)
-                    .set("api_ecl_flag", bean::setEclFlag, JsonHelper::toIntegerList)
-                    .set("api_fdam", bean::setFdam, JsonHelper::toDoubleList)
-                    .set("api_edam", bean::setEdam, JsonHelper::toDoubleList);
+                    .setIntegerList("api_frai_flag", bean::setFraiFlag)
+                    .setIntegerList("api_erai_flag", bean::setEraiFlag)
+                    .setIntegerList("api_fbak_flag", bean::setFbakFlag)
+                    .setIntegerList("api_ebak_flag", bean::setEbakFlag)
+                    .setIntegerList("api_fcl_flag", bean::setFclFlag)
+                    .setIntegerList("api_ecl_flag", bean::setEclFlag)
+                    .setDoubleList("api_fdam", bean::setFdam)
+                    .setDoubleList("api_edam", bean::setEdam);
             return bean;
         }
     }
@@ -1061,9 +1061,9 @@ public class BattleTypes {
             SupportAiratack bean = new SupportAiratack();
             JsonHelper.bind(json)
                     .setInteger("api_deck_id", bean::setDeckId)
-                    .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
-                    .set("api_undressing_flag", bean::setUndressingFlag, JsonHelper::toIntegerList)
-                    .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList)
+                    .setIntegerList("api_ship_id", bean::setShipId)
+                    .setIntegerList("api_undressing_flag", bean::setUndressingFlag)
+                    .setIntegerList("api_stage_flag", bean::setStageFlag)
                     .set("api_plane_from", bean::setPlaneFrom, JsonHelper.toList(JsonHelper::toIntegerList))
                     .set("api_stage1", bean::setStage1, Stage1::toStage1)
                     .set("api_stage2", bean::setStage2, Stage2::toStage2)
@@ -1105,10 +1105,10 @@ public class BattleTypes {
             SupportHourai bean = new SupportHourai();
             JsonHelper.bind(json)
                     .setInteger("api_deck_id", bean::setDeckId)
-                    .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
-                    .set("api_undressing_flag", bean::setUndressingFlag, JsonHelper::toIntegerList)
-                    .set("api_cl_list", bean::setClList, JsonHelper::toIntegerList)
-                    .set("api_damage", bean::setDamage, JsonHelper::toDoubleList);
+                    .setIntegerList("api_ship_id", bean::setShipId)
+                    .setIntegerList("api_undressing_flag", bean::setUndressingFlag)
+                    .setIntegerList("api_cl_list", bean::setClList)
+                    .setDoubleList("api_damage", bean::setDamage);
             return bean;
         }
     }
@@ -1154,14 +1154,14 @@ public class BattleTypes {
         public static Raigeki toRaigeki(JsonObject json) {
             Raigeki bean = new Raigeki();
             JsonHelper.bind(json)
-                    .set("api_frai", bean::setFrai, JsonHelper::toIntegerList)
-                    .set("api_erai", bean::setErai, JsonHelper::toIntegerList)
-                    .set("api_fdam", bean::setFdam, JsonHelper::toDoubleList)
-                    .set("api_edam", bean::setEdam, JsonHelper::toDoubleList)
-                    .set("api_fydam", bean::setFydam, JsonHelper::toDoubleList)
-                    .set("api_eydam", bean::setEydam, JsonHelper::toDoubleList)
-                    .set("api_fcl", bean::setFcl, JsonHelper::toIntegerList)
-                    .set("api_ecl", bean::setEcl, JsonHelper::toIntegerList);
+                    .setIntegerList("api_frai", bean::setFrai)
+                    .setIntegerList("api_erai", bean::setErai)
+                    .setDoubleList("api_fdam", bean::setFdam)
+                    .setDoubleList("api_edam", bean::setEdam)
+                    .setDoubleList("api_fydam", bean::setFydam)
+                    .setDoubleList("api_eydam", bean::setEydam)
+                    .setIntegerList("api_fcl", bean::setFcl)
+                    .setIntegerList("api_ecl", bean::setEcl);
             return bean;
         }
     }
@@ -1204,13 +1204,13 @@ public class BattleTypes {
         public static Hougeki toHougeki(JsonObject json) {
             Hougeki bean = new Hougeki();
             JsonHelper.bind(json)
-                    .set("api_at_list", bean::setAtList, JsonHelper::toIntegerList)
-                    .set("api_at_type", bean::setAtType, JsonHelper::toIntegerList)
+                    .setIntegerList("api_at_list", bean::setAtList)
+                    .setIntegerList("api_at_type", bean::setAtType)
                     .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList))
-                    .set("api_at_eflag", bean::setAtEflag, JsonHelper::toIntegerList);
+                    .setIntegerList("api_at_eflag", bean::setAtEflag);
             return bean;
         }
     }
@@ -1259,15 +1259,15 @@ public class BattleTypes {
         public static MidnightHougeki toMidnightHougeki(JsonObject json) {
             MidnightHougeki bean = new MidnightHougeki();
             JsonHelper.bind(json)
-                    .set("api_at_list", bean::setAtList, JsonHelper::toIntegerList)
-                    .set("api_at_type", bean::setAtType, JsonHelper::toIntegerList)
-                    .set("api_n_mother_list", bean::setNMotherList, JsonHelper::toIntegerList)
+                    .setIntegerList("api_at_list", bean::setAtList)
+                    .setIntegerList("api_at_type", bean::setAtType)
+                    .setIntegerList("api_n_mother_list", bean::setNMotherList)
                     .set("api_df_list", bean::setDfList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_si_list", bean::setSiList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
                     .set("api_cl_list", bean::setClList, JsonHelper.toList(JsonHelper::checkedToIntegerList))
-                    .set("api_sp_list", bean::setSpList, JsonHelper::toIntegerList)
+                    .setIntegerList("api_sp_list", bean::setSpList)
                     .set("api_damage", bean::setDamage, JsonHelper.toList(JsonHelper::checkedToDoubleList))
-                    .set("api_at_eflag", bean::setAtEflag, JsonHelper::toIntegerList);
+                    .setIntegerList("api_at_eflag", bean::setAtEflag);
             return bean;
         }
     }
@@ -1323,7 +1323,7 @@ public class BattleTypes {
                     .set("api_stage2", bean::setStage2, Stage2::toStage2)
                     .set("api_stage3", bean::setStage3, Stage3::toStage3)
                     .set("api_stage3_combined", bean::setStage3Combined, Stage3::toStage3)
-                    .set("api_stage_flag", bean::setStageFlag, JsonHelper::toIntegerList);
+                    .setIntegerList("api_stage_flag", bean::setStageFlag);
             return bean;
         }
     }
@@ -1396,10 +1396,10 @@ public class BattleTypes {
             FriendlyInfo bean = new FriendlyInfo();
             JsonHelper.bind(json)
                     .setInteger("api_production_type", bean::setProductionType)
-                    .set("api_ship_id", bean::setShipId, JsonHelper::toIntegerList)
-                    .set("api_ship_lv", bean::setShipLv, JsonHelper::toIntegerList)
-                    .set("api_nowhps", bean::setNowhps, JsonHelper::toIntegerList)
-                    .set("api_maxhps", bean::setMaxhps, JsonHelper::toIntegerList)
+                    .setIntegerList("api_ship_id", bean::setShipId)
+                    .setIntegerList("api_ship_lv", bean::setShipLv)
+                    .setIntegerList("api_nowhps", bean::setNowhps)
+                    .setIntegerList("api_maxhps", bean::setMaxhps)
                     .set("api_Slot", bean::setSlot, JsonHelper.toList(JsonHelper::toIntegerList))
                     .set("api_Param", bean::setParam, JsonHelper.toList(JsonHelper::toIntegerList));
             return bean;
@@ -1429,7 +1429,7 @@ public class BattleTypes {
         public static FriendlyBattle toFriendlyBattle(JsonObject json) {
             FriendlyBattle bean = new FriendlyBattle();
             JsonHelper.bind(json)
-                    .set("api_flare_pos", bean::setFlarePos, JsonHelper::toIntegerList)
+                    .setIntegerList("api_flare_pos", bean::setFlarePos)
                     .set("api_hougeki", bean::setHougeki, BattleTypes.MidnightHougeki::toMidnightHougeki);
             return bean;
         }

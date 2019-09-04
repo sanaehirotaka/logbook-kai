@@ -6,12 +6,13 @@ package logbook.internal;
  */
 public enum SeaArea {
 
-    欧州防衛艦隊("欧州防衛艦隊", 1),
-    連合艦隊("連合艦隊", 2),
-    地中海艦隊("地中海艦隊", 3),
-    機動部隊("機動部隊", 4),
-    攻略部隊("攻略部隊", 5),
-    ハワイ派遣艦隊("ハワイ派遣艦隊", 6);
+    識別札1("欧州防衛艦隊", 1),
+    識別札2("連合艦隊", 2),
+    識別札3("地中海艦隊", 3),
+    識別札4("識別札4", 4),
+    識別札5("識別札5", 5),
+    識別札6("識別札6", 6),
+    識別札7("識別札7", 7);
 
     /** 名前 */
     private String name;
@@ -54,17 +55,19 @@ public enum SeaArea {
     public static SeaArea fromArea(int area) {
         switch (area) {
         case 1:
-            return SeaArea.欧州防衛艦隊;
+            return SeaArea.識別札1;
         case 2:
-            return SeaArea.連合艦隊;
+            return SeaArea.識別札2;
         case 3:
-            return SeaArea.地中海艦隊;
+            return SeaArea.識別札3;
         case 4:
-            return SeaArea.機動部隊;
+            return SeaArea.識別札4;
         case 5:
-            return SeaArea.攻略部隊;
+            return SeaArea.識別札5;
         case 6:
-            return SeaArea.ハワイ派遣艦隊;
+            return SeaArea.識別札6;
+        case 7:
+            return SeaArea.識別札7;
         default:
             return null;
         }

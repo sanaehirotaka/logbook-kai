@@ -94,13 +94,13 @@ public class Mission implements Serializable {
                 .setString("api_name", bean::setName)
                 .setInteger("api_reset_type", bean::setResetType)
                 .setInteger("api_return_flag", bean::setReturnFlag)
-                .set("api_sample_fleet", bean::setSampleFleet, JsonHelper::toIntegerList)
+                .setIntegerList("api_sample_fleet", bean::setSampleFleet)
                 .setDouble("api_use_bull", bean::setUseBull)
                 .setDouble("api_use_fuel", bean::setUseFuel)
                 .setInteger("api_time", bean::setTime)
-                .set("api_win_item1", bean::setWinItem1, JsonHelper::toIntegerList)
-                .set("api_win_item2", bean::setWinItem2, JsonHelper::toIntegerList)
-                .set("api_win_mat_level", bean::setWinMatLevel, JsonHelper::toIntegerList);
+                .setIntegerList("api_win_item1", bean::setWinItem1)
+                .setIntegerList("api_win_item2", bean::setWinItem2)
+                .setIntegerList("api_win_mat_level", bean::setWinMatLevel);
         return bean;
     }
 }

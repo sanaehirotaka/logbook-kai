@@ -190,7 +190,7 @@ public class MapTypes {
         public static SelectRoute toSelectRoute(JsonObject json) {
             SelectRoute bean = new SelectRoute();
             JsonHelper.bind(json)
-                    .set("api_select_cells", bean::setSelectCells, JsonHelper::toIntegerList);
+                    .setIntegerList("api_select_cells", bean::setSelectCells);
             return bean;
         }
     }
