@@ -183,6 +183,12 @@ public final class AppConfig implements Serializable {
     /** 艦隊タブに旗艦の立ち絵を表示 */
     private boolean visiblePoseImageOnFleetTab = false;
 
+    /** store api_start2 */
+    private boolean storeApiStart2 = false;
+
+    /** store api_start2 directory */
+    private String storeApiStart2Dir = "";
+
     /**
      * アプリケーションのデフォルト設定ディレクトリからアプリケーション設定を取得します、
      * これは次の記述と同等です

@@ -2,6 +2,8 @@ package logbook.internal.gui;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
@@ -212,6 +215,18 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField proxyHost;
 
+    @FXML
+    private CheckBox storeInternal;
+
+    @FXML
+    private CheckBox storeApiStart2;
+
+    @FXML
+    private TextField storeApiStart2Dir;
+
+    @FXML
+    private Button storeApiStart2DirRef;
+
     /** FFmpeg 実行ファイル */
     @FXML
     private TextField ffmpegPath;
@@ -337,6 +352,10 @@ public class ConfigController extends WindowController {
         this.ffmpegArgs.setText(conf.getFfmpegArgs());
         this.ffmpegExt.setText(conf.getFfmpegExt());
         this.usePlugin.setSelected(conf.isUsePlugin());
+        this.storeInternal.setSelected(conf.isStoreApiStart2());
+        this.storeApiStart2.setSelected(conf.isStoreApiStart2());
+        this.storeApiStart2Dir.setText(conf.getStoreApiStart2Dir());
+        this.storeInternal.getOnAction().handle(new ActionEvent());
 
         this.pluginName.setCellValueFactory(new PropertyValueFactory<>("name"));
         this.pluginVendor.setCellValueFactory(new PropertyValueFactory<>("vendor"));
@@ -424,6 +443,8 @@ public class ConfigController extends WindowController {
         conf.setFfmpegArgs(this.ffmpegArgs.getText());
         conf.setFfmpegExt(this.ffmpegExt.getText());
         conf.setUsePlugin(this.usePlugin.isSelected());
+        conf.setStoreApiStart2(this.storeApiStart2.isSelected());
+        conf.setStoreApiStart2Dir(this.storeApiStart2Dir.getText());
 
         this.bouyomiChanStore();
 
@@ -451,6 +472,40 @@ public class ConfigController extends WindowController {
                 .filter(File::exists)
                 .map(File::getAbsolutePath)
                 .ifPresent(this.ffmpegPath::setText);
+    }
+
+    @FXML
+    void storeInternal(ActionEvent event) {
+        if (this.storeInternal.isSelected()) {
+            this.storeApiStart2.setDisable(false);
+            this.storeApiStart2Dir.setDisable(false);
+            this.storeApiStart2DirRef.setDisable(false);
+        } else {
+            this.storeApiStart2.setSelected(false);
+            this.storeApiStart2.setDisable(true);
+            this.storeApiStart2Dir.setDisable(true);
+            this.storeApiStart2DirRef.setDisable(true);
+        }
+    }
+
+    @FXML
+    void storeApiStart2(ActionEvent event) {
+        if (this.storeApiStart2.isSelected()) {
+            this.storeInternal.setSelected(true);
+        }
+    }
+
+    @FXML
+    void selectApiStart2Dir(ActionEvent event) {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setTitle("api_start2の保存先");
+        if (Files.exists(Paths.get(this.storeApiStart2Dir.getText()))) {
+            dc.setInitialDirectory(Paths.get(this.storeApiStart2Dir.getText()).toAbsolutePath().toFile());
+        }
+        Optional.ofNullable(dc.showDialog(this.getWindow()))
+                .filter(File::exists)
+                .map(File::getAbsolutePath)
+                .ifPresent(this.storeApiStart2Dir::setText);
     }
 
     private void setFFmpegTemplate() {

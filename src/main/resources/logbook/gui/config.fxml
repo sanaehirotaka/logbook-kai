@@ -202,8 +202,11 @@
                            <columnConstraints>
                               <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" minWidth="10.0" prefWidth="100.0" />
                            </columnConstraints>
                            <rowConstraints>
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
@@ -221,6 +224,10 @@
                               <TextField fx:id="proxyHost" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label text="プロキシポート番号*" GridPane.rowIndex="5" />
                               <TextField fx:id="proxyPort" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="storeInternal" mnemonicParsing="false" onAction="#storeInternal" text="内部データを保存する(試験的)" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
+                              <CheckBox fx:id="storeApiStart2" mnemonicParsing="false" onAction="#storeApiStart2" text="api_start2" GridPane.rowIndex="7" />
+                              <TextField fx:id="storeApiStart2Dir" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <Button fx:id="storeApiStart2DirRef" mnemonicParsing="false" onAction="#selectApiStart2Dir" text="参照..." GridPane.columnIndex="2" GridPane.rowIndex="7" />
                            </children>
                         </GridPane>
                      </children>
