@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
+import javafx.application.Platform;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.Basic;
@@ -26,6 +27,7 @@ import logbook.bean.ShipCollection;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.JsonHelper;
+import logbook.internal.gui.Tools;
 import logbook.internal.log.LogWriter;
 import logbook.internal.log.MaterialLogFormat;
 import logbook.proxy.RequestMetaData;
@@ -50,6 +52,7 @@ public class ApiPortPort implements APIListenerSpi {
             this.apiCombinedFlag(data);
             this.condition();
             this.akashiTimer();
+            this.detectGimmick(data);
         }
     }
 
@@ -211,6 +214,24 @@ public class ApiPortPort implements APIListenerSpi {
         long timer = AppCondition.get().getAkashiTimer();
         if (System.currentTimeMillis() - timer >= Duration.ofMinutes(20).toMillis()) {
             AppCondition.get().setAkashiTimer(System.currentTimeMillis());
+        }
+    }
+
+    /**
+     * api_data.api_event_object
+     * 
+     * @param object api_data
+     */
+    private void detectGimmick(JsonObject object) {
+        if (object.containsKey("api_event_object")) {
+            JsonObject eventObject = object.getJsonObject("api_event_object");
+            if (eventObject.containsKey("api_m_flag2")) {
+                if (JsonHelper.toInteger(eventObject.get("api_m_flag2")) > 0) {
+                    Platform.runLater(
+                            () -> Tools.Conrtols.showNotify(null, "ギミック解除成功", "ギミックが解除されました",
+                                    javafx.util.Duration.seconds(15)));
+                }
+            }
         }
     }
 }

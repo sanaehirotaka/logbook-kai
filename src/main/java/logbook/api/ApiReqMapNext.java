@@ -44,6 +44,8 @@ public class ApiReqMapNext implements APIListenerSpi {
 
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
+            MapStartNext next = MapStartNext.toMapStartNext(data);
+
             BattleLog log = AppCondition.get()
                     .getBattleResult();
             if (log == null) {
@@ -52,7 +54,7 @@ public class ApiReqMapNext implements APIListenerSpi {
                         .setBattleResult(log);
             }
             log.setCombinedType(CombinedType.toCombinedType(AppCondition.get().getCombinedType()));
-            log.getNext().add(MapStartNext.toMapStartNext(data));
+            log.getNext().add(next);
 
             if (AppConfig.get().isAlertBadlyNext() || AppBouyomiConfig.get().isEnable()) {
                 // 大破した艦娘
@@ -73,6 +75,10 @@ public class ApiReqMapNext implements APIListenerSpi {
                     // 棒読みちゃん連携
                     sendBouyomi(badlyShips);
                 }
+            }
+            if (next.achievementGimmick1()) {
+                Platform.runLater(
+                        () -> Tools.Conrtols.showNotify(null, "ギミック解除", "海域に変化が確認されました。", Duration.seconds(15)));
             }
         }
     }

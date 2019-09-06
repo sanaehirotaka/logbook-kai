@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import logbook.internal.JsonHelper;
 import lombok.Data;
 
@@ -103,6 +105,18 @@ public class BattleResult implements Serializable {
 
     /** api_landing_hp */
     private BattleResult.LandingHp landingHp;
+
+    /** api_m1 */
+    private Integer m1;
+
+    /**
+     * ギミック1が達成されたかを返します
+     * @return
+     */
+    @JsonIgnore
+    public boolean achievementGimmick1() {
+        return (this.m1 != null && this.m1 > 0);
+    }
 
     /**
      * 敵艦隊情報
@@ -335,7 +349,8 @@ public class BattleResult implements Serializable {
                 .setInteger("api_get_eventflag", bean::setGetEventflag)
                 .setBoolean("api_escape_flag", bean::setEscapeFlag)
                 .set("api_escape", bean::setEscape, Escape::toEscape)
-                .set("api_landing_hp", bean::setLandingHp, LandingHp::toLandingHp);
+                .set("api_landing_hp", bean::setLandingHp, LandingHp::toLandingHp)
+                .setInteger("api_m1", bean::setM1);
         return bean;
     }
 }

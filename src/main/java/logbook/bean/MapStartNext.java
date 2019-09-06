@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.json.JsonObject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import logbook.internal.JsonHelper;
 import lombok.Data;
 
@@ -74,6 +76,24 @@ public class MapStartNext implements Serializable {
     /** api_from_no */
     private Integer fromNo;
 
+    /** api_destruction_battle */
+    private DestructionBattle destructionBattle;
+
+    /** api_m1 */
+    private Integer m1;
+
+    /**
+     * ギミック1が達成されたかを返します
+     * @return
+     */
+    @JsonIgnore
+    public boolean achievementGimmick1() {
+        return (this.m1 != null && this.m1 > 0)
+                || (this.destructionBattle != null
+                        && this.destructionBattle.m1 != null
+                        && this.destructionBattle.m1 > 0);
+    }
+
     /**
      * JsonObjectから{@link MapStartNext}を構築します
      *
@@ -101,7 +121,34 @@ public class MapStartNext implements Serializable {
                 .set("api_happening", bean::setHappening, MapTypes.Happening::toHappening)
                 .set("api_itemget", bean::setItemget, JsonHelper.toList(MapTypes.Itemget::toItemget))
                 .set("api_select_route", bean::setSelectRoute, MapTypes.SelectRoute::toSelectRoute)
-                .setInteger("api_from_no", bean::setFromNo);
+                .setInteger("api_from_no", bean::setFromNo)
+                .set("api_destruction_battle", bean::setDestructionBattle, DestructionBattle::toDestructionBattle)
+                .setInteger("api_m1", bean::setM1);
         return bean;
+    }
+
+    /**
+     * api_destruction_battle
+     *
+     */
+    @Data
+    public static class DestructionBattle implements Serializable {
+
+        private static final long serialVersionUID = -6111573497713359784L;
+
+        /** api_lost_kind */
+        private Integer lostKind;
+
+        /** api_m1 */
+        private Integer m1;
+
+        public static DestructionBattle toDestructionBattle(JsonObject json) {
+            DestructionBattle bean = new DestructionBattle();
+            JsonHelper.bind(json)
+                    .setInteger("api_lost_kind", bean::setLostKind)
+                    .setInteger("api_m1", bean::setM1);
+
+            return bean;
+        }
     }
 }
