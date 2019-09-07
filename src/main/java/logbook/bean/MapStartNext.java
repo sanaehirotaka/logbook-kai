@@ -82,6 +82,9 @@ public class MapStartNext implements Serializable {
     /** api_m1 */
     private Integer m1;
 
+    /** api_m2 */
+    private Integer m2;
+
     /**
      * ギミック1が達成されたかを返します
      * @return
@@ -92,6 +95,18 @@ public class MapStartNext implements Serializable {
                 || (this.destructionBattle != null
                         && this.destructionBattle.m1 != null
                         && this.destructionBattle.m1 > 0);
+    }
+
+    /**
+     * ギミック2が達成されたかを返します
+     * @return
+     */
+    @JsonIgnore
+    public boolean achievementGimmick2() {
+        return (this.m2 != null && this.m2 > 0)
+                || (this.destructionBattle != null
+                        && this.destructionBattle.m2 != null
+                        && this.destructionBattle.m2 > 0);
     }
 
     /**
@@ -123,7 +138,8 @@ public class MapStartNext implements Serializable {
                 .set("api_select_route", bean::setSelectRoute, MapTypes.SelectRoute::toSelectRoute)
                 .setInteger("api_from_no", bean::setFromNo)
                 .set("api_destruction_battle", bean::setDestructionBattle, DestructionBattle::toDestructionBattle)
-                .setInteger("api_m1", bean::setM1);
+                .setInteger("api_m1", bean::setM1)
+                .setInteger("api_m2", bean::setM2);
         return bean;
     }
 
@@ -142,11 +158,15 @@ public class MapStartNext implements Serializable {
         /** api_m1 */
         private Integer m1;
 
+        /** api_m2 */
+        private Integer m2;
+
         public static DestructionBattle toDestructionBattle(JsonObject json) {
             DestructionBattle bean = new DestructionBattle();
             JsonHelper.bind(json)
                     .setInteger("api_lost_kind", bean::setLostKind)
-                    .setInteger("api_m1", bean::setM1);
+                    .setInteger("api_m1", bean::setM1)
+                    .setInteger("api_m2", bean::setM2);
 
             return bean;
         }

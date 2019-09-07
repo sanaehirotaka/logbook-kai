@@ -109,6 +109,9 @@ public class BattleResult implements Serializable {
     /** api_m1 */
     private Integer m1;
 
+    /** api_m2 */
+    private Integer m2;
+
     /**
      * ギミック1が達成されたかを返します
      * @return
@@ -116,6 +119,15 @@ public class BattleResult implements Serializable {
     @JsonIgnore
     public boolean achievementGimmick1() {
         return (this.m1 != null && this.m1 > 0);
+    }
+
+    /**
+     * ギミック2が達成されたかを返します
+     * @return
+     */
+    @JsonIgnore
+    public boolean achievementGimmick2() {
+        return (this.m2 != null && this.m2 > 0);
     }
 
     /**

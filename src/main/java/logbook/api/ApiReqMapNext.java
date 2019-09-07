@@ -80,6 +80,10 @@ public class ApiReqMapNext implements APIListenerSpi {
                 Platform.runLater(
                         () -> Tools.Conrtols.showNotify(null, "ギミック解除", "海域に変化が確認されました。", Duration.seconds(15)));
             }
+            if (next.achievementGimmick2()) {
+                Platform.runLater(
+                        () -> Tools.Conrtols.showNotify(null, "ギミック解除", "ギミックの達成を確認しました。", Duration.seconds(15)));
+            }
         }
     }
 
