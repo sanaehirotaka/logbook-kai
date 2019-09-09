@@ -114,6 +114,9 @@ public final class AppConfig implements Serializable {
     /** 警告サウンドディレクトリ */
     private String alertSoundDir = "./sounds/alert/"; //$NON-NLS-1$
 
+    /** デフォルトサウンド */
+    private String defaultNotifySound = "C:\\Windows\\media\\Windows Notify System Generic.wav"; //$NON-NLS-1$
+
     /** プラグインディレクトリ */
     private String pluginsDir = "./plugins/"; //$NON-NLS-1$
 

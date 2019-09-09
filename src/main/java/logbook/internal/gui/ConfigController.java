@@ -3,6 +3,7 @@ package logbook.internal.gui;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.List;
@@ -79,6 +80,10 @@ public class ConfigController extends WindowController {
     /** 通知でサウンドを鳴らす */
     @FXML
     private CheckBox useSound;
+
+    /** デフォルトサウンド */
+    @FXML
+    private TextField defaultNotifySound;
 
     /** 通知でトーストを表示 */
     @FXML
@@ -300,6 +305,7 @@ public class ConfigController extends WindowController {
         this.alertBadlyStart.setSelected(conf.isAlertBadlyStart());
         this.alertBadlyNext.setSelected(conf.isAlertBadlyNext());
         this.useSound.setSelected(conf.isUseSound());
+        this.defaultNotifySound.setText(conf.getDefaultNotifySound());
         this.useToast.setSelected(conf.isUseToast());
         this.useRemind.setSelected(conf.isUseRemind());
         this.remind.setText(Integer.toString(conf.getRemind()));
@@ -401,6 +407,7 @@ public class ConfigController extends WindowController {
         conf.setAlertBadlyStart(this.alertBadlyStart.isSelected());
         conf.setAlertBadlyNext(this.alertBadlyNext.isSelected());
         conf.setUseSound(this.useSound.isSelected());
+        conf.setDefaultNotifySound(this.defaultNotifySound.getText());
         conf.setUseToast(this.useToast.isSelected());
         conf.setUseRemind(this.useRemind.isSelected());
         conf.setRemind(Math.max(this.toInt(this.remind.getText()), 10));
@@ -451,6 +458,27 @@ public class ConfigController extends WindowController {
         ThreadManager.getExecutorService()
                 .execute(Config.getDefault()::store);
         this.getWindow().close();
+    }
+
+    @FXML
+    void selectSoundFile(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("サウンドファイルの選択");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("サウンドファイル",
+                "*.aif", "*.aiff", "*.fxm", "*.flv", "*.m3u8",
+                "*.m3u8", "*.mp3", "*.mp4", "*.m4a", "*.m4v", "*.wav"));
+        String current = this.defaultNotifySound.getText();
+        if (current != null && !current.isEmpty()) {
+            Path path = Paths.get(current);
+            Path parent = path.getParent();
+            if (parent != null && Files.exists(parent)) {
+                fc.setInitialDirectory(parent.toFile());
+            }
+        }
+        Optional.ofNullable(fc.showOpenDialog(this.getWindow()))
+                .filter(File::exists)
+                .map(File::getAbsolutePath)
+                .ifPresent(this.defaultNotifySound::setText);
     }
 
     @FXML
