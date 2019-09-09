@@ -67,6 +67,18 @@
                     "comment": "艦娘の名前（漢字）"
                 }
             ]
+        },
+        {
+            "id": "AchievementGimmick1",
+            "label": "ギミック解除\n(ルート追加等)",
+            "text": "ギミック解除 海域に変化が確認されました。",
+            "params": []
+        },
+        {
+            "id": "AchievementGimmick2",
+            "label": "ギミック解除\n(装甲破砕等)",
+            "text": "ギミック解除 ギミックの達成を確認しました。",
+            "params": []
         }
     ]
 }

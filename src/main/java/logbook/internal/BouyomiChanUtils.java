@@ -16,7 +16,9 @@ public class BouyomiChanUtils {
         MapStartNextAlert,
         MissionStartAlert,
         MissionComplete,
-        NdockComplete;
+        NdockComplete,
+        AchievementGimmick1,
+        AchievementGimmick2;
     }
 
     @SafeVarargs

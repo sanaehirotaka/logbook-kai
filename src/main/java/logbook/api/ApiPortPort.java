@@ -14,6 +14,7 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 
 import javafx.application.Platform;
+import logbook.bean.AppBouyomiConfig;
 import logbook.bean.AppCondition;
 import logbook.bean.AppConfig;
 import logbook.bean.Basic;
@@ -26,6 +27,8 @@ import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
+import logbook.internal.BouyomiChanUtils;
+import logbook.internal.BouyomiChanUtils.Type;
 import logbook.internal.JsonHelper;
 import logbook.internal.gui.Tools;
 import logbook.internal.log.LogWriter;
@@ -230,6 +233,9 @@ public class ApiPortPort implements APIListenerSpi {
                     Platform.runLater(
                             () -> Tools.Conrtols.showNotify(null, "ギミック解除", "ギミックの達成を確認しました。",
                                     javafx.util.Duration.seconds(15)));
+                    if (AppBouyomiConfig.get().isEnable()) {
+                        BouyomiChanUtils.speak(Type.AchievementGimmick2);
+                    }
                 }
             }
         }
