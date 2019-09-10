@@ -79,9 +79,11 @@ public class ApiReqMapNext implements APIListenerSpi {
             if (next.achievementGimmick1()) {
                 Platform.runLater(
                         () -> Tools.Conrtols.showNotify(null, "ギミック解除", "海域に変化が確認されました。", Duration.seconds(15)));
-                if (AppConfig.get().isUseNotification()) {
+                // 通知音再生
+                if (AppConfig.get().isUseSound()) {
                     Platform.runLater(Audios.playDefaultNotifySound());
                 }
+                // 棒読みちゃん連携
                 if (AppBouyomiConfig.get().isEnable()) {
                     BouyomiChanUtils.speak(Type.AchievementGimmick1);
                 }
@@ -89,9 +91,11 @@ public class ApiReqMapNext implements APIListenerSpi {
             if (next.achievementGimmick2()) {
                 Platform.runLater(
                         () -> Tools.Conrtols.showNotify(null, "ギミック解除", "ギミックの達成を確認しました。", Duration.seconds(15)));
-                if (AppConfig.get().isUseNotification()) {
+                // 通知音再生
+                if (AppConfig.get().isUseSound()) {
                     Platform.runLater(Audios.playDefaultNotifySound());
                 }
+                // 棒読みちゃん連携
                 if (AppBouyomiConfig.get().isEnable()) {
                     BouyomiChanUtils.speak(Type.AchievementGimmick2);
                 }

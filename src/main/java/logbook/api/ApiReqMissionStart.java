@@ -11,11 +11,13 @@ import javax.json.JsonObject;
 import javafx.application.Platform;
 import javafx.util.Duration;
 import logbook.bean.AppBouyomiConfig;
+import logbook.bean.AppConfig;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.MissionCollection;
 import logbook.bean.MissionCondition;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
+import logbook.internal.Audios;
 import logbook.internal.BouyomiChanUtils;
 import logbook.internal.BouyomiChanUtils.Type;
 import logbook.internal.LoggerHolder;
@@ -54,6 +56,10 @@ public class ApiReqMissionStart implements APIListenerSpi {
                     if (!condition.get().test(fleet)) {
                         Integer id = missionId;
                         Platform.runLater(() -> displayAlert(deckId, id));
+                        // 通知音再生
+                        if (AppConfig.get().isUseSound()) {
+                            Platform.runLater(Audios.playDefaultNotifySound());
+                        }
                         // 棒読みちゃん連携
                         sendBouyomi(deckId, missionId);
                     }

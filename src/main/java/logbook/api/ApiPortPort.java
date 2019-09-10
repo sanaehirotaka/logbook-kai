@@ -234,9 +234,11 @@ public class ApiPortPort implements APIListenerSpi {
                     Platform.runLater(
                             () -> Tools.Conrtols.showNotify(null, "ギミック解除", "ギミックの達成を確認しました。",
                                     javafx.util.Duration.seconds(15)));
-                    if (AppConfig.get().isUseNotification()) {
+                    // 通知音再生
+                    if (AppConfig.get().isUseSound()) {
                         Platform.runLater(Audios.playDefaultNotifySound());
                     }
+                    // 棒読みちゃん連携
                     if (AppBouyomiConfig.get().isEnable()) {
                         BouyomiChanUtils.speak(Type.AchievementGimmick2);
                     }
