@@ -8,3 +8,8 @@
 .bold {
     -fx-font-weight: bold;
 }
+.scroll-pane {
+    -fx-background-color: null;
+    -fx-background-insets: 0, 0;
+    -fx-padding: 0;
+}

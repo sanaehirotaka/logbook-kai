@@ -19,6 +19,10 @@ public class AppBouyomiConfig {
 
     private int port = 50001;
 
+    private boolean tryExecute = false;
+
+    private String bouyomiPath = "";
+
     private Map<String, AppBouyomiText> text = new ConcurrentHashMap<>();
 
     @Data

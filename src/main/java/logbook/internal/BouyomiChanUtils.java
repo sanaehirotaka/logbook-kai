@@ -1,7 +1,12 @@
 package logbook.internal;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,6 +16,8 @@ import logbook.plugin.PluginServices;
 import lombok.Data;
 
 public class BouyomiChanUtils {
+
+    private static final AtomicInteger tryCount = new AtomicInteger(0);
 
     public enum Type {
         MapStartNextAlert,
@@ -74,7 +81,31 @@ public class BouyomiChanUtils {
         try {
             bouyomiChan.speak(text);
         } catch (Exception e) {
+            if (AppBouyomiConfig.get().isTryExecute()) {
+                retry(bouyomiChan, text);
+            }
             LoggerHolder.get().info("棒読みちゃんとの接続で例外が発生しました", e);
+        }
+    }
+
+    private static void retry(BouyomiChan bouyomiChan, String text) {
+        synchronized (tryCount) {
+            if (tryCount.getAndIncrement() > 0) {
+                return;
+            }
+            Path path = Paths.get(AppBouyomiConfig.get().getBouyomiPath());
+            if (!Files.exists(path)) {
+                return;
+            }
+            try {
+                new ProcessBuilder(path.toString())
+                        .directory(path.getParent().toFile())
+                        .start();
+                ThreadManager.getExecutorService().schedule(() -> {
+                    speak(bouyomiChan, text);
+                }, 5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+            }
         }
     }
 

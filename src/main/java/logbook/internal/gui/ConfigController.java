@@ -2,6 +2,7 @@ package logbook.internal.gui;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -286,6 +288,12 @@ public class ConfigController extends WindowController {
     private TextField bouyomiPort;
 
     @FXML
+    private CheckBox bouyomiTryExecute;
+
+    @FXML
+    private TextField bouyomiPath;
+
+    @FXML
     private GridPane bouyomiTexts;
 
     private ObservableList<DetailPlugin> plugins = FXCollections.observableArrayList();
@@ -536,6 +544,66 @@ public class ConfigController extends WindowController {
                 .ifPresent(this.storeApiStart2Dir::setText);
     }
 
+    @FXML
+    void checkBouyomiTryExecute(ActionEvent event) {
+        if (this.bouyomiTryExecute.isSelected()) {
+            String pathText = this.bouyomiPath.getText();
+            if (pathText != null && !pathText.isEmpty() && Files.exists(Paths.get(pathText))) {
+                return;
+            }
+            this.selectBouyomiDir(event);
+
+            pathText = this.bouyomiPath.getText();
+            if (pathText != null && !pathText.isEmpty() && Files.exists(Paths.get(pathText))) {
+                return;
+            }
+            this.bouyomiTryExecute.setSelected(false);
+        }
+    }
+
+    @FXML
+    void selectBouyomiDir(ActionEvent event) {
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setTitle("BouyomiChan.exeがあるフォルダを選択してください");
+
+        String pathText = this.bouyomiPath.getText();
+        if (pathText != null && !pathText.isEmpty() && Files.exists(Paths.get(pathText))) {
+            dc.setInitialDirectory(Paths.get(pathText).toFile());
+        }
+        Path baseDir = Optional.ofNullable(dc.showDialog(this.getWindow()))
+                .filter(File::exists)
+                .map(File::toPath)
+                .orElse(null);
+        if (baseDir == null)
+            return;
+
+        Path bouyomichanPath = null;
+        Path tryPath = baseDir.resolve("BouyomiChan.exe");
+        if (Files.exists(tryPath)) {
+            bouyomichanPath = tryPath;
+        } else {
+            // 1つ下のサブフォルダを見てみる
+            try (DirectoryStream<Path> ds = Files.newDirectoryStream(baseDir, Files::isDirectory)) {
+                for (Path path : ds) {
+                    tryPath = path.resolve("BouyomiChan.exe");
+                    if (Files.exists(tryPath)) {
+                        bouyomichanPath = tryPath;
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
+        if (bouyomichanPath != null) {
+            this.bouyomiPath.setText(bouyomichanPath.toString());
+        } else {
+            Tools.Conrtols.alert(AlertType.INFORMATION,
+                    "BouyomiChan.exeが見つかりません",
+                    "選択されたフォルダにBouyomiChan.exeが見つかりませんでした。",
+                    this.getWindow());
+        }
+    }
+
     private void setFFmpegTemplate() {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -568,6 +636,8 @@ public class ConfigController extends WindowController {
         this.enableBouyomi.setSelected(config.isEnable());
         this.bouyomiHost.setText(config.getHost());
         this.bouyomiPort.setText(Integer.toString(config.getPort()));
+        this.bouyomiTryExecute.setSelected(config.isTryExecute());
+        this.bouyomiPath.setText(config.getBouyomiPath());
 
         BouyomiDefaultSettings settings = BouyomiChanUtils.getDefaultSettings();
         int row = 0;
@@ -611,6 +681,8 @@ public class ConfigController extends WindowController {
         config.setEnable(this.enableBouyomi.isSelected());
         config.setHost(this.bouyomiHost.getText());
         config.setPort(this.toInt(this.bouyomiPort.getText()));
+        config.setTryExecute(this.bouyomiTryExecute.isSelected());
+        config.setBouyomiPath(this.bouyomiPath.getText());
 
         Map<String, AppBouyomiText> textMap = config.getText();
         textMap.clear();

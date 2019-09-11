@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -311,12 +312,15 @@
                            <columnConstraints>
                               <ColumnConstraints fillWidth="false" />
                               <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
                            </columnConstraints>
                            <rowConstraints>
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
                               <CheckBox fx:id="enableBouyomi" mnemonicParsing="false" text="棒読みちゃん連携を使用する" GridPane.columnSpan="2147483647" />
@@ -324,28 +328,34 @@
                               <TextField fx:id="bouyomiHost" prefWidth="150.0" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="ポート番号" GridPane.rowIndex="2" />
                               <TextField fx:id="bouyomiPort" prefWidth="150.0" text="50001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <Label text="棒読みちゃん側で設定を変更していない場合はホスト・ポート番号を変更する必要はありません。" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                              <Label text="棒読みちゃん側で設定を変更していない場合はホスト・ポート番号を変更する必要はありません。" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+                              <CheckBox fx:id="bouyomiTryExecute" mnemonicParsing="false" onAction="#checkBouyomiTryExecute" text="棒読みちゃんに接続できない場合は起動する" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+                              <Label text="場所" GridPane.rowIndex="5" />
+                              <TextField fx:id="bouyomiPath" prefWidth="250.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Button mnemonicParsing="false" onAction="#selectBouyomiDir" text="参照..." GridPane.columnIndex="2" GridPane.rowIndex="5" />
                            </children>
                         </GridPane>
                         <Separator prefWidth="200.0" />
-                        <GridPane fx:id="bouyomiTexts">
-                           <columnConstraints>
-                              <ColumnConstraints fillWidth="false" />
-                              <ColumnConstraints />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                           </children>
-                        </GridPane>
+                        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                           <content>
+                              <GridPane fx:id="bouyomiTexts">
+                                 <columnConstraints>
+                                    <ColumnConstraints fillWidth="false" />
+                                    <ColumnConstraints />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                              </GridPane>
+                           </content>
+                        </ScrollPane>
                      </children>
                   </VBox>
                </content>
