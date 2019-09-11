@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
    <children>
       <TabPane VBox.vgrow="ALWAYS">
          <tabs>
