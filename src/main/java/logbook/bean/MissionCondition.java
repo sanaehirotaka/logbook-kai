@@ -51,6 +51,8 @@ public class MissionCondition implements Predicate<List<Ship>> {
 
     private Boolean result;
 
+    private String current;
+
     @Override
     public boolean test(List<Ship> ships) {
         this.result = false;
@@ -148,25 +150,26 @@ public class MissionCondition implements Predicate<List<Ship>> {
      * @return 条件に一致する場合true
      */
     private boolean testFleet(List<Ship> ships) {
+        long current = 0;
         if ("レベル".equals(this.countType)) {
-            return this.fleetStatus(ships, Ship::getLv) >= this.value;
+            current = this.fleetStatus(ships, Ship::getLv);
         }
         if ("火力".equals(this.countType)) {
-            return this.fleetStatus(ships, ship -> ship.getKaryoku().get(0)) >= this.value;
+            current = this.fleetStatus(ships, ship -> ship.getKaryoku().get(0));
         }
         if ("対潜".equals(this.countType)) {
-            return this.fleetStatus(ships, ship -> ship.getTaisen().get(0)) >= this.value;
+            current = this.fleetStatus(ships, ship -> ship.getTaisen().get(0));
         }
         if ("対空".equals(this.countType)) {
-            return this.fleetStatus(ships, ship -> ship.getTaiku().get(0)) >= this.value;
+            current = this.fleetStatus(ships, ship -> ship.getTaiku().get(0));
         }
         if ("索敵".equals(this.countType)) {
-            return this.fleetStatus(ships, ship -> ship.getSakuteki().get(0)) >= this.value;
+            current = this.fleetStatus(ships, ship -> ship.getSakuteki().get(0));
         }
         if ("装備".equals(this.countType)) {
             Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
                     .getSlotitemMap();
-            return ships.stream()
+            current = ships.stream()
                     .filter(Objects::nonNull)
                     .map(Ship::getSlot)
                     .flatMap(Collection::stream)
@@ -176,9 +179,10 @@ public class MissionCondition implements Predicate<List<Ship>> {
                     .filter(Objects::nonNull)
                     .map(SlotitemMst::getName)
                     .filter(this.item::equals)
-                    .count() >= this.value;
+                    .count();
         }
-        return false;
+        this.current = String.valueOf(current);
+        return current >= this.value;
     }
 
     /**
@@ -239,6 +243,9 @@ public class MissionCondition implements Predicate<List<Ship>> {
         if (this.item != null) {
             sb.append("かつ" + this.item + "を装備");
         }
+        if (this.current != null) {
+            sb.append("(現在の値:" + this.current + ")");
+        }
         if (this.description != null) {
             sb.append("(" + this.description + ")");
         }
@@ -254,6 +261,9 @@ public class MissionCondition implements Predicate<List<Ship>> {
         }
         sb.append(this.value);
         sb.append("以上");
+        if (this.current != null) {
+            sb.append("(現在の値:" + this.current + ")");
+        }
         if (this.description != null) {
             sb.append("(" + this.description + ")");
         }
