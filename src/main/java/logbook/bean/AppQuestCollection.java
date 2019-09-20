@@ -64,7 +64,11 @@ public class AppQuestCollection implements Serializable {
                     copyMap.remove(quest.getNo());
 
                     if (quest.getState() == 2) {
-                        copyMap.put(quest.getNo(), AppQuest.toAppQuest(quest));
+                        AppQuest appQuest = AppQuest.toAppQuest(quest);
+                        copyMap.put(quest.getNo(), appQuest);
+                        AppQuestCondition.get().set(appQuest);
+                    } else {
+                        AppQuestCondition.get().unset(quest.getNo());
                     }
                 }
             }

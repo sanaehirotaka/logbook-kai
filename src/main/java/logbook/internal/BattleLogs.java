@@ -370,12 +370,12 @@ public class BattleLogs {
     }
 
     /**
-     * 任意期間の出撃統計を取得します。
-     *
-     * @param unit 期間
-     * @return 出撃統計
+     * 任意条件のログを取得します。
+     * 
+     * @param predicate 条件
+     * @return ログ
      */
-    public static List<SimpleBattleLog> readSimpleLog(IUnit unit) {
+    public static List<SimpleBattleLog> readSimpleLog(Predicate<SimpleBattleLog> predicate) {
         try {
             Function<String, SimpleBattleLog> mapper = line -> {
                 try {
@@ -388,9 +388,6 @@ public class BattleLogs {
             Path dir = Paths.get(AppConfig.get().getReportPath());
             Path path = dir.resolve(new BattleResultLogFormat().fileName());
 
-            // 今日
-            ZonedDateTime now = unitToday();
-
             Stream<String> tmp;
             if (Files.exists(path)) {
                 tmp = Files.lines(path, LogWriter.DEFAULT_CHARSET);
@@ -402,9 +399,26 @@ public class BattleLogs {
                         .filter(l -> !l.isEmpty())
                         .map(mapper)
                         .filter(Objects::nonNull)
-                        .filter(log -> unit.accept(log.getDate(), now))
+                        .filter(predicate)
                         .collect(Collectors.toList());
             }
+        } catch (Exception e) {
+            LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * 任意期間の出撃統計を取得します。
+     *
+     * @param unit 期間
+     * @return 出撃統計
+     */
+    public static List<SimpleBattleLog> readSimpleLog(IUnit unit) {
+        try {
+            // 今日
+            ZonedDateTime now = unitToday();
+            return readSimpleLog(log -> unit.accept(log.getDate(), now));
         } catch (Exception e) {
             LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
         }
@@ -475,6 +489,8 @@ public class BattleLogs {
     @Data
     public static class SimpleBattleLog {
 
+        /** 日付文字列 */
+        private String dateString;
         /** 日付 */
         private ZonedDateTime date;
         /** 海域 */
@@ -514,6 +530,7 @@ public class BattleLogs {
         public SimpleBattleLog(String line) {
             String[] columns = line.split(",", -1);
 
+            this.setDateString(columns[0]);
             // 任務の更新時間が午前5時のため
             // 日付文字列を日本時間として解釈した後、GMT+04:00のタイムゾーンに変更します
             TemporalAccessor ta = Logs.DATE_FORMAT.parse(columns[0]);
