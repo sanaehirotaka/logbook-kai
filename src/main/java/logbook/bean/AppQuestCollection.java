@@ -66,9 +66,9 @@ public class AppQuestCollection implements Serializable {
                     if (quest.getState() == 2) {
                         AppQuest appQuest = AppQuest.toAppQuest(quest);
                         copyMap.put(quest.getNo(), appQuest);
-                        AppQuestCondition.get().set(appQuest);
+                        AppQuestDuration.get().set(appQuest);
                     } else {
-                        AppQuestCondition.get().unset(quest.getNo());
+                        AppQuestDuration.get().unset(quest.getNo());
                     }
                 }
             }

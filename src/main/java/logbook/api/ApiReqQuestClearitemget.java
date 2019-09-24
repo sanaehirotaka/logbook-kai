@@ -3,7 +3,7 @@ package logbook.api;
 import javax.json.JsonObject;
 
 import logbook.bean.AppQuestCollection;
-import logbook.bean.AppQuestCondition;
+import logbook.bean.AppQuestDuration;
 import logbook.proxy.RequestMetaData;
 import logbook.proxy.ResponseMetaData;
 
@@ -20,7 +20,7 @@ public class ApiReqQuestClearitemget implements APIListenerSpi {
         if (id != null) {
             Integer key = Integer.valueOf(id);
             AppQuestCollection.get().getQuest().remove(key);
-            AppQuestCondition.get().unset(key);
+            AppQuestDuration.get().unset(key);
         }
     }
 

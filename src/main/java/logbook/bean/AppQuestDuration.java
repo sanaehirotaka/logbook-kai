@@ -19,7 +19,7 @@ import lombok.val;
  *
  */
 @Data
-public class AppQuestCondition {
+public class AppQuestDuration {
 
     /** 期限をキーにするマップ */
     private ConcurrentHashMap<String, Map<Integer, List<Duration>>> map = new ConcurrentHashMap<>();
@@ -122,7 +122,7 @@ public class AppQuestCondition {
      *
      * @return <code>AppQuestCondition</code>
      */
-    public static AppQuestCondition get() {
-        return Config.getDefault().get(AppQuestCondition.class, AppQuestCondition::new);
+    public static AppQuestDuration get() {
+        return Config.getDefault().get(AppQuestDuration.class, AppQuestDuration::new);
     }
 }
