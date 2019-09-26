@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.QuestProgress">
+   <children>
+      <Label fx:id="name" styleClass="bold" />
+      <Label fx:id="info" wrapText="true" />
+      <TreeView fx:id="condition" VBox.vgrow="ALWAYS" />
+   </children>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@quest_progress.css" />
+   </stylesheets>
+</VBox>

@@ -16,11 +16,13 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Arc;
+import javafx.stage.Stage;
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCollection;
 import logbook.bean.QuestList.Quest;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
+import logbook.plugin.PluginServices;
 
 /**
  * 任務
@@ -35,6 +37,9 @@ public class QuestPane extends HBox {
 
     @FXML
     private Hyperlink name;
+
+    @FXML
+    private Hyperlink condition;
 
     @FXML
     private VBox detailView;
@@ -122,6 +127,10 @@ public class QuestPane extends HBox {
             this.name.setText(quest.getTitle());
             this.detail.setText(quest.getDetail().replaceAll("<br>", ""));
             this.setOnContextMenuRequested(this::showContextMenu);
+
+            if (PluginServices.getResource("logbook/quest/" + quest.getNo() + ".json") == null) {
+                this.condition.setVisible(false);
+            }
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
@@ -164,6 +173,18 @@ public class QuestPane extends HBox {
             this.getStyleClass().add("expanded");
         } else {
             this.getStyleClass().remove("expanded");
+        }
+    }
+
+    @FXML
+    void condition(ActionEvent event) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/quest_progress.fxml", (Stage) this.getScene().getWindow(),
+                    this.quest.getQuest().getTitle(), c -> {
+                        ((QuestProgress) c).setQuest(this.quest);
+                    }, null);
+        } catch (IOException e) {
+            LoggerHolder.get().warn("進捗を開けませんでした", e);
         }
     }
 

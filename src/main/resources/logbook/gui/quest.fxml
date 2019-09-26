@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Arc?>
 
-<fx:root styleClass="quest" type="HBox" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root styleClass="quest" type="HBox" xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox HBox.hgrow="ALWAYS">
          <children>
@@ -26,6 +26,7 @@
                      <children>
                         <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
                         <Hyperlink layoutX="32.0" onAction="#search" styleClass="search" text="検索" underline="true" />
+                        <Hyperlink fx:id="condition" layoutX="64.0" onAction="#condition" styleClass="remove" text="進捗" underline="true" />
                      </children>
                   </Group>
                </children>
