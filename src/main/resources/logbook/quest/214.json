@@ -1,0 +1,9 @@
+/* [214]あ号作戦 */
+{
+    "conditions" : [
+        {"start": true, "count": 36},
+        {"rank": ["S"], "count": 6},
+        {"boss": true, "count": 24},
+        {"boss": true, "rank": ["S", "A", "B"], "count": 12}
+    ]
+}
