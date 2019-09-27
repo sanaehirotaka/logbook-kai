@@ -18,9 +18,6 @@ import lombok.Data;
 @Data
 public class AppQuestCondition implements Predicate<QuestCollect> {
 
-    /** 名前 */
-    private String name;
-
     /** 条件 */
     private List<Condition> conditions = new ArrayList<>();
 
@@ -69,7 +66,7 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         @Override
         public boolean test(QuestCollect t) {
             int count = this.count(t);
-            this.current = String.valueOf(this.current);
+            this.current = String.valueOf(count);
             return this.result = (count >= this.count);
         }
 

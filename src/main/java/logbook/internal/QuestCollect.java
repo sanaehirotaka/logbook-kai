@@ -68,6 +68,9 @@ public class QuestCollect {
         List<SimpleBattleLog> logs = AppQuestDuration.get().getCondition(quest);
         Collection<MapinfoMst> mapinfo = MapinfoMstCollection.get().getMapinfo().values();
         for (SimpleBattleLog log : logs) {
+            if (Thread.currentThread().isInterrupted()) {
+                return null;
+            }
             if (condition.isCollectStypeInternal()) {
                 BattleLog battleLog = BattleLogs.read(log.getDateString());
                 PhaseState p = new PhaseState(battleLog);
