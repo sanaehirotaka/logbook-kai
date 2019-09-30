@@ -29,23 +29,17 @@ public class Createitem implements Serializable {
     /** api_create_flag */
     private Boolean createFlag;
 
-    /** api_shizai_flag */
-    private Boolean shizaiFlag;
-
-    /** api_slot_item */
-    private SlotItem slotItem;
-
     /** api_material */
     private List<Integer> material;
 
-    /** api_type3 */
-    private Integer type3;
+    /** api_get_items */
+    private List<SlotItem> getItems;
 
-    /** api_unsetslot */
-    private List<Integer> unsetslot;
-
-    /** api_fdata */
-    private String fdata;
+    /** api_unset_items */
+    private List<UnsetItems> unsetItems;
+    
+    /** SlotItem */
+    private SlotItem slotItem;
 
     /** 秘書艦 */
     private Ship secretary;
@@ -66,12 +60,9 @@ public class Createitem implements Serializable {
 
         JsonHelper.bind(json)
                 .setBoolean("api_create_flag", bean::setCreateFlag)
-                .setBoolean("api_shizai_flag", bean::setShizaiFlag)
-                .set("api_slot_item", bean::setSlotItem, SlotItem::toSlotItem)
                 .setIntegerList("api_material", bean::setMaterial)
-                .setInteger("api_type3", bean::setType3)
-                .setIntegerList("api_unsetslot", bean::setUnsetslot)
-                .setString("api_fdata", bean::setFdata);
+                .set("api_get_items", bean::setGetItems, JsonHelper.toList(SlotItem::toSlotItem))
+                .set("api_unset_items", bean::setUnsetItems, JsonHelper.toList(UnsetItems::toUnsetItems));
 
         Ship secretary = null;
         DeckPort port = DeckPortCollection.get()
@@ -89,5 +80,29 @@ public class Createitem implements Serializable {
         bean.setSecretary(secretary);
 
         return bean;
+    }
+
+    @Data
+    public static class UnsetItems {
+
+        /** api_type3 */
+        private Integer type3;
+
+        /** api_unsetslot */
+        private List<Integer> unsetslot;
+
+        /**
+         * JsonObjectから{@link UnsetItems}を構築します
+         *
+         * @param json JsonObject
+         * @return {@link UnsetItems}
+         */
+        public static UnsetItems toUnsetItems(JsonObject json) {
+            UnsetItems bean = new UnsetItems();
+            JsonHelper.bind(json)
+                    .setInteger("api_type3", bean::setType3)
+                    .setIntegerList("api_unsetslot", bean::setUnsetslot);
+            return bean;
+        }
     }
 }

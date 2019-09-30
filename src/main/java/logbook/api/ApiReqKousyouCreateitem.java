@@ -26,18 +26,19 @@ public class ApiReqKousyouCreateitem implements APIListenerSpi {
             Createitem createitem = Createitem.toCreateitem(data, req);
 
             // 開発装備を反映
-            SlotItem item = createitem.getSlotItem();
-            if (item != null) {
-                Map<Integer, SlotItem> map = SlotItemCollection.get()
-                        .getSlotitemMap();
-                item.setLevel(0);
-                item.setLocked(false);
-                map.put(item.getId(), item);
+            for (SlotItem item : createitem.getGetItems()) {
+                if (item != null && item.getId() > 0) {
+                    Map<Integer, SlotItem> map = SlotItemCollection.get()
+                            .getSlotitemMap();
+                    item.setLevel(0);
+                    item.setLocked(false);
+                    map.put(item.getId(), item);
+                }
+                // 開発ログに書き込む
+                createitem.setSlotItem(item);
+                LogWriter.getInstance(CreateitemLogFormat::new)
+                        .write(createitem);
             }
-
-            // 開発ログに書き込む
-            LogWriter.getInstance(CreateitemLogFormat::new)
-                    .write(createitem);
         }
     }
 }
