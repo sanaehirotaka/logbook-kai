@@ -41,6 +41,19 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         return false;
     }
 
+    @Override
+    public boolean test(QuestCollect t) {
+        Predicate<QuestCollect> predicate = null;
+        for (Condition condition : this.conditions) {
+            if (predicate == null) {
+                predicate = condition;
+            } else {
+                predicate = predicate.and(condition);
+            }
+        }
+        return this.result = predicate.test(t);
+    }
+
     /**
      * フィルター条件
      *
@@ -48,12 +61,15 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
     @Data
     public static class FilterCondition {
 
+        /** 海域条件 */
+        private Set<String> area;
+
         /** 艦隊条件 */
         private FleetCondition fleet;
     }
 
     /**
-     * 艦隊条件
+     * フィルター条件:艦隊条件
      *
      */
     @Data
@@ -78,14 +94,144 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         private String operator;
 
         @Override
-        public boolean test(List<ShipMst> t) {
-            // TODO 自動生成されたメソッド・スタブ
-            return false;
+        public boolean test(List<ShipMst> ships) {
+            if (this.operator != null) {
+                return this.testOperator(ships);
+            } else {
+                return this.testShip(ships);
+            }
+        }
+
+        @Override
+        public String toString() {
+            if (this.operator != null) {
+                return this.toStringOperator();
+            } else {
+                return this.toStringShip();
+            }
+        }
+
+        /**
+         * 条件(type=艦娘)
+         *
+         * @param ships 艦隊
+         * @return 条件に一致する場合true
+         */
+        private boolean testShip(List<ShipMst> ships) {
+            boolean result = false;
+            if (this.order != null) {
+                // 序列の指定有り
+                if (ships.size() >= this.order)
+                    result = this.testShip0(ships.get(this.order - 1));
+                if (result) {
+                    ships.set(this.order - 1, null);
+                }
+            } else {
+                // 序列の指定無し
+                for (int i = 0; i < ships.size(); i++) {
+                    result = this.testShip0(ships.get(i));
+                    if (result) {
+                        ships.set(i, null);
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        private boolean testShip0(ShipMst ship) {
+            boolean result = true;
+            if (ship == null) {
+                result = false;
+            }
+            if (result && this.stype != null) {
+                String stype = ship.asStype()
+                        .map(Stype::getName)
+                        .orElse(null);
+                result &= this.stype.contains(stype);
+            }
+            if (result && this.name != null) {
+                for (String name : this.name) {
+                    result &= ship.getName().startsWith(name);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * 条件(論理演算)
+         *
+         * @param ships 艦隊
+         * @return 条件に一致する場合true
+         */
+        private boolean testOperator(List<ShipMst> ships) {
+            Predicate<List<ShipMst>> predicate = null;
+            for (FleetCondition condition : this.conditions) {
+                if (predicate == null) {
+                    predicate = condition;
+                } else {
+                    predicate = this.operator.endsWith("AND")
+                            ? predicate.and(condition)
+                            : predicate.or(condition);
+                }
+            }
+            if ("NAND".equals(this.operator) || "NOR".equals(this.operator)) {
+                predicate = predicate.negate();
+            }
+            return predicate.test(new ArrayList<>(ships));
+        }
+
+        private String toStringShip() {
+            StringBuilder sb = new StringBuilder();
+            if (this.stype != null) {
+                sb.append(this.stype.stream().collect(Collectors.joining("または")));
+            }
+            if (this.name != null) {
+                sb.append(this.name.stream().collect(Collectors.joining("または")));
+            }
+            if (this.order != null) {
+                sb.append("を");
+                if (this.order == 1) {
+                    sb.append("旗艦");
+                } else {
+                    sb.append("序列" + this.order + "位");
+                }
+            } else {
+                sb.append("含む");
+            }
+            if (this.description != null) {
+                sb.append("(" + this.description + ")");
+            }
+            return sb.toString();
+        }
+
+        private String toStringOperator() {
+            StringBuilder sb = new StringBuilder();
+            switch (this.operator) {
+            case "AND":
+                sb.append("次の条件を全て満たす");
+                break;
+            case "OR":
+                sb.append("次の条件のいずれか少なくとも1つを満たす");
+                break;
+            case "NAND":
+                sb.append("次の条件のいずれか少なくとも1つを満たさない");
+                break;
+            case "NOR":
+                sb.append("次の条件を全て満たさない");
+                break;
+            default:
+                break;
+            }
+            if (this.description != null) {
+                sb.append("(" + this.description + ")");
+            }
+            return sb.toString();
         }
     }
 
     /**
-     * 条件
+     * 集計条件
      */
     @Data
     public static class Condition implements Predicate<QuestCollect> {
@@ -226,18 +372,5 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
                 return count;
             }
         }
-    }
-
-    @Override
-    public boolean test(QuestCollect t) {
-        Predicate<QuestCollect> predicate = null;
-        for (Condition condition : this.conditions) {
-            if (predicate == null) {
-                predicate = condition;
-            } else {
-                predicate = predicate.and(condition);
-            }
-        }
-        return this.result = predicate.test(t);
     }
 }

@@ -6,14 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCondition;
+import logbook.bean.AppQuestCondition.FilterCondition;
 import logbook.bean.AppQuestDuration;
 import logbook.bean.BattleLog;
 import logbook.bean.Enemy;
 import logbook.bean.MapinfoMst;
 import logbook.bean.MapinfoMstCollection;
+import logbook.bean.ShipMst;
 import logbook.bean.Stype;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import lombok.Data;
@@ -74,9 +77,45 @@ public class QuestCollect {
             if (Thread.currentThread().isInterrupted()) {
                 return null;
             }
+            // 海域
+            String map = mapinfo.stream().filter(i -> log.getArea().equals(i.getName()))
+                    .map(i -> i.getMapareaId() + "-" + i.getNo())
+                    .findFirst()
+                    .orElse(null);
+
+            // 戦闘ログ
+            BattleLog battleLog = null;
+            PhaseState p = null;
+
+            // フィルター条件
+            FilterCondition filter = condition.getFilter();
+            if (filter != null) {
+                if (!filter.getArea().contains(map)) {
+                    continue;
+                }
+                if (filter.getFleet() != null) {
+                    battleLog = BattleLogs.read(log.getDateString());
+                    p = new PhaseState(battleLog);
+
+                    List<ShipMst> ships = p.getAfterFriend().stream()
+                            .filter(Objects::nonNull)
+                            .map(Ships::shipMst)
+                            .map(s -> s.orElse(null))
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+
+                    if (!filter.getFleet().test(ships)) {
+                        continue;
+                    }
+                }
+            }
+
             if (condition.isCollectStypeInternal()) {
-                BattleLog battleLog = BattleLogs.read(log.getDateString());
-                PhaseState p = new PhaseState(battleLog);
+                if (battleLog == null)
+                    battleLog = BattleLogs.read(log.getDateString());
+                if (p == null)
+                    p = new PhaseState(battleLog);
+
                 p.apply(battleLog.getBattle());
                 p.apply(battleLog.getMidnight());
 
@@ -98,12 +137,6 @@ public class QuestCollect {
                             collect.getStype().merge(key, 1, (a, b) -> a + b);
                         });
             }
-            // 海域
-            String map = mapinfo.stream().filter(i -> log.getArea().equals(i.getName()))
-                    .map(i -> i.getMapareaId() + "-" + i.getNo())
-                    .findFirst()
-                    .orElse(null);
-
             if (map != null) {
                 // 海域ごとのカウント
                 count(log, collect.getArea().computeIfAbsent(map, k -> new Count()));

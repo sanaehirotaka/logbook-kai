@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 import javax.json.JsonObject;
 
 import logbook.internal.JsonHelper;
 import logbook.internal.ShipType;
-import logbook.internal.SlotItemType;
 import lombok.Data;
 
 /**
@@ -143,12 +143,23 @@ public class ShipMst implements Serializable {
     }
 
     /**
-     * この装備定義から{@link SlotItemType}を返します。
+     * この艦船定義から{@link ShipType}を返します。
      * 
-     * @return {@link SlotItemType}
+     * @return {@link ShipType}
      */
     public ShipType asShipType() {
         return ShipType.toShipType(this);
+    }
+
+    /**
+     * この艦船定義に対応する艦種を取得します
+     *
+     * @return 艦種
+     */
+    public Optional<Stype> asStype() {
+        return Optional.ofNullable(StypeCollection.get()
+                .getStypeMap()
+                .get(this.stype));
     }
 
     /**
