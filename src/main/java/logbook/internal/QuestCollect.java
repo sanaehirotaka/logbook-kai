@@ -66,6 +66,9 @@ public class QuestCollect {
     public static QuestCollect collect(AppQuest quest, AppQuestCondition condition) {
         QuestCollect collect = new QuestCollect();
         List<SimpleBattleLog> logs = AppQuestDuration.get().getCondition(quest);
+        if (logs == null) {
+            return null;
+        }
         Collection<MapinfoMst> mapinfo = MapinfoMstCollection.get().getMapinfo().values();
         for (SimpleBattleLog log : logs) {
             if (Thread.currentThread().isInterrupted()) {

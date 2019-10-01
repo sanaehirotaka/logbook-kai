@@ -1,5 +1,6 @@
 /* [201]敵艦隊を撃破せよ！ */
 {
+    "resetType" : "デイリー",
     "conditions" : [
         {"rank": ["S", "A", "B"], "count": 1}
     ]

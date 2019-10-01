@@ -1,5 +1,6 @@
 /* [230]敵潜水艦を制圧せよ！ */
 {
+    "resetType" : "デイリー",
     "conditions" : [
         {"stype": ["潜水艦"], "count": 6}
     ]

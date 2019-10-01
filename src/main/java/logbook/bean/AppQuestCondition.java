@@ -18,6 +18,12 @@ import lombok.Data;
 @Data
 public class AppQuestCondition implements Predicate<QuestCollect> {
 
+    /** 任務期間(文字列:単発,デイリー,ウィークリー,マンスリー,クオータリー) */
+    private String resetType;
+
+    /** フィルター条件 */
+    private FilterCondition filter;
+
     /** 条件 */
     private List<Condition> conditions = new ArrayList<>();
 
@@ -33,6 +39,49 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
             }
         }
         return false;
+    }
+
+    /**
+     * フィルター条件
+     *
+     */
+    @Data
+    public static class FilterCondition {
+
+        /** 艦隊条件 */
+        private FleetCondition fleet;
+    }
+
+    /**
+     * 艦隊条件
+     *
+     */
+    @Data
+    public static class FleetCondition implements Predicate<List<ShipMst>> {
+
+        /** 備考 */
+        private String description;
+
+        /** 艦種 */
+        private Set<String> stype;
+
+        /** 艦名 */
+        private Set<String> name;
+
+        /** 序列(1:旗艦) */
+        private Integer order;
+
+        /** 条件 */
+        private List<FleetCondition> conditions;
+
+        /** 演算子(AND,OR,NAND,NOR) */
+        private String operator;
+
+        @Override
+        public boolean test(List<ShipMst> t) {
+            // TODO 自動生成されたメソッド・スタブ
+            return false;
+        }
     }
 
     /**
@@ -92,18 +141,18 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
                     if (this.boss) {
                         sb.append("ボス");
                     }
-                    if (this.stype == null || this.stype.isEmpty()
-                            || this.stype.contains("E")
-                            || this.stype.contains("D")) {
+                    if (this.rank == null || this.rank.isEmpty()
+                            || this.rank.contains("E")
+                            || this.rank.contains("D")) {
                         // D以下
                         sb.append("戦闘");
-                    } else if (this.stype.contains("C")) {
+                    } else if (this.rank.contains("C")) {
                         // C以上
                         sb.append("C敗北以上");
-                    } else if (this.stype.contains("B")) {
+                    } else if (this.rank.contains("B")) {
                         // B以上
                         sb.append("B勝利以上");
-                    } else if (this.stype.contains("A")) {
+                    } else if (this.rank.contains("A")) {
                         // A以上
                         sb.append("A勝利以上");
                     } else {

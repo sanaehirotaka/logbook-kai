@@ -1,5 +1,6 @@
 /* [242]敵東方中枢艦隊を撃破せよ！ */
 {
+    "resetType" : "ウィークリー",
     "conditions" : [
         {"boss": true, "area": ["4-4"], "rank": ["S", "A", "B"], "count": 1}
     ]

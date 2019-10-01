@@ -1,5 +1,6 @@
 /* [213]海上通商破壊作戦 */
 {
+    "resetType" : "ウィークリー",
     "conditions" : [
         {"stype": ["補給艦"], "count": 20}
     ]

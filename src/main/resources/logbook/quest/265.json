@@ -1,5 +1,6 @@
 /* [265]海上護衛強化月間 */
 {
+    "resetType" : "マンスリー",
     "conditions" : [
         {"boss": true, "area": ["1-5"], "rank": ["S", "A"], "count": 10}
     ]

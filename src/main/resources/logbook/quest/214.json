@@ -1,5 +1,6 @@
 /* [214]あ号作戦 */
 {
+    "resetType" : "ウィークリー",
     "conditions" : [
         {"start": true, "count": 36},
         {"rank": ["S"], "count": 6},
