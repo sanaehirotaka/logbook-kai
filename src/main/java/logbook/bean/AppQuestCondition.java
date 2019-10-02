@@ -236,8 +236,14 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
     @Data
     public static class Condition implements Predicate<QuestCollect> {
 
+        /** 備考 */
+        private String description;
+
         /** 海域 */
         private Set<String> area;
+
+        /** マップセル(7-2の第1ボスなら7、第2ボスなら15) */
+        private String cell;
 
         /** 出撃 */
         private boolean start;
@@ -280,6 +286,9 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
                 } else {
                     sb.append("任意の海域");
                 }
+                if (this.cell != null) {
+                    sb.append("(セル" + this.cell + ")");
+                }
                 if (this.start) {
                     sb.append("に").append(this.count).append("回出撃");
                 } else {
@@ -307,6 +316,9 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
                     }
                     sb.append(this.count).append("回");
                 }
+            }
+            if (this.description != null) {
+                sb.append("(" + this.description + ")");
             }
             if (this.current != null) {
                 sb.append("(現在の値:" + this.current + ")");
@@ -350,10 +362,14 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
             } else {
                 // 評価
                 Rank rank;
-                if (this.boss) {
-                    rank = battleCount.getBoss();
+                if (this.cell != null) {
+                    rank = battleCount.getCell().computeIfAbsent(this.area + "-" + this.cell, i -> new Rank());
                 } else {
-                    rank = battleCount.getAll();
+                    if (this.boss) {
+                        rank = battleCount.getBoss();
+                    } else {
+                        rank = battleCount.getAll();
+                    }
                 }
                 boolean any = (this.rank == null || this.rank.isEmpty());
 

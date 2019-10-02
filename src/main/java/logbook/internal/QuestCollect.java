@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -38,11 +39,15 @@ public class QuestCollect {
     public static class Count {
         private int start;
         private Rank all = new Rank();
+        private Map<String, Rank> cell = new HashMap<>();
         private Rank boss = new Rank();
 
         public void add(Count count) {
             this.start += count.start;
             this.all.add(count.all);
+            for (Entry<String, Rank> entry : count.cell.entrySet()) {
+                this.cell.merge(entry.getKey(), entry.getValue(), Rank::add);
+            }
             this.boss.add(count.boss);
         }
     }
@@ -56,13 +61,14 @@ public class QuestCollect {
         private int d;
         private int e;
 
-        public void add(Rank rank) {
+        public Rank add(Rank rank) {
             this.s += rank.s;
             this.a += rank.a;
             this.b += rank.b;
             this.c += rank.c;
             this.d += rank.d;
             this.e += rank.e;
+            return this;
         }
     }
 
@@ -139,10 +145,10 @@ public class QuestCollect {
             }
             if (map != null) {
                 // 海域ごとのカウント
-                count(log, collect.getArea().computeIfAbsent(map, k -> new Count()));
+                count(map, log, collect.getArea().computeIfAbsent(map, k -> new Count()));
             }
             // 合計
-            count(log, collect.getTotal());
+            count(map, log, collect.getTotal());
 
             if (condition.test(collect)) {
                 break;
@@ -151,21 +157,23 @@ public class QuestCollect {
         return collect;
     }
 
-    private static void count(SimpleBattleLog log, Count count) {
+    private static void count(String map, SimpleBattleLog log, Count count) {
         boolean isStart = log.getBoss().contains("出撃");
         boolean isBoss = log.getBoss().contains("ボス");
+        String cell = log.getCell();
         String rank = log.getRank();
 
         if (isStart) {
             count.start++;
         }
         if (isBoss) {
-            rank(rank, count.getBoss());
+            rank(map, rank, count.getBoss());
         }
-        rank(rank, count.getAll());
+        rank(map, rank, count.getCell().computeIfAbsent(map + "-" + cell, i -> new Rank()));
+        rank(map, rank, count.getAll());
     }
 
-    private static void rank(String rank, Rank rankCount) {
+    private static void rank(String map, String rank, Rank rankCount) {
         if (rank.equals("S")) {
             rankCount.s++;
         }
