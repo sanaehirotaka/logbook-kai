@@ -26,7 +26,7 @@
                      <children>
                         <Hyperlink onAction="#remove" styleClass="remove" text="除去" underline="true" />
                         <Hyperlink layoutX="32.0" onAction="#search" styleClass="search" text="検索" underline="true" />
-                        <Hyperlink fx:id="condition" layoutX="64.0" onAction="#condition" styleClass="remove" text="進捗" underline="true" />
+                        <Hyperlink fx:id="condition" layoutX="64.0" onAction="#condition" styleClass="condition" text="進捗" underline="true" />
                      </children>
                   </Group>
                </children>

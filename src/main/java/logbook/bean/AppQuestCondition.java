@@ -45,6 +45,8 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
     public boolean test(QuestCollect t) {
         Predicate<QuestCollect> predicate = null;
         for (Condition condition : this.conditions) {
+            condition.test(t);
+
             if (predicate == null) {
                 predicate = condition;
             } else {
