@@ -1,0 +1,20 @@
+/* [257]「水雷戦隊」南西へ！ */
+{
+    "resetType" : "マンスリー",
+    "filter" : {
+        "area": ["1-4"],
+        "fleet": {
+            "description": "軽巡旗艦かつ軽巡３隻以下、他駆逐の艦隊",
+            "operator": "AND",
+            "conditions": [
+                {"stype": ["軽巡洋艦"], "count": 3, "operator": "LE"},
+                {"stype": ["駆逐艦"], "count": 1, "operator": "GE"},
+                {"stype": ["軽巡洋艦","駆逐艦"], "count": 0, "operator": "EQ", "difference": true},
+                {"stype": ["軽巡洋艦"], "order": 1}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["1-4"], "rank": ["S"], "count": 1}
+    ]
+}

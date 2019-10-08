@@ -1,0 +1,19 @@
+/* [249]「第五戦隊」出撃せよ！ */
+{
+    "resetType" : "マンスリー",
+    "filter" : {
+        "area": ["2-5"],
+        "fleet": {
+            "description": "妙高、那智、羽黒 を含む艦隊",
+            "operator": "AND",
+            "conditions": [
+                {"name": ["妙高"]},
+                {"name": ["那智"]},
+                {"name": ["羽黒"]}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["2-5"], "rank": ["S"], "count": 1}
+    ]
+}

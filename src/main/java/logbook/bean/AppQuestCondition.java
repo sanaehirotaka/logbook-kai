@@ -212,12 +212,16 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
             if (this.difference) {
                 sb.append("以外");
             }
-            sb.append("を");
             if (this.count != null) {
+                sb.append("が");
                 sb.append(this.count)
-                        .append("隻")
-                        .append(Operator.valueOf(this.operator).toString());
+                        .append("隻");
+                Operator ope = Operator.valueOf(this.operator);
+                if (ope != Operator.EQ) {
+                    sb.append(Operator.valueOf(this.operator).toString());
+                }
             } else {
+                sb.append("を");
                 if (this.order != null) {
                     if (this.order == 1) {
                         sb.append("旗艦");
