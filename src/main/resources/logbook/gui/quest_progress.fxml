@@ -9,7 +9,7 @@
    <children>
       <Label fx:id="name" styleClass="bold" />
       <Label fx:id="info" wrapText="true" />
-      <TreeView fx:id="condition" VBox.vgrow="ALWAYS" />
+      <TreeView fx:id="condition" VBox.vgrow="ALWAYS" showRoot="false" />
    </children>
    <stylesheets>
       <URL value="@application.css" />

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import logbook.internal.Operator;
 import logbook.internal.QuestCollect;
 import logbook.internal.QuestCollect.Count;
 import logbook.internal.QuestCollect.Rank;
@@ -86,18 +87,24 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         /** 艦名 */
         private Set<String> name;
 
+        /** 艦種もしくは艦名のリストに含まれないものに一致 */
+        private boolean difference;
+
+        /** カウント */
+        private Integer count;
+
         /** 序列(1:旗艦) */
         private Integer order;
 
         /** 条件 */
         private List<FleetCondition> conditions;
 
-        /** 演算子(AND,OR,NAND,NOR) */
+        /** 演算子(AND,OR,NAND,NOR,EQ(等しい),GE(以上),GT(より大きい),LE(以下),LT(より小さい),NE(等しくない)) */
         private String operator;
 
         @Override
         public boolean test(List<ShipMst> ships) {
-            if (this.operator != null) {
+            if (this.count == null && this.operator != null) {
                 return this.testOperator(ships);
             } else {
                 return this.testShip(ships);
@@ -106,7 +113,7 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
 
         @Override
         public String toString() {
-            if (this.operator != null) {
+            if (this.count == null && this.operator != null) {
                 return this.toStringOperator();
             } else {
                 return this.toStringShip();
@@ -120,44 +127,55 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
          * @return 条件に一致する場合true
          */
         private boolean testShip(List<ShipMst> ships) {
-            boolean result = false;
-            if (this.order != null) {
-                // 序列の指定有り
-                if (ships.size() >= this.order)
-                    result = this.testShip0(ships.get(this.order - 1));
-                if (result) {
-                    ships.set(this.order - 1, null);
-                }
-            } else {
-                // 序列の指定無し
+            if (this.count != null) {
+                // 序列の指定無効
+                int c = 0;
                 for (int i = 0; i < ships.size(); i++) {
-                    result = this.testShip0(ships.get(i));
-                    if (result) {
-                        ships.set(i, null);
-                        break;
+                    if (this.difference ^ this.testShip0(ships.get(i))) {
+                        c++;
+                    }
+                }
+                return Operator.valueOf(this.operator).compare(c, this.count);
+            } else {
+                if (this.order != null) {
+                    // 序列の指定有り
+                    if (ships.size() >= this.order) {
+                        if (this.difference ^ this.testShip0(ships.get(this.order - 1))) {
+                            ships.set(this.order - 1, null);
+                            return true;
+                        }
+                    }
+                } else {
+                    // 序列の指定無し
+                    for (int i = 0; i < ships.size(); i++) {
+                        if (this.difference ^ this.testShip0(ships.get(i))) {
+                            ships.set(i, null);
+                            return true;
+                        }
                     }
                 }
             }
-            return result;
+            return false;
         }
 
         private boolean testShip0(ShipMst ship) {
-            boolean result = true;
             if (ship == null) {
-                result = false;
+                return false;
             }
-            if (result && this.stype != null) {
+            if (this.stype != null) {
                 String stype = ship.asStype()
                         .map(Stype::getName)
                         .orElse(null);
-                result &= this.stype.contains(stype);
+                return this.stype.contains(stype);
             }
-            if (result && this.name != null) {
+            if (this.name != null) {
                 for (String name : this.name) {
-                    result &= ship.getName().startsWith(name);
+                    if (ship.getName().startsWith(name)) {
+                        return true;
+                    }
                 }
             }
-            return result;
+            return false;
         }
 
         /**
@@ -191,15 +209,24 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
             if (this.name != null) {
                 sb.append(this.name.stream().collect(Collectors.joining("または")));
             }
-            if (this.order != null) {
-                sb.append("を");
-                if (this.order == 1) {
-                    sb.append("旗艦");
-                } else {
-                    sb.append("序列" + this.order + "位");
-                }
+            if (this.difference) {
+                sb.append("以外");
+            }
+            sb.append("を");
+            if (this.count != null) {
+                sb.append(this.count)
+                        .append("隻")
+                        .append(Operator.valueOf(this.operator).toString());
             } else {
-                sb.append("含む");
+                if (this.order != null) {
+                    if (this.order == 1) {
+                        sb.append("旗艦");
+                    } else {
+                        sb.append("序列" + this.order + "位");
+                    }
+                } else {
+                    sb.append("含む");
+                }
             }
             if (this.description != null) {
                 sb.append("(" + this.description + ")");

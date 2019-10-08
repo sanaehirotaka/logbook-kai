@@ -21,6 +21,8 @@ import javafx.stage.WindowEvent;
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCondition;
 import logbook.bean.AppQuestCondition.Condition;
+import logbook.bean.AppQuestCondition.FilterCondition;
+import logbook.bean.AppQuestCondition.FleetCondition;
 import logbook.internal.LoggerHolder;
 import logbook.internal.QuestCollect;
 import logbook.internal.ThreadManager;
@@ -86,17 +88,40 @@ public class QuestProgress extends WindowController {
                     Optional<AppQuestCondition> condition = this.getValue();
                     if (!condition.isPresent()) {
                         this.failed();
+                        return;
                     }
 
                     TreeItem<String> root = new TreeItem<>(quest.getQuest().getTitle());
                     root.setExpanded(true);
 
+                    FilterCondition filterCondition = condition.get().getFilter();
+                    if (filterCondition != null) {
+                        TreeItem<String> filterTree = new TreeItem<>("フィルター条件");
+                        filterTree.setExpanded(true);
+                        setFilterIcon(filterTree);
+
+                        FleetCondition fleetCondition = filterCondition.getFleet();
+                        if (fleetCondition != null) {
+                            TreeItem<String> fleetTree = new TreeItem<>("艦隊条件");
+                            fleetTree.setExpanded(true);
+                            setFilterIcon(fleetTree);
+                            fleetTree.getChildren().add(QuestProgress.this.buildFilterLeaf(fleetCondition));
+
+                            filterTree.getChildren().add(fleetTree);
+                        }
+                        root.getChildren().add(filterTree);
+                    }
+
+                    TreeItem<String> conditionTree = new TreeItem<>("達成条件");
+                    conditionTree.setExpanded(true);
                     for (Condition part : condition.get().getConditions()) {
                         TreeItem<String> leaf = new TreeItem<>(part.toString());
-                        QuestProgress.this.setIcon(leaf, part.getResult());
-                        root.getChildren().add(leaf);
+                        setConditionIcon(leaf, part.getResult());
+                        conditionTree.getChildren().add(leaf);
                     }
-                    QuestProgress.this.setIcon(root, condition.get().getResult());
+                    setConditionIcon(conditionTree, condition.get().getResult());
+                    root.getChildren().add(conditionTree);
+
                     QuestProgress.this.condition.setRoot(root);
                 }
 
@@ -104,7 +129,7 @@ public class QuestProgress extends WindowController {
                 protected void failed() {
                     Throwable t = this.getException();
                     TreeItem<String> root = new TreeItem<>("何らかの理由で集計出来ませんでした。" + (t != null ? String.valueOf(t) : ""));
-                    QuestProgress.this.setIcon(root, false);
+                    setConditionIcon(root, false);
                     QuestProgress.this.condition.setRoot(root);
                 }
             };
@@ -118,7 +143,38 @@ public class QuestProgress extends WindowController {
         }
     }
 
-    private void setIcon(TreeItem<String> item, Boolean result) {
+    private TreeItem<String> buildFilterLeaf(FleetCondition condition) {
+        TreeItem<String> item = new TreeItem<>(condition.toString());
+        setFilterListIcon(item);
+        if (condition.getConditions() != null) {
+            if (condition.getConditions().size() == 1 && !condition.getOperator().startsWith("N")) {
+                item.setValue(condition.getConditions().get(0).toString());
+            } else {
+                for (FleetCondition subcondition : condition.getConditions()) {
+                    item.getChildren().add(this.buildFilterLeaf(subcondition));
+                }
+            }
+        }
+        return item;
+    }
+
+    private static void setFilterIcon(TreeItem<String> item) {
+        GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+        StackPane pane = new StackPane();
+        pane.setPrefWidth(18);
+        pane.getChildren().add(fontAwesome.create(FontAwesome.Glyph.FILTER).color(Color.ROYALBLUE));
+        item.setGraphic(pane);
+    }
+
+    private static void setFilterListIcon(TreeItem<String> item) {
+        GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+        StackPane pane = new StackPane();
+        pane.setPrefWidth(18);
+        pane.getChildren().add(fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT).color(Color.ROYALBLUE));
+        item.setGraphic(pane);
+    }
+
+    private static void setConditionIcon(TreeItem<String> item, Boolean result) {
         GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
         StackPane pane = new StackPane();

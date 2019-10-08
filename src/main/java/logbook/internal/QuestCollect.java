@@ -2,6 +2,7 @@ package logbook.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class QuestCollect {
         QuestCollect collect = new QuestCollect();
         List<SimpleBattleLog> logs = AppQuestDuration.get().getCondition(quest);
         if (logs == null) {
-            return null;
+            logs = Collections.emptyList();
         }
         Collection<MapinfoMst> mapinfo = MapinfoMstCollection.get().getMapinfo().values();
         for (SimpleBattleLog log : logs) {
