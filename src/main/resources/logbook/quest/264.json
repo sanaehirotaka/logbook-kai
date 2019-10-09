@@ -1,0 +1,18 @@
+/* [264]「空母機動部隊」西へ！ */
+{
+    "resetType" : "マンスリー",
+    "filter" : {
+        "area": ["4-2"],
+        "fleet": {
+            "description": "空母2隻以上かつ駆逐2隻以上の艦隊",
+            "operator": "AND",
+            "conditions": [
+                {"stype": ["軽空母", "正規空母", "装甲空母"], "count": 2, "operator": "GE"},
+                {"stype": ["駆逐艦"], "count": 2, "operator": "GE"}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["4-2"], "rank": ["S"], "count": 1}
+    ]
+}

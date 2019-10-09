@@ -1,0 +1,7 @@
+/* [256]「潜水艦隊」出撃せよ！ */
+{
+    "resetType" : "マンスリー",
+    "conditions" : [
+        {"boss": true, "area": ["6-1"], "rank": ["S"], "count": 3}
+    ]
+}

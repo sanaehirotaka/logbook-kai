@@ -1,0 +1,11 @@
+/* [845]発令！「西方海域作戦」 */
+{
+    "resetType" : "クオータリー",
+    "conditions" : [
+        {"boss": true, "area": ["4-1"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["4-2"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["4-3"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["4-4"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["4-5"], "rank": ["S"], "count": 1}
+    ]
+}

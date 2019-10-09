@@ -1,0 +1,18 @@
+/* [259]「水上打撃部隊」南方へ！ */
+{
+    "resetType" : "マンスリー",
+    "filter" : {
+        "area": ["5-1"],
+        "fleet": {
+            "description": "扶桑型、伊勢型、長門型、大和型のうち3隻＋軽巡1の艦隊",
+            "operator": "AND",
+            "conditions": [
+                {"name": ["扶桑", "山城", "伊勢", "日向", "長門", "陸奥", "大和", "武蔵"], "count": 3, "operator": "EQ"},
+                {"stype": ["軽巡洋艦"], "count": 1, "operator": "EQ"}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["5-1"], "rank": ["S"], "count": 1}
+    ]
+}

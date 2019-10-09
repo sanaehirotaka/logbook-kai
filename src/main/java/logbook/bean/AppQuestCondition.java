@@ -1,6 +1,7 @@
 package logbook.bean;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -82,10 +83,10 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         private String description;
 
         /** 艦種 */
-        private Set<String> stype;
+        private LinkedHashSet<String> stype;
 
         /** 艦名 */
-        private Set<String> name;
+        private LinkedHashSet<String> name;
 
         /** 艦種もしくは艦名のリストに含まれないものに一致 */
         private boolean difference;
@@ -214,12 +215,14 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
             }
             if (this.count != null) {
                 sb.append("が");
-                sb.append(this.count)
-                        .append("隻");
+                sb.append(this.count);
+                sb.append("隻");
                 Operator ope = Operator.valueOf(this.operator);
-                if (ope != Operator.EQ) {
-                    sb.append(Operator.valueOf(this.operator).toString());
+                if (ope == Operator.EQ) {
+                    // ～がX隻に等しい
+                    sb.append("に");
                 }
+                sb.append(Operator.valueOf(this.operator).toString());
             } else {
                 sb.append("を");
                 if (this.order != null) {
@@ -273,7 +276,7 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         private String description;
 
         /** 海域 */
-        private Set<String> area;
+        private LinkedHashSet<String> area;
 
         /** マップセル(7-2の第1ボスなら7、第2ボスなら15) */
         private String cell;
@@ -285,10 +288,10 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         private boolean boss;
 
         /** ランク */
-        private Set<String> rank;
+        private LinkedHashSet<String> rank;
 
         /** 艦種 */
-        private Set<String> stype;
+        private LinkedHashSet<String> stype;
 
         /** カウント */
         private int count;

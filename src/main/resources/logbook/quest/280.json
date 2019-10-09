@@ -1,0 +1,20 @@
+/* [280]兵站線確保！海上警備を強化実施せよ！ */
+{
+    "resetType" : "クオータリー",
+    "filter" : {
+        "area": ["2-5"],
+        "fleet": {
+            "operator": "AND",
+            "conditions": [
+                {"stype": ["軽空母", "軽巡洋艦", "重雷装巡洋艦", "練習巡洋艦"], "count": 1, "operator": "GE"},
+                {"stype": ["駆逐艦", "海防艦"], "count": 3, "operator": "GE"}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["1-2"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["1-3"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["1-4"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["2-1"], "rank": ["S"], "count": 1}
+    ]
+}

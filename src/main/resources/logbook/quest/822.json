@@ -1,0 +1,7 @@
+/* [822]沖ノ島海域迎撃戦 */
+{
+    "resetType" : "クオータリー",
+    "conditions" : [
+        {"boss": true, "area": ["2-4"], "rank": ["S"], "count": 2}
+    ]
+}
