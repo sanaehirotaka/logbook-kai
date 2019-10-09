@@ -1,0 +1,13 @@
+/* [888]新編成「三川艦隊」、鉄底海峡に突入せよ！ */
+{
+    "resetType" : "クオータリー",
+    "filter" : {
+        "area": ["5-1", "5-3", "5-4"],
+        "fleet": {"name": ["鳥海", "青葉", "衣笠", "加古", "古鷹", "天龍", "夕張"], "count": 4, "operator": "GE"}
+    },
+    "conditions" : [
+        {"boss": true, "area": ["5-1"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["5-3"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["5-4"], "rank": ["S"], "count": 1}
+    ]
+}

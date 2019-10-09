@@ -1,0 +1,15 @@
+/* [894]空母戦力の投入による兵站線戦闘哨戒 */
+{
+    "resetType" : "クオータリー",
+    "filter" : {
+        "area": ["1-3", "1-4", "2-1", "2-2", "2-3"],
+        "fleet": {"stype": ["軽空母", "正規空母", "装甲空母"]}
+    },
+    "conditions" : [
+        {"boss": true, "area": ["1-3"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["1-4"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["2-1"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["2-2"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["2-3"], "rank": ["S"], "count": 1}
+    ]
+}

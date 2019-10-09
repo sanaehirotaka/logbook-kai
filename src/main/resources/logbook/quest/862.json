@@ -1,0 +1,17 @@
+/* [862]前線の航空偵察を実施せよ！ */
+{
+    "resetType" : "クオータリー",
+    "filter" : {
+        "area": ["6-3"],
+        "fleet": {
+            "operator": "AND",
+            "conditions": [
+                {"stype": ["水上機母艦"], "count": 1, "operator": "GE"},
+                {"stype": ["軽巡洋艦"], "count": 2, "operator": "GE"}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["6-3"], "rank": ["S", "A"], "count": 2}
+    ]
+}
