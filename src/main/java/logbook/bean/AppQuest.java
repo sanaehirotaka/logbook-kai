@@ -23,6 +23,17 @@ public class AppQuest implements Serializable {
 
     private static final long serialVersionUID = 4212109733911812553L;
 
+    /** デイリー */
+    private static final int DAILY = 1;
+    /** ウィークリー */
+    private static final int WEEKLY = 2;
+    /** マンスリー */
+    private static final int MONTHLY = 3;
+    /** 単発 */
+    private static final int ONECE = 4;
+    /** クォータリー */
+    private static final int QUARTRELY = 5;
+
     /** No */
     private Integer no;
 
@@ -67,40 +78,44 @@ public class AppQuest implements Serializable {
             if (resetType != null) {
                 switch (resetType) {
                 case "デイリー":
-                    type = 1;
+                    type = DAILY;
                     break;
                 case "ウィークリー":
-                    type = 2;
+                    type = WEEKLY;
                     break;
                 case "マンスリー":
-                    type = 3;
+                    type = MONTHLY;
+                    break;
+                case "単発":
+                    type = ONECE;
                     break;
                 case "クオータリー":
-                    type = 4;
+                case "クォータリー":
+                    type = QUARTRELY;
                     break;
                 }
             }
         }
 
-        if (type == 1) {
+        if (type == DAILY) {
             // 1=デイリー
             // 1日加算
             expire = base.plusDays(1)
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
-        } else if (type == 2) {
+        } else if (type == WEEKLY) {
             // 2=ウィークリー
             // 7日加算して曜日(1(月曜日)から7(日曜日))-1を減算する
             expire = base.plusWeeks(1)
                     .minusDays(base.getDayOfWeek().getValue() - 1)
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
-        } else if (type == 3) {
+        } else if (type == MONTHLY) {
             // 3=マンスリー
             // 翌月1日にする
             expire = base
                     .withDayOfMonth(1)
                     .plusMonths(1)
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
-        } else if (type == 4) {
+        } else if (type == ONECE) {
             // 4=単発
             // 期限なし、とりあえず9999年12月31日
             expire = base
@@ -111,7 +126,7 @@ public class AppQuest implements Serializable {
                     // 9999年12月31日
                     .minusDays(1)
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
-        } else if (type == 5) {
+        } else if (type == QUARTRELY) {
             // 5=他
             // 月(1-12)を-1して4で割った後切り捨てて4をかけて4を足す。
             // これにより4月,8月,12月のいずれかになる。(クオータリー最終月)
