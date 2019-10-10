@@ -1,0 +1,17 @@
+/* [875]精鋭「三一駆」、鉄底海域に突入せよ！ */
+{
+    "resetType" : "クオータリー",
+    "filter" : {
+        "area": ["5-4"],
+        "fleet": {
+            "operator": "AND",
+            "conditions": [
+                {"name": ["長波改二"], "order": 1},
+                {"name": ["高波改", "沖波改", "朝霜改"], "count": 1, "operator": "GE"}
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["5-4"], "rank": ["S"], "count": 2}
+    ]
+}
