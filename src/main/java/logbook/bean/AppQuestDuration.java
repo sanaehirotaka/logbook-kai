@@ -47,6 +47,12 @@ public class AppQuestDuration {
             duration.setFrom(Logs.nowString());
             durations.add(duration);
         }
+        // 重複があれば削除
+        for (val entry : this.map.entrySet()) {
+            if (!entry.getKey().equals(quest.getExpire())) {
+                entry.getValue().remove(quest.getNo());
+            }
+        }
         // 期限切れの削除
         String now = Logs.nowString();
         val iterator = this.map.entrySet().iterator();
@@ -77,6 +83,18 @@ public class AppQuestDuration {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 受託を完了します。
+     * 
+     * @param questId
+     */
+    @JsonIgnore
+    public void remove(Integer questId) {
+        for (val entry : this.map.entrySet()) {
+            entry.getValue().remove(questId);
         }
     }
 

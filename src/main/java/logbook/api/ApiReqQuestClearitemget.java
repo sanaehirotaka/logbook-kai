@@ -20,7 +20,7 @@ public class ApiReqQuestClearitemget implements APIListenerSpi {
         if (id != null) {
             Integer key = Integer.valueOf(id);
             AppQuestCollection.get().getQuest().remove(key);
-            AppQuestDuration.get().unset(key);
+            AppQuestDuration.get().remove(key);
         }
     }
 
