@@ -38,11 +38,19 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 ### 動作環境
 
-Java 8u40以降がインストールされた環境で動作します
+Java 8u40以降のJava8がインストールされた環境で動作します
+**互換性の問題のため、Java9以降では動作しません。**
 
 * Windows 7 以降
 * Linux
 * MacOS
+
+次のJavaVMで動作確認されています。
+
+- [Amazon Corretto 8](https://aws.amazon.com/jp/corretto/)
+   - [Amazon Corretto 8のインストール方法](https://docs.aws.amazon.com/ja_jp/corretto/latest/corretto-8-ug/windows-7-install.html)
+- [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+   - 要OTNアカウント
 
 ### [FAQ](faq.md)
 
