@@ -46,9 +46,9 @@ Java 8u40以降のJava8がインストールされた環境で動作します
 * MacOS
 
 次のJavaVMで動作確認されています。
-
+- [Liberica JDK](https://bell-sw.com/pages/java-8u232/)
 - [Amazon Corretto 8](https://aws.amazon.com/jp/corretto/)
-   - [Amazon Corretto 8のインストール方法](https://docs.aws.amazon.com/ja_jp/corretto/latest/corretto-8-ug/windows-7-install.html)
+   - 一部機能が動作しません。
 - [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
    - 要OTNアカウント
 
