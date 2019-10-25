@@ -38,19 +38,21 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 ### 動作環境
 
-Java 8u40以降のJava8がインストールされた環境で動作します
-**互換性の問題のため、Java9以降では動作しません。**
+Java 8u40以降のJavaがインストールされた環境で動作します
 
-* Windows 7 以降
-* Linux
-* MacOS
-
-次のJavaVMで動作確認されています。
-- [Liberica JDK](https://bell-sw.com/pages/java-8u232/)
-- [Amazon Corretto 8](https://aws.amazon.com/jp/corretto/)
-   - 一部機能が動作しません。
+**次のJavaVMで動作確認されています。**
+- **[Liberica JDK version 8](https://bell-sw.com/pages/java-8u232/)**
+   - 新規に導入する場合、こちらを推奨します。
 - [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-   - 要OTNアカウント
+   - ダウンロードにOTNアカウントが必要です。
+
+**次のJavaVMではご利用いただけません。**
+- [Amazon Corretto 8](https://aws.amazon.com/jp/corretto/)
+   - 一部機能が動作しません(集計機能・自動アップデートが利用不可)。
+- [AdoptOpenJDK](https://adoptopenjdk.net/)
+   - ライブラリが不足しているため起動しません。
+- **バージョンが8ではないJavaVM**
+   - <small>9以降に対応すると8で動かなくなる…</small>
 
 ### [FAQ](faq.md)
 
@@ -112,9 +114,3 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 
 * The BSD 3-Clause License
 * **ライセンス全文 :** [https://bitbucket.org/controlsfx/controlsfx/src/default/license.txt?fileviewer=file-view-default](https://bitbucket.org/controlsfx/controlsfx/src/default/license.txt?fileviewer=file-view-default)
-
-#### [JPEXS Free Flash Decompiler](https://www.free-decompiler.com/flash/)
-
-* LGPLv3
-* **ライセンス全文 :** [https://www.free-decompiler.com/flash/license_library/](https://www.free-decompiler.com/flash/license_library/)
-
