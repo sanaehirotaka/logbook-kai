@@ -869,10 +869,10 @@ public class BattleDetail extends WindowController {
                 if (this.beforeFriendAliveCount == 1 && Ships.isBadlyDamage(ps.getAfterFriend().get(0))) {
                     return Rank.D敗北;
                 }
-                if (this.enemyDamageRatio > 2.5 * this.friendDamageRatio) {
+                if (Math.floor(this.enemyDamageRatio) > 2.5 * Math.floor(this.friendDamageRatio)) {
                     return Rank.B戦術的勝利;
                 }
-                if (this.enemyDamageRatio > 0.9 * this.friendDamageRatio) {
+                if (Math.floor(this.enemyDamageRatio) > 0.9 * Math.floor(this.friendDamageRatio)) {
                     return Rank.C戦術的敗北;
                 }
                 if (this.beforeFriendAliveCount > this.afterFriendAliveCount && this.afterFriendAliveCount == 1) {
