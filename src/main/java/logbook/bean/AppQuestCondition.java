@@ -399,7 +399,7 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
                 // 評価
                 Rank rank;
                 if (this.cell != null) {
-                    rank = battleCount.getCell().computeIfAbsent(this.area + "-" + this.cell, i -> new Rank());
+                    rank = battleCount.getCell().computeIfAbsent(this.area.stream().findFirst().get() + "-" + this.cell, i -> new Rank());
                 } else {
                     if (this.boss) {
                         rank = battleCount.getBoss();
