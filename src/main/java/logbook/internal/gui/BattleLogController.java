@@ -162,6 +162,14 @@ public class BattleLogController extends WindowController {
     @FXML
     private TableColumn<BattleLogDetail, String> dropItem;
 
+    /** 艦娘経験値 */
+    @FXML
+    private TableColumn<BattleLogDetail, String> shipExp;
+
+    /** 提督経験値 */
+    @FXML
+    private TableColumn<BattleLogDetail, String> exp;
+
     /** 種類 */
     @FXML
     private ChoiceBox<String> aggregateType;
@@ -267,6 +275,8 @@ public class BattleLogController extends WindowController {
             this.dropType.setCellValueFactory(new PropertyValueFactory<>("dropType"));
             this.dropShip.setCellValueFactory(new PropertyValueFactory<>("dropShip"));
             this.dropItem.setCellValueFactory(new PropertyValueFactory<>("dropItem"));
+            this.shipExp.setCellValueFactory(new PropertyValueFactory<>("shipExp"));
+            this.exp.setCellValueFactory(new PropertyValueFactory<>("exp"));
 
             // 統計
             // ルート要素(非表示)
@@ -539,6 +549,8 @@ public class BattleLogController extends WindowController {
         filterBase.add(this.addFilterColumn(this.detail, this.dropType, listener, BattleLogDetail::getDropType));
         filterBase.add(this.addFilterColumn(this.detail, this.dropShip, listener, BattleLogDetail::getDropShip));
         filterBase.add(this.addFilterColumn(this.detail, this.dropItem, listener, BattleLogDetail::getDropItem));
+        filterBase.add(this.addFilterColumn(this.detail, this.shipExp, listener, BattleLogDetail::getShipExp));
+        filterBase.add(this.addFilterColumn(this.detail, this.exp, listener, BattleLogDetail::getExp));
     }
 
     /**
@@ -593,6 +605,8 @@ public class BattleLogController extends WindowController {
         this.addAggregate(this.dropType, BattleLogDetail::getDropType);
         this.addAggregate(this.dropShip, BattleLogDetail::getDropShip);
         this.addAggregate(this.dropItem, BattleLogDetail::getDropItem);
+        this.addAggregate(this.shipExp, BattleLogDetail::getShipExp);
+        this.addAggregate(this.exp, BattleLogDetail::getExp);
 
         // 列の選択が変更されたときに集計する
         this.aggregateType.getSelectionModel()

@@ -44,6 +44,10 @@ public class BattleLogDetail {
     private StringProperty dropShip;
     /** ドロップアイテム */
     private StringProperty dropItem;
+    /** 艦娘経験値 */
+    private StringProperty shipExp;
+    /** 提督経験値 */
+    private StringProperty exp;
 
     /**
      * 日付を取得します。
@@ -405,6 +409,54 @@ public class BattleLogDetail {
         return this.dropItem;
     }
 
+    /**
+     * 艦娘経験値を取得します。
+     * @return 艦娘経験値
+     */
+    public String getShipExp() {
+        return this.shipExp.get();
+    }
+
+    /**
+     * 艦娘経験値を設定します。
+     * @param shipExp 艦娘経験値
+     */
+    public void setShipExp(String shipExp) {
+        this.shipExp = new SimpleStringProperty(shipExp);
+    }
+
+    /**
+     * 艦娘経験値を取得します。
+     * @return 艦娘経験値
+     */
+    public StringProperty shipExpProperty() {
+        return this.shipExp;
+    }
+
+    /**
+     * 提督経験値を取得します。
+     * @return 提督経験値
+     */
+    public String getExp() {
+        return this.exp.get();
+    }
+
+    /**
+     * 提督経験値を設定します。
+     * @param exp 提督経験値
+     */
+    public void setExp(String exp) {
+        this.exp = new SimpleStringProperty(exp);
+    }
+
+    /**
+     * 提督経験値を取得します。
+     * @return 提督経験値
+     */
+    public StringProperty expProperty() {
+        return this.exp;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner("\t")
@@ -423,6 +475,8 @@ public class BattleLogDetail {
                 .add(this.dropType.get())
                 .add(this.dropShip.get())
                 .add(this.dropItem.get())
+                .add(this.shipExp.get())
+                .add(this.exp.get())
                 .toString();
     }
 
@@ -451,6 +505,8 @@ public class BattleLogDetail {
         detail.setDropType(log.getDropType());
         detail.setDropShip(log.getDropShip());
         detail.setDropItem(log.getDropItem());
+        detail.setShipExp(log.getShipExp());
+        detail.setExp(log.getExp());
         return detail;
     }
 }

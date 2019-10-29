@@ -73,6 +73,8 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 .add("敵艦11").add("敵艦11HP")
                 .add("敵艦12").add("敵艦12HP")
                 .add("ドロップアイテム")
+                .add("艦娘経験値")
+                .add("提督経験値")
                 .toString();
     }
 
@@ -220,6 +222,18 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 .map(id -> Optional.ofNullable(UseitemCollection.get().getUseitemMap().get(id)))
                 .map(o -> o.map(Useitem::getName).orElse("不明"))
                 .orElse("");
+        // 経験値
+        format.艦娘経験値 = Integer.toString(result.getGetShipExp().stream()
+                .mapToInt(Integer::intValue)
+                .filter(i -> i > 0)
+                .sum()
+                + Optional.ofNullable(result.getGetShipExpCombined())
+                        .map(v -> v.stream()
+                                .mapToInt(Integer::intValue)
+                                .filter(i -> i > 0)
+                                .sum())
+                        .orElse(0));
+        format.提督経験値 = String.valueOf(result.getGetExp());
         return format.toString();
     }
 
@@ -243,6 +257,8 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
         String[] 敵艦 = new String[12];
         String[] 敵艦HP = new String[12];
         String ドロップアイテム = "";
+        String 艦娘経験値 = "";
+        String 提督経験値 = "";
 
         public Format() {
             Arrays.fill(this.味方艦, "");
@@ -277,6 +293,8 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
                 joiner.add(this.敵艦HP[i]);
             }
             joiner.add(this.ドロップアイテム);
+            joiner.add(this.艦娘経験値);
+            joiner.add(this.提督経験値);
             return joiner.toString();
         }
     }

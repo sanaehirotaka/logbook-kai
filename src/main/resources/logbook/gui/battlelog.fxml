@@ -81,6 +81,8 @@
                         <TableColumn fx:id="dropType" prefWidth="75.0" text="ドロップ艦種" />
                         <TableColumn fx:id="dropShip" prefWidth="75.0" text="ドロップ艦娘" />
                         <TableColumn fx:id="dropItem" prefWidth="75.0" text="アイテム" />
+                        <TableColumn fx:id="shipExp" prefWidth="75.0" text="艦娘経験値" />
+                        <TableColumn fx:id="exp" prefWidth="75.0" text="提督経験値" />
                     </columns>
                     <contextMenu>
                        <ContextMenu>

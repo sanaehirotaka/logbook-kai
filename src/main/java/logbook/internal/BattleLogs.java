@@ -521,7 +521,10 @@ public class BattleLogs {
         private String dropShip;
         /** ドロップアイテム */
         private String dropItem = "";
-
+        /** 艦娘経験値 */
+        private String shipExp = "";
+        /** 提督経験値 */
+        private String exp = "";
         /**
          * 海戦・ドロップ報告書.csvから出撃統計のベースを作成します
          *
@@ -552,6 +555,12 @@ public class BattleLogs {
             this.setDropShip(columns[13]);
             if (columns.length > 62) {
                 this.setDropItem(columns[62]);
+            }
+            if (columns.length > 63) {
+                this.setShipExp(columns[63]);
+            }
+            if (columns.length > 64) {
+                this.setExp(columns[64]);
             }
         }
     }
