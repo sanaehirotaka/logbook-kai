@@ -128,15 +128,11 @@ public class AppQuest implements Serializable {
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
         } else if (type == QUARTRELY) {
             // 5=他
-            // 月(1-12)を-1して4で割った後切り捨てて4をかけて4を足す。
-            // これにより4月,8月,12月のいずれかになる。(クオータリー最終月)
-            int month = (base.getMonthValue() - 1) / 4 * 4 + 4;
+            // クオータリー最終月を求める
+            int addMonth = (base.getMonthValue() / 3 * 3) - base.getMonthValue() + 3;
             // クオータリー最終月の翌月1日
             expire = base.withDayOfMonth(1)
-                    // クオータリー最終月にする
-                    .withMonth(month)
-                    // その翌月
-                    .plusMonths(1)
+                    .plusMonths(addMonth)
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
         }
         if (expire != null) {
