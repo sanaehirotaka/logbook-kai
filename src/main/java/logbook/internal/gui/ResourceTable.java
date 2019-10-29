@@ -1,5 +1,7 @@
 package logbook.internal.gui;
 
+import java.util.StringJoiner;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -249,5 +251,20 @@ public class ResourceTable {
      */
     public void setImprove(String improve) {
         this.improve.set(improve);
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner("\t")
+                .add(this.date.get())
+                .add(this.fuel.get())
+                .add(this.ammo.get())
+                .add(this.metal.get())
+                .add(this.bauxite.get())
+                .add(this.bucket.get())
+                .add(this.burner.get())
+                .add(this.research.get())
+                .add(this.improve.get())
+                .toString();
     }
 }
