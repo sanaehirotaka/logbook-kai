@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="650.0" prefWidth="830.0" xmlns="http://javafx.com/javafx/8.0.232-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ExpChartController">
+   <children>
+      <FlowPane>
+         <children>
+            <Label text="集計" />
+            <ChoiceBox fx:id="type" prefWidth="100.0" />
+            <Label text="期間" />
+            <ChoiceBox fx:id="term" prefWidth="100.0" />
+            <CheckBox fx:id="forceZero" mnemonicParsing="false" onAction="#forceZeroChange" text="ゼロを基準" />
+            <CheckBox fx:id="stacked" mnemonicParsing="false" onAction="#change" text="累積" />
+         </children>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </FlowPane>
+      <BarChart fx:id="chart" animated="false" VBox.vgrow="ALWAYS">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis fx:id="yAxis" side="LEFT" />
+         </yAxis>
+      </BarChart>
+   </children>
+   <stylesheets>
+      <URL value="@application.css" />
+      <URL value="@resource_chart.css" />
+   </stylesheets>
+</VBox>

@@ -255,6 +255,20 @@ public class MainMenuController extends WindowController {
     }
 
     /**
+     * 経験値チャート
+     *
+     * @param e ActionEvent
+     */
+    @FXML
+    void expChart(ActionEvent e) {
+        try {
+            InternalFXMLLoader.showWindow("logbook/gui/exp_chart.fxml", this.parentController.getWindow(), "経験値チャート");
+        } catch (Exception ex) {
+            LoggerHolder.get().error("経験値チャートの初期化に失敗しました", ex);
+        }
+    }
+
+    /**
      * 編成記録
      *
      * @param e ActionEvent
