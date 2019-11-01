@@ -1,8 +1,8 @@
 /* [280]兵站線確保！海上警備を強化実施せよ！ */
 {
-    "resetType" : "クオータリー",
+    "resetType" : "マンスリー",
     "filter" : {
-        "area": ["2-5"],
+        "area": ["1-2", "1-3", "1-4", "2-1"],
         "fleet": {
             "operator": "AND",
             "conditions": [
