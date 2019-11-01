@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -57,8 +58,8 @@ public class ExpChartController extends WindowController {
         // 選択肢を追加
         this.type.setItems(FXCollections.observableArrayList(TypeOption.values()));
         this.term.setItems(FXCollections.observableArrayList(ScaleOption.values()));
-        this.type.getSelectionModel().select(2);
-        this.term.getSelectionModel().select(3);
+        this.type.getSelectionModel().select(0);
+        this.term.getSelectionModel().select(2);
         this.type.getSelectionModel().selectedItemProperty().addListener(this::changed);
         this.term.getSelectionModel().selectedItemProperty().addListener(this::changed);
         this.change();
@@ -95,6 +96,7 @@ public class ExpChartController extends WindowController {
         series.setName(type.toString());
 
         boolean stacked = this.stacked.isSelected();
+        ObservableList<String> categories = FXCollections.observableArrayList();
         double current = 0D;
         for (Entry<ZonedDateTime, Double> entry : data.entrySet()) {
             String key = scale.getFormat().format(entry.getKey().withZoneSameInstant(ZoneId.of("Asia/Tokyo")));
@@ -103,8 +105,12 @@ public class ExpChartController extends WindowController {
             } else {
                 current = entry.getValue();
             }
+            categories.add(key);
             series.getData().add(new XYChart.Data<>(key, current));
         }
+        this.xAxis.getCategories().clear();
+        this.xAxis.getCategories().addAll(categories);
+        this.xAxis.setCategories(categories);
         this.chart.getData().clear();
         this.chart.getData().add(series);
     }
@@ -231,7 +237,7 @@ public class ExpChartController extends WindowController {
             }
         },
         /** 今週 */
-        NOW_WEEK("今週", "M月d日a", Duration.ofHours(12)) {
+        NOW_WEEK("今週", "d日a", Duration.ofHours(12)) {
             @Override
             public ZonedDateTime convert(ZonedDateTime time, TypeOption type) {
                 return super.convert(time, type).truncatedTo(ChronoUnit.HALF_DAYS);
@@ -251,7 +257,7 @@ public class ExpChartController extends WindowController {
             }
         },
         /** 先週 */
-        LAST_WEEK("先週", "M月d日a", Duration.ofHours(12)) {
+        LAST_WEEK("先週", "d日a", Duration.ofHours(12)) {
             @Override
             public ZonedDateTime convert(ZonedDateTime time, TypeOption type) {
                 return super.convert(time, type).truncatedTo(ChronoUnit.HALF_DAYS);
@@ -271,7 +277,7 @@ public class ExpChartController extends WindowController {
             }
         },
         /** 今月 */
-        NOW_MONTH("今月", "M月d日", Duration.ofDays(1)) {
+        NOW_MONTH("今月", "d日", Duration.ofDays(1)) {
             @Override
             public ZonedDateTime convert(ZonedDateTime time, TypeOption type) {
                 return super.convert(time, type).truncatedTo(ChronoUnit.DAYS);
@@ -291,7 +297,7 @@ public class ExpChartController extends WindowController {
             }
         },
         /** 先月 */
-        LAST_MONTH("先月", "M月d日", Duration.ofDays(1)) {
+        LAST_MONTH("先月", "d日", Duration.ofDays(1)) {
             @Override
             public ZonedDateTime convert(ZonedDateTime time, TypeOption type) {
                 return super.convert(time, type).truncatedTo(ChronoUnit.DAYS);
