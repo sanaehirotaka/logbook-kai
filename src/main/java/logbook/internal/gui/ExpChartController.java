@@ -108,10 +108,10 @@ public class ExpChartController extends WindowController {
             categories.add(key);
             series.getData().add(new XYChart.Data<>(key, current));
         }
-        this.xAxis.getCategories().clear();
-        this.xAxis.getCategories().addAll(categories);
-        this.xAxis.setCategories(categories);
+        this.chart.setTitle(type + "(" + scale + ")");
         this.chart.getData().clear();
+        this.xAxis.getCategories().clear();
+        this.xAxis.setCategories(categories);
         this.chart.getData().add(series);
     }
 
