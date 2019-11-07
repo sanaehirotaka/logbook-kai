@@ -35,6 +35,9 @@ class ShipImage {
     /** 画像キャッシュ(アイコン類) */
     private static final ReferenceCache<String, Image> COMMON_CACHE = new ReferenceCache<>(32);
 
+    /** 画像キャッシュ(HPゲージ) */
+    private static final ReferenceCache<Double, Image> HPGAUGE_CACHE = new ReferenceCache<>(60);
+
     /** 艦娘画像ファイル名(健在・小破) */
     private static final String[] NORMAL = { "1.png", "1.jpg" };
 
@@ -351,12 +354,32 @@ class ShipImage {
     private static void writeHpGauge(Chara chara, Canvas canvas, GraphicsContext gc) {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
-
+        double gaugeWidth = 7;
         double hpPer = (double) chara.getNowhp() / (double) chara.getMaxhp();
-        gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
-        gc.fillRect(width - 7, 0, 7, height - (height * hpPer));
-        gc.setFill(hpGaugeColor(hpPer));
-        gc.fillRect(width - 7, height - (height * hpPer), 7, height * hpPer);
+        gc.drawImage(createHpGauge(gaugeWidth, height, hpPer), width - gaugeWidth, 0);
+    }
+
+    /**
+     * HPゲージを作成する
+     * @param width ゲージの幅
+     * @param height ゲージの高さ
+     * @param hpPer 割合
+     * @return HPゲージのImage
+     */
+    private static Image createHpGauge(double width, double height, double hpPer) {
+        double fixedHpPer = (int) (height * hpPer) / height;
+        return HPGAUGE_CACHE.get(fixedHpPer, key -> {
+            Canvas canvas = new Canvas(width, height);
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
+            gc.fillRect(0, 0, width, height - (height * fixedHpPer));
+            gc.setFill(hpGaugeColor(fixedHpPer));
+            gc.fillRect(0, height - (height * fixedHpPer), width, height * fixedHpPer);
+
+            SnapshotParameters sp = new SnapshotParameters();
+            sp.setFill(Color.TRANSPARENT);
+            return canvas.snapshot(sp, null);
+        });
     }
 
     /**
