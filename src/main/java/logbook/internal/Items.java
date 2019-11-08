@@ -1,6 +1,5 @@
 package logbook.internal;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -163,16 +162,18 @@ public class Items {
     private static Image itemIcon(int type, boolean slot) {
         Image image = optimizeItemIcon(type);
         if (slot) {
-            double width = image.getWidth();
-            double height = image.getHeight();
-            Canvas canvas = new Canvas(width, height);
-            GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.setFill(Color.rgb(44, 58, 59));
-            gc.fillOval(2, 2, width - 2, height - 2);
-            gc.drawImage(image, 0, 0);
-            SnapshotParameters sp = new SnapshotParameters();
-            sp.setFill(Color.TRANSPARENT);
-            return canvas.snapshot(sp, null);
+            return CACHE.get("slotItemIcon#" + type, key -> {
+                double width = image.getWidth();
+                double height = image.getHeight();
+                Canvas canvas = new Canvas(width, height);
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+                gc.setFill(Color.rgb(44, 58, 59));
+                gc.fillOval(2, 2, width - 2, height - 2);
+                gc.drawImage(image, 0, 0);
+                SnapshotParameters sp = new SnapshotParameters();
+                sp.setFill(Color.TRANSPARENT);
+                return canvas.snapshot(sp, null);
+            });
         }
         return image;
     }
@@ -187,33 +188,29 @@ public class Items {
         Path dir = Paths.get(AppConfig.get().getResourcesDir());
         Path p = dir.resolve(Paths.get("common", "common_icon_weapon/common_icon_weapon_id_" + type + ".png"));
 
-        if (p != null && Files.isReadable(p)) {
-            try {
-                Image image = CACHE.get(p.toUri().toString(), Image::new);
-
-                double width = image.getWidth();
-                double height = image.getHeight();
-
-                if (width != ITEM_ICON_SIZE) {
-                    double x = (int) ((ITEM_ICON_SIZE - width) / 2);
-                    double y = (int) ((ITEM_ICON_SIZE - height) / 2);
-
-                    Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
-                    GraphicsContext gc = canvas.getGraphicsContext2D();
-
-                    gc.drawImage(image, x, y);
-                    SnapshotParameters sp = new SnapshotParameters();
-                    sp.setFill(Color.TRANSPARENT);
-
-                    return canvas.snapshot(sp, null);
-                }
-                return image;
-            } catch (Exception e) {
+        return CACHE.get(p.toUri().toString(), url -> {
+            Image image = new Image(url);
+            if (image.isError()) {
                 return defaultItemIcon();
             }
-        } else {
-            return defaultItemIcon();
-        }
+            double width = image.getWidth();
+            double height = image.getHeight();
+
+            if (width != ITEM_ICON_SIZE) {
+                double x = (int) ((ITEM_ICON_SIZE - width) / 2);
+                double y = (int) ((ITEM_ICON_SIZE - height) / 2);
+
+                Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+
+                gc.drawImage(image, x, y);
+                SnapshotParameters sp = new SnapshotParameters();
+                sp.setFill(Color.TRANSPARENT);
+
+                return canvas.snapshot(sp, null);
+            }
+            return image;
+        });
     }
 
     /**
@@ -222,11 +219,13 @@ public class Items {
      * @return デフォルト装備アイコン
      */
     private static Image defaultItemIcon() {
-        Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
-        SnapshotParameters sp = new SnapshotParameters();
-        sp.setFill(Color.TRANSPARENT);
+        return CACHE.get("defaultItemIcon", key -> {
+            Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
+            SnapshotParameters sp = new SnapshotParameters();
+            sp.setFill(Color.TRANSPARENT);
 
-        return canvas.snapshot(sp, null);
+            return canvas.snapshot(sp, null);
+        });
     }
 
     /**

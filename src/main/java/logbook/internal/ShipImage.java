@@ -272,9 +272,13 @@ class ShipImage {
                 int y = 24;
                 if (isShip) {
                     Ship ship = chara.asShip();
-                    for (Integer itemId : ship.getSlot()) {
-                        // 装備アイコン
-                        layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId, itemMap)));
+                    int slotnum = ship.getSlotnum();
+                    for (int i = 0; i < 5; i++) {
+                        if (slotnum > i) {
+                            Integer itemId = ship.getSlot().get(i);
+                            // 装備アイコン
+                            layers.add(new Layer(x, y, ITEM_ICON_SIZE, ITEM_ICON_SIZE, itemIcon(itemId, itemMap)));
+                        }
                         x += ITEM_ICON_SIZE + 2;
                     }
                     if (ship.getSlotEx() != 0) {
@@ -389,11 +393,10 @@ class ShipImage {
      * @param layers 画像レイヤー
      */
     private static void applyLayers(GraphicsContext gc, List<Layer> layers) {
-        Path dir = Paths.get(AppConfig.get().getResourcesDir());
         for (Layer layer : layers) {
             Image img = null;
             if (layer.path != null) {
-                Path p = dir.resolve(layer.path);
+                Path p = Paths.get(AppConfig.get().getResourcesDir()).resolve(layer.path);
                 img = COMMON_CACHE.get(p.toUri().toString(), Image::new);
             }
             if (layer.img != null) {
