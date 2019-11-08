@@ -8,6 +8,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import logbook.Messages;
 import logbook.bean.AppConfig;
@@ -220,11 +221,7 @@ public class Items {
      */
     private static Image defaultItemIcon() {
         return CACHE.get("defaultItemIcon", key -> {
-            Canvas canvas = new Canvas(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
-            SnapshotParameters sp = new SnapshotParameters();
-            sp.setFill(Color.TRANSPARENT);
-
-            return canvas.snapshot(sp, null);
+            return new WritableImage(ITEM_ICON_SIZE, ITEM_ICON_SIZE);
         });
     }
 
