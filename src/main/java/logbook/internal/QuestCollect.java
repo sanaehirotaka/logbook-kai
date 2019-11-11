@@ -75,10 +75,8 @@ public class QuestCollect {
 
     public static QuestCollect collect(AppQuest quest, AppQuestCondition condition) {
         QuestCollect collect = new QuestCollect();
-        List<SimpleBattleLog> logs = AppQuestDuration.get().getCondition(quest);
-        if (logs == null) {
-            logs = Collections.emptyList();
-        }
+        List<SimpleBattleLog> logs = AppQuestDuration.get().getCondition(quest)
+                .orElse(Collections.emptyList());
         Collection<MapinfoMst> mapinfo = MapinfoMstCollection.get().getMapinfo().values();
         for (SimpleBattleLog log : logs) {
             if (Thread.currentThread().isInterrupted()) {

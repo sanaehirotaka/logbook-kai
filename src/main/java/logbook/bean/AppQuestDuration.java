@@ -3,6 +3,7 @@ package logbook.bean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -99,16 +100,16 @@ public class AppQuestDuration {
     }
 
     @JsonIgnore
-    public List<SimpleBattleLog> getCondition(AppQuest quest) {
+    public Optional<List<SimpleBattleLog>> getCondition(AppQuest quest) {
         val durationMap = this.map.get(quest.getExpire());
         if (durationMap == null)
-            return null;
+            return Optional.empty();
 
         val durations = durationMap.get(quest.getNo());
         if (durations == null)
-            return null;
+            return Optional.empty();
 
-        return BattleLogs.readSimpleLog(log -> {
+        return Optional.of(BattleLogs.readSimpleLog(log -> {
             String date = log.getDateString();
             for (Duration duration : durations) {
                 String from = duration.getFrom();
@@ -118,7 +119,7 @@ public class AppQuestDuration {
                 }
             }
             return false;
-        });
+        }));
     }
 
     /**

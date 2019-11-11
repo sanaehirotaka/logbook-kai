@@ -388,19 +388,15 @@ public class BattleLogs {
             Path dir = Paths.get(AppConfig.get().getReportPath());
             Path path = dir.resolve(new BattleResultLogFormat().fileName());
 
-            Stream<String> tmp;
             if (Files.exists(path)) {
-                tmp = Files.lines(path, LogWriter.DEFAULT_CHARSET);
-            } else {
-                tmp = Stream.empty();
-            }
-            try (Stream<String> lines = tmp) {
-                return lines.skip(1)
-                        .filter(l -> !l.isEmpty())
-                        .map(mapper)
-                        .filter(Objects::nonNull)
-                        .filter(predicate)
-                        .collect(Collectors.toList());
+                try (Stream<String> lines = Files.lines(path, LogWriter.DEFAULT_CHARSET)) {
+                    return lines.skip(1)
+                            .filter(l -> !l.isEmpty())
+                            .map(mapper)
+                            .filter(Objects::nonNull)
+                            .filter(predicate)
+                            .collect(Collectors.toList());
+                }
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
@@ -525,6 +521,7 @@ public class BattleLogs {
         private String shipExp = "";
         /** 提督経験値 */
         private String exp = "";
+
         /**
          * 海戦・ドロップ報告書.csvから出撃統計のベースを作成します
          *
