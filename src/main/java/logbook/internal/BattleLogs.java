@@ -411,14 +411,7 @@ public class BattleLogs {
      * @return 出撃統計
      */
     public static List<SimpleBattleLog> readSimpleLog(IUnit unit) {
-        try {
-            // 今日
-            ZonedDateTime now = unitToday();
-            return readSimpleLog(log -> unit.accept(log.getDate(), now));
-        } catch (Exception e) {
-            LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
-        }
-        return new ArrayList<>();
+        return readSimpleLog(log -> unit.accept(log.getDate(), unitToday()));
     }
 
     /**
