@@ -6,7 +6,7 @@
         "fleet": {
             "operator": "AND",
             "conditions": [
-                {"name": ["長波改二"], "order": 1},
+                {"name": ["長波改二"]},
                 {"name": ["高波改", "沖波改", "朝霜改"], "count": 1, "operator": "GE"}
             ]
         }
