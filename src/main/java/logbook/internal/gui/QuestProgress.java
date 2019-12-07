@@ -47,7 +47,7 @@ public class QuestProgress extends WindowController {
 
     void setQuest(AppQuest quest) {
         this.quest = quest;
-        this.name.setText(quest.getQuest().getTitle());
+        this.name.setText(quest.getQuest().getTitle() + " 期限:" + quest.getExpire());
         this.info.setText(quest.getQuest().getDetail().replaceAll("<br>", ""));
         this.condition.setRoot(new TreeItem<String>("読み込み中"));
         this.load();
