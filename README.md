@@ -1,5 +1,9 @@
 航海日誌 (logbook-kai)
 --
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/sanaehirotaka/logbook-kai)
+![GitHub](https://img.shields.io/github/license/sanaehirotaka/logbook-kai)
+![GitHub All Releases](https://img.shields.io/github/downloads/sanaehirotaka/logbook-kai/total)
+![GitHub Release Date](https://img.shields.io/github/release-date/sanaehirotaka/logbook-kai)
 
 **航海日誌 (logbook-kai)** は、「艦隊これくしょん ～艦これ～」をより遊びやすくするための外部ツールです。
 
@@ -24,21 +28,15 @@ MIT ライセンスの下で公開する、自由ソフトウェアです。
 * 所有艦娘一覧 : 艦娘の各種パラメータ(コンディション、制空値、火力値等)の閲覧を行うことが出来ます。
 * お風呂に入りたい艦娘 : 修理が必要な艦娘の時間と必要資材を一覧で見ることが出来ます。
 
-### [ダウンロード](https://github.com/sanaehirotaka/logbook-kai/releases)
-
-**ご注意ください**
-
-**初期の状態では艦娘の画像が表示出来ません。必ず**[FAQ](faq.md)**をお読みください。**
-
-#### プラグイン
-* [Pushbullet Plugin](https://github.com/rsky/logbook-kai-plugins)
- * 遠征・入渠の通知をiPhone/Android端末へプッシュ通知することが可能になります。
-
-### [ブラウザの設定(必須)](how-to-preference.md)
 
 ### 動作環境
+![Java](https://img.shields.io/badge/-Java-007396.svg?logo=java)
+![Windows](https://img.shields.io/badge/-Windows-0078D6.svg?logo=windows)
+![Debian](https://img.shields.io/badge/-Debian-A81D33.svg?logo=debian)
+![Redhat](https://img.shields.io/badge/-Redhat-EE0000.svg?logo=red-hat)
+![macOS](https://img.shields.io/badge/-macOS-333333.svg?logo=apple)
 
-Java 8u40以降のJavaがインストールされた環境で動作します
+Java 8u40以降のJava8がインストールされたWindows,LinuxまたはmacOSが必要です。
 
 **次のJavaVMで動作確認されています。**
 - **[Liberica JDK version 8](https://bell-sw.com/pages/java-8u232/)**
@@ -46,15 +44,24 @@ Java 8u40以降のJavaがインストールされた環境で動作します
 - [Oracle JDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
    - ダウンロードにOTNアカウントが必要です。
 
-**次のJavaVMではご利用いただけません。**
-- [Amazon Corretto 8](https://aws.amazon.com/jp/corretto/)
-   - 一部機能が動作しません(集計機能・自動アップデートが利用不可)。
-- [AdoptOpenJDK](https://adoptopenjdk.net/)
-   - ライブラリが不足しているため起動しません。
-- **バージョンが8ではないJavaVM**
-   - <small>9以降に対応すると8で動かなくなる…</small>
+次のJavaVMではご利用いただけません。
+- バージョンが8ではないJavaVM
+- Amazon Corretto : 一部機能が動作しません(集計機能・自動アップデートが利用不可)。
+- AdoptOpenJDK : ライブラリが不足しているため起動しません。
+
+### [ダウンロード](https://github.com/sanaehirotaka/logbook-kai/releases)
+
+**ご注意ください**
+
+**初期の状態では艦娘の画像が表示出来ません。必ず**[FAQ](faq.md)**をお読みください。**
+
+### [ブラウザの設定(必須)](how-to-preference.md)
 
 ### [FAQ](faq.md)
+
+#### プラグイン
+* [Pushbullet Plugin](https://github.com/rsky/logbook-kai-plugins)
+  * 遠征・入渠の通知をiPhone/Android端末へプッシュ通知することが可能になります。
 
 ### スクリーンショット
 
