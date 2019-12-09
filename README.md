@@ -1,9 +1,9 @@
 航海日誌 (logbook-kai)
 --
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/sanaehirotaka/logbook-kai)
-![GitHub](https://img.shields.io/github/license/sanaehirotaka/logbook-kai)
-![GitHub All Releases](https://img.shields.io/github/downloads/sanaehirotaka/logbook-kai/total)
-![GitHub Release Date](https://img.shields.io/github/release-date/sanaehirotaka/logbook-kai)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/sanaehirotaka/logbook-kai)](https://github.com/sanaehirotaka/logbook-kai/releases/latest)
+[![GitHub](https://img.shields.io/github/license/sanaehirotaka/logbook-kai)](LICENSE)
+[![GitHub All Releases](https://img.shields.io/github/downloads/sanaehirotaka/logbook-kai/total)](https://github.com/sanaehirotaka/logbook-kai/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/sanaehirotaka/logbook-kai)](https://github.com/sanaehirotaka/logbook-kai/releases)
 
 **航海日誌 (logbook-kai)** は、「艦隊これくしょん ～艦これ～」をより遊びやすくするための外部ツールです。
 
