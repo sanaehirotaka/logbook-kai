@@ -32,7 +32,6 @@ public class AppQuestDuration {
      */
     @JsonIgnore
     public void set(AppQuest quest) {
-        // 今のところ、単発・クオータリーは対象にしない
         if (quest.getExpire() == null) {
             return;
         }

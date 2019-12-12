@@ -1,19 +1,17 @@
 package logbook.internal.proxy;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -273,22 +271,8 @@ public final class ReverseProxyServlet extends ProxyServlet {
         }
 
         void set(InputStream body) {
-            BiConsumer<Map<String, List<String>>, String[]> accumulator = (m, v) -> {
-                if (v.length == 2) {
-                    m.computeIfAbsent(v[0], k -> new ArrayList<>())
-                            .add(v[1]);
-                }
-            };
-            BiConsumer<Map<String, List<String>>, Map<String, List<String>>> combiner = (m1, m2) -> {
-                m2.entrySet()
-                        .stream()
-                        .forEach(entry -> m1.merge(entry.getKey(), entry.getValue(), (l1, l2) -> {
-                            l1.addAll(l2);
-                            return l1;
-                        }));
-            };
-            String bodystr = "";
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(body, StandardCharsets.UTF_8))) {
+            String bodystr;
+            try (Reader reader = new InputStreamReader(body, StandardCharsets.UTF_8)) {
                 int len;
                 char[] cbuf = new char[128];
                 StringBuilder sb = new StringBuilder();
@@ -296,12 +280,25 @@ public final class ReverseProxyServlet extends ProxyServlet {
                     sb.append(cbuf, 0, len);
                 }
                 bodystr = URLDecoder.decode(sb.toString(), "UTF-8");
-            } catch (Exception e) {
-                // NOP
+            } catch (IOException e) {
+                bodystr = "";
             }
-            this.setParameterMap(Arrays.stream(bodystr.split("&"))
-                    .map(kv -> kv.split("="))
-                    .collect(LinkedHashMap::new, accumulator, combiner));
+            Map<String, List<String>> map = new LinkedHashMap<>();
+            for (String part : bodystr.split("&")) {
+                String key;
+                String value;
+                int idx = part.indexOf('=');
+                if (idx > 0) {
+                    key = part.substring(0, idx);
+                    value = part.substring(idx + 1, part.length());
+                } else {
+                    key = part;
+                    value = null;
+                }
+                map.computeIfAbsent(key, k -> new ArrayList<>())
+                        .add(value);
+            }
+            this.setParameterMap(map);
             this.setRequestBody(Optional.of(body));
         }
 

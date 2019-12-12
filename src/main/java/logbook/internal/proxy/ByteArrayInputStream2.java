@@ -1,7 +1,6 @@
 package logbook.internal.proxy;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +15,7 @@ public class ByteArrayInputStream2 extends InputStream {
 
     private List<byte[]> l;
     private Iterator<byte[]> e;
-    private InputStream in;
+    private ByteArrayInputStream in;
 
     public ByteArrayInputStream2(byte[] b) {
         this(Collections.singletonList(b));
@@ -33,7 +32,7 @@ public class ByteArrayInputStream2 extends InputStream {
     }
 
     @Override
-    public int available() throws IOException {
+    public int available() {
         if (this.in == null) {
             return 0; // no way to signal EOF from available()
         }
@@ -50,14 +49,14 @@ public class ByteArrayInputStream2 extends InputStream {
     }
 
     @Override
-    public void reset() throws IOException {
+    public void reset() {
         this.e = this.l.iterator();
         this.in = null;
         this.nextStream();
     }
 
     @Override
-    public int read() throws IOException {
+    public int read() {
         while (this.in != null) {
             int c = this.in.read();
             if (c != -1) {
@@ -69,7 +68,7 @@ public class ByteArrayInputStream2 extends InputStream {
     }
 
     @Override
-    public int read(byte b[], int off, int len) throws IOException {
+    public int read(byte b[], int off, int len) {
         if (this.in == null) {
             return -1;
         } else if (b == null) {
@@ -90,7 +89,7 @@ public class ByteArrayInputStream2 extends InputStream {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // NOP
     }
 
