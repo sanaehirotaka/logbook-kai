@@ -154,7 +154,7 @@ public class ApiStart2 implements APIListenerSpi {
      */
     private void apiMstMaparea(JsonArray array) {
         MapareaCollection.get()
-                .setMaparea(JsonHelper.toMap(array, Maparea::getId, Maparea::toMaparea));
+                .getMaparea().putAll(JsonHelper.toMap(array, Maparea::getId, Maparea::toMaparea));
     }
 
     /**
@@ -164,7 +164,7 @@ public class ApiStart2 implements APIListenerSpi {
      */
     private void apiMstMapinfo(JsonArray array) {
         MapinfoMstCollection.get()
-                .setMapinfo(JsonHelper.toMap(array, MapinfoMst::getId, MapinfoMst::toMapinfoMst));
+                .getMapinfo().putAll(JsonHelper.toMap(array, MapinfoMst::getId, MapinfoMst::toMapinfoMst));
     }
 
     /**

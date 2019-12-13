@@ -1,8 +1,10 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckComboBox;
+
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -45,12 +50,15 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import logbook.bean.BattleLog;
+import logbook.bean.MapinfoMst;
+import logbook.bean.MapinfoMstCollection;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.IUnit;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ToStringConverter;
+import logbook.plugin.PluginServices;
 
 /**
  * 戦闘ログのUIコントローラー
@@ -506,15 +514,52 @@ public class BattleLogController extends WindowController {
             // ボスフィルタ
             Predicate<BattleLogDetail> bossFilter = boss ? e -> e.getBoss().indexOf("ボス") != -1 : anyFilter;
 
-            this.detailsSource.addAll(this.logMap.get(collect.getCollectUnit())
+            List<BattleLogDetail> values = this.logMap.get(collect.getCollectUnit())
                     .stream()
                     .map(BattleLogDetail::toBattleLogDetail)
                     .filter(areaFilter)
                     .filter(bossFilter)
                     .sorted(Comparator.comparing(BattleLogDetail::getDate).reversed())
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toList());
+            this.updateCellName(values);
+            this.detailsSource.addAll(values);
         }
         this.initializeFilterPane();
+    }
+
+    private void updateCellName(List<BattleLogDetail> values) {
+        Map<String, String> mapNames = MapinfoMstCollection.get()
+                .getMapinfo()
+                .values()
+                .stream()
+                .collect(Collectors.toMap(MapinfoMst::getName,
+                        m -> m.getMapareaId() + "-" + m.getNo(),
+                        (a, b) -> a));
+
+        Map<?, ?> mapping = Collections.emptyMap();
+        InputStream is = PluginServices.getResourceAsStream("logbook/map/mapping.json");
+        if (is != null) {
+            try {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.enable(Feature.ALLOW_COMMENTS);
+                    mapping = mapper.readValue(is, Map.class);
+                } finally {
+                    is.close();
+                }
+            } catch (Exception e) {
+                LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
+            }
+        }
+        for (BattleLogDetail log : values) {
+            String mapId = mapNames.get(log.getArea());
+            if (mapId != null) {
+                String cell = (String) mapping.get(mapId + "-" + log.getCell());
+                if (cell != null) {
+                    log.setCell(cell);
+                }
+            }
+        }
     }
 
     /**
