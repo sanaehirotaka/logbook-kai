@@ -50,12 +50,12 @@
                               <Label fx:id="mapcell" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="6">
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="3">
                            <children>
                               <Label text="ルート:" />
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="7">
+                        <HBox GridPane.columnIndex="4" GridPane.columnSpan="3">
                            <children>
                               <Label fx:id="route" />
                            </children>
