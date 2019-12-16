@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -45,6 +46,7 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
+import logbook.internal.Mapping;
 import logbook.internal.PhaseState;
 import logbook.internal.Rank;
 import logbook.internal.Ships;
@@ -55,7 +57,6 @@ import lombok.Getter;
  *
  */
 public class BattleDetail extends WindowController {
-
     /** 戦闘ログ */
     private BattleLog log;
 
@@ -83,6 +84,12 @@ public class BattleDetail extends WindowController {
     /** 戦果報告 */
     private BattleResult result;
 
+    /** 戦闘回数 */
+    private Integer battleCount;
+
+    /** ルート */
+    private List<String> routeList;
+
     /** ルート要素 */
     @FXML
     private VBox detail;
@@ -94,6 +101,10 @@ public class BattleDetail extends WindowController {
     /** マス */
     @FXML
     private Label mapcell;
+
+    /** ルート */
+    @FXML
+    private Label route;
 
     /** 艦隊行動: */
     @FXML
@@ -187,7 +198,9 @@ public class BattleDetail extends WindowController {
             IMidnightBattle midnight = this.log.getMidnight();
             Set<Integer> escape = this.log.getEscape();
             BattleResult result = this.log.getResult();
-            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight, result);
+            Integer battleCount = this.log.getBattleCount();
+            List<String> route = this.log.getRoute();
+            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight, result, battleCount, route);
         }
     }
 
@@ -200,10 +213,13 @@ public class BattleDetail extends WindowController {
      * @param itemMap 装備
      * @param battle 戦闘
      * @param midnight 夜戦
-     * @param result 戦果報告
+     * @param result 戦果報告 
+     * @param battleCount 戦闘回数
+     * @param route ルート
      */
     void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap, Set<Integer> escape,
-            Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight, BattleResult result) {
+            Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight, BattleResult result,
+            Integer battleCount, List<String> route) {
         int hashCode = Objects.hash(last, battle, midnight, result);
         if (this.hashCode == hashCode) {
             return;
@@ -218,6 +234,8 @@ public class BattleDetail extends WindowController {
         this.battle = battle;
         this.midnight = midnight;
         this.result = result;
+        this.battleCount = battleCount;
+        this.routeList = route;
         this.update();
     }
 
@@ -253,8 +271,17 @@ public class BattleDetail extends WindowController {
         boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
         this.mapcell.setText(this.last.getMapareaId()
                 + "-" + this.last.getMapinfoNo()
-                + "-" + this.last.getNo()
+                + "-" + Mapping.getCell(this.last.getMapareaId(), this.last.getMapinfoNo(), this.last.getNo())
                 + (boss ? "(ボス)" : ""));
+        // ルート
+        if (this.routeList != null) {
+            this.route.setText(this.routeList.stream()
+                    .map(Mapping::getCell)
+                    .collect(Collectors.joining("→"))
+                    + Optional.ofNullable(this.battleCount).map(v -> "(戦闘" + v + "回)").orElse(""));
+        } else {
+            this.route.setText("");
+        }
 
         // 艦隊行動
         this.intercept.setText(BattleTypes.Intercept.toIntercept(this.battle.getFormation().get(2)).toString());

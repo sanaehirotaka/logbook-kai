@@ -1,7 +1,9 @@
 package logbook.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import logbook.internal.Config;
@@ -45,6 +47,12 @@ public class AppCondition implements Serializable {
 
     /** cond値更新時間(エポック秒) */
     private long condUpdateTime = 0;
+
+    /** 戦闘回数 */
+    private int battleCount = 0;
+
+    /** ルート(mapping.jsonを参照) */
+    private List<String> route = new ArrayList<>();
 
     /**
      * アプリケーションのデフォルト設定ディレクトリから{@link AppCondition}を取得します、

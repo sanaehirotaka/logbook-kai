@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
+<ScrollPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.232-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleDetail">
    <content>
       <VBox fx:id="detail">
          <children>
@@ -32,9 +32,9 @@
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints vgrow="SOMETIMES" />
-                      <RowConstraints vgrow="SOMETIMES" />
-                      <RowConstraints vgrow="SOMETIMES" />
-                      <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
+                        <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
                         <RowConstraints vgrow="SOMETIMES" />
@@ -45,9 +45,19 @@
                               <Label text="マス:" />
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="7">
+                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="4">
                            <children>
                               <Label fx:id="mapcell" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" GridPane.columnIndex="6">
+                           <children>
+                              <Label text="ルート:" />
+                           </children>
+                        </HBox>
+                        <HBox GridPane.columnIndex="7">
+                           <children>
+                              <Label fx:id="route" />
                            </children>
                         </HBox>
                         <HBox GridPane.rowIndex="1">

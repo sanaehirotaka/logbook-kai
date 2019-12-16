@@ -31,8 +31,13 @@ public class ApiReqCombinedBattleEachBattle implements APIListenerSpi {
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
 
-            BattleLog log = AppCondition.get().getBattleResult();
+            AppCondition condition = AppCondition.get();
+            BattleLog log = condition.getBattleResult();
             if (log != null) {
+                condition.setBattleCount(condition.getBattleCount() + 1);
+                log.setBattleCount(condition.getBattleCount());
+                log.setRoute(condition.getRoute());
+
                 log.setBattle(CombinedBattleEachBattle.toBattle(data));
                 // ローデータを設定する
                 if (AppConfig.get().isIncludeRawData()) {

@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
@@ -47,13 +48,17 @@ public class ApiReqMapStart implements APIListenerSpi {
             BattleLog log = new BattleLog();
             log.setCombinedType(CombinedType.toCombinedType(AppCondition.get().getCombinedType()));
             log.getNext().add(MapStartNext.toMapStartNext(data));
-            AppCondition.get()
-                    .setBattleResult(log);
 
-            AppCondition.get()
-                    .setMapStart(Boolean.TRUE);
-            AppCondition.get()
-                    .setDeckId(Integer.parseInt(req.getParameter("api_deck_id")));
+            AppCondition condition = AppCondition.get();
+            condition.setBattleResult(log);
+            condition.setMapStart(Boolean.TRUE);
+            condition.setDeckId(Integer.parseInt(req.getParameter("api_deck_id")));
+            // ルート情報
+            condition.getRoute().add(new StringJoiner("-")
+                    .add(req.getParameter("api_maparea_id"))
+                    .add(req.getParameter("api_mapinfo_no"))
+                    .add(req.getParameter("api_no"))
+                    .toString());
 
             if (AppConfig.get().isAlertBadlyStart() || AppBouyomiConfig.get().isEnable()) {
                 // 大破した艦娘

@@ -3,6 +3,7 @@ package logbook.api;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -204,11 +205,15 @@ public class ApiPortPort implements APIListenerSpi {
     private void condition() {
         AppCondition condition = AppCondition.get();
         // 出撃中ではない
-        condition.setMapStart(Boolean.FALSE);
+        condition.setMapStart(false);
         // 退避を削除
         condition.getEscape().clear();
         // 戦闘結果を削除
         condition.setBattleResultConfirm(null);
+        // 戦闘回数リセット
+        condition.setBattleCount(0);
+        // ルート削除
+        condition.setRoute(new ArrayList<>());
     }
 
     /**

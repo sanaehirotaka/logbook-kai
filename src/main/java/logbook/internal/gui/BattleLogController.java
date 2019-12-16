@@ -1,10 +1,8 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +14,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckComboBox;
-
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -57,8 +52,8 @@ import logbook.internal.BattleLogs.IUnit;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
+import logbook.internal.Mapping;
 import logbook.internal.ToStringConverter;
-import logbook.plugin.PluginServices;
 
 /**
  * 戦闘ログのUIコントローラー
@@ -535,26 +530,10 @@ public class BattleLogController extends WindowController {
                 .collect(Collectors.toMap(MapinfoMst::getName,
                         m -> m.getMapareaId() + "-" + m.getNo(),
                         (a, b) -> a));
-
-        Map<?, ?> mapping = Collections.emptyMap();
-        InputStream is = PluginServices.getResourceAsStream("logbook/map/mapping.json");
-        if (is != null) {
-            try {
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    mapper.enable(Feature.ALLOW_COMMENTS);
-                    mapping = mapper.readValue(is, Map.class);
-                } finally {
-                    is.close();
-                }
-            } catch (Exception e) {
-                LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
-            }
-        }
         for (BattleLogDetail log : values) {
             String mapId = mapNames.get(log.getArea());
             if (mapId != null) {
-                String cell = (String) mapping.get(mapId + "-" + log.getCell());
+                String cell = (String) Mapping.getCell(mapId + "-" + log.getCell());
                 if (cell != null) {
                     log.setCell(cell);
                 }

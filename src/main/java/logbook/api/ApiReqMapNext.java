@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javax.json.JsonObject;
@@ -46,25 +47,30 @@ public class ApiReqMapNext implements APIListenerSpi {
         if (data != null) {
             MapStartNext next = MapStartNext.toMapStartNext(data);
 
-            BattleLog log = AppCondition.get()
-                    .getBattleResult();
+            AppCondition condition = AppCondition.get();
+            BattleLog log = condition.getBattleResult();
             if (log == null) {
                 log = new BattleLog();
-                AppCondition.get()
-                        .setBattleResult(log);
+                condition.setBattleResult(log);
             }
-            log.setCombinedType(CombinedType.toCombinedType(AppCondition.get().getCombinedType()));
+            log.setCombinedType(CombinedType.toCombinedType(condition.getCombinedType()));
             log.getNext().add(next);
+            // ルート情報
+            condition.getRoute().add(new StringJoiner("-")
+                    .add(req.getParameter("api_maparea_id"))
+                    .add(req.getParameter("api_mapinfo_no"))
+                    .add(req.getParameter("api_no"))
+                    .toString());
 
             if (AppConfig.get().isAlertBadlyNext() || AppBouyomiConfig.get().isEnable()) {
                 // 大破した艦娘
                 List<Ship> badlyShips = DeckPortCollection.get()
                         .getDeckPortMap()
-                        .get(AppCondition.get().getDeckId())
+                        .get(condition.getDeckId())
                         .getBadlyShips();
 
                 // 連合艦隊時は第2艦隊も見る
-                if (AppCondition.get().isCombinedFlag()) {
+                if (condition.isCombinedFlag()) {
                     badlyShips.addAll(DeckPortCollection.get()
                             .getDeckPortMap()
                             .get(2).getBadlyShips());
