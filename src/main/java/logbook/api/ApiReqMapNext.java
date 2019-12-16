@@ -57,9 +57,9 @@ public class ApiReqMapNext implements APIListenerSpi {
             log.getNext().add(next);
             // ルート情報
             condition.getRoute().add(new StringJoiner("-")
-                    .add(req.getParameter("api_maparea_id"))
-                    .add(req.getParameter("api_mapinfo_no"))
-                    .add(req.getParameter("api_no"))
+                    .add(data.getJsonNumber("api_maparea_id").toString())
+                    .add(data.getJsonNumber("api_mapinfo_no").toString())
+                    .add(data.getJsonNumber("api_no").toString())
                     .toString());
 
             if (AppConfig.get().isAlertBadlyNext() || AppBouyomiConfig.get().isEnable()) {

@@ -55,9 +55,9 @@ public class ApiReqMapStart implements APIListenerSpi {
             condition.setDeckId(Integer.parseInt(req.getParameter("api_deck_id")));
             // ルート情報
             condition.getRoute().add(new StringJoiner("-")
-                    .add(req.getParameter("api_maparea_id"))
-                    .add(req.getParameter("api_mapinfo_no"))
-                    .add(req.getParameter("api_no"))
+                    .add(data.getJsonNumber("api_maparea_id").toString())
+                    .add(data.getJsonNumber("api_mapinfo_no").toString())
+                    .add(data.getJsonNumber("api_no").toString())
                     .toString());
 
             if (AppConfig.get().isAlertBadlyStart() || AppBouyomiConfig.get().isEnable()) {
