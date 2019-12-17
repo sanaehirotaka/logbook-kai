@@ -1,3 +1,6 @@
+.bold {
+    -fx-font-weight: bold;
+}
 /* 制空均衡 */
 .dispseiku0 {
 	-fx-text-fill: darkred;
