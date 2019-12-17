@@ -31,6 +31,7 @@
                                     <Bundle-License>The MIT License (MIT)</Bundle-License>
                                     <Implementation-Title>航海日誌</Implementation-Title>
                                     <Implementation-Vendor>sanaehirotaka</Implementation-Vendor>
+                                    <Built-By>sanaehirotaka</Built-By>
                                 </manifestEntries>
                                 <manifest>
                                     <mainClass>logbook.internal.Launcher</mainClass>
