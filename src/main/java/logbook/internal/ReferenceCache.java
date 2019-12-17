@@ -4,6 +4,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -43,9 +44,44 @@ public final class ReferenceCache<K, V> {
         return value;
     }
 
+    /**
+     * 指定されたキーがマップされている値を返します。
+     * このキャッシュにそのキーのマッピングが含まれていない、または参照オブジェクトがクリアされている場合は
+     * getterで指定された値と指定されたキーをこのキャッシュに関連付けます。
+     *
+     * @param key 関連付けられた値が返されるキー
+     * @param getter 指定されたキーに関連付けられる値
+     * @return 指定されたキーがマップされている値
+     */
+    public V get(K key, BiFunction<K, CacheStatus, V> getter) {
+        Reference<V> r = this.cache.get(key);
+        V value;
+        if (r != null && (value = r.get()) != null) {
+            return value;
+        }
+        CacheStatus status = new CacheStatus();
+        value = getter.apply(key, status);
+        if (status.isDoCache()) {
+            this.cache.put(key, new SoftReference<>(value));
+        }
+        return value;
+    }
+
     @Override
     public String toString() {
         return this.cache.toString();
+    }
+
+    public static class CacheStatus {
+        boolean doCache = true;
+
+        public boolean isDoCache() {
+            return this.doCache;
+        }
+
+        public void setDoCache(boolean doCache) {
+            this.doCache = doCache;
+        }
     }
 
     private static class LRUCache<K, V> extends LinkedHashMap<K, V> {

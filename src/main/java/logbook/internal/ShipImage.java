@@ -148,7 +148,11 @@ class ShipImage {
         if (chara != null) {
             Path base = getPath(chara);
             if (base != null) {
-                return BASE_CACHE.get(base.toUri().toString(), Image::new);
+                return BASE_CACHE.get(base.toUri().toString(), (url, status) -> {
+                    Image image = new Image(url);
+                    status.setDoCache(!image.isError());
+                    return image;
+                });
             }
         }
         return null;
@@ -395,7 +399,11 @@ class ShipImage {
             Image img = null;
             if (layer.path != null) {
                 Path p = Paths.get(AppConfig.get().getResourcesDir()).resolve(layer.path);
-                img = COMMON_CACHE.get(p.toUri().toString(), Image::new);
+                img = COMMON_CACHE.get(p.toUri().toString(), (url, status) -> {
+                    Image image = new Image(url);
+                    status.setDoCache(!image.isError());
+                    return image;
+                });
             }
             if (layer.img != null) {
                 img = layer.img;

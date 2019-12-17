@@ -189,9 +189,10 @@ public class Items {
         Path dir = Paths.get(AppConfig.get().getResourcesDir());
         Path p = dir.resolve(Paths.get("common", "common_icon_weapon/common_icon_weapon_id_" + type + ".png"));
 
-        return CACHE.get(p.toUri().toString(), url -> {
+        return CACHE.get(p.toUri().toString(), (url, status) -> {
             Image image = new Image(url);
             if (image.isError()) {
+                status.setDoCache(false);
                 return defaultItemIcon();
             }
             double width = image.getWidth();
