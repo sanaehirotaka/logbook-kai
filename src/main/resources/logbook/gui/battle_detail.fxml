@@ -45,7 +45,7 @@
                               <Label text="マス:" />
                            </children>
                         </HBox>
-                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="4">
+                        <HBox GridPane.columnIndex="1">
                            <children>
                               <Label fx:id="mapcell" />
                            </children>
