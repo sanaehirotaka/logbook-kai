@@ -353,9 +353,10 @@ public class BattleLogController extends WindowController {
 
         // 海域の名前
         List<String> areaNames = list.stream()
-                .map(log -> log.getArea()
+                .peek(log -> log.setArea(log.getArea()
                         + Optional.ofNullable(this.mapNames.get(log.getArea()))
-                                .map(v -> "(" + v + ")").orElse(""))
+                                .map(v -> "(" + v + ")").orElse("")))
+                .map(SimpleBattleLog::getArea)
                 .distinct()
                 .sorted(Comparator.naturalOrder())
                 .collect(Collectors.toList());
