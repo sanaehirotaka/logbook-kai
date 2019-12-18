@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -28,13 +29,16 @@ import logbook.bean.SlotitemMstCollection;
 class ShipImage {
 
     /** 画像キャッシュ(艦) */
-    private static final ReferenceCache<String, Image> BASE_CACHE = new ReferenceCache<>(200);
+    private static final ReferenceCache<String, Image> BASE_CACHE = new ReferenceCache<>(120);
 
     /** 画像キャッシュ(アイコン類) */
     private static final ReferenceCache<String, Image> COMMON_CACHE = new ReferenceCache<>(32);
 
     /** 画像キャッシュ(HPゲージ) */
-    private static final ReferenceCache<Double, Image> HPGAUGE_CACHE = new ReferenceCache<>(60);
+    private static final ReferenceCache<Double, Image> HPGAUGE_CACHE = new ReferenceCache<>(50);
+
+    /** 画像キャッシュ(経験値ゲージ) */
+    private static final ReferenceCache<Double, Image> EXPGAUGE_CACHE = new ReferenceCache<>(50);
 
     /** 艦娘画像ファイル名(健在・小破) */
     private static final String[] NORMAL = { "1.png", "1.jpg" };
@@ -186,7 +190,8 @@ class ShipImage {
      */
     static Image get(Chara chara, boolean addItem, boolean applyState,
             Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
-        return get(chara, addItem, applyState, true, true, true, itemMap, escape);
+        boolean visibleExpGauge = AppConfig.get().isVisibleExpGauge();
+        return get(chara, addItem, applyState, true, true, true, visibleExpGauge, itemMap, escape);
     }
 
     /**
@@ -198,11 +203,13 @@ class ShipImage {
      * @param banner バナーアイコンを追加する
      * @param cond コンディションを反映する
      * @param hpGauge HPゲージを反映する
+     * @param expGauge 経験値ゲージを反映する
      * @param itemMap 装備Map
      * @param escape 退避艦ID
      * @return 艦娘の画像
      */
     static Image get(Chara chara, boolean addItem, boolean applyState, boolean banner, boolean cond, boolean hpGauge,
+            boolean expGauge,
             Map<Integer, SlotItem> itemMap, Set<Integer> escape) {
         Canvas canvas = new Canvas(240, 60);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -302,6 +309,9 @@ class ShipImage {
 
             applyLayers(gc, layers);
 
+            if (expGauge && chara.isShip()) {
+                writeExpGauge(chara.asShip(), canvas, gc);
+            }
             if (hpGauge) {
                 writeHpGauge(chara, canvas, gc);
             }
@@ -358,29 +368,66 @@ class ShipImage {
      * @param gc GraphicsContext
      */
     private static void writeHpGauge(Chara chara, Canvas canvas, GraphicsContext gc) {
-        double width = canvas.getWidth();
-        double height = canvas.getHeight();
+        double w = canvas.getWidth();
+        double h = canvas.getHeight();
         double gaugeWidth = 7;
         double hpPer = (double) chara.getNowhp() / (double) chara.getMaxhp();
-        gc.drawImage(createHpGauge(gaugeWidth, height, hpPer), width - gaugeWidth, 0);
+        gc.drawImage(createGauge(gaugeWidth, h, hpPer, ShipImage::hpGaugeColor, HPGAUGE_CACHE), w - gaugeWidth, 0);
     }
 
     /**
-     * HPゲージを作成する
+     * 経験値ゲージ
+     * @param chara キャラクター
+     * @param canvas Canvas
+     * @param gc GraphicsContext
+     */
+    private static void writeExpGauge(Ship ship, Canvas canvas, GraphicsContext gc) {
+        double w = canvas.getWidth();
+        double h = canvas.getHeight();
+        double gaugeHeight = 4;
+        double exp = ship.getExp().get(0);
+        double next = ship.getExp().get(1);
+        double expPer;
+        if (next > 0) {
+            Integer nowLvExp = ExpTable.get().get(ship.getLv());
+            Integer nextLvExp = ExpTable.get().get(ship.getLv() + 1);
+            if (nowLvExp != null && nextLvExp != null) {
+                expPer = (exp - nowLvExp.doubleValue()) / (nextLvExp.doubleValue() - nowLvExp.doubleValue());
+            } else {
+                expPer = 0;
+            }
+        } else {
+            expPer = 0;
+        }
+        gc.drawImage(createGauge(w, gaugeHeight, expPer, k -> Color.STEELBLUE, EXPGAUGE_CACHE), 0, h - gaugeHeight);
+    }
+
+    /**
+     * ゲージを作成する
      * @param width ゲージの幅
      * @param height ゲージの高さ
-     * @param hpPer 割合
-     * @return HPゲージのImage
+     * @param per 割合
+     * @param colorFunc 色
+     * @param cache キャッシュ
+     * @return ゲージのImage
      */
-    private static Image createHpGauge(double width, double height, double hpPer) {
-        double fixedHpPer = (int) (height * hpPer) / height;
-        return HPGAUGE_CACHE.get(fixedHpPer, key -> {
+    private static Image createGauge(double width, double height, double per,
+            Function<Double, Color> colorFunc,
+            ReferenceCache<Double, Image> cache) {
+        double fixedPer = (int) (Math.max(width, height) * per) / Math.max(width, height);
+        return cache.get(fixedPer, key -> {
             Canvas canvas = new Canvas(width, height);
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
-            gc.fillRect(0, 0, width, height - (height * fixedHpPer));
-            gc.setFill(hpGaugeColor(fixedHpPer));
-            gc.fillRect(0, height - (height * fixedHpPer), width, height * fixedHpPer);
+            if (width < height) {
+                gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
+                gc.fillRect(0, 0, width, height - (height * fixedPer));
+            }
+            gc.setFill(colorFunc.apply(fixedPer));
+            if (width < height) {
+                gc.fillRect(0, height - (height * fixedPer), width, height * fixedPer);
+            } else {
+                gc.fillRect(0, 0, width * fixedPer, height);
+            }
 
             SnapshotParameters sp = new SnapshotParameters();
             sp.setFill(Color.TRANSPARENT);

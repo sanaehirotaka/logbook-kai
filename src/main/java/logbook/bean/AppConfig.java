@@ -48,6 +48,9 @@ public final class AppConfig implements Serializable {
     /** 遠征完了時のリマインド(秒) */
     private int remind = 60;
 
+    /** 艦娘の画像に経験値バーを表示する */
+    private boolean visibleExpGauge = true;
+
     /** 母港枠の空きがこれ以下でボタンを警告色に変える */
     private int shipFullyThreshold = 4;
 

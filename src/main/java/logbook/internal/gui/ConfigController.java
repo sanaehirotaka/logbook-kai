@@ -148,6 +148,10 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox includeRawData;
 
+    /** 艦娘の画像に経験値バーを表示する */
+    @FXML
+    private CheckBox visibleExpGauge;
+
     /** 母港枠 */
     @FXML
     private TextField shipFullyThreshold;
@@ -345,6 +349,7 @@ public class ConfigController extends WindowController {
         this.indefiniteExpires.setSelected(conf.isIndefiniteExpires());
         this.compressBattleLogs.setSelected(conf.isCompressBattleLogs());
         this.includeRawData.setSelected(conf.isIncludeRawData());
+        this.visibleExpGauge.setSelected(conf.isVisibleExpGauge());
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
@@ -454,6 +459,7 @@ public class ConfigController extends WindowController {
         conf.setIndefiniteExpires(this.indefiniteExpires.isSelected());
         conf.setCompressBattleLogs(this.compressBattleLogs.isSelected());
         conf.setIncludeRawData(this.includeRawData.isSelected());
+        conf.setVisibleExpGauge(this.visibleExpGauge.isSelected());
         conf.setShipFullyThreshold(this.toInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(this.toInt(this.itemFullyThreshold.getText()));
         conf.setImageZoomRate(this.toInt(this.imageZoomRate.getText()));
