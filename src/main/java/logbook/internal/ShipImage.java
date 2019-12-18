@@ -399,7 +399,7 @@ class ShipImage {
         } else {
             expPer = 0;
         }
-        Color color = Color.TRANSPARENT.interpolate(Color.STEELBLUE, 0.9);
+        Color color = Color.TRANSPARENT.interpolate(Color.DEEPSKYBLUE, 0.9);
         gc.drawImage(createGauge(w, gaugeHeight, expPer, k -> color, EXPGAUGE_CACHE), 0, h - gaugeHeight);
     }
 
