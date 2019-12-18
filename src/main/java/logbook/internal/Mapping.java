@@ -4,11 +4,14 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import logbook.bean.MapinfoMst;
+import logbook.bean.MapinfoMstCollection;
 import logbook.plugin.PluginServices;
 
 /**
@@ -19,6 +22,7 @@ public class Mapping {
 
     private static Mapping INSTANCE = new Mapping();
 
+    /** セルNoと記号のマッピング*/
     private Map<String, String> mapping;
 
     private Mapping() {
@@ -74,5 +78,18 @@ public class Mapping {
             return String.valueOf(no);
         }
         return ret;
+    }
+
+    /**
+     * 海域名と略称(例:1-5)のマッピングを返します
+     * @return 海域名と略称(例:1-5)のマッピング
+     */
+    public static Map<String, String> fullNameToShort() {
+        return MapinfoMstCollection.get()
+                .getMapinfo()
+                .values()
+                .stream()
+                .collect(Collectors.toMap(MapinfoMst::getName,
+                        m -> m.getMapareaId() + "-" + m.getNo(), (a, b) -> a));
     }
 }

@@ -3,12 +3,14 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -45,8 +47,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import logbook.bean.BattleLog;
-import logbook.bean.MapinfoMst;
-import logbook.bean.MapinfoMstCollection;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.IUnit;
 import logbook.internal.BattleLogs.SimpleBattleLog;
@@ -212,12 +212,16 @@ public class BattleLogController extends WindowController {
     /** 集計用Map */
     private Map<String, Function<BattleLogDetail, ?>> aggregateTypeMap = new HashMap<>();
 
+    /** 海域名と略称(例:1-5)のマッピング */
+    private Map<String, String> mapNames = Collections.emptyMap();
+
     @FXML
     void initialize() {
         try {
             TableTool.setVisible(this.detail, this.getClass().toString() + "#" + "detail");
             TableTool.setVisible(this.aggregate, this.getClass().toString() + "#" + "aggregate");
-
+            // 海域名と略称(例:1-5)のマッピング
+            this.mapNames = Mapping.fullNameToShort();
             // 統計
             this.collect.setShowRoot(false);
 
@@ -349,7 +353,9 @@ public class BattleLogController extends WindowController {
 
         // 海域の名前
         List<String> areaNames = list.stream()
-                .map(SimpleBattleLog::getArea)
+                .map(log -> log.getArea()
+                        + Optional.ofNullable(this.mapNames.get(log.getArea()))
+                                .map(v -> "(" + v + ")").orElse(""))
                 .distinct()
                 .sorted(Comparator.naturalOrder())
                 .collect(Collectors.toList());
@@ -523,17 +529,10 @@ public class BattleLogController extends WindowController {
     }
 
     private void updateCellName(List<BattleLogDetail> values) {
-        Map<String, String> mapNames = MapinfoMstCollection.get()
-                .getMapinfo()
-                .values()
-                .stream()
-                .collect(Collectors.toMap(MapinfoMst::getName,
-                        m -> m.getMapareaId() + "-" + m.getNo(),
-                        (a, b) -> a));
         for (BattleLogDetail log : values) {
-            String mapId = mapNames.get(log.getArea());
+            String mapId = this.mapNames.get(log.getArea());
             if (mapId != null) {
-                String cell = (String) Mapping.getCell(mapId + "-" + log.getCell());
+                String cell = Mapping.getCell(mapId + "-" + log.getCell());
                 if (cell != null) {
                     log.setCell(cell);
                 }
