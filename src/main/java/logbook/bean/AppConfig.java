@@ -19,10 +19,13 @@ import lombok.Data;
 @Data
 public final class AppConfig implements Serializable {
 
-    private static final long serialVersionUID = 1609207862902171553L;
+    private static final long serialVersionUID = -158061123666406172L;
 
     /** ウインドウスタイル */
     private String windowStyle = "main";
+
+    /** フォントサイズ */
+    private String fontSize = "default";
 
     /** 遠征・入渠完了時に通知をする */
     private boolean useNotification = true;

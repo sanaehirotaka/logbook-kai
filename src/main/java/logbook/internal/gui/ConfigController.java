@@ -35,9 +35,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import logbook.bean.AppBouyomiConfig;
 import logbook.bean.AppBouyomiConfig.AppBouyomiText;
 import logbook.bean.AppConfig;
+import logbook.bean.WindowLocation;
 import logbook.internal.BouyomiChanUtils;
 import logbook.internal.BouyomiChanUtils.BouyomiDefaultSettings;
 import logbook.internal.BouyomiChanUtils.BouyomiSetting;
@@ -66,6 +68,21 @@ public class ConfigController extends WindowController {
     /** メイン画面のスタイル-ワイド */
     @FXML
     private RadioButton windowStyleWide;
+
+    @FXML
+    private ToggleGroup fontSize;
+
+    /** 文字の大きさ-標準 */
+    @FXML
+    private RadioButton fontSizeDefault;
+
+    /** 文字の大きさ-少し大きい */
+    @FXML
+    private RadioButton fontSizeLarge1;
+
+    /** 文字の大きさ-大きい */
+    @FXML
+    private RadioButton fontSizeLarge2;
 
     /** 遠征・入渠完了時に通知をする */
     @FXML
@@ -309,6 +326,8 @@ public class ConfigController extends WindowController {
         AppConfig conf = AppConfig.get();
         this.windowStyleSmart.setSelected("main".equals(conf.getWindowStyle()));
         this.windowStyleWide.setSelected("main_wide".equals(conf.getWindowStyle()));
+        this.fontSizeLarge1.setSelected("large1".equals(conf.getFontSize()));
+        this.fontSizeLarge2.setSelected("large2".equals(conf.getFontSize()));
         this.useNotification.setSelected(conf.isUseNotification());
         this.alertBadlyStart.setSelected(conf.isAlertBadlyStart());
         this.alertBadlyNext.setSelected(conf.isAlertBadlyNext());
@@ -411,6 +430,14 @@ public class ConfigController extends WindowController {
         if (this.windowStyleWide.isSelected())
             windowStyle = "main_wide";
         conf.setWindowStyle(windowStyle);
+
+        String fontSize = "default";
+        if (this.fontSizeLarge1.isSelected())
+            fontSize = "large1";
+        if (this.fontSizeLarge2.isSelected())
+            fontSize = "large2";
+        conf.setFontSize(fontSize);
+
         conf.setUseNotification(this.useNotification.isSelected());
         conf.setAlertBadlyStart(this.alertBadlyStart.isSelected());
         conf.setAlertBadlyNext(this.alertBadlyNext.isSelected());
@@ -707,5 +734,21 @@ public class ConfigController extends WindowController {
                 return 0;
         }
         return Integer.parseInt(v, 10);
+    }
+
+    @Override
+    public void setWindowLocation(WindowLocation location) {
+        if (location != null) {
+            boolean intersect = Screen.getScreens()
+                    .stream()
+                    .map(Screen::getVisualBounds)
+                    .anyMatch(r -> r.intersects(
+                            location.getX(), location.getY(), location.getWidth(), location.getHeight()));
+
+            if (intersect) {
+                this.getWindow().setX(location.getX());
+                this.getWindow().setY(location.getY());
+            }
+        }
     }
 }

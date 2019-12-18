@@ -25,7 +25,7 @@ public class Main extends Application {
             fxmlName = AppConfig.get().getWindowStyle();
         }
         FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/" + fxmlName + ".fxml"); //$NON-NLS-1$
-        Parent root = loader.load();
+        Parent root = InternalFXMLLoader.setGlobal(loader.load());
         stage.setScene(new Scene(root));
 
         WindowController controller = loader.getController();
