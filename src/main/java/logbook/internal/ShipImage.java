@@ -382,9 +382,9 @@ class ShipImage {
      * @param gc GraphicsContext
      */
     private static void writeExpGauge(Ship ship, Canvas canvas, GraphicsContext gc) {
-        double w = canvas.getWidth();
+        double w = canvas.getWidth() - 7;
         double h = canvas.getHeight();
-        double gaugeHeight = 4;
+        double gaugeHeight = 6;
         double exp = ship.getExp().get(0);
         double next = ship.getExp().get(1);
         double expPer;
@@ -399,7 +399,8 @@ class ShipImage {
         } else {
             expPer = 0;
         }
-        gc.drawImage(createGauge(w, gaugeHeight, expPer, k -> Color.STEELBLUE, EXPGAUGE_CACHE), 0, h - gaugeHeight);
+        Color color = Color.TRANSPARENT.interpolate(Color.STEELBLUE, 0.9);
+        gc.drawImage(createGauge(w, gaugeHeight, expPer, k -> color, EXPGAUGE_CACHE), 0, h - gaugeHeight);
     }
 
     /**
@@ -418,9 +419,11 @@ class ShipImage {
         return cache.get(fixedPer, key -> {
             Canvas canvas = new Canvas(width, height);
             GraphicsContext gc = canvas.getGraphicsContext2D();
+            gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
             if (width < height) {
-                gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
                 gc.fillRect(0, 0, width, height - (height * fixedPer));
+            } else {
+                gc.fillRect(width * fixedPer, 0, width - (width * fixedPer), height);
             }
             gc.setFill(colorFunc.apply(fixedPer));
             if (width < height) {
