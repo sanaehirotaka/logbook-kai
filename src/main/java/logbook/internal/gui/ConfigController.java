@@ -526,7 +526,9 @@ public class ConfigController extends WindowController {
     void selectReportDir(ActionEvent event) {
         DirectoryChooser dc = new DirectoryChooser();
         dc.setTitle("報告書の保存先");
-        dc.setInitialDirectory(new File(this.reportDir.getText()));
+        if (Files.exists(Paths.get(this.reportDir.getText()))) {
+            dc.setInitialDirectory(new File(this.reportDir.getText()));
+        }
         Optional.ofNullable(dc.showDialog(this.getWindow()))
                 .filter(File::exists)
                 .map(File::getAbsolutePath)
