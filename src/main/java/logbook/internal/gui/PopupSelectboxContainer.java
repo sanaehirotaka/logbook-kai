@@ -39,7 +39,7 @@ class PopupSelectboxContainer<T> extends VBox {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/popup-selectbox.fxml");
             loader.setRoot(this);
             loader.setController(this);
-            loader.load();
+            InternalFXMLLoader.setGlobal(loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }

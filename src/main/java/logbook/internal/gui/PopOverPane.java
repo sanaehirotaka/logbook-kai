@@ -47,7 +47,7 @@ public class PopOverPane extends VBox {
             FXMLLoader loader = InternalFXMLLoader.load("logbook/gui/pop-over.fxml");
             loader.setRoot(this);
             loader.setController(this);
-            loader.load();
+            InternalFXMLLoader.setGlobal(loader.load());
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLのロードに失敗しました", e);
         }

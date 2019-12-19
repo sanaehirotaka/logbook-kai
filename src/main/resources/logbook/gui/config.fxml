@@ -68,7 +68,7 @@
                                  </children>
                               </HBox>
                               <Label text="文字の大きさ*" GridPane.rowIndex="1" />
-                              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
                                     <RadioButton fx:id="fontSizeDefault" mnemonicParsing="false" selected="true" text="標準">
                                        <toggleGroup>

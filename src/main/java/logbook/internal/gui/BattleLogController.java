@@ -409,6 +409,8 @@ public class BattleLogController extends WindowController {
         UnitDialog dialog = new UnitDialog();
 
         Alert alert = new Alert(Alert.AlertType.NONE);
+        alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+        InternalFXMLLoader.setGlobal(alert.getDialogPane());
         alert.initOwner(this.getWindow());
         alert.setTitle("集計の追加");
         alert.setDialogPane(dialog);

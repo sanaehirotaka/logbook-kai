@@ -35,6 +35,8 @@ public class PropertyDialog<T> {
         sheet.setSearchBoxVisible(sheet.getItems().size() > 10);
 
         this.alert = new Alert(AlertType.NONE);
+        this.alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+        InternalFXMLLoader.setGlobal(this.alert.getDialogPane());
         this.alert.initOwner(owner);
         this.alert.setTitle(title);
         this.alert.getDialogPane().setContent(new BorderPane(sheet));

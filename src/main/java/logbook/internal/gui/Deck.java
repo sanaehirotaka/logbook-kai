@@ -204,6 +204,8 @@ public class Deck extends WindowController {
         // 編成記録が保存されていない場合に確認する
         if (oldValue != null && this.modified.get()) {
             Alert alert = new Alert(AlertType.INFORMATION);
+            alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+            InternalFXMLLoader.setGlobal(alert.getDialogPane());
             alert.initOwner(this.deckList.getScene().getWindow());
             alert.setTitle("編成記録の保存");
             alert.setContentText("保存されていない編成記録「" + this.deckName.getText() + "」を保存しますか?");
@@ -283,6 +285,8 @@ public class Deck extends WindowController {
                     del.getStyleClass().add("delete");
                     del.setOnAction(e -> {
                         Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+                        InternalFXMLLoader.setGlobal(alert.getDialogPane());
                         alert.initOwner(Deck.this.deckList.getScene().getWindow());
                         alert.setTitle("編成記録の除去");
                         alert.setContentText("「" + item.getName() + "」を除去しますか?");

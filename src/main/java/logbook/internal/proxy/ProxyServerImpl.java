@@ -18,6 +18,7 @@ import javafx.scene.control.TextArea;
 import logbook.Messages;
 import logbook.bean.AppConfig;
 import logbook.internal.LoggerHolder;
+import logbook.internal.gui.InternalFXMLLoader;
 import logbook.proxy.ProxyServerSpi;
 
 /**
@@ -90,6 +91,8 @@ public final class ProxyServerImpl implements ProxyServerSpi {
 
         Runnable runnable = () -> {
             Alert alert = new Alert(AlertType.WARNING);
+            alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+            InternalFXMLLoader.setGlobal(alert.getDialogPane());
             TextArea textArea = new TextArea(stackTrace);
             alert.getDialogPane().setExpandableContent(textArea);
 

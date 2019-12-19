@@ -18,6 +18,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import logbook.internal.gui.InternalFXMLLoader;
 import logbook.internal.gui.Tools;
 
 /**
@@ -98,6 +99,8 @@ public class CheckUpdate {
         ButtonType no = new ButtonType("後で");
 
         Alert alert = new Alert(AlertType.INFORMATION);
+        alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+        InternalFXMLLoader.setGlobal(alert.getDialogPane());
         alert.setTitle("新しいバージョン");
         alert.setHeaderText("新しいバージョン");
         alert.setContentText(message);

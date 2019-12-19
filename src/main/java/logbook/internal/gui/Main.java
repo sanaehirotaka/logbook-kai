@@ -40,6 +40,8 @@ public class Main extends Application {
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
             if (AppConfig.get().isCheckDoit()) {
                 Alert alert = new Alert(AlertType.INFORMATION);
+                alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+                InternalFXMLLoader.setGlobal(alert.getDialogPane());
                 alert.initOwner(stage);
                 alert.setTitle("終了の確認");
                 alert.setHeaderText("終了の確認");

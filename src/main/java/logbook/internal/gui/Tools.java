@@ -201,6 +201,7 @@ public class Tools {
                 Window own) {
             Alert alert = new Alert(type);
             alert.getDialogPane().getStylesheets().add("logbook/gui/application.css");
+            InternalFXMLLoader.setGlobal(alert.getDialogPane());
             alert.initOwner(own);
             alert.setTitle(title);
             alert.setContentText(message);
