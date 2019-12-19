@@ -15,5 +15,12 @@ hs_err_pid*
 /target/
 /lib/
 /dest/
+/battlelog/
 /config/
 /logs/
+/plugins/
+/resources/
+/sounds/
+/launch.bat
+/README.url
+/*.csv
