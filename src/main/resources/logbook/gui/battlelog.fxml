@@ -29,7 +29,7 @@
                <children>
                   <TreeTableView fx:id="collect" VBox.vgrow="ALWAYS">
                     <columns>
-                      <TreeTableColumn fx:id="unit" prefWidth="130.0" text="集計" />
+                      <TreeTableColumn fx:id="unit" prefWidth="170.0" text="集計" />
                       <TreeTableColumn fx:id="start" prefWidth="40.0" text="出撃" />
                         <TreeTableColumn fx:id="win" prefWidth="40.0" text="勝利" />
                         <TreeTableColumn fx:id="s" prefWidth="40.0" text="S勝利" />

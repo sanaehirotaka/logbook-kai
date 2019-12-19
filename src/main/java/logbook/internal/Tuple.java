@@ -1,5 +1,7 @@
 package logbook.internal;
 
+import java.util.Objects;
+
 /**
  * Tuple
  *
@@ -27,7 +29,7 @@ public interface Tuple {
         }
 
         public A get1() {
-            return _1;
+            return this._1;
         }
 
         public Unit<A> asUnit() {
@@ -40,6 +42,23 @@ public interface Tuple {
 
         public <B, C> Triplet<A, B, C> asTriplet() {
             return new Triplet<A, B, C>(this._1, null, null);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this._1);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            if (this == obj)
+                return true;
+            if (!(obj instanceof Unit))
+                return false;
+            Unit<?> unit = (Unit<?>) obj;
+            return Objects.equals(this._1, unit._1);
         }
     }
 
@@ -80,6 +99,24 @@ public interface Tuple {
         public <C> Triplet<A, B, C> asTriplet() {
             return new Triplet<A, B, C>(this._1, this._2, null);
         }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this._1) + Objects.hashCode(this._2);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            if (this == obj)
+                return true;
+            if (!(obj instanceof Pair))
+                return false;
+            Pair<?, ?> unit = (Pair<?, ?>) obj;
+            return Objects.equals(this._1, unit._1)
+                    && Objects.equals(this._2, unit._2);
+        }
     }
 
     public static class Triplet<A, B, C> implements Tuple {
@@ -116,6 +153,25 @@ public interface Tuple {
 
         public Triplet<A, B, C> asTriplet() {
             return this;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(this._1) + Objects.hashCode(this._2) + Objects.hashCode(this._3);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null)
+                return false;
+            if (this == obj)
+                return true;
+            if (!(obj instanceof Triplet))
+                return false;
+            Triplet<?, ?, ?> unit = (Triplet<?, ?, ?>) obj;
+            return Objects.equals(this._1, unit._1)
+                    && Objects.equals(this._2, unit._2)
+                    && Objects.equals(this._3, unit._3);
         }
     }
 }

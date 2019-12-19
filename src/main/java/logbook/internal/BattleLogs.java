@@ -347,12 +347,17 @@ public class BattleLogs {
             } else {
                 tmp = Stream.empty();
             }
+
+            // 海域名と略称(例:1-5)のマッピング
+            Map<String, String> mapNames = Mapping.fullNameToShort();
+
             try (Stream<String> lines = tmp) {
                 List<SimpleBattleLog> all = lines.skip(1)
                         .filter(l -> !l.isEmpty())
                         .map(mapper)
                         .filter(Objects::nonNull)
                         .filter(log -> log.getDate().compareTo(limit) > 0)
+                        .peek(log -> updateLog(mapNames, log))
                         .collect(Collectors.toList());
 
                 Map<IUnit, List<SimpleBattleLog>> map = new LinkedHashMap<>();
@@ -388,6 +393,9 @@ public class BattleLogs {
             Path dir = Paths.get(AppConfig.get().getReportPath());
             Path path = dir.resolve(new BattleResultLogFormat().fileName());
 
+            // 海域名と略称(例:1-5)のマッピング
+            Map<String, String> mapNames = Mapping.fullNameToShort();
+
             if (Files.exists(path)) {
                 try (Stream<String> lines = Files.lines(path, LogWriter.DEFAULT_CHARSET)) {
                     return lines.skip(1)
@@ -395,6 +403,7 @@ public class BattleLogs {
                             .map(mapper)
                             .filter(Objects::nonNull)
                             .filter(predicate)
+                            .peek(log -> updateLog(mapNames, log))
                             .collect(Collectors.toList());
                 }
             }
@@ -471,6 +480,17 @@ public class BattleLogs {
                 .truncatedTo(ChronoUnit.DAYS);
     }
 
+    private static void updateLog(Map<String, String> mapNames, SimpleBattleLog log) {
+        String shortName = mapNames.get(log.getArea());
+        if (shortName != null) {
+            log.setAreaShortName(shortName);
+            String cell = Mapping.getCell(shortName + "-" + log.getCell());
+            if (cell != null) {
+                log.setCell(cell);
+            }
+        }
+    }
+
     /**
      * 出撃統計のベース
      *
@@ -484,6 +504,8 @@ public class BattleLogs {
         private ZonedDateTime date;
         /** 海域 */
         private String area;
+        /** 海域略称 */
+        private String areaShortName;
         /** マス */
         private String cell;
         /** ボス */

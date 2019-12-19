@@ -3,14 +3,12 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -52,8 +50,9 @@ import logbook.internal.BattleLogs.IUnit;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
-import logbook.internal.Mapping;
 import logbook.internal.ToStringConverter;
+import logbook.internal.Tuple;
+import logbook.internal.Tuple.Pair;
 
 /**
  * 戦闘ログのUIコントローラー
@@ -212,16 +211,11 @@ public class BattleLogController extends WindowController {
     /** 集計用Map */
     private Map<String, Function<BattleLogDetail, ?>> aggregateTypeMap = new HashMap<>();
 
-    /** 海域名と略称(例:1-5)のマッピング */
-    private Map<String, String> mapNames = Collections.emptyMap();
-
     @FXML
     void initialize() {
         try {
             TableTool.setVisible(this.detail, this.getClass().toString() + "#" + "detail");
             TableTool.setVisible(this.aggregate, this.getClass().toString() + "#" + "aggregate");
-            // 海域名と略称(例:1-5)のマッピング
-            this.mapNames = Mapping.fullNameToShort();
             // 統計
             this.collect.setShowRoot(false);
 
@@ -352,18 +346,23 @@ public class BattleLogController extends WindowController {
         unitRoot.getChildren().add(boss);
 
         // 海域の名前
-        List<String> areaNames = list.stream()
-                .peek(log -> log.setArea(log.getArea()
-                        + Optional.ofNullable(this.mapNames.get(log.getArea()))
-                                .map(v -> "(" + v + ")").orElse("")))
-                .map(SimpleBattleLog::getArea)
+        List<Pair<String, String>> areaNames = list.stream()
+                .map(log -> Tuple.of(log.getArea(), log.getAreaShortName()))
                 .distinct()
-                .sorted(Comparator.naturalOrder())
+                .sorted(Comparator.comparing(Tuple.Pair::getValue))
                 .collect(Collectors.toList());
-        for (String area : areaNames) {
+        for (Pair<String, String> name : areaNames) {
+            String area = name.getKey();
+            String text;
+            if (name.getValue() != null) {
+                text = area + "(" + name.getValue() + ")";
+            } else {
+                text = area;
+            }
+
             // 海域毎の集計
             BattleLogCollect areaValue = BattleLogs.collect(list, area, false);
-            areaValue.setUnit(area);
+            areaValue.setUnit(text);
             areaValue.setCollectUnit(unit);
             areaValue.setArea(area);
 
@@ -523,22 +522,9 @@ public class BattleLogController extends WindowController {
                     .filter(bossFilter)
                     .sorted(Comparator.comparing(BattleLogDetail::getDate).reversed())
                     .collect(Collectors.toList());
-            this.updateCellName(values);
             this.detailsSource.addAll(values);
         }
         this.initializeFilterPane();
-    }
-
-    private void updateCellName(List<BattleLogDetail> values) {
-        for (BattleLogDetail log : values) {
-            String mapId = this.mapNames.get(log.getArea());
-            if (mapId != null) {
-                String cell = Mapping.getCell(mapId + "-" + log.getCell());
-                if (cell != null) {
-                    log.setCell(cell);
-                }
-            }
-        }
     }
 
     /**
