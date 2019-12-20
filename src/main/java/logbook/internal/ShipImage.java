@@ -415,21 +415,21 @@ class ShipImage {
     private static Image createGauge(double width, double height, double per,
             Function<Double, Color> colorFunc,
             ReferenceCache<Double, Image> cache) {
-        double fixedPer = (int) (Math.max(width, height) * per) / Math.max(width, height);
-        return cache.get(fixedPer, key -> {
+        double size = (int) Math.max((Math.max(width, height) * per), 0);
+        return cache.get(size, key -> {
             Canvas canvas = new Canvas(width, height);
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
             if (width < height) {
-                gc.fillRect(0, 0, width, height - (height * fixedPer));
+                gc.fillRect(0, 0, width, height - size);
             } else {
-                gc.fillRect(width * fixedPer, 0, width - (width * fixedPer), height);
+                gc.fillRect(size, 0, width - size, height);
             }
-            gc.setFill(colorFunc.apply(fixedPer));
+            gc.setFill(colorFunc.apply(size / Math.max(width, height)));
             if (width < height) {
-                gc.fillRect(0, height - (height * fixedPer), width, height * fixedPer);
+                gc.fillRect(0, height - size, width, size);
             } else {
-                gc.fillRect(0, 0, width * fixedPer, height);
+                gc.fillRect(0, 0, size, height);
             }
 
             SnapshotParameters sp = new SnapshotParameters();
