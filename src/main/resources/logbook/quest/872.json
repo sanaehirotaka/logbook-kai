@@ -2,7 +2,7 @@
 {
     "resetType" : "クオータリー",
     "conditions" : [
-        {"boss": true, "area": ["7-2"], "cell": "15", "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["7-2"], "cell": "M", "rank": ["S"], "count": 1},
         {"boss": true, "area": ["5-5"], "rank": ["S"], "count": 1},
         {"boss": true, "area": ["6-2"], "rank": ["S"], "count": 1},
         {"boss": true, "area": ["6-5"], "rank": ["S"], "count": 1}
