@@ -81,6 +81,8 @@ public class QuestPane extends HBox {
                 this.getStyleClass().add("deck");
                 break;
             case 2:
+            case 8:
+            case 9:
                 this.getStyleClass().add("sortie");
                 break;
             case 3:
@@ -97,9 +99,6 @@ public class QuestPane extends HBox {
                 break;
             case 7:
                 this.getStyleClass().add("kaisou");
-                break;
-            case 8:
-                this.getStyleClass().add("sortie");
                 break;
             default:
                 break;
