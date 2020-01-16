@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.AirBaseController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.232-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.AirBaseController">
    <children>
-      <SplitPane dividerPositions="0.46" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="splitPane" dividerPositions="0.46" VBox.vgrow="ALWAYS">
          <items>
             <TreeTableView fx:id="areaTable" prefHeight="200.0" prefWidth="200.0">
               <columns>

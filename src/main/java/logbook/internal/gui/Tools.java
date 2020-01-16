@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,8 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.SplitPane.Divider;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableColumnBase;
@@ -257,6 +260,28 @@ public class Tools {
             return view;
         }
 
+        /**
+         * SplitPaneの分割サイズを設定する
+         * 
+         * @param pane SplitPane
+         * @param key SplitPaneのキー
+         */
+        public static void setSplitWidth(SplitPane pane, String key) {
+            Double position = AppConfig.get().getDividerPositionMap()
+                    .get(key);
+            Iterator<Divider> ite = pane.getDividers()
+                    .iterator();
+            if (ite.hasNext()) {
+                Divider divider = ite.next();
+                if (position != null) {
+                    divider.setPosition(position);
+                }
+                // 幅が変更された時に設定を保存する
+                divider.positionProperty().addListener((ob, o, n) -> {
+                    AppConfig.get().getDividerPositionMap().put(key, n.doubleValue());
+                });
+            }
+        }
     }
 
     /**

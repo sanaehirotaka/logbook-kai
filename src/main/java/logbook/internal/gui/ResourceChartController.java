@@ -25,6 +25,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -37,9 +39,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
 import logbook.internal.LoggerHolder;
@@ -61,6 +65,9 @@ public class ResourceChartController extends WindowController {
 
     /** 日付書式 */
     public static final DateTimeFormatter TABLE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    @FXML
+    private SplitPane splitPane;
 
     /** 期間 */
     @FXML
@@ -165,6 +172,12 @@ public class ResourceChartController extends WindowController {
     @FXML
     void initialize() {
         TableTool.setVisible(this.table, this.getClass().toString() + "#" + "table");
+        // SplitPaneの分割サイズ
+        Timeline x = new Timeline();
+        x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+            Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
+        }));
+        x.play();
         // 資材ログのテーブル列をバインド
         this.date.setCellValueFactory(new PropertyValueFactory<>("date"));
         this.fuelGap.setCellValueFactory(new PropertyValueFactory<>("fuel"));

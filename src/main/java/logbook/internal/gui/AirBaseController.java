@@ -27,6 +27,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -40,6 +41,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import logbook.bean.Maparea;
 import logbook.bean.MapareaCollection;
 import logbook.bean.Mapinfo;
@@ -57,6 +59,9 @@ import logbook.plugin.PluginServices;
  *
  */
 public class AirBaseController extends WindowController {
+
+    @FXML
+    private SplitPane splitPane;
 
     /** 基地航空隊 テーブル */
     @FXML
@@ -134,7 +139,12 @@ public class AirBaseController extends WindowController {
     void initialize() {
         try {
             TableTool.setVisible(this.planeTable, this.getClass() + "#" + "planeTable");
-
+            // SplitPaneの分割サイズ
+            Timeline x = new Timeline();
+            x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+                Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
+            }));
+            x.play();
             this.areaTable.setShowRoot(false);
             this.airBase.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
             this.actionKind.setCellValueFactory(new TreeItemPropertyValueFactory<>("actionKind"));
@@ -165,7 +175,6 @@ public class AirBaseController extends WindowController {
                     javafx.util.Duration.seconds(1),
                     this::update));
             this.timeline.play();
-
             this.setAirBase();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);

@@ -14,6 +14,8 @@ import org.controlsfx.control.textfield.TextFields;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -24,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -33,6 +36,7 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 import logbook.Messages;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
@@ -50,6 +54,9 @@ import lombok.Data;
  *
  */
 public class ItemItemController extends WindowController {
+
+    @FXML
+    private SplitPane splitPane;
 
     // フィルター
 
@@ -156,6 +163,12 @@ public class ItemItemController extends WindowController {
         try {
             TableTool.setVisible(this.typeTable, this.getClass().toString() + "#" + "typeTable");
             TableTool.setVisible(this.detailTable, this.getClass().toString() + "#" + "detailTable");
+            // SplitPaneの分割サイズ
+            Timeline x = new Timeline();
+            x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+                Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
+            }));
+            x.play();
 
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.typeValue.setDisable(!nv);

@@ -13,7 +13,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.MissionLogController">
    <children>
-      <SplitPane dividerPositions="0.3" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="splitPane1" dividerPositions="0.3" VBox.vgrow="ALWAYS">
          <items>
             <VBox>
                <children>
@@ -29,9 +29,9 @@
             </VBox>
             <VBox>
                <children>
-                  <SplitPane dividerPositions="0.7" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+                  <SplitPane fx:id="splitPane2" dividerPositions="0.7" orientation="VERTICAL" VBox.vgrow="ALWAYS">
                      <items>
-                        <SplitPane dividerPositions="0.43">
+                        <SplitPane fx:id="splitPane3" dividerPositions="0.43">
                            <items>
                               <TableView fx:id="aggregate">
                                  <columns>

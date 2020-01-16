@@ -22,7 +22,7 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.CalcExpController">
    <children>
-      <SplitPane dividerPositions="0.6" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="splitPane" dividerPositions="0.6" orientation="VERTICAL" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets />
          </VBox.margin>

@@ -21,9 +21,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleLogController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.232-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.BattleLogController">
    <children>
-      <SplitPane dividerPositions="0.35" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="splitPane1" dividerPositions="0.35" VBox.vgrow="ALWAYS">
          <items>
             <VBox>
                <children>
@@ -109,7 +109,7 @@
                               </HBox>
                               <HBox>
                                  <children>
-                                    <SplitPane dividerPositions="0.45">
+                                    <SplitPane fx:id="splitPane2" dividerPositions="0.45">
                                        <items>
                                           <TableView fx:id="aggregate">
                                              <columns>

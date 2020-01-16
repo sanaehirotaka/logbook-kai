@@ -1,6 +1,9 @@
 package logbook.internal.gui;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -19,6 +22,8 @@ import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,6 +33,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Toggle;
@@ -40,6 +46,7 @@ import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 import logbook.bean.AppConfig;
 import logbook.bean.SlotitemEquiptype;
 import logbook.bean.SlotitemEquiptypeCollection;
@@ -57,6 +64,9 @@ import lombok.val;
  *
  */
 public class CreateItemController extends WindowController {
+
+    @FXML
+    private SplitPane splitPane;
 
     /** 集計 */
     @FXML
@@ -116,6 +126,12 @@ public class CreateItemController extends WindowController {
     void initialize() {
         try {
             TableTool.setVisible(this.detail, this.getClass() + "#" + "detail");
+            // SplitPaneの分割サイズ
+            Timeline x = new Timeline();
+            x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+                Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
+            }));
+            x.play();
             this.detail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.detail.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
 

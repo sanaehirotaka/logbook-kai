@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckListView;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,11 +25,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import logbook.bean.AppConfig;
 import logbook.internal.ThreadManager;
 import logbook.internal.gui.ScreenCapture.ImageData;
@@ -40,6 +44,9 @@ public class CaptureSaveController extends WindowController {
 
     /** ファイル名日付書式 */
     static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss.SSS");
+
+    @FXML
+    private SplitPane splitPane;
 
     @FXML
     private CheckBox tile;
@@ -61,6 +68,12 @@ public class CaptureSaveController extends WindowController {
 
     @FXML
     void initialize() {
+        // SplitPaneの分割サイズ
+        Timeline x = new Timeline();
+        x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+            Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
+        }));
+        x.play();
         this.image.fitWidthProperty().bind(this.imageParent.widthProperty());
         this.image.fitHeightProperty().bind(this.imageParent.heightProperty());
     }

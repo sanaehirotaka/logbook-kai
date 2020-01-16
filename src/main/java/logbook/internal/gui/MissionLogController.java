@@ -22,6 +22,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,6 +32,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -37,6 +40,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.util.Duration;
 import logbook.bean.AppConfig;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
@@ -52,6 +56,15 @@ import lombok.Data;
  *
  */
 public class MissionLogController extends WindowController {
+
+    @FXML
+    private SplitPane splitPane1;
+
+    @FXML
+    private SplitPane splitPane2;
+
+    @FXML
+    private SplitPane splitPane3;
 
     /** 統計 */
     @FXML
@@ -153,6 +166,14 @@ public class MissionLogController extends WindowController {
     void initialize() {
         TableTool.setVisible(this.detail, this.getClass() + "#" + "detail");
         TableTool.setVisible(this.aggregate, this.getClass() + "#" + "aggregate");
+        // SplitPaneの分割サイズ
+        Timeline x = new Timeline();
+        x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+            Tools.Conrtols.setSplitWidth(this.splitPane1, this.getClass() + "#" + "splitPane1");
+            Tools.Conrtols.setSplitWidth(this.splitPane2, this.getClass() + "#" + "splitPane2");
+            Tools.Conrtols.setSplitWidth(this.splitPane3, this.getClass() + "#" + "splitPane3");
+        }));
+        x.play();
 
         // 集計
         this.collect.setShowRoot(false);

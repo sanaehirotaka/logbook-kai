@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -21,6 +23,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -28,6 +31,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
 import logbook.bean.AppConfig;
 import logbook.bean.AppSeaAreaExp;
 import logbook.bean.AppSeaAreaExpCollection;
@@ -41,6 +45,9 @@ import logbook.internal.Rank;
 import logbook.internal.Ships;
 
 public class CalcExpController extends WindowController {
+
+    @FXML
+    private SplitPane splitPane;
 
     @FXML
     private ComboBox<ShipWrapper> shipList;
@@ -123,6 +130,12 @@ public class CalcExpController extends WindowController {
 
     @FXML
     void initialize() {
+        // SplitPaneの分割サイズ
+        Timeline x = new Timeline();
+        x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+            Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
+        }));
+        x.play();
         // Spinnerに最小値最大値現在値を設定
         this.nowLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ExpTable.maxLv(), 1, 1));
         this.goalLv.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, ExpTable.maxLv(), 1, 1));

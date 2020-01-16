@@ -23,7 +23,7 @@
           <Button mnemonicParsing="false" onAction="#save" text="保存" />
         </items>
       </ToolBar>
-      <SplitPane dividerPositions="0.35" VBox.vgrow="ALWAYS">
+      <SplitPane fx:id="splitPane" dividerPositions="0.35" VBox.vgrow="ALWAYS">
         <items>
             <CheckListView fx:id="list" />
             <ScrollPane fx:id="imageParent" hbarPolicy="NEVER" vbarPolicy="NEVER">

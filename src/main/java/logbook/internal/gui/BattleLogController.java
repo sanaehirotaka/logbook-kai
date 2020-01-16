@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckComboBox;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -33,6 +35,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -44,6 +47,7 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import logbook.bean.BattleLog;
 import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.IUnit;
@@ -59,6 +63,12 @@ import logbook.internal.Tuple.Pair;
  *
  */
 public class BattleLogController extends WindowController {
+
+    @FXML
+    private SplitPane splitPane1;
+
+    @FXML
+    private SplitPane splitPane2;
 
     /** 統計 */
     @FXML
@@ -216,6 +226,13 @@ public class BattleLogController extends WindowController {
         try {
             TableTool.setVisible(this.detail, this.getClass().toString() + "#" + "detail");
             TableTool.setVisible(this.aggregate, this.getClass().toString() + "#" + "aggregate");
+            // SplitPaneの分割サイズ
+            Timeline x = new Timeline();
+            x.getKeyFrames().add(new KeyFrame(Duration.millis(1), (e) -> {
+                Tools.Conrtols.setSplitWidth(this.splitPane1, this.getClass() + "#" + "splitPane1");
+                Tools.Conrtols.setSplitWidth(this.splitPane2, this.getClass() + "#" + "splitPane2");
+            }));
+            x.play();
             // 統計
             this.collect.setShowRoot(false);
 

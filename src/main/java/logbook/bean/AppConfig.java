@@ -162,6 +162,9 @@ public final class AppConfig implements Serializable {
     /** テーブル列のソート順 */
     private Map<String, Map<String, String>> columnSortOrderMap = new LinkedHashMap<>();
 
+    /** SplitPaneの分割サイズ */
+    private Map<String, Double> dividerPositionMap = new HashMap<>();
+
     /** キャプチャの保存先 */
     private String captureDir;
 

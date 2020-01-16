@@ -19,7 +19,7 @@
 
 <VBox prefHeight="650.0" prefWidth="830.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ResourceChartController">
    <children>
-      <SplitPane dividerPositions="0.8" orientation="VERTICAL">
+      <SplitPane fx:id="splitPane" dividerPositions="0.8" orientation="VERTICAL">
          <items>
             <VBox>
                <children>
