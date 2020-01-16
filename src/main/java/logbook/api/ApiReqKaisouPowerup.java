@@ -28,7 +28,7 @@ public class ApiReqKaisouPowerup implements APIListenerSpi {
                 Ship ship = ShipCollection.get()
                         .getShipMap()
                         .remove(shipId);
-                if (ship != null) {
+                if (ship != null && !"0".equals(req.getParameter("api_slot_dest_flag"))) {
                     Map<Integer, SlotItem> itemMap = SlotItemCollection.get()
                             .getSlotitemMap();
                     // 持っている装備を廃棄する
