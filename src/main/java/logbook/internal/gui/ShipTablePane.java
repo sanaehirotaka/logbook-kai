@@ -1300,9 +1300,7 @@ public class ShipTablePane extends VBox {
 
             @Override
             public String toString() {
-                return this.ship.kai == 1 && this.ship.afterlv > this.lv
-                        ? Integer.toString(this.lv)
-                        : this.lv + "." + this.ship.kai;
+                return this.lv + "." + this.ship.kai;
             }
         }
     }
