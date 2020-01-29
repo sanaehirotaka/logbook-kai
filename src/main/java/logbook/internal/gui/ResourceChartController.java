@@ -3,7 +3,6 @@ package logbook.internal.gui;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,6 +47,7 @@ import javafx.util.StringConverter;
 import logbook.bean.AppConfig;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Logs;
+import logbook.internal.Tuple.Pair;
 import logbook.internal.log.LogWriter;
 import logbook.internal.log.MaterialLogFormat;
 
@@ -59,9 +59,6 @@ public class ResourceChartController extends WindowController {
 
     /** 資材ログで使用するタイムゾーン */
     private static final ZoneId TIME_ZONE = ZoneId.of("Asia/Tokyo");
-
-    /** 資材テーブルに表示する資材のフォーマット */
-    private static final MessageFormat COMPARE_FORMAT = new MessageFormat("{0,number,0}({1,number,+0;-0})");
 
     /** 日付書式 */
     public static final DateTimeFormatter TABLE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -139,35 +136,35 @@ public class ResourceChartController extends WindowController {
 
     /** 燃料列 */
     @FXML
-    private TableColumn<ResourceTable, String> fuelGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> fuelGap;
 
     /** 弾薬列 */
     @FXML
-    private TableColumn<ResourceTable, String> ammoGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> ammoGap;
 
     /** 鋼材列 */
     @FXML
-    private TableColumn<ResourceTable, String> metalGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> metalGap;
 
     /** ボーキ列 */
     @FXML
-    private TableColumn<ResourceTable, String> bauxiteGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> bauxiteGap;
 
     /** 高速修復材列 */
     @FXML
-    private TableColumn<ResourceTable, String> bucketGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> bucketGap;
 
     /** 高速建造材列 */
     @FXML
-    private TableColumn<ResourceTable, String> burnerGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> burnerGap;
 
     /** 開発資材列 */
     @FXML
-    private TableColumn<ResourceTable, String> researchGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> researchGap;
 
     /** 改修資材列 */
     @FXML
-    private TableColumn<ResourceTable, String> improveGap;
+    private TableColumn<ResourceTable, Pair<Integer, Integer>> improveGap;
 
     @FXML
     void initialize() {
@@ -181,13 +178,21 @@ public class ResourceChartController extends WindowController {
         // 資材ログのテーブル列をバインド
         this.date.setCellValueFactory(new PropertyValueFactory<>("date"));
         this.fuelGap.setCellValueFactory(new PropertyValueFactory<>("fuel"));
+        this.fuelGap.setComparator(Comparator.comparing(Pair::get1));
         this.ammoGap.setCellValueFactory(new PropertyValueFactory<>("ammo"));
+        this.ammoGap.setComparator(Comparator.comparing(Pair::get1));
         this.metalGap.setCellValueFactory(new PropertyValueFactory<>("metal"));
+        this.metalGap.setComparator(Comparator.comparing(Pair::get1));
         this.bauxiteGap.setCellValueFactory(new PropertyValueFactory<>("bauxite"));
+        this.bauxiteGap.setComparator(Comparator.comparing(Pair::get1));
         this.bucketGap.setCellValueFactory(new PropertyValueFactory<>("bucket"));
+        this.bucketGap.setComparator(Comparator.comparing(Pair::get1));
         this.burnerGap.setCellValueFactory(new PropertyValueFactory<>("burner"));
+        this.burnerGap.setComparator(Comparator.comparing(Pair::get1));
         this.researchGap.setCellValueFactory(new PropertyValueFactory<>("research"));
+        this.researchGap.setComparator(Comparator.comparing(Pair::get1));
         this.improveGap.setCellValueFactory(new PropertyValueFactory<>("improve"));
+        this.improveGap.setComparator(Comparator.comparing(Pair::get1));
 
         // 終了日付を初期値として設定
         this.to.setValue(LocalDate.from(ZonedDateTime.now(TIME_ZONE)));
@@ -332,38 +337,38 @@ public class ResourceChartController extends WindowController {
             for (ResourceLog log : logs.values()) {
                 ResourceTable row = new ResourceTable();
                 row.setDate(TABLE_DATE_FORMAT.format(log.getDate()));
-                row.setFuel(COMPARE_FORMAT.format(new Integer[] { log.getFuel(),
+                row.setFuel(log.getFuel(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getFuel() - r.getFuel())
-                                .orElse(0) }));
-                row.setAmmo(COMPARE_FORMAT.format(new Integer[] { log.getAmmo(),
+                                .orElse(0));
+                row.setAmmo(log.getAmmo(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getAmmo() - r.getAmmo())
-                                .orElse(0) }));
-                row.setMetal(COMPARE_FORMAT.format(new Integer[] { log.getMetal(),
+                                .orElse(0));
+                row.setMetal(log.getMetal(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getMetal() - r.getMetal())
-                                .orElse(0) }));
-                row.setBauxite(COMPARE_FORMAT.format(new Integer[] { log.getBauxite(),
+                                .orElse(0));
+                row.setBauxite(log.getBauxite(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getBauxite() - r.getBauxite())
-                                .orElse(0) }));
-                row.setBucket(COMPARE_FORMAT.format(new Integer[] { log.getBucket(),
+                                .orElse(0));
+                row.setBucket(log.getBucket(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getBucket() - r.getBucket())
-                                .orElse(0) }));
-                row.setBurner(COMPARE_FORMAT.format(new Integer[] { log.getBurner(),
+                                .orElse(0));
+                row.setBurner(log.getBurner(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getBurner() - r.getBurner())
-                                .orElse(0) }));
-                row.setResearch(COMPARE_FORMAT.format(new Integer[] { log.getResearch(),
+                                .orElse(0));
+                row.setResearch(log.getResearch(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getResearch() - r.getResearch())
-                                .orElse(0) }));
-                row.setImprove(COMPARE_FORMAT.format(new Integer[] { log.getImprove(),
+                                .orElse(0));
+                row.setImprove(log.getImprove(),
                         Optional.ofNullable(before)
                                 .map(r -> log.getImprove() - r.getImprove())
-                                .orElse(0) }));
+                                .orElse(0));
                 tableBody.add(row);
                 before = log;
             }
