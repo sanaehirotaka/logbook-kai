@@ -79,6 +79,34 @@
                                  </children>
                               </HBox>
                               <Label fx:id="cond" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <HBox alignment="CENTER_LEFT" GridPane.rowIndex="3">
+                                 <children>
+                                    <ImageView fx:id="karyokusumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="火力合計:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="karyokusum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <children>
+                                    <ImageView fx:id="taikusumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="対空合計:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="taikusum" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <HBox alignment="CENTER_LEFT" GridPane.rowIndex="4">
+                                 <children>
+                                    <ImageView fx:id="taissumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="対潜合計:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="taissum" styleClass="value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                 <children>
+                                    <ImageView fx:id="sakutekisumImg" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                                    <Label text="索敵合計:" />
+                                 </children>
+                              </HBox>
+                              <Label fx:id="sakutekisum" styleClass="value" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                            </children>
                         </GridPane>
                      </children>
