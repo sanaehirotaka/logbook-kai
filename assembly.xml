@@ -9,7 +9,7 @@
 
     <files>
         <file>
-            <source>target/${project.artifactId}.jar</source>
+            <source>target/${project.name}.jar</source>
         </file>
     </files>
 
