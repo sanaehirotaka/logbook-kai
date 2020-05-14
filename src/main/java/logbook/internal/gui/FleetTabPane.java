@@ -118,6 +118,38 @@ public class FleetTabPane extends ScrollPane {
     @FXML
     private Label cond;
 
+    /** 火力合計アイコン */
+    @FXML
+    private ImageView karyokusumImg;
+
+    /** 火力合計 */
+    @FXML
+    private Label karyokusum;
+
+    /** 対空合計アイコン */
+    @FXML
+    private ImageView taikusumImg;
+
+    /** 対空合計 */
+    @FXML
+    private Label taikusum;
+
+    /** 対潜合計アイコン */
+    @FXML
+    private ImageView taissumImg;
+
+    /** 対潜合計 */
+    @FXML
+    private Label taissum;
+
+    /** 索敵合計アイコン */
+    @FXML
+    private ImageView sakutekisumImg;
+
+    /** 索敵合計 */
+    @FXML
+    private Label sakutekisum;
+
     /** 注釈 */
     @FXML
     private VBox remark;
@@ -265,6 +297,14 @@ public class FleetTabPane extends ScrollPane {
         this.setDecision33();
         // 艦娘レベル計
         this.lvsum.setText(Integer.toString(withoutEscape.stream().mapToInt(Ship::getLv).sum()));
+        // 火力合計
+        this.karyokusum.setText(Integer.toString(withoutEscape.stream().mapToInt(ship -> ship.getKaryoku().get(0)).sum()));
+        // 対空合計
+        this.taikusum.setText(Integer.toString(withoutEscape.stream().mapToInt(ship -> ship.getTaiku().get(0)).sum()));
+        // 対潜合計
+        this.taissum.setText(Integer.toString(withoutEscape.stream().mapToInt(ship -> ship.getTaisen().get(0)).sum()));
+        // 索敵合計
+        this.sakutekisum.setText(Integer.toString(withoutEscape.stream().mapToInt(ship -> ship.getSakuteki().get(0)).sum()));
 
         ObservableList<Node> childs = this.ships.getChildren();
         childs.clear();
@@ -347,6 +387,10 @@ public class FleetTabPane extends ScrollPane {
         this.touchPlaneStartProbabilityImg.setImage(Items.itemImageByType(10));
         this.decision33Img.setImage(Items.itemImageByType(9));
         this.lvsumImg.setImage(Items.itemImageByType(28));
+        this.karyokusumImg.setImage(Items.itemImageByType(3));
+        this.taikusumImg.setImage(Items.itemImageByType(15));
+        this.taissumImg.setImage(Items.itemImageByType(17));
+        this.sakutekisumImg.setImage(Items.itemImageByType(11));
     }
 
     /**
