@@ -1,18 +1,26 @@
 package logbook.internal;
 
 import java.awt.Desktop;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -27,13 +35,15 @@ import logbook.internal.gui.Tools;
  */
 public class CheckUpdate {
 
-    /** 更新確認先 */
-    private static final String[] CHECK_SITES = {
-            "https://lk.sanaechan.net/v1.txt",
-            "https://kancolle.sanaechan.net/logbook-kai.txt",
-            "http://lk.sanaechan.net/v1.txt",
-            "http://kancolle.sanaechan.net/logbook-kai.txt"
-    };
+    /** 更新確認先 Github tags API */
+    private static final String TAGS = "https://api.github.com/repos/sanaehirotaka/logbook-kai/tags";
+
+    /** 更新確認先 Github releases API */
+    private static final String RELEASES = "https://api.github.com/repos/sanaehirotaka/logbook-kai/releases/tags/";
+
+    /** 検索するtagの名前 */
+    /* 例えばv20.1.1 の 20.1.1にマッチ */
+    static final Pattern TAG_REGIX = Pattern.compile("\\d+\\.\\d+(?:\\.\\d+)?$");
 
     public static void run(Stage stage) {
         run(false, stage);
@@ -58,32 +68,86 @@ public class CheckUpdate {
      * @return 最新のバージョン
      */
     private static Version remoteVersion() {
-        for (String checkSite : CHECK_SITES) {
-            URI uri = URI.create(checkSite);
-            try {
-                HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
-                // タイムアウトを設定
-                connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(10));
-                connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(5));
-                // 200 OKの場合にバージョンを読み取る
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    try (InputStream in = connection.getInputStream()) {
-                        byte[] b = new byte[128];
-                        int l = in.read(b, 0, b.length);
-                        String str = new String(b, 0, l, StandardCharsets.US_ASCII);
-
-                        Version remote = new Version(str);
-                        if (!remote.equals(Version.UNKNOWN)) {
-                            return remote;
-                        }
-                    }
-                }
-                connection.disconnect();
-            } catch (Exception e) {
-                LoggerHolder.get().warn("最新バージョンの取得に失敗しました[url=" + uri + "]", e);
+        try {
+            // Githubのtagsから一番新しいreleasesを取ってくる
+            JsonArray tags;
+            try (JsonReader r = Json.createReader(new ByteArrayInputStream(readURI(URI.create(TAGS))))) {
+                tags = r.readArray();
             }
+            // tagsを処理する
+            return tags.stream()
+                    //　tagの名前
+                    .map(val -> val.asJsonObject().getString("name"))
+                    // tagの名前にバージョンを含む?実行中のバージョンより新しい?
+                    .filter(tagname -> {
+                        Matcher m = TAG_REGIX.matcher(tagname);
+                        if (m.find()) {
+                            Version remote = new Version(m.group());
+                            return (!Version.UNKNOWN.equals(remote) && Version.getCurrent().compareTo(remote) < 0);
+                        }
+                        return false;
+                    })
+                    // tagがreleasesにある?
+                    .filter(name -> {
+                        try {
+                            JsonObject releases;
+                            try (JsonReader r = Json
+                                    .createReader(new ByteArrayInputStream(readURI(URI.create(RELEASES + name))))) {
+                                releases = r.readObject();
+                            }
+                            // releasesにない場合は "message": "Not Found"
+                            if (releases.getString("message", null) != null)
+                                return false;
+                            // draftではない
+                            if (releases.getBoolean("draft", false))
+                                return false;
+                            // prereleaseではない
+                            if (releases.getBoolean("prerelease", false))
+                                return false;
+                            // assetsが1つ以上ある
+                            if (releases.getJsonArray("assets") == null || releases.getJsonArray("assets").size() == 0)
+                                return false;
+                            // 最新版が見つかった!
+                            return true;
+                        } catch (Exception e) {
+                            return false;
+                        }
+                    })
+                    .findFirst()
+                    .map(tagname -> {
+                        Matcher m = TAG_REGIX.matcher(tagname);
+                        m.find();
+                        return new Version(m.group());
+                    })
+                    .orElse(Version.UNKNOWN);
+        } catch (Exception e) {
+            LoggerHolder.get().warn("最新バージョンの取得に失敗しました", e);
         }
         return Version.UNKNOWN;
+    }
+
+    private static byte[] readURI(URI uri) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+        try {
+            // タイムアウトを設定
+            connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(10));
+            connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(5));
+            // 200 OKの場合にURIを読み取る
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                try (InputStream in = connection.getInputStream()) {
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = in.read(buffer, 0, buffer.length)) > 0) {
+                        out.write(buffer, 0, len);
+                    }
+                }
+                return out.toByteArray();
+            }
+        } finally {
+            connection.disconnect();
+        }
+        return new byte[0];
     }
 
     private static void openInfo(Version o, Version n, boolean isStartUp, Stage stage) {
