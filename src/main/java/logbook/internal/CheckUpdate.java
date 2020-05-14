@@ -41,6 +41,9 @@ public class CheckUpdate {
     /** 更新確認先 Github releases API */
     private static final String RELEASES = "https://api.github.com/repos/sanaehirotaka/logbook-kai/releases/tags/";
 
+    /** ダウンロードサイトを開くを選択したときに開くURL */
+    private static final String OPEN_URL = "https://github.com/sanaehirotaka/logbook-kai/releases";
+
     /** 検索するtagの名前 */
     /* 例えばv20.1.1 の 20.1.1にマッチ */
     static final Pattern TAG_REGIX = Pattern.compile("\\d+\\.\\d+(?:\\.\\d+)?$");
@@ -69,11 +72,11 @@ public class CheckUpdate {
      */
     private static Version remoteVersion() {
         try {
-            // Githubのtagsから一番新しいreleasesを取ってくる
             JsonArray tags;
             try (JsonReader r = Json.createReader(new ByteArrayInputStream(readURI(URI.create(TAGS))))) {
                 tags = r.readArray();
             }
+            // Githubのtagsから一番新しいreleasesを取ってくる
             // tagsを処理する
             return tags.stream()
                     //　tagの名前
@@ -91,8 +94,7 @@ public class CheckUpdate {
                     .filter(name -> {
                         try {
                             JsonObject releases;
-                            try (JsonReader r = Json
-                                    .createReader(new ByteArrayInputStream(readURI(URI.create(RELEASES + name))))) {
+                            try (JsonReader r = Json.createReader(new ByteArrayInputStream(readURI(URI.create(RELEASES + name))))) {
                                 releases = r.readObject();
                             }
                             // releasesにない場合は "message": "Not Found"
@@ -185,7 +187,7 @@ public class CheckUpdate {
             ThreadManager.getExecutorService()
                     .submit(() -> {
                         Desktop.getDesktop()
-                                .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
+                                .browse(URI.create(OPEN_URL));
                         return null;
                     });
         } catch (Exception e) {
