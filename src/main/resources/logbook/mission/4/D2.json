@@ -1,0 +1,25 @@
+/*西方潜水艦作戦*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "火力", "value": 60},
+        {"type": "艦隊", "count_type": "対空", "value": 80},
+        {"type": "艦隊", "count_type": "対潜", "value": 50},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 55, "order": 1}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["潜水母艦"], "order": 1},
+                {"type": "艦娘", "ship_type" :["潜水艦", "潜水空母"]},
+                {"type": "艦娘", "ship_type" :["潜水艦", "潜水空母"]},
+                {"type": "艦娘", "ship_type" :["潜水艦", "潜水空母"]},
+                {"type": "艦娘"}
+            ]
+        }
+    ]
+}
