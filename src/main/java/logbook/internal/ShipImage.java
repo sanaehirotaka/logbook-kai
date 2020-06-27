@@ -271,7 +271,7 @@ class ShipImage {
                 Ship ship = chara.asShip();
                 Integer sallyArea = ship.getSallyArea();
                 if (sallyArea != null && sallyArea.intValue() != 0) {
-                    Path p = Paths.get("common", JOIN_BANNER.replace("{0}", Integer.toString(sallyArea - 1)));
+                    Path p = Paths.get("common", JOIN_BANNER.replace("{0}", Integer.toString(sallyArea + 3)));
                     layers.add(new Layer(50, -3, p));
                 }
             }
