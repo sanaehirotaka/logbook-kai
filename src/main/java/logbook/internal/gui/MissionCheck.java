@@ -153,6 +153,7 @@ public class MissionCheck extends WindowController {
                 item = this.buildLeaf(cond);
             } else if (mission.getSampleFleet() != null) {
                 item = new TreeItem<>();
+                setIcon(item, null);
             } else {
                 return null;
             }

@@ -1,0 +1,27 @@
+/*ラバウル方面艦隊進出*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "火力", "value": 450},
+        {"type": "艦隊", "count_type": "対空", "value": 350},
+        {"type": "艦隊", "count_type": "対潜", "value": 330},
+        {"type": "艦隊", "count_type": "索敵", "value": 250},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 55, "order": 1}
+            ]
+        },
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "ship_type" :["重巡洋艦"], "order": 1},
+                {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                {"type": "艦娘"}
+            ]
+        }
+    ]
+}

@@ -52,7 +52,9 @@ public class Missions {
 
         InputStream is = PluginServices
                 .getResourceAsStream("logbook/mission/" + mission.getMapareaId() + "/" + mission.getDispNo() + ".json");
-
+        if (is == null) {
+            return Optional.empty();
+        }
         MissionCondition condition;
         try {
             ObjectMapper mapper = new ObjectMapper();

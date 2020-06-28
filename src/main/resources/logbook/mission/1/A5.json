@@ -1,0 +1,61 @@
+/*小笠原沖哨戒線*/
+{
+    "operator": "AND",
+    "conditions": [
+        {"type": "艦隊", "count_type": "火力", "value": 280},
+        {"type": "艦隊", "count_type": "対空", "value": 220},
+        {"type": "艦隊", "count_type": "対潜", "value": 240},
+        {"type": "艦隊", "count_type": "索敵", "value": 150},
+        {
+            "operator": "AND",
+            "conditions": [
+                {"type": "艦娘", "level": 45, "order": 1}
+            ]
+        },
+        {
+            "operator": "OR",
+            "conditions": [
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["軽巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘"}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘"}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["護衛空母"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘", "ship_type" :["駆逐艦"]},
+                        {"type": "艦娘"},
+                        {"type": "艦娘"}
+                    ]
+                },
+                {
+                    "operator": "AND",
+                    "conditions": [
+                        {"type": "艦娘", "ship_type" :["軽巡洋艦", "練習巡洋艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘", "ship_type" :["海防艦"]},
+                        {"type": "艦娘"},
+                        {"type": "艦娘"}
+                    ]
+                }
+            ]
+        }
+    ]
+}
