@@ -707,8 +707,7 @@ public class Ships {
                 .getSlotitemMap();
         // 艦娘から装備を取り出すFunction
         Function<Ship, Stream<SlotItem>> toSlotItem = ship -> {
-            return ship.getSlot()
-                    .stream()
+            return Stream.concat(ship.getSlot().stream(), Stream.of(ship.getSlotEx()))
                     .map(itemMap::get)
                     .filter(Objects::nonNull);
         };
