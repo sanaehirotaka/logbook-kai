@@ -72,6 +72,8 @@ public class Ships {
         // 索敵係数
         // 小口径主砲：0.6
         VIEW_COEFFICIENT.put(SlotItemType.小口径主砲, 0.6D);
+        // 中口径主砲 : 0.6
+        VIEW_COEFFICIENT.put(SlotItemType.中口径主砲, 0.6D);
         // 艦上戦闘機：0.6
         VIEW_COEFFICIENT.put(SlotItemType.艦上戦闘機, 0.6D);
         // 艦上爆撃機：0.6
@@ -88,10 +90,18 @@ public class Ships {
         VIEW_COEFFICIENT.put(SlotItemType.小型電探, 0.6D);
         // 大型電探：0.6
         VIEW_COEFFICIENT.put(SlotItemType.大型電探, 0.6D);
+        // ソナー：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.ソナー,  0.6D);
+        // 特殊潜航艇：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.特殊潜航艇, 0.6D);
+        // オートジャイロ：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.オートジャイロ, 0.6D);
         // 対潜哨戒機：0.6
         VIEW_COEFFICIENT.put(SlotItemType.対潜哨戒機, 0.6D);
         // 探照灯：0.6
         VIEW_COEFFICIENT.put(SlotItemType.探照灯, 0.6D);
+        // 潜水艦魚雷：0.6
+        VIEW_COEFFICIENT.put(SlotItemType.潜水艦魚雷, 0.6D);
         // 司令部施設：0.6
         VIEW_COEFFICIENT.put(SlotItemType.司令部施設, 0.6D);
         // 航空要員(熟練艦載機整備員)：0.6
