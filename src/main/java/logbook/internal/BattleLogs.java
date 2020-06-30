@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
@@ -481,7 +483,7 @@ public class BattleLogs {
     }
 
     private static void updateLog(Map<String, String> mapNames, SimpleBattleLog log) {
-        String shortName = mapNames.get(log.getArea());
+        String shortName = log.getAreaShortName() != null ? log.getAreaShortName() : mapNames.get(log.getArea());
         if (shortName != null) {
             log.setAreaShortName(shortName);
             String cell = Mapping.getCell(shortName + "-" + log.getCell());
@@ -537,6 +539,9 @@ public class BattleLogs {
         /** 提督経験値 */
         private String exp = "";
 
+        /** 海域名の海域略称付きパターン */
+        private static final Pattern AREA_PATTERN = Pattern.compile("^([0-9]+-[0-9]+) (.*)$");
+
         /**
          * 海戦・ドロップ報告書.csvから出撃統計のベースを作成します
          *
@@ -552,7 +557,14 @@ public class BattleLogs {
             ZonedDateTime date = ZonedDateTime.of(LocalDateTime.from(ta), ZoneId.of("Asia/Tokyo"))
                     .withZoneSameInstant(ZoneId.of("GMT+04:00"));
             this.setDate(date);
-            this.setArea(columns[1]);
+            // 旧フォーマットは"海域名"のみ(例:"鎮守府正面海域")、新フォーマットは"略称 海域名"(例:"1-1 鎮守府正面海域") 
+            Matcher m = AREA_PATTERN.matcher(columns[1]);
+            if (m.matches()) {
+                this.setArea(m.group(2));
+                this.setAreaShortName(m.group(1));
+            } else {
+                this.setArea(columns[1]);
+            }
             this.setCell(columns[2]);
             this.setBoss(columns[3]);
             this.setRank(columns[4]);

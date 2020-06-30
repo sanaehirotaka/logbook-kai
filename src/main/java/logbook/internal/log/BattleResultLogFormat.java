@@ -106,7 +106,13 @@ public class BattleResultLogFormat extends LogFormatBase<BattleLog> {
 
         Format format = new Format();
         format.日付 = log.getTime();
-        format.海域 = result.getQuestName();
+        format.海域 = new StringBuilder(32)
+                .append(log.getNext().get(0).getMapareaId())
+                .append("-")
+                .append(log.getNext().get(0).getMapinfoNo())
+                .append(" ")
+                .append(result.getQuestName())
+                .toString();
         format.マス = String.valueOf(log.getNext().get(log.getNext().size() - 1).getNo());
         format.ボス = bossText.apply(log);
         format.ランク = result.getWinRank();
