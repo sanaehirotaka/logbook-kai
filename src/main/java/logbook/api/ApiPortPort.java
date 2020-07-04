@@ -89,14 +89,16 @@ public class ApiPortPort implements APIListenerSpi {
         // cond値が更新されたかを検出
         Predicate<Ship> update = beforeShip -> {
             Ship afterShip = afterShipMap.get(beforeShip.getId());
-            if (afterShip != null) {
+            // 本来このチェックは正しくないが、自然回復の起点となる時間を知りえないのでこのチェックで代用する。
+            // このチェックだと、自然回復以外にも出撃によるcond値の低下が起きた時や、
+            // cond値40未満の艦の入渠、49前後の艦の演習参加などでもリセットされてしまうが、
+            // 最大で3分の誤差でしかないので許容する。
+            if (afterShip != null && (beforeShip.getCond() < 49 || afterShip.getCond() < 49)) {
                 return !beforeShip.getCond().equals(afterShip.getCond());
             }
             return false;
         };
-        if (before.values().stream()
-                .filter(ship -> ship.getCond() <= 49)
-                .anyMatch(update)) {
+        if (before.values().stream().anyMatch(update)) {
             ZonedDateTime time = ZonedDateTime.now(ZoneId.systemDefault());
             AppCondition.get().setCondUpdateTime(time.toEpochSecond());
         }
