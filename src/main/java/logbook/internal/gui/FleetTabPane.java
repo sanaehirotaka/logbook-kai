@@ -64,6 +64,9 @@ public class FleetTabPane extends ScrollPane {
     /** 入渠中の艦娘達のハッシュ・コード */
     private int ndocksHashCode;
 
+    /** 連合艦隊フラグ */
+    private boolean combinedFlag;
+
     /** Tabのクラス名(タブ色を変えるのに使用) */
     private String tabCssClass;
 
@@ -236,12 +239,13 @@ public class FleetTabPane extends ScrollPane {
         int ndocksHashCode = NdockCollection.get().getNdockSet().hashCode();
 
         if (this.portHashCode != this.port.hashCode() || this.shipsHashCode != this.shipList.hashCode()
-                || this.ndocksHashCode != ndocksHashCode) {
+                || this.ndocksHashCode != ndocksHashCode || this.combinedFlag != AppCondition.get().isCombinedFlag()) {
             this.updateShips();
+            this.portHashCode = this.port.hashCode();
+            this.shipsHashCode = this.shipList.hashCode();
+            this.ndocksHashCode = ndocksHashCode;
+            this.combinedFlag = AppCondition.get().isCombinedFlag();
         }
-        this.portHashCode = this.port.hashCode();
-        this.shipsHashCode = this.shipList.hashCode();
-        this.ndocksHashCode = ndocksHashCode;
     }
 
     /**
@@ -323,7 +327,7 @@ public class FleetTabPane extends ScrollPane {
                         !ship.getBull().equals(Ships.shipMst(ship).map(ShipMst::getBullMax).orElse(0)))) {
             // 未補給時
             this.tabCssClass = "shortage";
-        } else if (this.port.getId() > 1 && this.port.getMission().get(0) == 0L) {
+        } else if (this.port.getId() > 1 && this.port.getMission().get(0) == 0L && (this.port.getId() != 2 || !AppCondition.get().isCombinedFlag())) {
             // 遠征未出撃
             this.tabCssClass = "empty";
         } else {
