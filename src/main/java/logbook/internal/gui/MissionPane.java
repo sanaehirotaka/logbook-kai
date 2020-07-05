@@ -14,6 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
+import logbook.bean.AppCondition;
+import logbook.bean.BattleTypes.CombinedType;
 import logbook.bean.DeckPort;
 import logbook.bean.Mission;
 import logbook.bean.MissionCollection;
@@ -118,12 +120,23 @@ public class MissionPane extends AnchorPane {
             this.progress.setVisible(false);
             // 艦隊名
             this.fleet.setText(this.port.getName());
-            // 遠征先
-            this.name.setText("<未出撃>");
-            // 残り時間
-            this.time.setText("");
-
-            styleClass.add("empty");
+            if (AppCondition.get().isCombinedFlag() && this.port.getId() == 2) {
+                // 連合編成中
+                this.name.setText("(連合艦隊)");
+                this.time.setText(
+                        Optional.of(AppCondition.get().getCombinedType())
+                            .map(CombinedType::toCombinedType)
+                            .filter(type -> type != CombinedType.未結成)
+                            .map(CombinedType::toString)
+                            .orElse("<不明な連合艦隊タイプ>")
+                 );
+            } else {
+                // 遠征先
+                this.name.setText("<未出撃>");
+                styleClass.add("empty");
+                // 残り時間
+                this.time.setText("");
+            }
         } else {
             // 出撃(遠征中・遠征帰還・遠征中止)
             Optional<Mission> mission = Optional.ofNullable(MissionCollection.get()

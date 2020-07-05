@@ -30,6 +30,7 @@ logbook.api.ApiReqCombinedBattleLdAirbattle
 logbook.api.ApiReqCombinedBattleMidnightBattle
 logbook.api.ApiReqCombinedBattleSpMidnight
 logbook.api.ApiReqHenseiChange
+logbook.api.ApiReqHenseiCombined
 logbook.api.ApiReqHenseiPresetSelect
 logbook.api.ApiReqHokyuCharge
 logbook.api.ApiReqKaisouMarriage

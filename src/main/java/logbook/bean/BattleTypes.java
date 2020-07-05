@@ -1543,10 +1543,10 @@ public class BattleTypes {
 
     /**
      * 連合艦隊
-     * 0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊
+     * 0=未結成, 1=機動部隊, 2=水上部隊, 3=輸送部隊, (4, 5 - 念のため定義のみ）
      */
     public enum CombinedType {
-        未結成, 機動部隊, 水上部隊, 輸送部隊;
+        未結成, 機動部隊, 水上部隊, 輸送部隊, 連合艦隊タイプ4, 連合艦隊タイプ5;
 
         public static CombinedType toCombinedType(int i) {
             switch (i) {
@@ -1558,6 +1558,10 @@ public class BattleTypes {
                 return 水上部隊;
             case 3:
                 return 輸送部隊;
+            case 4:
+                return 連合艦隊タイプ4;
+            case 5:
+                return 連合艦隊タイプ5;
             default:
                 return 未結成;
             }
