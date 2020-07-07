@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.controlsfx.control.CheckComboBox;
@@ -41,6 +44,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -56,7 +60,7 @@ import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ToStringConverter;
 import logbook.internal.Tuple;
-import logbook.internal.Tuple.Pair;
+import logbook.internal.Tuple.Triplet;
 
 /**
  * 戦闘ログのUIコントローラー
@@ -176,11 +180,11 @@ public class BattleLogController extends WindowController {
 
     /** 艦娘経験値 */
     @FXML
-    private TableColumn<BattleLogDetail, String> shipExp;
+    private TableColumn<BattleLogDetail, Integer> shipExp;
 
     /** 提督経験値 */
     @FXML
-    private TableColumn<BattleLogDetail, String> exp;
+    private TableColumn<BattleLogDetail, Integer> exp;
 
     /** 種類 */
     @FXML
@@ -220,6 +224,9 @@ public class BattleLogController extends WindowController {
 
     /** 集計用Map */
     private Map<String, Function<BattleLogDetail, ?>> aggregateTypeMap = new HashMap<>();
+
+    /** 海域短縮名のパターン（1-2など） */
+    private static final Pattern AREA_SHORTNAME_PATTERN = Pattern.compile("^([0-9]+)-([0-9]+)$");
 
     @FXML
     void initialize() {
@@ -300,7 +307,55 @@ public class BattleLogController extends WindowController {
             // ルート要素(非表示)
             TreeItem<BattleLogCollect> root = new TreeItem<BattleLogCollect>(new BattleLogCollect());
             this.collect.setRoot(root);
-
+            this.collect.setSortPolicy((param) -> {
+                // 最上位（root直下=集計単位）はいじらない
+                root.getChildren().forEach(agg -> {
+                    // 各集計単位でソートする
+                    agg.getChildren().sort((o1, o2) -> {
+                        BattleLogCollect b1 = o1.getValue();
+                        BattleLogCollect b2 = o2.getValue();
+                        if (b1 == null) {
+                            return b2 == null ? 0 : 1;
+                        } else if (b2 == null) {
+                            return -1;
+                        }
+                        // 上位の sort order から順にチェック
+                        for (TreeTableColumn<BattleLogCollect, ?> column : param.getSortOrder()) {
+                            int alpha = column.getSortType() == SortType.DESCENDING ? -1 : 1;
+                            int diff = 0;
+                            if (column == this.unit) {
+                                diff = b1.getAreaSortOrder() - b2.getAreaSortOrder();
+                            } else if (column == this.start) {
+                                try {
+                                    int i1 = b1.getStart().equals("-") ? 0 : Integer.parseInt(b1.getStart());
+                                    int i2 = b2.getStart().equals("-") ? 0 : Integer.parseInt(b2.getStart());
+                                    diff = i1 - i2;
+                                } catch (Throwable e) {
+                                    // ignore parse error
+                                }
+                            } else if (column == this.win) {
+                                diff = b1.getWin() - b2.getWin();
+                            } else if (column == this.s) {
+                                diff = b1.getS() - b2.getS();
+                            } else if (column == this.a) {
+                                diff = b1.getA() - b2.getA();
+                            } else if (column == this.b) {
+                                diff = b1.getB() - b2.getB();
+                            } else if (column == this.c) {
+                                diff = b1.getC() - b2.getC();
+                            } else if (column == this.d) {
+                                diff = b1.getD() - b2.getD();
+                            }
+                            if (diff != 0) {
+                                return alpha * diff;
+                            }
+                        }
+                        // ソート順がない、またはソート順位が同じ場合は海域でソート
+                        return b1.getAreaSortOrder() - b2.getAreaSortOrder();
+                    });
+                });
+                return true;
+            });
             // 集計
             this.aggregate.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.aggregate.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
@@ -338,6 +393,23 @@ public class BattleLogController extends WindowController {
         }
     }
 
+    private static int getSortOrder(String areaShortName) {
+        return Optional.ofNullable(areaShortName)
+            .map(AREA_SHORTNAME_PATTERN::matcher)
+            .filter(Matcher::matches)
+            .map(m -> {
+                try {
+                    int mapArea = Integer.parseInt(m.group(1));
+                    int mapNo = Integer.parseInt(m.group(2));
+                    return mapArea * 1000 + mapNo;
+                } catch (Throwable e) {
+                    // ignore parse error
+                    return null;
+                }
+            })
+            .orElse(Integer.MAX_VALUE);
+    }
+
     /**
      * ログをセット
      * @param unit 集計単位
@@ -363,35 +435,37 @@ public class BattleLogController extends WindowController {
         unitRoot.getChildren().add(boss);
 
         // 海域の名前
-        List<Pair<String, String>> areaNames = list.stream()
+        List<Triplet<String, String, Integer>> areaNames = list.stream()
                 .map(log -> Tuple.of(log.getArea(), log.getAreaShortName()))
                 .distinct()
-                .sorted(Comparator.comparing(Tuple.Pair::getValue))
+                .map(tuple -> Tuple.of(tuple.getKey(), tuple.getValue(), getSortOrder(tuple.getValue())))
+                .sorted(Comparator.comparing(Triplet::get3))
                 .collect(Collectors.toList());
-        for (Pair<String, String> name : areaNames) {
-            String area = name.getKey();
+        for (Triplet<String, String, Integer> name : areaNames) {
+            String area = name.get1();
             String text;
-            if (name.getValue() != null) {
-                text = area + "(" + name.getValue() + ")";
+            if (name.get2() != null) {
+                text = area + "(" + name.get2() + ")";
             } else {
                 text = area;
             }
 
             // 海域毎の集計
-            BattleLogCollect areaValue = BattleLogs.collect(list, name.getValue(), false);
+            BattleLogCollect areaValue = BattleLogs.collect(list, name.get2(), false);
             areaValue.setUnit(text);
             areaValue.setCollectUnit(unit);
             areaValue.setArea(area);
-            areaValue.setAreaShortName(name.getValue());
-
+            areaValue.setAreaShortName(name.get2());
+            areaValue.setAreaSortOrder(name.get3());
+            
             TreeItem<BattleLogCollect> areaRoot = new TreeItem<BattleLogCollect>(areaValue);
 
             // 海域ボス
-            BattleLogCollect areaBossValue = BattleLogs.collect(list, name.getValue(), true);
+            BattleLogCollect areaBossValue = BattleLogs.collect(list, name.get2(), true);
             areaBossValue.setUnit("ボス");
             areaBossValue.setCollectUnit(unit);
             areaBossValue.setArea(area);
-            areaBossValue.setAreaShortName(name.getValue());
+            areaBossValue.setAreaShortName(name.get2());
             areaBossValue.setBoss(true);
 
             TreeItem<BattleLogCollect> areaBoss = new TreeItem<BattleLogCollect>(areaBossValue);
