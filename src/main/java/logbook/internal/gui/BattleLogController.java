@@ -386,7 +386,7 @@ public class BattleLogController extends WindowController {
             TreeItem<BattleLogCollect> areaRoot = new TreeItem<BattleLogCollect>(areaValue);
 
             // 海域ボス
-            BattleLogCollect areaBossValue = BattleLogs.collect(list, area, true);
+            BattleLogCollect areaBossValue = BattleLogs.collect(list, name.getValue(), true);
             areaBossValue.setUnit("ボス");
             areaBossValue.setCollectUnit(unit);
             areaBossValue.setArea(area);
