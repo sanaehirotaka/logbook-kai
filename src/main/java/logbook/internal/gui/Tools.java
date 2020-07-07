@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
 
 import org.controlsfx.control.Notifications;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -40,6 +42,8 @@ import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
@@ -284,11 +288,173 @@ public class Tools {
         }
     }
 
+    public static class TablesTreesBase {
+
+        /**
+         * テーブル列の幅の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         */
+        public static  <S> void setWidth(Supplier<Stream<? extends TableColumnBase<S, ?>>> columns, String key) {
+            Map<String, Double> setting = AppConfig.get()
+                    .getColumnWidthMap()
+                    .get(key);
+            if (setting != null) {
+                // 初期設定
+                columns.get().forEach(column -> {
+                    Double width = setting.get(getColumnName(column));
+                    if (width != null) {
+                        column.setPrefWidth(width);
+                    }
+                });
+            }
+            // 幅が変更された時に設定を保存する
+            columns.get().forEach(column -> {
+                column.widthProperty().addListener((ob, o, n) -> {
+                    Map<String, Double> map = AppConfig.get()
+                            .getColumnWidthMap()
+                            .computeIfAbsent(key, e -> new HashMap<>());
+                    map.put(getColumnName(column), n.doubleValue());
+                });
+            });
+        }
+
+        public interface AbstractTable<S, C extends TableColumnBase<?, ?>> {
+            public Stream<C> getColumns();
+            public ObservableList<C> getSortOrder();
+            public String getSortType(C column);
+            public void setSortType(C column, String type);
+            public ObjectProperty<?> sortTypeProperty(C column);
+        }
+        
+        public static class TableWrapper<S> implements AbstractTable<S, TableColumn<S, ?>> {
+            private final TableView<S> table;
+            TableWrapper(TableView<S> table) {
+                this.table = table;
+            }
+            
+            @Override
+            public Stream<TableColumn<S, ?>> getColumns() {
+                return Tables.getColumns(this.table);
+            }
+
+            @Override
+            public ObservableList<TableColumn<S, ?>> getSortOrder() {
+                return this.table.getSortOrder();
+            }
+
+            @Override
+            public void setSortType(TableColumn<S, ?> column, String type) {
+                column.setSortType(SortType.valueOf(type));
+            }
+
+            @Override
+            public ObjectProperty<?> sortTypeProperty(TableColumn<S, ?> column) {
+                return column.sortTypeProperty();
+            }
+
+            @Override
+            public String getSortType(TableColumn<S, ?> column) {
+                return column.getSortType().name();
+            }
+        }
+
+        public static class TreeWrapper<S> implements AbstractTable<S, TreeTableColumn<S, ?>> {
+            private final TreeTableView<S> tree;
+            TreeWrapper(TreeTableView<S> table) {
+                this.tree = table;
+            }
+            
+            @Override
+            public Stream<TreeTableColumn<S, ?>> getColumns() {
+                return Trees.getColumns(this.tree);
+            }
+
+            @Override
+            public ObservableList<TreeTableColumn<S, ?>> getSortOrder() {
+                return this.tree.getSortOrder();
+            }
+
+            @Override
+            public String getSortType(TreeTableColumn<S, ?> column) {
+                return column.getSortType().name();
+            }
+
+            @Override
+            public void setSortType(TreeTableColumn<S, ?> column, String type) {
+                column.setSortType(TreeTableColumn.SortType.valueOf(type));
+            }
+
+            @Override
+            public ObjectProperty<?> sortTypeProperty(TreeTableColumn<S, ?> column) {
+                return column.sortTypeProperty();
+            }
+        }
+        
+        /**
+         * テーブルソート列の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         */
+        public static <S, C extends TableColumnBase<?, ?>> void setSortOrder(AbstractTable<S, C> table, String key) {
+            Map<String, String> setting = AppConfig.get()
+                    .getColumnSortOrderMap()
+                    .get(key);
+            ObservableList<C> sortOrder = table.getSortOrder();
+            if (setting != null) {
+                // 初期設定
+                Map<String, C> columnsMap = table.getColumns()
+                        .collect(Collectors.toMap(Tables::getColumnName, c -> c, (c1, c2) -> c1));
+                setting.forEach((k, v) -> {
+                    Optional.ofNullable(columnsMap.get(k)).ifPresent(col -> {
+                        sortOrder.add(col);
+                        table.setSortType(col, v);
+                    });
+                });
+            }
+            // ソート列またはソートタイプが変更された時に設定を保存する
+            sortOrder.addListener((ListChangeListener<C>) e -> storeSortOrder(table, key));
+            table.getColumns().forEach(col -> {
+                table.sortTypeProperty(col).addListener((ob, o, n) -> storeSortOrder(table, key));
+            });
+        }
+
+        private static <S, C extends TableColumnBase<?, ?>> void storeSortOrder(AbstractTable<S, C> table, String key) {
+            ObservableList<C> sortOrder = table.getSortOrder();
+            Map<String, String> setting = AppConfig.get()
+                    .getColumnSortOrderMap()
+                    .computeIfAbsent(key, e1 -> new LinkedHashMap<>());
+            setting.clear();
+            sortOrder.stream().forEach(col -> setting.put(getColumnName(col), table.getSortType(col)));
+        }
+        
+        /**
+         * TableColumnの名前を取得する
+         * @param column TableColumn
+         * @return TableColumnの名前
+         */
+        public static String getColumnName(TableColumnBase<?, ?> column) {
+            LinkedList<String> names = null;
+            TableColumnBase<?, ?> parent = column;
+            while ((parent = parent.getParentColumn()) != null) {
+                if (names == null) {
+                    names = new LinkedList<>();
+                }
+                names.addFirst(parent.getText());
+            }
+            if (names != null) {
+                return names.stream().collect(Collectors.joining(".")) + "." + column.getText();
+            } else {
+                return column.getText();
+            }
+        }
+    }
+    
     /**
      * TableViewに関係するメソッドを集めたクラス
      *
      */
-    public static class Tables {
+    public static class Tables extends TablesTreesBase {
 
         private static final String SEPARATOR = "\t"; //$NON-NLS-1$
 
@@ -429,27 +595,7 @@ public class Tools {
          * @param key テーブルのキー名
          */
         public static void setWidth(TableView<?> table, String key) {
-            Map<String, Double> setting = AppConfig.get()
-                    .getColumnWidthMap()
-                    .get(key);
-            if (setting != null) {
-                // 初期設定
-                getColumns(table).forEach(column -> {
-                    Double width = setting.get(getColumnName(column));
-                    if (width != null) {
-                        column.setPrefWidth(width);
-                    }
-                });
-            }
-            // 幅が変更された時に設定を保存する
-            getColumns(table).forEach(column -> {
-                column.widthProperty().addListener((ob, o, n) -> {
-                    Map<String, Double> map = AppConfig.get()
-                            .getColumnWidthMap()
-                            .computeIfAbsent(key, e -> new HashMap<>());
-                    map.put(getColumnName(column), n.doubleValue());
-                });
-            });
+            TablesTreesBase.setWidth(() -> getColumns(table), key);
         }
 
         /**
@@ -458,47 +604,7 @@ public class Tools {
          * @param key テーブルのキー名
          */
         public static <S> void setSortOrder(TableView<S> table, String key) {
-            Map<String, String> setting = AppConfig.get()
-                    .getColumnSortOrderMap()
-                    .get(key);
-            ObservableList<TableColumn<S, ?>> sortOrder = table.getSortOrder();
-            if (setting != null) {
-                // 初期設定
-                Map<String, TableColumn<S, ?>> columnsMap = getColumns(table)
-                        .collect(Collectors.toMap(Tables::getColumnName, c -> c, (c1, c2) -> c1));
-                setting.forEach((k, v) -> {
-                    Optional.ofNullable(columnsMap.get(k)).ifPresent(col -> {
-                        sortOrder.add(col);
-                        col.setSortType(SortType.valueOf(v));
-                    });
-                });
-            }
-            // ソート列またはソートタイプが変更された時に設定を保存する
-            sortOrder.addListener((ListChangeListener<TableColumn<S, ?>>) e -> storeSortOrder(table, key));
-            getColumns(table).forEach(col -> {
-                col.sortTypeProperty().addListener((ob, o, n) -> storeSortOrder(table, key));
-            });
-        }
-
-        /**
-         * TableColumnの名前を取得する
-         * @param column TableColumn
-         * @return TableColumnの名前
-         */
-        public static String getColumnName(TableColumn<?, ?> column) {
-            LinkedList<String> names = null;
-            TableColumnBase<?, ?> parent = column;
-            while ((parent = parent.getParentColumn()) != null) {
-                if (names == null) {
-                    names = new LinkedList<>();
-                }
-                names.addFirst(parent.getText());
-            }
-            if (names != null) {
-                return names.stream().collect(Collectors.joining(".")) + "." + column.getText();
-            } else {
-                return column.getText();
-            }
+            TablesTreesBase.setSortOrder(new TableWrapper<S>(table), key);
         }
 
         /**
@@ -510,15 +616,6 @@ public class Tools {
             return table.getColumns()
                     .stream()
                     .flatMap(Tables::flatColumns);
-        }
-
-        private static <S> void storeSortOrder(TableView<S> table, String key) {
-            ObservableList<TableColumn<S, ?>> sortOrder = table.getSortOrder();
-            Map<String, String> setting = AppConfig.get()
-                    .getColumnSortOrderMap()
-                    .computeIfAbsent(key, e1 -> new LinkedHashMap<>());
-            setting.clear();
-            sortOrder.stream().forEach(col -> setting.put(getColumnName(col), col.getSortType().name()));
         }
 
         private static String tableHeader(TableView<?> table, String separator) {
@@ -539,6 +636,35 @@ public class Tools {
                         .flatMap(Tables::flatColumns);
             }
             return Stream.of(column);
+        }
+    }
+    
+    public static class Trees extends TablesTreesBase {
+        /**
+         * テーブル列の幅の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         */
+        public static void setWidth(TreeTableView<?> tree, String key) {
+            TablesTreesBase.setWidth(() -> getColumns(tree), key);
+        }
+        
+        /**
+         * テーブルソート列の設定を行う
+         * @param table テーブル
+         * @param key テーブルのキー名
+         */
+        public static <S> void setSortOrder(TreeTableView<S> table, String key) {
+            TablesTreesBase.setSortOrder(new TreeWrapper<S>(table), key);
+        }
+
+        /**
+         * TreeTableViewからTreeTableColumnをストリームとして取得する
+         * @param tree TreeTableView
+         * @return TreeTableColumn
+         */
+        public static <S> Stream<TreeTableColumn<S, ?>> getColumns(TreeTableView<S> tree) {
+            return tree.getColumns().stream();
         }
     }
 
