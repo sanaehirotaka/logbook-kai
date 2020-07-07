@@ -433,10 +433,10 @@ public class BattleLogs {
      * @param bossOnly 集計対象をボスのみにする場合true
      * @return 出撃統計
      */
-    public static BattleLogCollect collect(List<SimpleBattleLog> logs, String area, boolean bossOnly) {
+    public static BattleLogCollect collect(List<SimpleBattleLog> logs, String areaShortName, boolean bossOnly) {
         Predicate<SimpleBattleLog> anyFilter = e -> true;
         // 海域フィルタ
-        Predicate<SimpleBattleLog> areaFilter = area != null ? e -> area.equals(e.getArea()) : anyFilter;
+        Predicate<SimpleBattleLog> areaFilter = areaShortName != null ? e -> areaShortName.equals(e.getAreaShortName()) : anyFilter;
         // ボスフィルタ
         Predicate<SimpleBattleLog> bossFilter = bossOnly ? e -> e.getBoss().indexOf("ボス") != -1 : anyFilter;
 
