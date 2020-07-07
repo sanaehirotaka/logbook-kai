@@ -3,6 +3,8 @@ package logbook.internal.gui;
 import java.time.ZoneId;
 import java.util.StringJoiner;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.internal.BattleLogs.SimpleBattleLog;
@@ -47,9 +49,9 @@ public class BattleLogDetail {
     /** ドロップアイテム */
     private StringProperty dropItem;
     /** 艦娘経験値 */
-    private StringProperty shipExp;
+    private final IntegerProperty shipExp = new SimpleIntegerProperty();
     /** 提督経験値 */
-    private StringProperty exp;
+    private final IntegerProperty exp = new SimpleIntegerProperty();
 
     /**
      * 日付を取得します。
@@ -439,7 +441,7 @@ public class BattleLogDetail {
      * 艦娘経験値を取得します。
      * @return 艦娘経験値
      */
-    public String getShipExp() {
+    public int getShipExp() {
         return this.shipExp.get();
     }
 
@@ -447,15 +449,15 @@ public class BattleLogDetail {
      * 艦娘経験値を設定します。
      * @param shipExp 艦娘経験値
      */
-    public void setShipExp(String shipExp) {
-        this.shipExp = new SimpleStringProperty(shipExp);
+    public void setShipExp(int shipExp) {
+        this.shipExp.set(shipExp);
     }
 
     /**
      * 艦娘経験値を取得します。
      * @return 艦娘経験値
      */
-    public StringProperty shipExpProperty() {
+    public IntegerProperty shipExpProperty() {
         return this.shipExp;
     }
 
@@ -463,7 +465,7 @@ public class BattleLogDetail {
      * 提督経験値を取得します。
      * @return 提督経験値
      */
-    public String getExp() {
+    public int getExp() {
         return this.exp.get();
     }
 
@@ -471,15 +473,15 @@ public class BattleLogDetail {
      * 提督経験値を設定します。
      * @param exp 提督経験値
      */
-    public void setExp(String exp) {
-        this.exp = new SimpleStringProperty(exp);
+    public void setExp(int exp) {
+        this.exp.set(exp);
     }
 
     /**
      * 提督経験値を取得します。
      * @return 提督経験値
      */
-    public StringProperty expProperty() {
+    public IntegerProperty expProperty() {
         return this.exp;
     }
 
@@ -501,8 +503,8 @@ public class BattleLogDetail {
                 .add(this.dropType.get())
                 .add(this.dropShip.get())
                 .add(this.dropItem.get())
-                .add(this.shipExp.get())
-                .add(this.exp.get())
+                .add(Integer.toString(this.shipExp.get()))
+                .add(Integer.toString(this.exp.get()))
                 .toString();
     }
 
@@ -532,8 +534,8 @@ public class BattleLogDetail {
         detail.setDropType(log.getDropType());
         detail.setDropShip(log.getDropShip());
         detail.setDropItem(log.getDropItem());
-        detail.setShipExp(log.getShipExp());
-        detail.setExp(log.getExp());
+        detail.setShipExp(Integer.parseInt(log.getShipExp()));
+        detail.setExp(Integer.parseInt(log.getExp()));
         return detail;
     }
 }

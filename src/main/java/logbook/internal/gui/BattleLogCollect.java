@@ -1,5 +1,7 @@
 package logbook.internal.gui;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.internal.BattleLogs.IUnit;
@@ -11,28 +13,28 @@ import logbook.internal.BattleLogs.IUnit;
 public class BattleLogCollect {
 
     /** 集計  */
-    private StringProperty unit;
+    private final StringProperty unit = new SimpleStringProperty();
 
-    /** 出撃  */
-    private StringProperty start;
+    /** 出撃 （ボスカウントを"-"にするため String のままにする） */
+    private final SimpleStringProperty start = new SimpleStringProperty();
 
     /** 勝利  */
-    private StringProperty win;
+    private final IntegerProperty win = new SimpleIntegerProperty();
 
     /** S勝利 */
-    private StringProperty s;
+    private final IntegerProperty s = new SimpleIntegerProperty();
 
     /** A勝利 */
-    private StringProperty a;
+    private final IntegerProperty a = new SimpleIntegerProperty();
 
     /** B勝利 */
-    private StringProperty b;
+    private final IntegerProperty b = new SimpleIntegerProperty();
 
     /** C敗北 */
-    private StringProperty c;
+    private final IntegerProperty c = new SimpleIntegerProperty();
 
     /** D敗北 */
-    private StringProperty d;
+    private final IntegerProperty d = new SimpleIntegerProperty();
 
     /** 集計単位 */
     private IUnit collectUnit;
@@ -46,6 +48,9 @@ public class BattleLogCollect {
     /** ボス */
     private boolean boss;
 
+    /** 海域ソート順 */
+    private int areaSortOrder;
+    
     /**
      * 集計を取得します。
      * @return 集計
@@ -59,7 +64,7 @@ public class BattleLogCollect {
      * @param unit 集計
      */
     public void setUnit(String unit) {
-        this.unit = new SimpleStringProperty(unit);
+        this.unit.set(unit);
     }
 
     /**
@@ -83,7 +88,7 @@ public class BattleLogCollect {
      * @param start 出撃
      */
     public void setStart(String start) {
-        this.start = new SimpleStringProperty(start);
+        this.start .set(start);
     }
 
     /**
@@ -98,7 +103,7 @@ public class BattleLogCollect {
      * 勝利を取得します。
      * @return 勝利
      */
-    public String getWin() {
+    public int getWin() {
         return this.win.get();
     }
 
@@ -106,15 +111,15 @@ public class BattleLogCollect {
      * 勝利を設定します。
      * @param win 勝利
      */
-    public void setWin(String win) {
-        this.win = new SimpleStringProperty(win);
+    public void setWin(int win) {
+        this.win.set(win);
     }
 
     /**
      * 勝利を取得します。
      * @return 勝利
      */
-    public StringProperty winProperty() {
+    public IntegerProperty winProperty() {
         return this.win;
     }
 
@@ -122,7 +127,7 @@ public class BattleLogCollect {
      * S勝利を取得します。
      * @return S勝利
      */
-    public String getS() {
+    public int getS() {
         return this.s.get();
     }
 
@@ -130,15 +135,15 @@ public class BattleLogCollect {
      * S勝利を設定します。
      * @param s S勝利
      */
-    public void setS(String s) {
-        this.s = new SimpleStringProperty(s);
+    public void setS(int s) {
+        this.s.set(s);
     }
 
     /**
      * S勝利を取得します。
      * @return S勝利
      */
-    public StringProperty sProperty() {
+    public IntegerProperty sProperty() {
         return this.s;
     }
 
@@ -146,7 +151,7 @@ public class BattleLogCollect {
      * A勝利を取得します。
      * @return A勝利
      */
-    public String getA() {
+    public int getA() {
         return this.a.get();
     }
 
@@ -154,15 +159,15 @@ public class BattleLogCollect {
      * A勝利を設定します。
      * @param a A勝利
      */
-    public void setA(String a) {
-        this.a = new SimpleStringProperty(a);
+    public void setA(int a) {
+        this.a.set(a);
     }
 
     /**
      * A勝利を取得します。
      * @return A勝利
      */
-    public StringProperty aProperty() {
+    public IntegerProperty aProperty() {
         return this.a;
     }
 
@@ -170,7 +175,7 @@ public class BattleLogCollect {
      * B勝利を取得します。
      * @return B勝利
      */
-    public String getB() {
+    public int getB() {
         return this.b.get();
     }
 
@@ -178,15 +183,15 @@ public class BattleLogCollect {
      * B勝利を設定します。
      * @param b B勝利
      */
-    public void setB(String b) {
-        this.b = new SimpleStringProperty(b);
+    public void setB(int b) {
+        this.b.set(b);
     }
 
     /**
      * B勝利を取得します。
      * @return B勝利
      */
-    public StringProperty bProperty() {
+    public IntegerProperty bProperty() {
         return this.b;
     }
 
@@ -194,7 +199,7 @@ public class BattleLogCollect {
      * C敗北を取得します。
      * @return C敗北
      */
-    public String getC() {
+    public int getC() {
         return this.c.get();
     }
 
@@ -202,15 +207,15 @@ public class BattleLogCollect {
      * C敗北を設定します。
      * @param c C敗北
      */
-    public void setC(String c) {
-        this.c = new SimpleStringProperty(c);
+    public void setC(int c) {
+        this.c.set(c);
     }
 
     /**
      * C敗北を取得します。
      * @return C敗北
      */
-    public StringProperty cProperty() {
+    public IntegerProperty cProperty() {
         return this.c;
     }
 
@@ -218,7 +223,7 @@ public class BattleLogCollect {
      * D敗北を取得します。
      * @return D敗北
      */
-    public String getD() {
+    public int getD() {
         return this.d.get();
     }
 
@@ -226,15 +231,15 @@ public class BattleLogCollect {
      * D敗北を設定します。
      * @param d D敗北
      */
-    public void setD(String d) {
-        this.d = new SimpleStringProperty(d);
+    public void setD(int d) {
+        this.d.set(d);
     }
 
     /**
      * D敗北を取得します。
      * @return D敗北
      */
-    public StringProperty dProperty() {
+    public IntegerProperty dProperty() {
         return this.d;
     }
 
@@ -300,5 +305,21 @@ public class BattleLogCollect {
      */
     public void setBoss(boolean boss) {
         this.boss = boss;
+    }
+
+    /**
+     * 海域ソート順を取得します。
+     * @return ソート順
+     */
+    public int getAreaSortOrder() {
+        return this.areaSortOrder;
+    }
+
+    /**
+     * 海域ソート順を設定します。
+     * @param areaSortOrder ソート順
+     */
+    public void setAreaSortOrder(int areaSortOrder) {
+        this.areaSortOrder = areaSortOrder;
     }
 }

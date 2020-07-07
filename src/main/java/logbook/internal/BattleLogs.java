@@ -459,21 +459,21 @@ public class BattleLogs {
                 .filter(bossFilter)
                 .map(SimpleBattleLog::getRank)
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()));
-        long s = rank.getOrDefault("S", 0L);
-        long a = rank.getOrDefault("A", 0L);
-        long b = rank.getOrDefault("B", 0L);
-        long c = rank.getOrDefault("C", 0L);
-        long d = rank.getOrDefault("D", 0L);
-        long win = s + a + b;
+        int s = rank.getOrDefault("S", 0L).intValue();
+        int a = rank.getOrDefault("A", 0L).intValue();
+        int b = rank.getOrDefault("B", 0L).intValue();
+        int c = rank.getOrDefault("C", 0L).intValue();
+        int d = rank.getOrDefault("D", 0L).intValue();
+        int win = s + a + b;
 
         BattleLogCollect value = new BattleLogCollect();
         value.setStart(start);
-        value.setWin(String.valueOf(win));
-        value.setS(String.valueOf(s));
-        value.setA(String.valueOf(a));
-        value.setB(String.valueOf(b));
-        value.setC(String.valueOf(c));
-        value.setD(String.valueOf(d));
+        value.setWin(win);
+        value.setS(s);
+        value.setA(a);
+        value.setB(b);
+        value.setC(c);
+        value.setD(d);
         return value;
     }
 
@@ -484,13 +484,26 @@ public class BattleLogs {
 
     private static void updateLog(Map<String, String> mapNames, SimpleBattleLog log) {
         String shortName = log.getAreaShortName() != null ? log.getAreaShortName() : mapNames.get(log.getArea());
+        int sortOrder = Integer.MAX_VALUE;
         if (shortName != null) {
             log.setAreaShortName(shortName);
             String cell = Mapping.getCell(shortName + "-" + log.getCell());
             if (cell != null) {
                 log.setCell(cell);
             }
+            Pattern AREA_SHORTNAME_PATTERN = Pattern.compile("^([0-9]+)-([0-9]+)$");
+            Matcher m = AREA_SHORTNAME_PATTERN.matcher(shortName);
+            if (m.matches()) {
+                try {
+                    int area = Integer.parseInt(m.group(1));
+                    int no = Integer.parseInt(m.group(2));
+                    sortOrder = area * 1000000 + no * 1000 + Integer.parseInt(cell);
+                } catch (Throwable e) {
+                    // ignore parse error
+                }
+            }
         }
+        log.setAreaSortOrder(sortOrder);
     }
 
     /**
@@ -508,6 +521,8 @@ public class BattleLogs {
         private String area;
         /** 海域略称 */
         private String areaShortName;
+        /** 海域の並び替え順 */
+        private int areaSortOrder;
         /** マス */
         private String cell;
         /** ボス */
