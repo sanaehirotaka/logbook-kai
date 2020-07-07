@@ -378,7 +378,7 @@ public class BattleLogController extends WindowController {
             }
 
             // 海域毎の集計
-            BattleLogCollect areaValue = BattleLogs.collect(list, area, false);
+            BattleLogCollect areaValue = BattleLogs.collect(list, name.getValue(), false);
             areaValue.setUnit(text);
             areaValue.setCollectUnit(unit);
             areaValue.setArea(area);
