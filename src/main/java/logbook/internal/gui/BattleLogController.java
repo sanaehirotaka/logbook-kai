@@ -356,6 +356,7 @@ public class BattleLogController extends WindowController {
                 });
                 return true;
             });
+
             // 集計
             this.aggregate.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.aggregate.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
@@ -373,6 +374,8 @@ public class BattleLogController extends WindowController {
 
             // フィルタ
             this.initializeFilterPane();
+
+            TreeTableTool.setVisible(this.collect, this.getClass().toString() + "#" + "collect");
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
