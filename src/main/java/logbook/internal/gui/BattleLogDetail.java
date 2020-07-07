@@ -18,6 +18,8 @@ public class BattleLogDetail {
     private StringProperty date;
     /** 海域 */
     private StringProperty area;
+    /** 海域短縮名 */
+    private StringProperty areaShortName;
     /** マス */
     private StringProperty cell;
     /** ボス */
@@ -95,6 +97,30 @@ public class BattleLogDetail {
      */
     public StringProperty areaProperty() {
         return this.area;
+    }
+
+    /**
+     * 海域短縮名を取得します。
+     * @return 海域短縮名
+     */
+    public String getAreaShortName() {
+        return this.areaShortName.get();
+    }
+
+    /**
+     * 海域短縮名を設定します。
+     * @param area 海域短縮名
+     */
+    public void setAreaShortName(String area) {
+        this.areaShortName = new SimpleStringProperty(area);
+    }
+
+    /**
+     * 海域短縮名を取得します。
+     * @return 海域短縮名
+     */
+    public StringProperty areaShortNameProperty() {
+        return this.areaShortName;
     }
 
     /**
@@ -492,6 +518,7 @@ public class BattleLogDetail {
         String date = Logs.DATE_FORMAT.format(log.getDate().withZoneSameInstant(ZoneId.of("Asia/Tokyo")));
         detail.setDate(date);
         detail.setArea(log.getArea());
+        detail.setAreaShortName(log.getAreaShortName());
         detail.setCell(log.getCell());
         detail.setBoss(log.getBoss());
         detail.setRank(log.getRank());

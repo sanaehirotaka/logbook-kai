@@ -40,6 +40,9 @@ public class BattleLogCollect {
     /** 海域 */
     private String area;
 
+    /** 海域短縮名 */
+    private String areaShortName;
+
     /** ボス */
     private boolean boss;
 
@@ -265,6 +268,22 @@ public class BattleLogCollect {
      */
     public void setArea(String area) {
         this.area = area;
+    }
+
+    /**
+     * 海域短縮名を取得します。
+     * @return 海域短縮名
+     */
+    public String getAreaShortName() {
+        return this.areaShortName;
+    }
+
+    /**
+     * 海域短縮名を設定します。
+     * @param areaShortName 海域短縮名
+     */
+    public void setAreaShortName(String areaShortName) {
+        this.areaShortName = areaShortName;
     }
 
     /**
