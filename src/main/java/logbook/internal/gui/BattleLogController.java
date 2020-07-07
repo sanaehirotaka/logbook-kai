@@ -382,6 +382,7 @@ public class BattleLogController extends WindowController {
             areaValue.setUnit(text);
             areaValue.setCollectUnit(unit);
             areaValue.setArea(area);
+            areaValue.setAreaShortName(name.getValue());
 
             TreeItem<BattleLogCollect> areaRoot = new TreeItem<BattleLogCollect>(areaValue);
 
@@ -390,6 +391,7 @@ public class BattleLogController extends WindowController {
             areaBossValue.setUnit("ボス");
             areaBossValue.setCollectUnit(unit);
             areaBossValue.setArea(area);
+            areaBossValue.setAreaShortName(name.getValue());
             areaBossValue.setBoss(true);
 
             TreeItem<BattleLogCollect> areaBoss = new TreeItem<BattleLogCollect>(areaBossValue);
@@ -525,12 +527,12 @@ public class BattleLogController extends WindowController {
         this.detailsSource.clear();
         if (value != null) {
             BattleLogCollect collect = value.getValue();
-            String area = collect.getArea();
+            String areaShortName = collect.getAreaShortName();
             boolean boss = collect.isBoss();
 
             Predicate<BattleLogDetail> anyFilter = e -> true;
             // 海域フィルタ
-            Predicate<BattleLogDetail> areaFilter = area != null ? e -> area.equals(e.getArea()) : anyFilter;
+            Predicate<BattleLogDetail> areaFilter = areaShortName != null ? e -> areaShortName.equals(e.getAreaShortName()) : anyFilter;
             // ボスフィルタ
             Predicate<BattleLogDetail> bossFilter = boss ? e -> e.getBoss().indexOf("ボス") != -1 : anyFilter;
 
@@ -620,7 +622,7 @@ public class BattleLogController extends WindowController {
      * 集計を初期化する
      */
     private void initializeAggregate() {
-        this.addAggregate(this.area, BattleLogDetail::getArea);
+        this.addAggregate(this.area, (detail) -> detail.getAreaShortName() + " " + detail.getArea());
         this.addAggregate(this.cell, BattleLogDetail::getCell);
         this.addAggregate(this.boss, BattleLogDetail::getBoss);
         this.addAggregate(this.rank, BattleLogDetail::getRank);
