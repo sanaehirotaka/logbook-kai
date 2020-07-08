@@ -18,18 +18,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.SelectionMode;
@@ -42,6 +47,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -78,7 +84,7 @@ public class CreateItemController extends WindowController {
 
     /** 件数 */
     @FXML
-    private TreeTableColumn<CreateItemCollect, String> count;
+    private TreeTableColumn<CreateItemCollect, Integer> count;
 
     /** 割合 */
     @FXML
@@ -122,6 +128,8 @@ public class CreateItemController extends WindowController {
 
     private Map<CreateItemCollect, List<CreateItem>> detailList = new HashMap<>();
 
+    private ObservableList<CreateItem> detailItems = FXCollections.observableArrayList();
+
     @FXML
     void initialize() {
         try {
@@ -134,6 +142,9 @@ public class CreateItemController extends WindowController {
             x.play();
             this.detail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.detail.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
+            SortedList<CreateItem> sorted = new SortedList<CreateItem>(this.detailItems);
+            this.detail.setItems(sorted);
+            sorted.comparatorProperty().bind(this.detail.comparatorProperty());
 
             Map<String, SlotitemMst> unitToType3 = this.unitToType3();
             this.unit.setCellFactory(p -> new ItemIconCell(unitToType3));
@@ -147,6 +158,10 @@ public class CreateItemController extends WindowController {
             this.recipe.setCellValueFactory(new PropertyValueFactory<>("recipe"));
             this.secretary.setCellValueFactory(new PropertyValueFactory<>("secretary"));
 
+            this.collect.setSortPolicy((param) -> {
+                Optional.ofNullable(this.collect.getRoot()).map(TreeItem::getChildren).ifPresent(items -> sortItems(param.getSortOrder(), items));
+                return true;
+            });
             this.collect.getSelectionModel()
                     .selectedItemProperty()
                     .addListener(this::detail);
@@ -156,6 +171,36 @@ public class CreateItemController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+    
+    private void sortItems(List<TreeTableColumn<CreateItemCollect, ?>> sortOrder, List<TreeItem<CreateItemCollect>> items) {
+        items.sort((o1, o2) -> {
+            CreateItemCollect c1 = o1.getValue();
+            CreateItemCollect c2 = o2.getValue();
+            int diff = 0;
+            for (TreeTableColumn<CreateItemCollect, ?> order: sortOrder) {
+                if (order == this.unit) {
+                    diff = c1.getUnit().compareTo(c2.getUnit());
+                } else if (order == this.count) {
+                    diff = c1.getCount() - c2.getCount();
+                } else if (order == this.ratio) {
+                    // アイテムごとの列だと空の場合もある
+                    if (c1.getRatio() != null && c2.getRatio() != null) {
+                        double dd = c1.getRatio() - c2.getRatio();
+                        diff = dd > 0.0 ? 1 : (dd < 0.0 ? -1 : 0);
+                    }
+                }
+                if (diff != 0) {
+                    int alpha = order.getSortType() == SortType.DESCENDING ? -1 : 1;
+                    return alpha * diff;
+                }
+            }
+            // 名前の昇順がデフォルト
+            diff = c1.getUnit().compareTo(c2.getUnit());
+            return diff;
+        });
+        // 子供もソート
+        items.forEach(item -> sortItems(sortOrder, item.getChildren()));
     }
 
     @FXML
@@ -278,14 +323,14 @@ public class CreateItemController extends WindowController {
                 List<CreateItem> rows = this.getSubItem(value);
                 Collections.sort(rows, Comparator.comparing(CreateItem::getDate));
 
-                long size = rows.size();
+                int size = rows.size();
                 long total = count.get(recipe);
-                String ratio = BigDecimal.valueOf(size)
+                double ratio = BigDecimal.valueOf(size)
                         .divide(BigDecimal.valueOf(total), 4, RoundingMode.FLOOR)
                         .multiply(BigDecimal.valueOf(100))
                         .setScale(2)
-                        .toPlainString() + "%";
-                item.setCount(String.valueOf(size));
+                        .doubleValue();
+                item.setCount(size);
                 item.setRatio(ratio);
 
                 this.detailList.put(item, rows);
@@ -296,6 +341,9 @@ public class CreateItemController extends WindowController {
 
             if (value instanceof Map) {
                 this.setUnit(unitRoot, count, recipe, (Map<?, ?>) value);
+            }
+            if (recipe == null) {
+                item.setCount(unitRoot.getChildren().stream().map(TreeItem::getValue).mapToInt(CreateItemCollect::getCount).sum());
             }
         }
     }
@@ -326,10 +374,9 @@ public class CreateItemController extends WindowController {
             TreeItem<CreateItemCollect> oldValue, TreeItem<CreateItemCollect> value) {
         if (value != null) {
             List<CreateItem> items = this.detailList.get(value.getValue());
+            this.detailItems.clear();
             if (items != null) {
-                this.detail.setItems(FXCollections.observableArrayList(items));
-            } else {
-                this.detail.getItems().clear();
+                this.detailItems.addAll(items);
             }
         }
     }
@@ -554,10 +601,10 @@ public class CreateItemController extends WindowController {
         private StringProperty unit = new SimpleStringProperty();
 
         /** 回数 */
-        private StringProperty count = new SimpleStringProperty();
+        private IntegerProperty count = new SimpleIntegerProperty();
 
         /** 割合 */
-        private StringProperty ratio = new SimpleStringProperty();
+        private Double ratio;
 
         /**
          * 単位を取得します。
@@ -587,7 +634,7 @@ public class CreateItemController extends WindowController {
          * 回数を取得します。
          * @return 回数
          */
-        public StringProperty countProperty() {
+        public IntegerProperty countProperty() {
             return this.count;
         }
 
@@ -595,7 +642,7 @@ public class CreateItemController extends WindowController {
          * 回数を取得します。
          * @return 回数
          */
-        public String getCount() {
+        public int getCount() {
             return this.count.get();
         }
 
@@ -603,7 +650,7 @@ public class CreateItemController extends WindowController {
          * 回数を設定します。
          * @param count 回数
          */
-        public void setCount(String count) {
+        public void setCount(int count) {
             this.count.set(count);
         }
 
@@ -612,23 +659,23 @@ public class CreateItemController extends WindowController {
          * @return 割合
          */
         public StringProperty ratioProperty() {
-            return this.ratio;
+            return new SimpleStringProperty(this.ratio != null ? this.ratio + "%" : "");
         }
 
         /**
          * 割合を取得します。
          * @return 割合
          */
-        public String getRatio() {
-            return this.ratio.get();
+        public Double getRatio() {
+            return this.ratio;
         }
 
         /**
          * 割合を設定します。
          * @param ratio 割合
          */
-        public void setRatio(String ratio) {
-            this.ratio.set(ratio);
+        public void setRatio(Double ratio) {
+            this.ratio = ratio;
         }
     }
 
