@@ -373,12 +373,14 @@ public class CreateItemController extends WindowController {
     private void detail(ObservableValue<? extends TreeItem<CreateItemCollect>> observable,
             TreeItem<CreateItemCollect> oldValue, TreeItem<CreateItemCollect> value) {
         if (value != null) {
-            List<CreateItem> items = this.detailList.get(value.getValue());
             this.detailItems.clear();
-            if (items != null) {
-                this.detailItems.addAll(items);
-            }
+            addItems(this.detailItems, value);
         }
+    }
+    
+    private void addItems(List<CreateItem> list, TreeItem<CreateItemCollect> value) {
+        Optional.ofNullable(this.detailList.get(value.getValue())).ifPresent(list::addAll);
+        value.getChildren().forEach(child -> addItems(list, child));
     }
 
     /**
