@@ -22,8 +22,8 @@
                   <TreeTableView fx:id="collect" VBox.vgrow="ALWAYS">
                      <columns>
                         <TreeTableColumn fx:id="unit" prefWidth="175.0" text="集計" />
-                        <TreeTableColumn fx:id="count" prefWidth="60.0" text="件数" />
-                        <TreeTableColumn fx:id="ratio" prefWidth="60.0" text="割合" />
+                        <TreeTableColumn fx:id="count" prefWidth="60.0" text="件数" styleClass="align_right"/>
+                        <TreeTableColumn fx:id="ratio" prefWidth="60.0" text="割合" styleClass="align_right" />
                      </columns>
                   </TreeTableView>
                   <ToolBar prefHeight="40.0" prefWidth="200.0">

@@ -170,6 +170,7 @@ public class CreateItemController extends WindowController {
             this.group.selectedToggleProperty()
                     .addListener(this::changeType);
             this.setCollect(this.buttonItemRecipe);
+            TreeTableTool.setVisible(this.collect, this.getClass() + "#" + "collect");
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
