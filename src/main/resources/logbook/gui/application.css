@@ -14,3 +14,6 @@
 .titled-pane > .title {
     -fx-padding: 0.16665em 0.75em 0.16665em 0.75em; /* 2 9 2 9 */
 }
+.align_right {
+    -fx-alignment: center_right;
+}
