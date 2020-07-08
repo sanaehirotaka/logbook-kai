@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javafx.animation.KeyFrame;
@@ -60,6 +61,7 @@ import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
+import logbook.internal.Tuple;
 import logbook.internal.log.CreateitemLogFormat;
 import logbook.internal.log.LogWriter;
 import lombok.EqualsAndHashCode;
@@ -195,8 +197,11 @@ public class CreateItemController extends WindowController {
                     return alpha * diff;
                 }
             }
-            // 名前の昇順がデフォルト
-            diff = c1.getUnit().compareTo(c2.getUnit());
+            // デフォルトは predefined sort order の昇順
+            diff = c1.getSortOrder() - c2.getSortOrder();
+            if (diff == 0) {
+                diff = c1.getUnit().compareTo(c2.getUnit());
+            }
             return diff;
         });
         // 子供もソート
@@ -255,24 +260,28 @@ public class CreateItemController extends WindowController {
         Path logFile = Paths.get(AppConfig.get().getReportPath(), new CreateitemLogFormat().fileName());
         try {
             List<CreateItem> logs;
+            Map<String, Integer> map = SlotitemEquiptypeCollection.get().getEquiptypeMap().values().stream()
+                .collect(Collectors.toMap(SlotitemEquiptype::getName, SlotitemEquiptype::getId)); 
             try (Stream<String> lines = Files.lines(logFile, LogWriter.DEFAULT_CHARSET)) {
                 logs = lines.skip(1)
                         .map(CreateItem::parse)
                         .filter(Objects::nonNull)
+                        .map(item -> item.setEquipType(map.getOrDefault(item.getType(), -1)))
                         .collect(toList());
             }
+
             Map<Recipe, Long> count = logs.stream()
                     .collect(groupingBy(CreateItem::getRecipe, counting()));
 
             Map<?, ?> grouping = Collections.emptyMap();
-
+            
             if (button == this.buttonItemRecipe) {
                 grouping = logs.stream()
                         .filter(item -> !item.getItem().isEmpty())
-                        .sorted(Comparator.comparing(CreateItem::getType)
+                        .sorted(Comparator.comparing(CreateItem::getEquipType)
                                 .thenComparing(CreateItem::getItem)
                                 .thenComparing(CreateItem::getRecipe))
-                        .collect(groupingBy(CreateItem::getType, LinkedHashMap::new,
+                        .collect(groupingBy((item) -> Tuple.of(item.getEquipType(), item.getType()), LinkedHashMap::new,
                                 groupingBy(CreateItem::getItem, LinkedHashMap::new,
                                         groupingBy(CreateItem::getRecipe, LinkedHashMap::new,
                                                 toList()))));
@@ -303,6 +312,7 @@ public class CreateItemController extends WindowController {
      * @param recipe
      * @param grouping
      */
+    @SuppressWarnings("unchecked")
     private void setUnit(TreeItem<CreateItemCollect> parent,
             Map<Recipe, Long> count,
             Recipe recipe,
@@ -310,12 +320,18 @@ public class CreateItemController extends WindowController {
         for (val entry : grouping.entrySet()) {
             Object key = entry.getKey();
             Object value = entry.getValue();
+            Tuple.Pair<Integer, String> pair = null;
             if (key instanceof Recipe) {
                 recipe = (Recipe) key;
+            } else if (key instanceof Tuple.Pair) {
+                pair = (Tuple.Pair<Integer, String>)key;
             }
             CreateItemCollect item = new CreateItemCollect();
             if ("".equals(key)) {
                 item.setUnit("(失敗)");
+            } else if (pair != null) {
+                item.setUnit(pair.getValue());
+                item.setSortOrder(pair.getKey());
             } else {
                 item.setUnit(key.toString());
             }
@@ -447,6 +463,9 @@ public class CreateItemController extends WindowController {
         /** 秘書艦 */
         private StringProperty secretary = new SimpleStringProperty();
 
+        /** SlotitemEquiptype */
+        private int equipType;
+        
         /**
          * 日付を取得します。
          * @return 日付
@@ -567,6 +586,15 @@ public class CreateItemController extends WindowController {
             this.secretary.set(secretary);
         }
 
+        public int getEquipType() {
+            return this.equipType;
+        }
+
+        public CreateItem setEquipType(int equipType) {
+            this.equipType = equipType;
+            return this;
+        }
+
         @Override
         public String toString() {
             return new StringJoiner("\t")
@@ -607,6 +635,9 @@ public class CreateItemController extends WindowController {
 
         /** 割合 */
         private Double ratio;
+        
+        /** ソート順 */
+        private int sortOrder;
 
         /**
          * 単位を取得します。
@@ -678,6 +709,22 @@ public class CreateItemController extends WindowController {
          */
         public void setRatio(Double ratio) {
             this.ratio = ratio;
+        }
+
+        /**
+         * ソート順を取得します。
+         * @return ソート順
+         */
+        public int getSortOrder() {
+            return this.sortOrder;
+        }
+
+        /**
+         * ソート順を設定します。
+         * @param sortOrder ソート順
+         */
+        public void setSortOrder(int sortOrder) {
+            this.sortOrder = sortOrder;
         }
     }
 
