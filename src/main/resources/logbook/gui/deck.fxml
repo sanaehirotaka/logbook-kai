@@ -21,8 +21,8 @@
               <items>
                 <Button mnemonicParsing="false" onAction="#addNewDeck" text="新しい編成" />
                   <Pane prefHeight="0.0" prefWidth="10.0" />
-                  <Button mnemonicParsing="false" onAction="#up" text="↑" />
-                  <Button mnemonicParsing="false" onAction="#down" text="↓" />
+                  <Button fx:id="deckUp" mnemonicParsing="false" onAction="#up" text="↑" disable="true" />
+                  <Button fx:id="deckDown" mnemonicParsing="false" onAction="#down" text="↓" disable="true" />
               </items>
             </ToolBar>
             <ListView fx:id="deckList" styleClass="deckList" VBox.vgrow="ALWAYS" />
@@ -39,7 +39,7 @@
                   <Button mnemonicParsing="false" onAction="#storeImage" text="画像ファイルとして保存" />
                   <Label text="編成テンプレート" />
                   <ComboBox fx:id="preFleetList" />
-                  <Button mnemonicParsing="false" onAction="#addPreFleet" text="追加" />
+                  <Button fx:id="addPreFleet" mnemonicParsing="false" onAction="#addPreFleet" text="追加" disable="true"/>
               </items>
             </ToolBar>
             <ScrollPane fx:id="decksPane" VBox.vgrow="ALWAYS">
