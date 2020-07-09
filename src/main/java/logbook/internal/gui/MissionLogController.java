@@ -39,11 +39,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.SortType;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.util.Duration;
 import logbook.bean.AppConfig;
+import logbook.bean.Mission;
+import logbook.bean.MissionCollection;
 import logbook.internal.BattleLogs.Unit;
 import logbook.internal.LoggerHolder;
 import logbook.internal.Logs;
@@ -217,6 +220,9 @@ public class MissionLogController extends WindowController {
         this.readLog();
         this.setCollect();
 
+        this.collect.setSortPolicy((params) -> sortCollect(params.getSortOrder(), this.collect.getRoot().getChildren()));
+        TreeTableTool.setVisible(this.collect, this.getClass() + "#" + "collect");
+
         // 選択された時のリスナーを設定
         this.collect.getSelectionModel()
                 .selectedItemProperty()
@@ -226,6 +232,35 @@ public class MissionLogController extends WindowController {
                 .addListener(this::chart);
     }
 
+    private boolean sortCollect(List<TreeTableColumn<MissionLogCollect, ?>> sortOrder, List<TreeItem<MissionLogCollect>> items) {
+        items.sort((o1, o2) -> {
+            MissionLogCollect c1 = (MissionLogCollect)o1.getValue();
+            MissionLogCollect c2 = (MissionLogCollect)o2.getValue();
+            for (TreeTableColumn<MissionLogCollect, ?> column : sortOrder) {
+                int diff = 0;
+                if (column == this.unit) {
+                    if (c1.getName() != null && c2.getName() != null) {
+                        diff = c1.getName().compareTo(c2.getName());
+                    } else {
+                        diff = c1.getSortOrder() - c2.getSortOrder();
+                    }
+                } else if (column == this.successGood) {
+                    diff = c1.successGoodProperty().get() - c2.successGoodProperty().get();
+                } else if (column == this.success) {
+                    diff = c1.successProperty().get() - c2.successProperty().get();
+                } else if (column == this.fail) {
+                    diff = c1.failProperty().get() - c2.failProperty().get();
+                }
+                if (diff != 0) {
+                    return (column.getSortType() == SortType.DESCENDING ? -1 : 1) * diff;
+                }
+            }
+            return c1.getSortOrder() - c2.getSortOrder();
+        });
+        items.forEach(item -> sortCollect(sortOrder, item.getChildren()));
+        return true;
+    }
+    
     @FXML
     void copyDetail(ActionEvent event) {
         TableTool.selectionCopy(this.detail);
@@ -422,12 +457,16 @@ public class MissionLogController extends WindowController {
         TreeItem<MissionLogCollect> root = new TreeItem<MissionLogCollect>(new MissionLogCollect());
         this.collect.setRoot(root);
 
+        int index = 0;
+        Map<String, Integer> orders = MissionCollection.get().getMissionMap().values().stream().collect(
+                Collectors.toMap(Mission::getName, m -> m.getMapareaId()*10000+m.getId(), (k1, k2) -> k1));
         for (Unit unit : Unit.values()) {
             List<SimpleMissionLog> list = this.logMap.get(unit);
             // 単位のルート
             MissionLogCollect rootValue = collect(list, null);
             rootValue.setUnit(unit.getName());
             rootValue.setCollectUnit(unit);
+            rootValue.setSortOrder(index++);
 
             TreeItem<MissionLogCollect> unitRoot = new TreeItem<MissionLogCollect>(rootValue);
             unitRoot.setExpanded(true);
@@ -443,7 +482,7 @@ public class MissionLogController extends WindowController {
                 MissionLogCollect subValue = collect(list, name);
                 subValue.setCollectUnit(unit);
                 subValue.setName(name);
-
+                subValue.setSortOrder(orders.getOrDefault(name, Integer.MAX_VALUE));
                 TreeItem<MissionLogCollect> subRow = new TreeItem<MissionLogCollect>(subValue);
                 unitRoot.getChildren().add(subRow);
             }
