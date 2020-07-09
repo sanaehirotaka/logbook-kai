@@ -26,6 +26,9 @@ public class MissionLogCollect {
     /** 失敗 */
     private IntegerProperty fail;
 
+    /** ソート順 */
+    private int sortOrder;
+
     /** 集計単位 */
     @Getter
     @Setter
@@ -99,4 +102,21 @@ public class MissionLogCollect {
     public IntegerProperty failProperty() {
         return this.fail;
     }
+
+    /**
+     * ソート順を取得します。
+     * @return ソート順
+     */
+    public int getSortOrder() {
+        return this.sortOrder;
+    }
+
+    /**
+     * ソート順を設定します。
+     * @return ソート順
+     */
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
 }
