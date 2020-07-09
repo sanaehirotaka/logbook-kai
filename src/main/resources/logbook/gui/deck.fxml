@@ -42,7 +42,7 @@
                   <Button mnemonicParsing="false" onAction="#addPreFleet" text="追加" />
               </items>
             </ToolBar>
-            <ScrollPane VBox.vgrow="ALWAYS">
+            <ScrollPane fx:id="decksPane" VBox.vgrow="ALWAYS">
                <content>
                   <VBox fx:id="deck" styleClass="deck">
                      <children>

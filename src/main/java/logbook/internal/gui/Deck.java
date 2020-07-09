@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -74,6 +75,9 @@ public class Deck extends WindowController {
     @FXML
     private TilePane fleets;
 
+    @FXML
+    private ScrollPane decksPane;
+    
     /** 選択している編成 */
     private ObjectProperty<AppDeck> currentDeck = new SimpleObjectProperty<>();
 
@@ -104,6 +108,17 @@ public class Deck extends WindowController {
         this.currentDeck.addListener(this::changeCurrent);
         // 名前が変更された時のリスナー
         this.deckName.textProperty().addListener((ov, o, n) -> this.modified.set(true));
+        this.fleetList.getSelectionModel().selectedIndexProperty().addListener((ob, o, n) -> {
+            if (n != null) {
+                double maxX = this.deck.getWidth()-this.decksPane.getViewportBounds().getWidth();
+                double targetX = this.fleets.getChildren().get(n.intValue()).getBoundsInParent().getMinX();
+                this.decksPane.setHvalue(Math.min(targetX/maxX, 1.0));
+                
+                double maxY = this.deck.getHeight()-this.decksPane.getViewportBounds().getHeight();
+                double targetY = this.fleets.getBoundsInParent().getMinY()+this.fleets.getChildren().get(n.intValue()).getBoundsInParent().getMinY();
+                this.decksPane.setVvalue(Math.min(targetY/maxY, 1.0));
+            }
+        });
     }
 
     @FXML
