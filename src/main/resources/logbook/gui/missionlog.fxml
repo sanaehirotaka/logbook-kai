@@ -20,9 +20,9 @@
                   <TreeTableView fx:id="collect" VBox.vgrow="ALWAYS">
                      <columns>
                         <TreeTableColumn fx:id="unit" prefWidth="145.0" text="集計" />
-                        <TreeTableColumn fx:id="successGood" prefWidth="45.0" text="大成功" />
-                        <TreeTableColumn fx:id="success" prefWidth="45.0" text="成功" />
-                        <TreeTableColumn fx:id="fail" prefWidth="45.0" text="失敗" />
+                        <TreeTableColumn fx:id="successGood" prefWidth="45.0" text="大成功" styleClass="align_right" />
+                        <TreeTableColumn fx:id="success" prefWidth="45.0" text="成功" styleClass="align_right" />
+                        <TreeTableColumn fx:id="fail" prefWidth="45.0" text="失敗" styleClass="align_right" />
                      </columns>
                   </TreeTableView>
                </children>
@@ -36,8 +36,8 @@
                               <TableView fx:id="aggregate">
                                  <columns>
                                     <TableColumn fx:id="resource" prefWidth="100.0" text="資材" />
-                                    <TableColumn fx:id="count" prefWidth="75.0" text="合計" />
-                                    <TableColumn fx:id="average" prefWidth="45.0" text="平均" />
+                                    <TableColumn fx:id="count" prefWidth="75.0" text="合計" styleClass="align_right" />
+                                    <TableColumn fx:id="average" prefWidth="45.0" text="平均" styleClass="align_right" />
                                  </columns>
                                  <contextMenu>
                                     <ContextMenu>
@@ -58,14 +58,14 @@
                               <TableColumn fx:id="date" prefWidth="150.0" text="日付" />
                               <TableColumn fx:id="name" prefWidth="110.0" text="遠征名" />
                               <TableColumn fx:id="result" prefWidth="55.0" text="結果" />
-                              <TableColumn fx:id="fuel" prefWidth="40.0" text="燃料" />
-                              <TableColumn fx:id="ammo" prefWidth="40.0" text="弾薬" />
-                              <TableColumn fx:id="metal" prefWidth="40.0" text="鋼材" />
-                              <TableColumn fx:id="bauxite" prefWidth="45.0" text="ボーキ" />
+                              <TableColumn fx:id="fuel" prefWidth="40.0" text="燃料" styleClass="align_right" />
+                              <TableColumn fx:id="ammo" prefWidth="40.0" text="弾薬" styleClass="align_right" />
+                              <TableColumn fx:id="metal" prefWidth="40.0" text="鋼材" styleClass="align_right" />
+                              <TableColumn fx:id="bauxite" prefWidth="45.0" text="ボーキ" styleClass="align_right" />
                               <TableColumn fx:id="item1name" prefWidth="100.0" text="アイテム1" />
-                              <TableColumn fx:id="item1count" prefWidth="40.0" text="個数1" />
+                              <TableColumn fx:id="item1count" prefWidth="40.0" text="個数1" styleClass="align_right" />
                               <TableColumn fx:id="item2name" prefWidth="100.0" text="アイテム2" />
-                              <TableColumn fx:id="item2count" prefWidth="40.0" text="個数2" />
+                              <TableColumn fx:id="item2count" prefWidth="40.0" text="個数2" styleClass="align_right" />
                            </columns>
                            <contextMenu>
                               <ContextMenu>
