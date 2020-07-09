@@ -1,6 +1,8 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -309,7 +311,12 @@ public class MissionLogController extends WindowController {
                 MissionAggregate agg = new MissionAggregate();
                 agg.setResource(entry.getKey());
                 agg.setCount(entry.getValue());
-                agg.setAverage(((double) entry.getValue()) / subLog.size());
+                double average = ((double) entry.getValue()) / subLog.size();
+                average = BigDecimal.valueOf(entry.getValue())
+                    .divide(BigDecimal.valueOf(subLog.size()), 2, RoundingMode.HALF_UP)
+                    .setScale(2)
+                    .doubleValue();
+                agg.setAverage(average);
 
                 // 資材別の合計を表示する
                 this.aggregates.add(agg);
