@@ -185,7 +185,7 @@ public class MissionLogController extends WindowController {
 
         // 詳細
         SortedList<MissionLogDetail> sortedList = new SortedList<>(this.details);
-        this.detail.setItems(this.details);
+        this.detail.setItems(sortedList);
         sortedList.comparatorProperty().bind(this.detail.comparatorProperty());
         this.detail.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.detail.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
@@ -204,7 +204,7 @@ public class MissionLogController extends WindowController {
 
         // 集計
         SortedList<MissionAggregate> sortedList2 = new SortedList<>(this.aggregates);
-        this.aggregate.setItems(this.aggregates);
+        this.aggregate.setItems(sortedList2);
         sortedList2.comparatorProperty().bind(this.aggregate.comparatorProperty());
         this.aggregate.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.aggregate.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
