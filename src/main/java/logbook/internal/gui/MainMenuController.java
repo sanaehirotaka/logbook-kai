@@ -115,7 +115,31 @@ public class MainMenuController extends WindowController {
                             ((BattleDetail) c).setData(sendlog);
                         }, null);
             } else {
-                Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘中ではありません", this.parentController.getWindow());
+                Tools.Conrtols.alert(AlertType.INFORMATION, "現在の戦闘", "戦闘のデータがありません", this.parentController.getWindow());
+            }
+        } catch (Exception ex) {
+            LoggerHolder.get().error("詳細の表示に失敗しました", ex);
+        }
+    }
+
+    /**
+     * 現在の演習
+     * 
+     * @param e ActionEvent
+     */
+    @FXML
+    void practiceStatus(ActionEvent e) {
+        try {
+            BattleLog log = AppCondition.get().getPracticeBattleResult();
+            if (log != null && log.getBattle() != null) {
+                BattleLog sendlog = log;
+                InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.parentController.getWindow(),
+                        "演習詳細", c -> {
+                            ((BattleDetail) c).setInterval(() -> AppCondition.get().getPracticeBattleResult());
+                            ((BattleDetail) c).setData(sendlog);
+                        }, null);
+            } else {
+                Tools.Conrtols.alert(AlertType.INFORMATION, "演習詳細", "演習のデータがありません", this.parentController.getWindow());
             }
         } catch (Exception ex) {
             LoggerHolder.get().error("詳細の表示に失敗しました", ex);

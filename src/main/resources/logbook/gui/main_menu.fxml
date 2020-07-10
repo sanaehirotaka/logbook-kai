@@ -13,6 +13,7 @@
             <MenuItem mnemonicParsing="false" onAction="#capture" text="キャプチャ" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#battleStatus" text="現在の戦闘" />
+            <MenuItem mnemonicParsing="false" onAction="#practiceStatus" text="現在の演習" />
             <MenuItem mnemonicParsing="false" onAction="#battlelog" text="戦闘ログ">
                    <accelerator>
                       <KeyCodeCombination alt="UP" code="A" control="DOWN" meta="UP" shift="UP" shortcut="UP" />

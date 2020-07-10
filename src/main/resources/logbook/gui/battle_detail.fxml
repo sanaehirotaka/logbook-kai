@@ -25,7 +25,7 @@
                         <Insets top="3.0" />
                      </HBox.margin>
                      <children>
-                        <HBox>
+                        <HBox fx:id="routeInfo">
                            <children>
                               <Label style="-fx-padding: 0 3px 0 0;" text="マス:" />
                               <Label fx:id="mapcell" styleClass="bold" />

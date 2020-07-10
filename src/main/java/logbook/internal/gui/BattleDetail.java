@@ -21,6 +21,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 import logbook.bean.BattleLog;
@@ -97,6 +98,10 @@ public class BattleDetail extends WindowController {
     /** フェーズ */
     @FXML
     private VBox phase;
+
+    /** ルート情報 */
+    @FXML
+    private HBox routeInfo;
 
     /** マス */
     @FXML
@@ -190,7 +195,7 @@ public class BattleDetail extends WindowController {
             this.log = log;
         }
         if (this.log != null) {
-            MapStartNext last = this.log.getNext().get(this.log.getNext().size() - 1);
+            MapStartNext last = this.log.getNext().size() > 0 ? this.log.getNext().get(this.log.getNext().size() - 1) : null;
             CombinedType combinedType = this.log.getCombinedType();
             Map<Integer, List<Ship>> deckMap = this.log.getDeckMap();
             Map<Integer, SlotItem> itemMap = this.log.getItemMap();
@@ -268,19 +273,24 @@ public class BattleDetail extends WindowController {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap, this.escape);
 
         // マス
-        boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
-        this.mapcell.setText(this.last.getMapareaId()
-                + "-" + this.last.getMapinfoNo()
-                + "-" + Mapping.getCell(this.last.getMapareaId(), this.last.getMapinfoNo(), this.last.getNo())
-                + (boss ? "(ボス)" : ""));
-        // ルート
-        if (this.routeList != null) {
-            this.route.setText(this.routeList.stream()
-                    .map(Mapping::getCell)
-                    .collect(Collectors.joining("→"))
-                    + Optional.ofNullable(this.battleCount).map(v -> "(戦闘" + v + "回)").orElse(""));
+        if (this.last != null) {
+            boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
+            this.mapcell.setText(this.last.getMapareaId()
+                    + "-" + this.last.getMapinfoNo()
+                    + "-" + Mapping.getCell(this.last.getMapareaId(), this.last.getMapinfoNo(), this.last.getNo())
+                    + (boss ? "(ボス)" : ""));
+            // ルート
+            if (this.routeList != null) {
+                this.route.setText(this.routeList.stream()
+                        .map(Mapping::getCell)
+                        .collect(Collectors.joining("→"))
+                        + Optional.ofNullable(this.battleCount).map(v -> "(戦闘" + v + "回)").orElse(""));
+            } else {
+                this.route.setText("");
+            }
         } else {
-            this.route.setText("");
+            this.routeInfo.getChildren().clear();
+            this.routeInfo.getChildren().add(new Label("演習詳細"));
         }
 
         // 艦隊行動
