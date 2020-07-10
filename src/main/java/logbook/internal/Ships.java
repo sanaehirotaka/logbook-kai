@@ -44,6 +44,9 @@ import lombok.Data;
  */
 public class Ships {
 
+    /** 敵艦IDの下限(inclusive) */
+    public static final int MIN_ENEMY_ID = 1500;
+
     /** 小破(75%) */
     public static final double SLIGHT_DAMAGE = 0.75D;
     /** 中破(50%) */
@@ -834,7 +837,8 @@ public class Ships {
             return Messages.getString("ship.name", shipMst(chara)
                     .map(mst -> {
                         String yomi = mst.getYomi();
-                        if (yomi == null || "-".equals(yomi) || yomi.isEmpty()) {
+                        // 敵艦として1500未満のIDが出てくるのは演習のみ（もっといい判別の仕方があれば差し替えたほうが良いかも）
+                        if (yomi == null || "-".equals(yomi) || yomi.isEmpty() || mst.getId() < MIN_ENEMY_ID) {
                             return mst.getName();
                         } else {
                             return mst.getName() + yomi;

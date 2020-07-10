@@ -52,6 +52,9 @@ logbook.api.ApiReqMissionResult
 logbook.api.ApiReqMissionStart
 logbook.api.ApiReqNyukyoSpeedchange
 logbook.api.ApiReqNyukyoStart
+logbook.api.ApiReqPracticeBattle
+logbook.api.ApiReqPracticeBattleresult
+logbook.api.ApiReqPracticeMidnightBattle
 logbook.api.ApiReqQuestClearitemget
 logbook.api.ApiReqQuestStop
 logbook.api.ApiReqSortieAirbattle

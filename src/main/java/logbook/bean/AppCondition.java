@@ -36,6 +36,9 @@ public class AppCondition implements Serializable {
     /** 最後の戦闘結果 */
     private BattleLog battleResultConfirm;
 
+    /** 演習結果 */
+    private BattleLog practiceBattleResult;
+
     /** 退避艦ID */
     private Set<Integer> escape = new HashSet<>();
 
