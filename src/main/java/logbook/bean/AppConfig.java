@@ -72,6 +72,21 @@ public final class AppConfig implements Serializable {
     /** 艦隊タブにラベル単位のタブを追加 */
     private boolean labelTabs = true;
 
+    /** 艦隊タブの色（無傷） */
+    private String tabColorNoDamage;
+    /** 艦隊タブの色（健在） */
+    private String tabColorLessThanSlightDamage;
+    /** 艦隊タブの色（小破） */
+    private String tabColorSlightDamage;
+    /** 艦隊タブの色（中破） */
+    private String tabColorHalfDamage;
+    /** 艦隊タブの色（大破） */
+    private String tabColorBadlyDamage;
+    /** 艦隊タブの色（未遠征） */
+    private String tabColorNoMission;
+    /** 艦隊タブの色（要補給） */
+    private String tabColorNeedRefuel;
+    
     /** 音量 */
     private int soundLevel = 85;
 

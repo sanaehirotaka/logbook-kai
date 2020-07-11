@@ -172,6 +172,28 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox labelTabs;
 
+    /** 艦隊タブの色（無傷） */
+    @FXML
+    private TextField tabColorNoDamage;
+    /** 艦隊タブの色（健在） */
+    @FXML
+    private TextField tabColorLessThanSlightDamage;
+    /** 艦隊タブの色（小破） */
+    @FXML
+    private TextField tabColorSlightDamage;
+    /** 艦隊タブの色（中破） */
+    @FXML
+    private TextField tabColorHalfDamage;
+    /** 艦隊タブの色（大破） */
+    @FXML
+    private TextField tabColorBadlyDamage;
+    /** 艦隊タブの色（未遠征） */
+    @FXML
+    private TextField tabColorNoMission;
+    /** 艦隊タブの色（要補給） */
+    @FXML
+    private TextField tabColorNeedRefuel;
+    
     /** 最前面に表示する */
     @FXML
     private CheckBox onTop;
@@ -355,6 +377,13 @@ public class ConfigController extends WindowController {
         this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
         this.deckTabs.setSelected(conf.isDeckTabs());
         this.labelTabs.setSelected(conf.isLabelTabs());
+        this.tabColorNoDamage.setText(conf.getTabColorNoDamage());
+        this.tabColorLessThanSlightDamage.setText(conf.getTabColorLessThanSlightDamage());
+        this.tabColorSlightDamage.setText(conf.getTabColorSlightDamage());
+        this.tabColorHalfDamage.setText(conf.getTabColorHalfDamage());
+        this.tabColorBadlyDamage.setText(conf.getTabColorBadlyDamage());
+        this.tabColorNoMission.setText(conf.getTabColorNoMission());
+        this.tabColorNeedRefuel.setText(conf.getTabColorNeedRefuel());
         this.onTop.setSelected(conf.isOnTop());
         this.checkDoit.setSelected(conf.isCheckDoit());
         this.checkUpdate.setSelected(conf.isCheckUpdate());
@@ -453,6 +482,11 @@ public class ConfigController extends WindowController {
         conf.setRemind(Math.max(this.toInt(this.remind.getText()), 10));
         conf.setSoundLevel(this.toInt(this.soundLevel.getText()));
         conf.setMaterialLogInterval(this.toInt(this.materialLogInterval.getText()));
+        conf.setOnTop(this.onTop.isSelected());
+        conf.setCheckDoit(this.checkDoit.isSelected());
+        conf.setCheckUpdate(this.checkUpdate.isSelected());
+        conf.setReportPath(this.reportDir.getText());
+        
         conf.setApplyBattle(this.applyBattle.isSelected());
         conf.setApplyResult(this.applyResult.isSelected());
         conf.setBattleLogExpires(this.toInt(this.battleLogExpires.getText()));
@@ -465,10 +499,14 @@ public class ConfigController extends WindowController {
         conf.setImageZoomRate(this.toInt(this.imageZoomRate.getText()));
         conf.setDeckTabs(this.deckTabs.isSelected());
         conf.setLabelTabs(this.labelTabs.isSelected());
-        conf.setOnTop(this.onTop.isSelected());
-        conf.setCheckDoit(this.checkDoit.isSelected());
-        conf.setCheckUpdate(this.checkUpdate.isSelected());
-        conf.setReportPath(this.reportDir.getText());
+        conf.setTabColorNoDamage(this.tabColorNoDamage.getText());
+        conf.setTabColorLessThanSlightDamage(this.tabColorLessThanSlightDamage.getText());
+        conf.setTabColorSlightDamage(this.tabColorSlightDamage.getText());
+        conf.setTabColorHalfDamage(this.tabColorHalfDamage.getText());
+        conf.setTabColorBadlyDamage(this.tabColorBadlyDamage.getText());
+        conf.setTabColorNoMission(this.tabColorNoMission.getText());
+        conf.setTabColorNeedRefuel(this.tabColorNeedRefuel.getText());
+        
         ShipImageCacheStrategy shipImageCacheStrategy = ShipImageCacheStrategy.ALL;
         if (this.shipImageCacheStrategyAll.isSelected())
             shipImageCacheStrategy = ShipImageCacheStrategy.ALL;
@@ -481,18 +519,20 @@ public class ConfigController extends WindowController {
         conf.setHideShipImageFromShipTablePane(this.hideShipImageFromShipTablePane.isSelected());
         conf.setHideItemImageFromShipTablePane(this.hideItemImageFromShipTablePane.isSelected());
         conf.setVisiblePoseImageOnFleetTab(this.visiblePoseImageOnFleetTab.isSelected());
+        
         conf.setConnectionClose(this.connectionClose.isSelected());
         conf.setListenPort(this.toInt(this.listenPort.getText()));
         conf.setAllowOnlyFromLocalhost(this.allowOnlyFromLocalhost.isSelected());
         conf.setUseProxy(this.useProxy.isSelected());
-        conf.setProxyPort(this.toInt(this.proxyPort.getText()));
         conf.setProxyHost(this.proxyHost.getText());
+        conf.setProxyPort(this.toInt(this.proxyPort.getText()));
+        conf.setStoreApiStart2(this.storeApiStart2.isSelected());
+        conf.setStoreApiStart2Dir(this.storeApiStart2Dir.getText());
+        
         conf.setFfmpegPath(this.ffmpegPath.getText());
         conf.setFfmpegArgs(this.ffmpegArgs.getText());
         conf.setFfmpegExt(this.ffmpegExt.getText());
         conf.setUsePlugin(this.usePlugin.isSelected());
-        conf.setStoreApiStart2(this.storeApiStart2.isSelected());
-        conf.setStoreApiStart2Dir(this.storeApiStart2Dir.getText());
 
         this.bouyomiChanStore();
 

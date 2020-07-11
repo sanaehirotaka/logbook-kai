@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="500.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.232-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="600.0" styleClass="configWindow" xmlns="http://javafx.com/javafx/8.0.232-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ConfigController">
    <children>
       <TabPane VBox.vgrow="ALWAYS">
          <tabs>
@@ -168,6 +168,42 @@
                               <Label text="(一部の一覧表示にのみ適用)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                               <CheckBox fx:id="deckTabs" mnemonicParsing="false" text="所有艦娘一覧に艦隊単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
                               <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="所有艦娘一覧にラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+                           </children>
+                        </GridPane>
+                        <Label styleClass="bold" text="艦隊タブの色" />
+                        <GridPane hgap="3">
+                           <columnConstraints>
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                              <ColumnConstraints fillWidth="false" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="無傷" GridPane.rowIndex="0" />
+                              <TextField fx:id="tabColorNoDamage" prefWidth="70.0" promptText="-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                              <Label text="健在" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                              <TextField fx:id="tabColorLessThanSlightDamage" prefWidth="70.0" promptText="#D0EEFF" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                              <Label text="小破" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                              <TextField fx:id="tabColorSlightDamage" prefWidth="70.0" promptText="#FFEB5C" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+                              <Label text="中破" GridPane.columnIndex="6" GridPane.rowIndex="0" />
+                              <TextField fx:id="tabColorHalfDamage" prefWidth="70.0" promptText="#FFBC5C" GridPane.columnIndex="7" GridPane.rowIndex="0" />
+                              <Label text="大破" GridPane.columnIndex="8" GridPane.rowIndex="0" />
+                              <TextField fx:id="tabColorBadlyDamage" prefWidth="70.0" promptText="#FF655C" GridPane.columnIndex="9" GridPane.rowIndex="0" />
+                              <Label text="未遠征" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                              <TextField fx:id="tabColorNoMission" prefWidth="70.0" promptText="#87CEFA" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="要補給" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <TextField fx:id="tabColorNeedRefuel" prefWidth="70.0" promptText="#FFF030" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Label text="（色を変えない場合は「-」（ハイフン）を指定）" GridPane.columnSpan="6"  GridPane.columnIndex="4" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
                      </children>
