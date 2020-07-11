@@ -272,8 +272,8 @@ public class MainController extends WindowController {
                     Tab tab = new Tab(port.getName(), pane);
                     tab.setClosable(false);
                     tab.getStyleClass().removeIf(s -> !s.equals("tab"));
-                    Optional.ofNullable(pane.tabCssClass())
-                            .ifPresent(tab.getStyleClass()::add);
+                    Optional.ofNullable(pane.tabStyle())
+                            .ifPresent(tab::setStyle);
                     tabs.add(tab);
                 }
             } else {
@@ -292,8 +292,8 @@ public class MainController extends WindowController {
                         FleetTabPane pane = (FleetTabPane) tab.getContent();
                         pane.update(port);
                         tab.getStyleClass().removeIf(s -> !s.equals("tab"));
-                        Optional.ofNullable(pane.tabCssClass())
-                                .ifPresent(tab.getStyleClass()::add);
+                        Optional.ofNullable(pane.tabStyle())
+                                .ifPresent(tab::setStyle);
                     }
                 }
             }
@@ -304,8 +304,8 @@ public class MainController extends WindowController {
                     FleetTabPane pane = (FleetTabPane) node;
                     pane.update();
                     tab.getStyleClass().removeIf(s -> !s.equals("tab"));
-                    Optional.ofNullable(pane.tabCssClass())
-                            .ifPresent(tab.getStyleClass()::add);
+                    Optional.ofNullable(pane.tabStyle())
+                            .ifPresent(tab::setStyle);
                 }
             }
         }

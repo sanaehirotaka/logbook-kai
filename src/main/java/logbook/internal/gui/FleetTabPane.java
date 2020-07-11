@@ -67,8 +67,8 @@ public class FleetTabPane extends ScrollPane {
     /** 連合艦隊フラグ */
     private boolean combinedFlag;
 
-    /** Tabのクラス名(タブ色を変えるのに使用) */
-    private String tabCssClass;
+    /** Tabのスタイル(タブ色を変えるのに使用) */
+    private String tabStyle;
 
     /** 分岐点係数 */
     private double branchCoefficient = 1;
@@ -249,12 +249,12 @@ public class FleetTabPane extends ScrollPane {
     }
 
     /**
-     * タブに設定するCSSクラス名
+     * タブに設定するスタイル
      *
-     * @return CSSクラス名
+     * @return スタイル
      */
-    public String tabCssClass() {
-        return this.tabCssClass;
+    public String tabStyle() {
+        return this.tabStyle;
     }
 
     private void updateShips() {
@@ -316,23 +316,45 @@ public class FleetTabPane extends ScrollPane {
                 .map(FleetTabShipPane::new)
                 .forEach(childs::add);
 
+        String left = null;
+        String right = null;
+        AppConfig conf = AppConfig.get();
         if (this.shipList.stream().anyMatch(Ships::isBadlyDamage)) {
             // 大破時
-            this.tabCssClass = "alert";
+            left = Optional.ofNullable(conf.getTabColorBadlyDamage()).map(String::trim).filter(color -> color.length() > 0).orElse("#FF655C");
         } else if (this.shipList.stream().anyMatch(Ships::isHalfDamage)) {
             // 中破時
-            this.tabCssClass = "warn";
-        } else if (this.shipList.stream()
+            left = Optional.ofNullable(conf.getTabColorHalfDamage()).map(String::trim).filter(color -> color.length() > 0).orElse("#FFBC5C");
+        } else if (this.shipList.stream().anyMatch(Ships::isSlightDamage)) {
+            // 小破時
+            left = Optional.ofNullable(conf.getTabColorSlightDamage()).map(String::trim).filter(color -> color.length() > 0).orElse("#FFEB5C");
+        } else if (this.shipList.stream().anyMatch(s -> s.getNowhp() != s.getMaxhp())) {
+            // 健在時
+            left = Optional.ofNullable(conf.getTabColorLessThanSlightDamage()).map(String::trim).filter(color -> color.length() > 0).orElse("#D0EEFF");
+        } else {
+            // 無傷時
+            left = Optional.ofNullable(conf.getTabColorBadlyDamage()).map(String::trim).filter(color -> color.length() > 0).orElse(null);
+        }
+        if (this.shipList.stream()
                 .anyMatch(ship -> !ship.getFuel().equals(Ships.shipMst(ship).map(ShipMst::getFuelMax).orElse(0)) ||
                         !ship.getBull().equals(Ships.shipMst(ship).map(ShipMst::getBullMax).orElse(0)))) {
             // 未補給時
-            this.tabCssClass = "shortage";
+            right = Optional.ofNullable(conf.getTabColorNeedRefuel()).map(String::trim).filter(color -> color.length() > 0).orElse("#FFF030");
         } else if (this.port.getId() > 1 && this.port.getMission().get(0) == 0L && (this.port.getId() != 2 || !AppCondition.get().isCombinedFlag())) {
             // 遠征未出撃
-            this.tabCssClass = "empty";
+            right = Optional.ofNullable(conf.getTabColorNoMission()).map(String::trim).filter(color -> color.length() > 0).orElse("#87CEFA");
         } else {
-            this.tabCssClass = null;
+            right = null;
         }
+        Optional<String> l = Optional.ofNullable(left).map(String::trim).filter(str -> !str.equals("-"));
+        Optional<String> r = Optional.ofNullable(right).map(String::trim).filter(str -> !str.equals("-"));
+        if (!l.isPresent() && !r.isPresent()) {
+            this.tabStyle = "";
+        } else {
+            this.tabStyle = "-fx-background-color: -fx-outer-border, -fx-text-box-border, linear-gradient(from 40% 0% to 70% 100%, "
+                    + l.orElse("-fx-color") + ", " + r.orElse("-fx-color") + ");";
+        }
+        
         // 疲労
         int minCond = this.shipList.stream()
                 .mapToInt(Ship::getCond)
