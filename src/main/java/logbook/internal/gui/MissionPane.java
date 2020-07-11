@@ -38,7 +38,7 @@ public class MissionPane extends AnchorPane {
     private final Duration stage2 = Duration.ofMinutes(10);
 
     /** 色変化3段階目 */
-    private final Duration stage3 = Duration.ofMinutes(5);
+    private final Duration stage3 = Duration.ofMinutes(1);
 
     @FXML
     private ProgressBar progress;
