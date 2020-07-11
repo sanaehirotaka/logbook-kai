@@ -1,6 +1,7 @@
 package logbook.internal.gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.TextFields;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,7 +44,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -52,7 +53,6 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.converter.IntegerStringConverter;
 import logbook.bean.AppConfig;
 import logbook.bean.AppShipTableConfig;
 import logbook.bean.AppShipTableConfig.AppShipTableTabConfig;
@@ -67,7 +67,6 @@ import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
-import logbook.internal.Operator;
 import logbook.internal.ShipFilter;
 import logbook.internal.Ships;
 import lombok.AllArgsConstructor;
@@ -84,6 +83,10 @@ public class ShipTablePane extends VBox {
     @FXML
     private TitledPane filter;
 
+    /** フィルターペイン */
+    @FXML
+    private FlowPane filters;
+    
     /** テキスト */
     @FXML
     private ToggleSwitch textFilter;
@@ -175,30 +178,6 @@ public class ShipTablePane extends VBox {
     /** すべて */
     @FXML
     private CheckBox allTypes;
-
-    /** コンディション */
-    @FXML
-    private ToggleSwitch condFilter;
-
-    /** コンディション */
-    @FXML
-    private TextField conditionValue;
-
-    /** コンディション条件 */
-    @FXML
-    private ChoiceBox<Operator> conditionType;
-
-    /** レベル */
-    @FXML
-    private ToggleSwitch levelFilter;
-
-    /** レベル */
-    @FXML
-    private TextField levelValue;
-
-    /** レベル条件 */
-    @FXML
-    private ChoiceBox<Operator> levelType;
 
     /** ラベル */
     @FXML
@@ -377,6 +356,9 @@ public class ShipTablePane extends VBox {
     /** 艦隊名 */
     private String fleetName;
 
+    /** パラメータによるフィルター */
+    private List<ParameterFilterPane.ShipItemParameterFilterPane> parameterFilters;
+
     /**
      * 所有艦娘一覧のテーブルのコンストラクタ
      *
@@ -417,6 +399,8 @@ public class ShipTablePane extends VBox {
         }
     }
 
+
+
     @FXML
     void initialize() {
         try {
@@ -430,12 +414,13 @@ public class ShipTablePane extends VBox {
                 this.saveConfig();
             });
 
-            // フィルター 初期値
-            this.conditionType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.conditionType.getSelectionModel().select(Operator.GE);
-            this.levelType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.levelType.getSelectionModel().select(Operator.GE);
-
+            // フィルター 初期化
+            this.parameterFilters = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                this.parameterFilters.add(new ParameterFilterPane.ShipItemParameterFilterPane());
+            }
+            this.filters.getChildren().addAll(1, this.parameterFilters);
+            
             // フィルターのバインド
             this.textFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.textValue.setDisable(!nv);
@@ -443,14 +428,6 @@ public class ShipTablePane extends VBox {
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.typeCheckBox().forEach(c -> c.setDisable(!nv));
                 this.allTypes.setDisable(!nv);
-            });
-            this.condFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.conditionValue.setDisable(!nv);
-                this.conditionType.setDisable(!nv);
-            });
-            this.levelFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.levelValue.setDisable(!nv);
-                this.levelType.setDisable(!nv);
             });
             this.labelFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.labelValue.setDisable(!nv);
@@ -466,27 +443,13 @@ public class ShipTablePane extends VBox {
             this.textValue.textProperty().addListener(this::filterAction);
             this.typeFilter.selectedProperty().addListener(this::filterAction);
             this.typeCheckBox().forEach(c -> c.selectedProperty().addListener(this::filterAction));
-            this.condFilter.selectedProperty().addListener(this::filterAction);
-            this.conditionValue.textProperty().addListener(this::filterAction);
-            this.conditionType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
-            this.levelFilter.selectedProperty().addListener(this::filterAction);
-            this.levelValue.textProperty().addListener(this::filterAction);
-            this.levelType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+            this.parameterFilters.forEach(f -> f.filterProperty().addListener(this::filterAction));
             this.labelFilter.selectedProperty().addListener(this::filterAction);
             this.labelValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
             this.slotExFilter.selectedProperty().addListener(this::filterAction);
             this.slotExValue.selectedProperty().addListener(this::filterAction);
             this.missionFilter.selectedProperty().addListener(this::filterAction);
             this.missionValue.selectedProperty().addListener(this::filterAction);
-
-            this.conditionValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
-            TextFields.bindAutoCompletion(this.conditionValue, new SuggestSupport("53", "50", "49", "33", "30", "20"));
-            this.conditionValue.setText("53");
-
-            this.levelValue.setTextFormatter(new TextFormatter<>(new IntegerStringConverter()));
-            TextFields.bindAutoCompletion(this.levelValue,
-                    new SuggestSupport("100", "99", "90", "80", "75", "70", "65", "60", "55", "50", "40", "30", "20"));
-            this.levelValue.setText("98");
 
             // カラムとオブジェクトのバインド
             this.row.setCellFactory(e -> {
@@ -880,22 +843,9 @@ public class ShipTablePane extends VBox {
                     .types(types)
                     .build());
         }
-        if (this.condFilter.isSelected()) {
-            int condition = Integer.parseInt(this.conditionValue.getText().isEmpty() ? "0"
-                    : this.conditionValue.getText());
-            filter = this.filterAnd(filter, ShipFilter.CondFilter.builder()
-                    .conditionValue(condition)
-                    .conditionType(this.conditionType.getValue())
-                    .build());
-        }
-        if (this.levelFilter.isSelected()) {
-            int level = Integer.parseInt(this.levelValue.getText().isEmpty() ? "0"
-                    : this.levelValue.getText());
-
-            filter = this.filterAnd(filter, ShipFilter.LevelFilter.builder()
-                    .levelValue(level)
-                    .levelType(this.levelType.getValue())
-                    .build());
+        for (Predicate<ShipItem> parameterFilter : this.parameterFilters.stream().map(ParameterFilterPane::filterProperty).map(ReadOnlyObjectProperty::get)
+            .filter(Objects::nonNull).collect(Collectors.toList())) {
+            filter = this.filterAnd(filter, parameterFilter);
         }
         if (this.labelFilter.isSelected()) {
             filter = this.filterAnd(filter, ShipFilter.LabelFilter.builder()
@@ -948,15 +898,12 @@ public class ShipTablePane extends VBox {
         this.typeFilter.setSelected(config.isTypeEnabled());
         this.typeCheckBox().forEach(c -> c.setSelected(config.getTypeValue().contains(c.getText())));
 
-        // コンディション
-        this.condFilter.setSelected(config.isConditionEnabled());
-        this.conditionValue.setText(config.getConditionValue());
-        this.conditionType.setValue(config.getConditionType());
-
-        // レベル
-        this.levelFilter.setSelected(config.isLevelEnabled());
-        this.levelValue.setText(config.getLevelValue());
-        this.levelType.setValue(config.getLevelType());
+        // パラメーターフィルター
+        Optional.ofNullable(config.getParameterFilters()).ifPresent((pf) -> {
+            for (int i = 0; i < Math.min(pf.size(), this.parameterFilters.size()); i++) {
+                this.parameterFilters.get(i).loadConfig(pf.get(i));
+            }
+        });
 
         // ラベル
         this.labelFilter.setSelected(config.isLabelEnabled());
@@ -1002,16 +949,11 @@ public class ShipTablePane extends VBox {
                 .filter(CheckBox::isSelected)
                 .map(CheckBox::getText)
                 .collect(Collectors.toList()));
-
-        // コンディション
-        config.setConditionEnabled(this.condFilter.isSelected());
-        config.setConditionValue(this.conditionValue.getText());
-        config.setConditionType(this.conditionType.getValue());
-
-        // レベル
-        config.setLevelEnabled(this.levelFilter.isSelected());
-        config.setLevelValue(this.levelValue.getText());
-        config.setLevelType(this.levelType.getValue());
+        
+        // パラメーターフィルター
+        config.setParameterFilters(this.parameterFilters.stream()
+            .map(ParameterFilterPane::saveConfig)
+            .collect(Collectors.toList()));
 
         // ラベル
         config.setLabelEnabled(this.labelFilter.isSelected());

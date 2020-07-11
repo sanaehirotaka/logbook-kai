@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import logbook.internal.Config;
-import logbook.internal.Operator;
 import lombok.Data;
 
 /**
@@ -40,23 +39,8 @@ public class AppShipTableConfig {
         /** 艦種 */
         private List<String> typeValue;
 
-        /** コンディション */
-        private boolean conditionEnabled;
-
-        /** コンディション */
-        private String conditionValue;
-
-        /** コンディション条件 */
-        private Operator conditionType;
-
-        /** レベル */
-        private boolean levelEnabled;
-
-        /** レベル */
-        private String levelValue;
-
-        /** レベル条件 */
-        private Operator levelType;
+        /** パラメータフィルター */
+        private List<ParameterFilterConfig> parameterFilters;
 
         /** ラベル条件 */
         private boolean labelEnabled;

@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 <?import org.controlsfx.control.ToggleSwitch?>
@@ -29,7 +30,7 @@
                               <TextField fx:id="textValue" disable="true" prefWidth="200.0" promptText="名前・艦種または装備" />
                            </children>
                         </FlowPane>
-                        <FlowPane>
+                        <FlowPane fx:id="filters" Hgap="5" Vgap="5">
                            <children>
                               <VBox fillWidth="false">
                                  <children>
@@ -58,20 +59,6 @@
                                           <CheckBox fx:id="allTypes" disable="true" mnemonicParsing="false" onAction="#allTypeAction" selected="true" text="すべて" />
                                        </children>
                                     </TextFlow>
-                                 </children>
-                              </VBox>
-                              <VBox fillWidth="false">
-                                 <children>
-                                    <ToggleSwitch fx:id="condFilter" prefWidth="0.0" text="コンディション" />
-                                    <TextField fx:id="conditionValue" disable="true" prefWidth="70.0" text="53" />
-                                    <ChoiceBox fx:id="conditionType" disable="true" />
-                                 </children>
-                              </VBox>
-                              <VBox fillWidth="false">
-                                 <children>
-                                    <ToggleSwitch fx:id="levelFilter" prefWidth="0.0" text="レベル" />
-                                    <TextField fx:id="levelValue" disable="true" prefWidth="70.0" text="98" />
-                                    <ChoiceBox fx:id="levelType" disable="true" />
                                  </children>
                               </VBox>
                               <VBox fillWidth="false">
