@@ -1,5 +1,7 @@
 package logbook.internal;
 
+import java.util.stream.Stream;
+
 /**
  * 海域
  *
@@ -10,9 +12,12 @@ public enum SeaArea {
     識別札2("沖縄方面部隊", 2),
     識別札3("第二遊撃部隊", 3),
     識別札4("小笠原方面部隊", 4),
-    識別札5("識別札5", 5),
-    識別札6("識別札6", 6),
-    識別札7("識別札7", 7);
+    識別札5("南東方面部隊", 5),
+    識別札6("第二艦隊", 6),
+    識別札7("前進部隊", 7),
+    識別札8("機動部隊前衛", 8),
+    識別札9("機動部隊", 9),
+    識別札10("識別札10", 10);
 
     /** 名前 */
     private String name;
@@ -53,23 +58,6 @@ public enum SeaArea {
      * @return 海域
      */
     public static SeaArea fromArea(int area) {
-        switch (area) {
-        case 1:
-            return SeaArea.識別札1;
-        case 2:
-            return SeaArea.識別札2;
-        case 3:
-            return SeaArea.識別札3;
-        case 4:
-            return SeaArea.識別札4;
-        case 5:
-            return SeaArea.識別札5;
-        case 6:
-            return SeaArea.識別札6;
-        case 7:
-            return SeaArea.識別札7;
-        default:
-            return null;
-        }
+        return Stream.of(SeaArea.values()).filter(s -> s.getArea() == area).findAny().orElse(null);
     }
 }
