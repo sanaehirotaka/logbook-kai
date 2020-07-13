@@ -248,7 +248,7 @@ class ShipImage {
                 } else if (Ships.isHalfDamage(chara)) {
                     layers.add(HALF_DAMAGE_BADGE);
                     layers.add(HALF_DAMAGE_BACKGROUND);
-                } else if (Ships.isBadlyDamage(chara)) {
+                } else if (Ships.isBadlyDamage(chara) || (Ships.isLost(chara) && chara.isPractice())) {
                     layers.add(BADLY_DAMAGE_BADGE);
                     layers.add(BADLY_DAMAGE_BACKGROUND);
                 } else if (Ships.isLost(chara)) {
@@ -497,7 +497,7 @@ class ShipImage {
         if (mst.isPresent()) {
             Path dir = ShipMst.getResourcePathDir(mst.get());
             String[] names;
-            if ((chara.isShip() || chara.isFriend())
+            if ((chara.isShip() || chara.isFriend() || chara.isPractice())
                     && (Ships.isHalfDamage(chara) || Ships.isBadlyDamage(chara) || Ships.isLost(chara))) {
                 names = damaged;
             } else {

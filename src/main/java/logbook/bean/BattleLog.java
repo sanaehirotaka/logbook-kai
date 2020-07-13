@@ -68,6 +68,9 @@ public class BattleLog implements Serializable {
     /** ローデータ */
     private RawData raw;
 
+    /** 演習かどうか */
+    private boolean isPractice;
+
     /**
      * 艦隊スナップショットを作成します
      * @param log 戦闘ログ
