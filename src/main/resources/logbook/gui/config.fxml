@@ -41,7 +41,7 @@
                           <rowConstraints>
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="24.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -79,14 +79,18 @@
                                     <RadioButton fx:id="fontSizeLarge2" mnemonicParsing="false" text="大きい" toggleGroup="$fontSize" />
                                  </children>
                               </HBox>
-                              <CheckBox fx:id="useNotification" mnemonicParsing="false" text="遠征・入渠完了時に通知をする" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+                              <HBox  alignment="CENTER_LEFT" GridPane.rowIndex="2" GridPane.columnSpan="2147483647">
+                                 <CheckBox fx:id="useNotification" mnemonicParsing="false" text="遠征・入渠完了時に通知をする" />
+                                 <CheckBox fx:id="useToast" mnemonicParsing="false" text="通知でトーストを表示" />
+                              </HBox>
                               <CheckBox fx:id="alertBadlyStart" mnemonicParsing="false" text="出撃時に大破艦がいる場合に通知をする" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
                               <CheckBox fx:id="alertBadlyNext" mnemonicParsing="false" text="進撃時に大破艦がいる場合に通知をする" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
                               <CheckBox fx:id="useSound" mnemonicParsing="false" text="通知でサウンドを鳴らす" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
                               <Label text="デフォルトサウンド" GridPane.rowIndex="6" />
                               <TextField fx:id="defaultNotifySound" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                               <Button mnemonicParsing="false" onAction="#selectSoundFile" text="参照..." GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                              <CheckBox fx:id="useToast" mnemonicParsing="false" text="通知でトーストを表示" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
+                              <Label text="トーストの位置" GridPane.rowIndex="7" />
+                              <ChoiceBox fx:id="toastLocation" prefWidth="60.0" GridPane.columnIndex="1"  GridPane.rowIndex="7" />
                               <CheckBox fx:id="useRemind" mnemonicParsing="false" text="遠征完了時のリマインド(秒)" GridPane.rowIndex="8" />
                               <TextField fx:id="remind" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                               <Label text="音量(%)" GridPane.rowIndex="9" />
