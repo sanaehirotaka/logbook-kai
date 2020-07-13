@@ -327,49 +327,21 @@ public class BattleLogs {
      */
     public static Map<IUnit, List<SimpleBattleLog>> readSimpleLog() {
         try {
-            Function<String, SimpleBattleLog> mapper = line -> {
-                try {
-                    return new SimpleBattleLog(line);
-                } catch (Exception e) {
-                    LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
-                }
-                return null;
-            };
-            Path dir = Paths.get(AppConfig.get().getReportPath());
-            Path path = dir.resolve(new BattleResultLogFormat().fileName());
-
             // 今日
             ZonedDateTime now = unitToday();
             // ログ読み込み制限
             ZonedDateTime limit = now.minusMonths(2);
 
-            Stream<String> tmp;
-            if (Files.exists(path)) {
-                tmp = Files.lines(path, LogWriter.DEFAULT_CHARSET);
-            } else {
-                tmp = Stream.empty();
+            // ログの読み込み
+            List<SimpleBattleLog> all = readSimpleLog((log) -> log.getDate().compareTo(limit) > 0);
+
+            Map<IUnit, List<SimpleBattleLog>> map = new LinkedHashMap<>();
+            for (IUnit unit : Unit.values()) {
+                map.put(unit, all.stream()
+                        .filter(log -> unit.accept(log.getDate(), now))
+                        .collect(Collectors.toList()));
             }
-
-            // 海域名と略称(例:1-5)のマッピング
-            Map<String, String> mapNames = Mapping.fullNameToShort();
-
-            try (Stream<String> lines = tmp) {
-                List<SimpleBattleLog> all = lines.skip(1)
-                        .filter(l -> !l.isEmpty())
-                        .map(mapper)
-                        .filter(Objects::nonNull)
-                        .filter(log -> log.getDate().compareTo(limit) > 0)
-                        .peek(log -> updateLog(mapNames, log))
-                        .collect(Collectors.toList());
-
-                Map<IUnit, List<SimpleBattleLog>> map = new LinkedHashMap<>();
-                for (IUnit unit : Unit.values()) {
-                    map.put(unit, all.stream()
-                            .filter(log -> unit.accept(log.getDate(), now))
-                            .collect(Collectors.toList()));
-                }
-                return map;
-            }
+            return map;
         } catch (Exception e) {
             LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
         }
@@ -395,19 +367,24 @@ public class BattleLogs {
             Path dir = Paths.get(AppConfig.get().getReportPath());
             Path path = dir.resolve(new BattleResultLogFormat().fileName());
 
+            Stream<String> tmp;
+            if (Files.exists(path)) {
+                tmp = Files.lines(path, LogWriter.DEFAULT_CHARSET);
+            } else {
+                tmp = Stream.empty();
+            }
+
             // 海域名と略称(例:1-5)のマッピング
             Map<String, String> mapNames = Mapping.fullNameToShort();
 
-            if (Files.exists(path)) {
-                try (Stream<String> lines = Files.lines(path, LogWriter.DEFAULT_CHARSET)) {
-                    return lines.skip(1)
-                            .filter(l -> !l.isEmpty())
-                            .map(mapper)
-                            .filter(Objects::nonNull)
-                            .filter(predicate)
-                            .peek(log -> updateLog(mapNames, log))
-                            .collect(Collectors.toList());
-                }
+            try (Stream<String> lines = tmp) {
+                return lines.skip(1)
+                        .filter(l -> !l.isEmpty())
+                        .map(mapper)
+                        .filter(Objects::nonNull)
+                        .filter(predicate)
+                        .peek(log -> updateLog(mapNames, log))
+                        .collect(Collectors.toList());
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("海戦・ドロップ報告書の読み込み中に例外", e);
