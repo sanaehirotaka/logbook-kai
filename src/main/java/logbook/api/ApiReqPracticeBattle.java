@@ -26,15 +26,14 @@ public class ApiReqPracticeBattle implements APIListenerSpi {
                 AppCondition condition = AppCondition.get();
                 BattleLog log = new BattleLog();
                 condition.setPracticeBattleResult(log);
-                if (log != null) {
-                    log.setBattle(SortieBattle.toBattle(data));
-                    // 出撃艦隊
-                    Integer dockId = Optional.ofNullable(log.getBattle())
-                            .map(IFormation::getDockId)
-                            .orElse(1);
-                    // 艦隊スナップショットを作る
-                    BattleLog.snapshot(log, dockId);
-                }
+                log.setPractice(true);
+                log.setBattle(SortieBattle.toBattle(data));
+                // 出撃艦隊
+                Integer dockId = Optional.ofNullable(log.getBattle())
+                        .map(IFormation::getDockId)
+                        .orElse(1);
+                // 艦隊スナップショットを作る
+                BattleLog.snapshot(log, dockId);
             }
         } catch (Throwable e) {
             e.printStackTrace();

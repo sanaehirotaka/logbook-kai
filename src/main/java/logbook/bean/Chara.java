@@ -111,4 +111,12 @@ public interface Chara extends Cloneable {
         throw new IllegalStateException(this + " is not an Enemy");
     }
 
+    /**
+     * このオブジェクトが演習相手である場合 true を返します。
+     * @return このオブジェクトが演習相手である場合 true
+     */
+    @JsonIgnore
+    default boolean isPractice() {
+        return false;
+    }
 }

@@ -167,6 +167,9 @@ public class BattleDetail extends WindowController {
     @FXML
     private Label exp;
 
+    /** 演習かどうか */
+    private boolean isPractice;
+
     /** 周期タイマー */
     private Timeline timeline = new Timeline();
 
@@ -205,7 +208,8 @@ public class BattleDetail extends WindowController {
             BattleResult result = this.log.getResult();
             Integer battleCount = this.log.getBattleCount();
             List<String> route = this.log.getRoute();
-            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight, result, battleCount, route);
+            boolean isPractice = this.log.isPractice();
+            this.setData(last, combinedType, deckMap, escape, itemMap, battle, midnight, result, battleCount, route, isPractice);
         }
     }
 
@@ -221,10 +225,11 @@ public class BattleDetail extends WindowController {
      * @param result 戦果報告 
      * @param battleCount 戦闘回数
      * @param route ルート
+     * @param isPractice 演習かどうか
      */
     void setData(MapStartNext last, CombinedType combinedType, Map<Integer, List<Ship>> deckMap, Set<Integer> escape,
             Map<Integer, SlotItem> itemMap, IFormation battle, IMidnightBattle midnight, BattleResult result,
-            Integer battleCount, List<String> route) {
+            Integer battleCount, List<String> route, boolean isPractice) {
         int hashCode = Objects.hash(last, battle, midnight, result);
         if (this.hashCode == hashCode) {
             return;
@@ -241,6 +246,7 @@ public class BattleDetail extends WindowController {
         this.result = result;
         this.battleCount = battleCount;
         this.routeList = route;
+        this.isPractice = isPractice;
         this.update();
     }
 
@@ -271,7 +277,9 @@ public class BattleDetail extends WindowController {
 
     private void setInfo() {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap, this.escape);
-
+        if (this.isPractice) {
+            ps.getAfterEnemy().forEach(enemy -> enemy.setPractice(true));
+        }
         // マス
         if (this.last != null) {
             boolean boss = this.last.getNo().equals(this.last.getBosscellNo()) || this.last.getEventId() == 5;
@@ -399,6 +407,9 @@ public class BattleDetail extends WindowController {
      */
     private void setPhase() {
         PhaseState ps = new PhaseState(this.combinedType, this.battle, this.deckMap, this.itemMap, this.escape);
+        if (this.isPractice) {
+            ps.getAfterEnemy().forEach(enemy -> enemy.setPractice(true));
+        }
 
         // 評価初期化
         Judge judge = new Judge();
