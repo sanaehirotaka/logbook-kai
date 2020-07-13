@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -36,6 +37,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
+import javafx.util.Duration;
 import logbook.bean.AppBouyomiConfig;
 import logbook.bean.AppBouyomiConfig.AppBouyomiText;
 import logbook.bean.AppConfig;
@@ -49,6 +51,8 @@ import logbook.internal.LoggerHolder;
 import logbook.internal.ShipImageCacheStrategy;
 import logbook.internal.ThreadManager;
 import logbook.internal.ToStringConverter;
+import logbook.internal.Tuple;
+import logbook.internal.Tuple.Pair;
 import logbook.plugin.PluginContainer;
 import logbook.plugin.PluginServices;
 
@@ -108,6 +112,10 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox useToast;
 
+    /** トーストの位置 */
+    @FXML
+    private ChoiceBox<Pair<String, String>> toastLocation;
+
     /** 遠征完了時のリマインド */
     @FXML
     private CheckBox useRemind;
@@ -119,7 +127,7 @@ public class ConfigController extends WindowController {
     /** 音量 */
     @FXML
     private TextField soundLevel;
-
+    
     /** 資材ログ保存間隔 */
     @FXML
     private TextField materialLogInterval;
@@ -349,6 +357,12 @@ public class ConfigController extends WindowController {
 
     @FXML
     void initialize() {
+        this.toastLocation.getItems().add(Tuple.of("左上", "TOP_LEFT"));
+        this.toastLocation.getItems().add(Tuple.of("左下", "BOTTOM_LEFT"));
+        this.toastLocation.getItems().add(Tuple.of("右上", "TOP_RIGHT"));
+        this.toastLocation.getItems().add(Tuple.of("右下", "BOTTOM_RIGHT"));
+        this.toastLocation.setConverter(ToStringConverter.of(Pair::getKey));
+        
         AppConfig conf = AppConfig.get();
         this.windowStyleSmart.setSelected("main".equals(conf.getWindowStyle()));
         this.windowStyleWide.setSelected("main_wide".equals(conf.getWindowStyle()));
@@ -360,6 +374,7 @@ public class ConfigController extends WindowController {
         this.useSound.setSelected(conf.isUseSound());
         this.defaultNotifySound.setText(conf.getDefaultNotifySound());
         this.useToast.setSelected(conf.isUseToast());
+        this.toastLocation.setValue(this.toastLocation.getItems().stream().filter(value -> value.getValue().equals(conf.getToastLocation())).findAny().orElse(this.toastLocation.getItems().get(3)));
         this.useRemind.setSelected(conf.isUseRemind());
         this.remind.setText(Integer.toString(conf.getRemind()));
         this.soundLevel.setText(Integer.toString(conf.getSoundLevel()));
@@ -437,6 +452,9 @@ public class ConfigController extends WindowController {
                 .forEach(this.plugins::add);
         this.pluginTable.setItems(this.plugins);
 
+        this.toastLocation.getSelectionModel().selectedItemProperty().addListener(
+                (ob, o, n) -> Tools.Conrtols.showNotify(null, "確認", "この位置に表示されます。", Duration.seconds(5), Pos.valueOf(n.getValue())));
+
         this.bouyomiChanInit();
     }
 
@@ -478,6 +496,7 @@ public class ConfigController extends WindowController {
         conf.setUseSound(this.useSound.isSelected());
         conf.setDefaultNotifySound(this.defaultNotifySound.getText());
         conf.setUseToast(this.useToast.isSelected());
+        conf.setToastLocation(this.toastLocation.getValue().getValue());
         conf.setUseRemind(this.useRemind.isSelected());
         conf.setRemind(Math.max(this.toInt(this.remind.getText()), 10));
         conf.setSoundLevel(this.toInt(this.soundLevel.getText()));

@@ -236,12 +236,26 @@ public class Tools {
          * @param hide 消えるまでの秒数
          */
         public static void showNotify(Node node, String title, String message, Duration hide) {
+            showNotify(node, title, message, hide, 
+                    Optional.ofNullable(AppConfig.get().getToastLocation()).map(Pos::valueOf).orElse(Pos.BOTTOM_RIGHT));
+        }
+
+        /**
+         * 通知を表示する
+         *
+         * @param node グラフィック
+         * @param title タイトル
+         * @param message メッセージ
+         * @param hide 消えるまでの秒数
+         * @param pos 出す位置
+         */
+        public static void showNotify(Node node, String title, String message, Duration hide, Pos position) {
             Notifications notifications = Notifications.create()
                     .graphic(node)
                     .title(title)
                     .text(message)
                     .hideAfter(hide)
-                    .position(Pos.BOTTOM_RIGHT);
+                    .position(position);
             if (node == null) {
                 notifications.showInformation();
             } else {

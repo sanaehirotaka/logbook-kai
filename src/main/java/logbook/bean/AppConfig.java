@@ -42,6 +42,9 @@ public final class AppConfig implements Serializable {
     /** 通知でトーストを表示 */
     private boolean useToast = true;
 
+    /** トーストの位置 (default: BOTTOM_RIGHT) */
+    private String toastLocation;
+
     /** 遠征完了時のリマインド */
     private boolean useRemind = true;
 
