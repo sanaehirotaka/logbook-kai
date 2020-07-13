@@ -275,8 +275,9 @@ public class CreateItemController extends WindowController {
                     .collect(groupingBy(CreateItem::getRecipe, counting()));
 
             Map<?, ?> grouping = Collections.emptyMap();
-            
+            CreateItemCollect rootCollect = new CreateItemCollect();
             if (button == this.buttonItemRecipe) {
+                rootCollect.setUnit("全件 (成功のみ)");
                 grouping = logs.stream()
                         .filter(item -> !item.getItem().isEmpty())
                         .sorted(Comparator.comparing(CreateItem::getEquipType)
@@ -288,6 +289,7 @@ public class CreateItemController extends WindowController {
                                                 toList()))));
             }
             if (button == this.buttonRecipeItem) {
+                rootCollect.setUnit("全件 (失敗も含む)");
                 grouping = logs.stream()
                         .sorted(Comparator.comparing(CreateItem::getRecipe)
                                 .thenComparing(CreateItem::getType)
@@ -298,9 +300,12 @@ public class CreateItemController extends WindowController {
             }
 
             TreeItem<CreateItemCollect> root = new TreeItem<>();
+            root.setValue(rootCollect);
+            root.setExpanded(true);
             this.collect.setRoot(root);
-            this.collect.setShowRoot(false);
+            this.collect.setShowRoot(true);
             this.setUnit(root, count, null, grouping);
+            setCount(root);
         } catch (Exception e) {
             LoggerHolder.get().warn("開発報告書の読込中に例外", e);
         }
@@ -360,9 +365,13 @@ public class CreateItemController extends WindowController {
                 this.setUnit(unitRoot, count, recipe, (Map<?, ?>) value);
             }
             if (recipe == null) {
-                item.setCount(unitRoot.getChildren().stream().map(TreeItem::getValue).mapToInt(CreateItemCollect::getCount).sum());
+                setCount(unitRoot);
             }
         }
+    }
+    
+    private static void setCount(TreeItem<CreateItemCollect> item) {
+        item.getValue().setCount(item.getChildren().stream().map(TreeItem::getValue).mapToInt(CreateItemCollect::getCount).sum());
     }
 
     private List<CreateItem> getSubItem(Object maporlist) {
@@ -396,8 +405,12 @@ public class CreateItemController extends WindowController {
     }
     
     private void addItems(List<CreateItem> list, TreeItem<CreateItemCollect> value) {
-        Optional.ofNullable(this.detailList.get(value.getValue())).ifPresent(list::addAll);
-        value.getChildren().forEach(child -> addItems(list, child));
+        Optional<List<CreateItem>> v = Optional.ofNullable(this.detailList.get(value.getValue()));
+        if (v.isPresent()) {
+            list.addAll(v.get());
+        } else {
+            value.getChildren().forEach(child -> addItems(list, child));
+        }
     }
 
     /**
