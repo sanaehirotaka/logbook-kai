@@ -103,7 +103,9 @@ public class QuestPane extends HBox {
             default:
                 break;
             }
-
+            if (!this.quest.isActive()) {
+                this.getStyleClass().add("inactive");
+            }
             switch (quest.getProgressFlag()) {
             case 1:
                 this.progress.setStartAngle(90);
@@ -118,8 +120,13 @@ public class QuestPane extends HBox {
                 this.progress.setLength(360 * 0.8);
                 break;
             default:
-                this.progress.setRadiusX(2);
-                this.progress.setRadiusY(2);
+                if (quest.getState() == 3) {
+                    this.progress.setRadiusX(5);
+                    this.progress.setRadiusY(5);
+                } else {
+                    this.progress.setRadiusX(2);
+                    this.progress.setRadiusY(2);
+                }
                 this.progress.setLength(360);
                 break;
             }

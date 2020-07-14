@@ -231,6 +231,9 @@ TabPane .tab.empty .tab-label {
 .quest.kaisou .progress {
     -fx-fill: #7058a3;
 }
+.quest.inactive {
+    -fx-opacity: 0.3;
+}
 
 .fully {
     -fx-base: #FFD700;
