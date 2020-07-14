@@ -43,6 +43,9 @@ public class AppQuest implements Serializable {
     /** 期限 */
     private String expire;
 
+    /** 受諾中 */
+    private boolean active;
+
     /**
      * 任務を構築します
      *
@@ -53,6 +56,7 @@ public class AppQuest implements Serializable {
         AppQuest bean = new AppQuest();
         bean.setNo(quest.getNo());
         bean.setQuest(quest);
+        bean.setActive(quest.getState() == 2 || quest.getState() == 3);  // 受諾中、もしくは完了済み
 
         ZonedDateTime base = ZonedDateTime.now(ZoneId.of("GMT+04:00"))
                 .truncatedTo(ChronoUnit.DAYS);

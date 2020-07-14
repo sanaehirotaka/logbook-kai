@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -395,6 +396,8 @@ public class MainController extends WindowController {
             quest.clear();
             questMap.values()
                     .stream()
+                    // 受諾中の任務を上に持ってくる
+                    .sorted(Comparator.comparing(AppQuest::isActive).reversed())
                     .map(QuestPane::new)
                     .forEach(quest::add);
             // ハッシュ・コードの更新
