@@ -30,6 +30,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -38,6 +39,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import logbook.Messages;
+import logbook.bean.AppItemTableConfig;
 import logbook.bean.Ship;
 import logbook.bean.SlotItem;
 import logbook.bean.SlotItemCollection;
@@ -59,7 +61,10 @@ public class ItemItemController extends WindowController {
     private SplitPane splitPane;
 
     // フィルター
-
+    /** フィルター */
+    @FXML
+    private TitledPane filter;
+    
     /** テキスト */
     @FXML
     private ToggleSwitch typeFilter;
@@ -169,7 +174,7 @@ public class ItemItemController extends WindowController {
                 Tools.Conrtols.setSplitWidth(this.splitPane, this.getClass() + "#" + "splitPane");
             }));
             x.play();
-
+            this.filter.expandedProperty().addListener((ob, o, n) -> saveConfig());
             this.typeFilter.selectedProperty().addListener((ob, ov, nv) -> {
                 this.typeValue.setDisable(!nv);
                 this.typeValue.setDisable(!nv);
@@ -241,6 +246,8 @@ public class ItemItemController extends WindowController {
             this.typeTable.getSelectionModel()
                     .selectedItemProperty()
                     .addListener(this::detail);
+            
+            loadConfig();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
@@ -255,6 +262,7 @@ public class ItemItemController extends WindowController {
                 .typeValue(this.typeValue.getValue() == null ? "" : this.typeValue.getValue())
                 .build();
         this.types.setPredicate(filter);
+        saveConfig();
     }
 
     /**
@@ -470,6 +478,23 @@ public class ItemItemController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    private void loadConfig() {
+        Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getItemTabConfig).ifPresent(config -> {
+            this.filter.setExpanded(config.isFilterExpanded());
+            this.typeFilter.setSelected(config.isTextFilterEnabled());
+            Optional.ofNullable(config.getTextFilter()).ifPresent(this.typeValue::setValue);
+        });
+    }
+    
+    private void saveConfig() {
+        AppItemTableConfig config = AppItemTableConfig.get();
+        AppItemTableConfig.ItemTabConfig itemTabConfig = new AppItemTableConfig.ItemTabConfig();
+        itemTabConfig.setFilterExpanded(this.filter.isExpanded());
+        itemTabConfig.setTextFilterEnabled(this.typeFilter.isSelected());
+        Optional.ofNullable(this.typeValue.getValue()).map(String::trim).filter(str -> !str.isEmpty()).ifPresent(itemTabConfig::setTextFilter);
+        config.setItemTabConfig(itemTabConfig);
     }
 
     @Data
