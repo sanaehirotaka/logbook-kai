@@ -333,7 +333,7 @@ public class FleetTabPane extends ScrollPane {
             left = Optional.ofNullable(conf.getTabColorLessThanSlightDamage()).map(String::trim).filter(color -> color.length() > 0).orElse("#D0EEFF");
         } else {
             // 無傷時
-            left = Optional.ofNullable(conf.getTabColorBadlyDamage()).map(String::trim).filter(color -> color.length() > 0).orElse(null);
+            left = Optional.ofNullable(conf.getTabColorNoDamage()).map(String::trim).filter(color -> color.length() > 0).orElse(null);
         }
         if (this.shipList.stream()
                 .anyMatch(ship -> !ship.getFuel().equals(Ships.shipMst(ship).map(ShipMst::getFuelMax).orElse(0)) ||
