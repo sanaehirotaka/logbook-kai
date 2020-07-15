@@ -7,7 +7,7 @@
 
 <VBox prefHeight="600.0" prefWidth="800.0" styleClass="itemWindow" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1" fx:controller="logbook.internal.gui.ItemController">
    <children>
-      <TabPane VBox.vgrow="ALWAYS">
+      <TabPane fx:id="tab" VBox.vgrow="ALWAYS">
          <tabs>
             <Tab closable="false" text="全ての装備">
                <content>

@@ -20,7 +20,7 @@
            <items>
               <VBox>
                  <children>
-                    <TitledPane animated="false" expanded="false" text="フィルター">
+                    <TitledPane fx:id="filter" animated="false" expanded="false" text="フィルター">
                    <content>
                       <FlowPane>
                          <children>

@@ -25,11 +25,13 @@ import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import logbook.Messages;
+import logbook.bean.AppItemTableConfig;
 import logbook.bean.SlotItemCollection;
 import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
@@ -46,6 +48,8 @@ import lombok.val;
 public class ItemAirBaseController extends WindowController {
 
     // フィルター
+    @FXML
+    private TitledPane filter;
 
     @FXML
     private ToggleSwitch seikuFilter;
@@ -177,7 +181,8 @@ public class ItemAirBaseController extends WindowController {
     void initialize() {
         try {
             TableTool.setVisible(this.itemTable, this.getClass().toString() + "#" + "airBaseItemTable");
-
+            
+            this.filter.expandedProperty().addListener((ob, o, n) -> saveConfig());
             // フィルター 初期値
             this.seikuType.setItems(FXCollections.observableArrayList(Operator.values()));
             this.seikuType.getSelectionModel().select(Operator.GE);
@@ -289,7 +294,8 @@ public class ItemAirBaseController extends WindowController {
             SortedList<AirBaseItem> sortedAirBaseItems = new SortedList<>(this.items);
             this.itemTable.setItems(sortedAirBaseItems);
             sortedAirBaseItems.comparatorProperty().bind(this.itemTable.comparatorProperty());
-
+            
+            loadConfig();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
@@ -469,7 +475,19 @@ public class ItemAirBaseController extends WindowController {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
+    
+    private void loadConfig() {
+        Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getAirbaseTabConfig).ifPresent((config) -> {
+            this.filter.setExpanded(config.isFilterExpanded());
+        });
+    }
 
+    private void saveConfig() {
+        AppItemTableConfig config = AppItemTableConfig.get();
+        AppItemTableConfig.AirbaseTabConfig airbaseTabConfig = new AppItemTableConfig.AirbaseTabConfig();
+        airbaseTabConfig.setFilterExpanded(this.filter.isExpanded());
+        config.setAirbaseTabConfig(airbaseTabConfig);
+    }
     /**
      * フィルター
      *
