@@ -376,10 +376,7 @@ public class ItemAirBaseController extends WindowController {
                         .get(itemId);
 
                 if (mst != null) {
-                    ImageView img = new ImageView(Items.itemImage(mst));
-                    img.setFitWidth(36);
-                    img.setFitHeight(36);
-                    this.setGraphic(img);
+                    this.setGraphic(Tools.Conrtols.zoomImage(new ImageView(Items.itemImage(mst))));
                     this.setText(mst.getName());
                 }
             } else {
