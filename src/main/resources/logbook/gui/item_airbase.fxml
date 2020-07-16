@@ -18,45 +18,7 @@
            <content>
               <VBox>
                  <children>
-                    <FlowPane>
-                       <children>
-                          <VBox fillWidth="false">
-                             <children>
-                                <ToggleSwitch fx:id="seikuFilter" prefWidth="0.0" text="制空(出撃)" />
-                              <Spinner fx:id="seikuValue" disable="true" editable="true" prefWidth="75.0" />
-                                <ChoiceBox fx:id="seikuType" disable="true" />
-                             </children>
-                          </VBox>
-                          <VBox fillWidth="false">
-                             <children>
-                                <ToggleSwitch fx:id="interceptSeikuFilter" prefWidth="0.0" text="制空(防空)" />
-                              <Spinner fx:id="interceptSeikuValue" disable="true" editable="true" prefWidth="75.0" />
-                                <ChoiceBox fx:id="interceptSeikuType" disable="true" />
-                             </children>
-                          </VBox>
-                          <VBox fillWidth="false">
-                             <children>
-                                <ToggleSwitch fx:id="distanceFilter" prefWidth="0.0" text="行動半径(素)" />
-                              <Spinner fx:id="distanceValue" disable="true" editable="true" prefWidth="75.0" />
-                                <ChoiceBox fx:id="distanceType" disable="true" />
-                             </children>
-                          </VBox>
-                          <VBox fillWidth="false">
-                             <children>
-                                <ToggleSwitch fx:id="distanceTaiteichanFilter" prefWidth="0.0" text="行動半径(二式大艇)" />
-                              <Spinner fx:id="distanceTaiteichanValue" disable="true" editable="true" prefWidth="75.0" />
-                                <ChoiceBox fx:id="distanceTaiteichanType" disable="true" />
-                             </children>
-                          </VBox>
-                          <VBox fillWidth="false">
-                             <children>
-                                <ToggleSwitch fx:id="distanceCatalinaFilter" prefWidth="0.0" text="行動半径(Catalina)" />
-                              <Spinner fx:id="distanceCatalinaValue" disable="true" editable="true" prefWidth="75.0" />
-                                <ChoiceBox fx:id="distanceCatalinaType" disable="true" />
-                             </children>
-                          </VBox>
-                       </children>
-                    </FlowPane>
+                    <FlowPane fx:id="filters" />
                  </children>
               </VBox>
            </content>

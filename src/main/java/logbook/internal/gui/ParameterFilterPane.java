@@ -234,4 +234,37 @@ abstract class ParameterFilterPane<T> extends GridPane {
             super(SHIPITEM_PARAMETERS);
         }
     }
+    
+    /**
+     * 基地航空隊のパラメータ用のペイン
+     */
+    static class AirBaseParameterFilterPane extends ParameterFilterPane<AirBaseItem> {
+        
+        private static final List<IntegerParameter<AirBaseItem>> AIRBASE_PARAMETERS;
+        
+        static {
+            AIRBASE_PARAMETERS = Stream.of(
+                    new IntegerParameter<AirBaseItem>("熟練", AirBaseItem::getAlv, () -> new IntegerSpinnerValueFactory(0, 7, 0)),
+                    new IntegerParameter<AirBaseItem>("改修", AirBaseItem::getLevel, () -> new IntegerSpinnerValueFactory(0, 10, 0)),
+                    new IntegerParameter<AirBaseItem>("所持", AirBaseItem::getCount, () -> new IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<AirBaseItem>("制空(出撃)", AirBaseItem::getSeiku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 103)),
+                    new IntegerParameter<AirBaseItem>("制空(防空)", AirBaseItem::getInterceptSeiku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 101)),
+                    new IntegerParameter<AirBaseItem>("半径(素)", AirBaseItem::getDistance, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 7)),
+                    new IntegerParameter<AirBaseItem>("半径(+大艇)", AirBaseItem::getDistanceTaiteichan, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 9)),
+                    new IntegerParameter<AirBaseItem>("半径(+Cata)", AirBaseItem::getDistanceCatalina, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 10)),
+                    new IntegerParameter<AirBaseItem>("配置コスト", AirBaseItem::getCost, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 100)),
+                    new IntegerParameter<AirBaseItem>("対空", AirBaseItem::getTyku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 5)),
+                    new IntegerParameter<AirBaseItem>("対爆", AirBaseItem::getHoum, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<AirBaseItem>("迎撃", AirBaseItem::getHouk, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<AirBaseItem>("雷装", AirBaseItem::getRaig, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<AirBaseItem>("爆装", AirBaseItem::getBaku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<AirBaseItem>("対潜", AirBaseItem::getTais, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<AirBaseItem>("索敵", AirBaseItem::getSaku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 1))
+            ).collect(Collectors.toList());
+        }
+
+        AirBaseParameterFilterPane() {
+            super(AIRBASE_PARAMETERS);
+        }
+    }
 }
