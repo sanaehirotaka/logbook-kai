@@ -21,7 +21,7 @@ public class ApiGetMemberQuestlist implements APIListenerSpi {
             QuestList quest = QuestList.toQuestList(data);
 
             AppQuestCollection.get()
-                    .update(quest);
+                    .update(quest, "0".equals(req.getParameter("api_tab_id")));
         }
     }
 
