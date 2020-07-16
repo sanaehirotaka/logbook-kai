@@ -3,31 +3,28 @@ package logbook.internal.gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import org.controlsfx.control.ToggleSwitch;
-
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import logbook.Messages;
@@ -37,12 +34,11 @@ import logbook.bean.SlotitemMst;
 import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
-import logbook.internal.Operator;
 import logbook.plugin.PluginServices;
 import lombok.val;
 
 /**
- * 所有装備一覧のUIコントローラー
+ * 基地航空隊一覧のUIコントローラー
  *
  */
 public class ItemAirBaseController extends WindowController {
@@ -52,49 +48,7 @@ public class ItemAirBaseController extends WindowController {
     private TitledPane filter;
 
     @FXML
-    private ToggleSwitch seikuFilter;
-
-    @FXML
-    private Spinner<Integer> seikuValue;
-
-    @FXML
-    private ChoiceBox<Operator> seikuType;
-
-    @FXML
-    private ToggleSwitch interceptSeikuFilter;
-
-    @FXML
-    private Spinner<Integer> interceptSeikuValue;
-
-    @FXML
-    private ChoiceBox<Operator> interceptSeikuType;
-
-    @FXML
-    private ToggleSwitch distanceFilter;
-
-    @FXML
-    private Spinner<Integer> distanceValue;
-
-    @FXML
-    private ChoiceBox<Operator> distanceType;
-
-    @FXML
-    private ToggleSwitch distanceTaiteichanFilter;
-
-    @FXML
-    private Spinner<Integer> distanceTaiteichanValue;
-
-    @FXML
-    private ChoiceBox<Operator> distanceTaiteichanType;
-
-    @FXML
-    private ToggleSwitch distanceCatalinaFilter;
-
-    @FXML
-    private Spinner<Integer> distanceCatalinaValue;
-
-    @FXML
-    private ChoiceBox<Operator> distanceCatalinaType;
+    private FlowPane filters;
 
     // 一覧
 
@@ -177,72 +131,23 @@ public class ItemAirBaseController extends WindowController {
     /** 基地航空隊 */
     private FilteredList<AirBaseItem> items;
 
+    /** フィルター */
+    private List<ParameterFilterPane.AirBaseParameterFilterPane> parameterFilters;
+
+    /** フィルターの更新を停止 */
+    private boolean disableFilterUpdate;
+
     @FXML
     void initialize() {
         try {
             TableTool.setVisible(this.itemTable, this.getClass().toString() + "#" + "airBaseItemTable");
             
             this.filter.expandedProperty().addListener((ob, o, n) -> saveConfig());
-            // フィルター 初期値
-            this.seikuType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.seikuType.getSelectionModel().select(Operator.GE);
-            this.interceptSeikuType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.interceptSeikuType.getSelectionModel().select(Operator.GE);
-            this.distanceType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.distanceType.getSelectionModel().select(Operator.GE);
-            this.distanceTaiteichanType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.distanceTaiteichanType.getSelectionModel().select(Operator.GE);
-            this.distanceCatalinaType.setItems(FXCollections.observableArrayList(Operator.values()));
-            this.distanceCatalinaType.getSelectionModel().select(Operator.GE);
 
-            this.seikuValue.setValueFactory(new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 103));
-            this.interceptSeikuValue.setValueFactory(new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 101));
-            this.distanceValue.setValueFactory(new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 7));
-            this.distanceCatalinaValue.setValueFactory(new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 9));
-            this.distanceTaiteichanValue.setValueFactory(new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 10));
-            // フィルターのリスナー
-            this.seikuFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.seikuValue.setDisable(!nv);
-                this.seikuType.setDisable(!nv);
-            });
-            this.interceptSeikuFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.interceptSeikuValue.setDisable(!nv);
-                this.interceptSeikuType.setDisable(!nv);
-            });
-            this.distanceFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.distanceValue.setDisable(!nv);
-                this.distanceType.setDisable(!nv);
-            });
-            this.distanceTaiteichanFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.distanceTaiteichanValue.setDisable(!nv);
-                this.distanceTaiteichanType.setDisable(!nv);
-            });
-            this.distanceCatalinaFilter.selectedProperty().addListener((ob, ov, nv) -> {
-                this.distanceCatalinaValue.setDisable(!nv);
-                this.distanceCatalinaType.setDisable(!nv);
-            });
-
-            this.seikuFilter.selectedProperty().addListener(this::filterAction);
-            this.seikuValue.valueProperty().addListener(this::filterAction);
-            this.spinnerHandller(this.seikuValue);
-            this.seikuType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
-            this.interceptSeikuFilter.selectedProperty().addListener(this::filterAction);
-            this.interceptSeikuValue.valueProperty().addListener(this::filterAction);
-            this.spinnerHandller(this.interceptSeikuValue);
-            this.interceptSeikuType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
-            this.distanceFilter.selectedProperty().addListener(this::filterAction);
-            this.distanceValue.valueProperty().addListener(this::filterAction);
-            this.spinnerHandller(this.distanceValue);
-            this.distanceType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
-            this.distanceTaiteichanFilter.selectedProperty().addListener(this::filterAction);
-            this.distanceTaiteichanValue.valueProperty().addListener(this::filterAction);
-            this.spinnerHandller(this.distanceTaiteichanValue);
-            this.distanceTaiteichanType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
-            this.distanceCatalinaFilter.selectedProperty().addListener(this::filterAction);
-            this.distanceCatalinaValue.valueProperty().addListener(this::filterAction);
-            this.distanceCatalinaValue.getEditor().textProperty().addListener(this::filterAction);
-            this.spinnerHandller(this.distanceCatalinaValue);
-            this.distanceCatalinaType.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+            // フィルター 初期化
+            this.parameterFilters = IntStream.range(0, 5).mapToObj(i -> new ParameterFilterPane.AirBaseParameterFilterPane()).collect(Collectors.toList());
+            this.parameterFilters.forEach(f -> f.filterProperty().addListener(this::filterAction));
+            this.filters.getChildren().addAll(this.parameterFilters);
 
             // カラムのバインド
             this.name.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -302,64 +207,23 @@ public class ItemAirBaseController extends WindowController {
     }
 
     /**
-     * Spinnerの変更を即座に反映する
-     *
-     * @param spinner Spinner
-     */
-    private <T> void spinnerHandller(Spinner<T> spinner) {
-        spinner.getEditor().textProperty().addListener((ob, o, n) -> {
-            SpinnerValueFactory<T> f = spinner.getValueFactory();
-            T value = f.getConverter().fromString("".equals(n) ? "0" : n);
-            if (!value.equals(f.getValue())) {
-                f.setValue(value);
-            }
-        });
-    }
-
-    /**
      * フィルターを設定する
      */
     private void filterAction(ObservableValue<?> observable, Object oldValue, Object newValue) {
-        this.items.setPredicate(this.createFilter());
+        createFilter();
+        saveConfig();
     }
 
     /**
-     * フィルターを作成する
-     * @return フィルター
+     * フィルターを作成して設定する
      */
-    private Predicate<AirBaseItem> createFilter() {
-        Predicate<AirBaseItem> filter = null;
-        if (this.seikuFilter.isSelected()) {
-            filter = this.filterAnd(filter,
-                    IntegerPropertyFilter.build(this.seikuType.getValue(),
-                            this.seikuValue.getValue(),
-                            AirBaseItem::seikuProperty));
-        }
-        if (this.interceptSeikuFilter.isSelected()) {
-            filter = this.filterAnd(filter,
-                    IntegerPropertyFilter.build(this.interceptSeikuType.getValue(),
-                            this.interceptSeikuValue.getValue(),
-                            AirBaseItem::interceptSeikuProperty));
-        }
-        if (this.distanceFilter.isSelected()) {
-            filter = this.filterAnd(filter,
-                    IntegerPropertyFilter.build(this.distanceType.getValue(),
-                            this.distanceValue.getValue(),
-                            AirBaseItem::distanceProperty));
-        }
-        if (this.distanceTaiteichanFilter.isSelected()) {
-            filter = this.filterAnd(filter,
-                    IntegerPropertyFilter.build(this.distanceTaiteichanType.getValue(),
-                            this.distanceTaiteichanValue.getValue(),
-                            AirBaseItem::distanceTaiteichanProperty));
-        }
-        if (this.distanceCatalinaFilter.isSelected()) {
-            filter = this.filterAnd(filter,
-                    IntegerPropertyFilter.build(this.distanceCatalinaType.getValue(),
-                            this.distanceCatalinaValue.getValue(),
-                            AirBaseItem::distanceCatalinaProperty));
-        }
-        return filter;
+    private void createFilter() {
+        this.items.setPredicate(this.parameterFilters.stream()
+            .map(ParameterFilterPane::filterProperty)
+            .map(ReadOnlyObjectProperty::get)
+            .filter(Objects::nonNull)
+            .reduce((acc, val) -> this.filterAnd(acc, val))
+            .orElse(null));
     }
 
     private <T> Predicate<T> filterAnd(Predicate<T> base, Predicate<T> add) {
@@ -475,44 +339,32 @@ public class ItemAirBaseController extends WindowController {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
     }
-    
+
     private void loadConfig() {
-        Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getAirbaseTabConfig).ifPresent((config) -> {
-            this.filter.setExpanded(config.isFilterExpanded());
-        });
+        this.disableFilterUpdate = true;
+        try {
+            Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getAirbaseTabConfig).ifPresent((config) -> {
+                this.filter.setExpanded(config.isFilterExpanded());
+                Optional.ofNullable(config.getParameterFilters()).ifPresent((list) -> {
+                    for (int i = 0; i < Math.min(list.size(), this.parameterFilters.size()); i++) {
+                        this.parameterFilters.get(i).loadConfig(list.get(i));
+                    }
+                });
+            });
+        } finally {
+            this.disableFilterUpdate = false;
+        }
+        createFilter();
     }
 
     private void saveConfig() {
+        if (this.disableFilterUpdate) {
+            return;
+        }
         AppItemTableConfig config = AppItemTableConfig.get();
         AppItemTableConfig.AirbaseTabConfig airbaseTabConfig = new AppItemTableConfig.AirbaseTabConfig();
         airbaseTabConfig.setFilterExpanded(this.filter.isExpanded());
+        airbaseTabConfig.setParameterFilters(this.parameterFilters.stream().map(ParameterFilterPane::saveConfig).collect(Collectors.toList()));
         config.setAirbaseTabConfig(airbaseTabConfig);
-    }
-    /**
-     * フィルター
-     *
-     * @param <T>
-     */
-    private static class IntegerPropertyFilter<T> implements Predicate<T> {
-
-        private Operator operator;
-
-        private Integer value;
-
-        private Function<T, IntegerProperty> func;
-
-        @Override
-        public boolean test(T t) {
-            return this.operator.compare(this.func.apply(t).getValue(), this.value);
-        }
-
-        public static <T> IntegerPropertyFilter<T> build(Operator operator, Integer value,
-                Function<T, IntegerProperty> func) {
-            val f = new IntegerPropertyFilter<T>();
-            f.operator = operator;
-            f.value = value;
-            f.func = func;
-            return f;
-        }
     }
 }

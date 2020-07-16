@@ -1,5 +1,7 @@
 package logbook.bean;
 
+import java.util.List;
+
 import logbook.internal.Config;
 import lombok.Data;
 
@@ -34,7 +36,11 @@ public class AppItemTableConfig {
      */
     @Data
     public static class AirbaseTabConfig {
+        /** フィルターが展開されていたかどうか */
         private boolean filterExpanded;
+
+        /** パラメータフィルター */
+        private List<ParameterFilterConfig> parameterFilters;
     }
 
     /**
