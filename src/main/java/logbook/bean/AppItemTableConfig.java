@@ -26,9 +26,18 @@ public class AppItemTableConfig {
      */
     @Data
     public static class ItemTabConfig {
+        /** フィルターが展開されていたかどうか */
         private boolean filterExpanded;
+
+        /** テキストフィルターがオンだったかどうか */
         private boolean textFilterEnabled;
+
+        /** テキストフィルター */
         private String textFilter;
+
+        /** パラメータフィルター */
+        private List<ParameterFilterConfig> parameterFilters;
+
     }
 
     /**

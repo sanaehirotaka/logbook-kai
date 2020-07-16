@@ -22,7 +22,7 @@
                  <children>
                     <TitledPane fx:id="filter" animated="false" expanded="false" text="フィルター">
                    <content>
-                      <FlowPane>
+                      <FlowPane fx:id="filters" hgap="5" >
                          <children>
                             <VBox>
                                <children>

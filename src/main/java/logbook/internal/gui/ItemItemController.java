@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.controlsfx.control.ToggleSwitch;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -35,6 +39,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -64,7 +69,10 @@ public class ItemItemController extends WindowController {
     /** フィルター */
     @FXML
     private TitledPane filter;
-    
+
+    @FXML
+    private FlowPane filters;
+
     /** テキスト */
     @FXML
     private ToggleSwitch typeFilter;
@@ -72,6 +80,9 @@ public class ItemItemController extends WindowController {
     /** テキスト */
     @FXML
     private ComboBox<String> typeValue;
+
+    /** パラメータフィルター */
+    private List<ParameterFilterPane<Item>> parameterFilters;
 
     // 一覧(装備一覧)
 
@@ -163,6 +174,9 @@ public class ItemItemController extends WindowController {
     /** 詳細一覧 */
     private ObservableList<DetailItem> details = FXCollections.observableArrayList();
 
+    /** フィルターの更新停止 */
+    private boolean disableFilterUpdate;
+
     @FXML
     void initialize() {
         try {
@@ -181,6 +195,10 @@ public class ItemItemController extends WindowController {
             });
             this.typeFilter.selectedProperty().addListener(this::filterAction);
             this.typeValue.getSelectionModel().selectedItemProperty().addListener(this::filterAction);
+
+            this.parameterFilters = IntStream.range(0, 3).mapToObj(i -> new ParameterFilterPane.ItemParameterFilterPane()).collect(Collectors.toList());
+            this.filters.getChildren().addAll(this.parameterFilters);
+            this.parameterFilters.forEach(f -> f.filterProperty().addListener(this::filterAction));
 
             // カラムとオブジェクトのバインド
             this.name.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -257,12 +275,30 @@ public class ItemItemController extends WindowController {
      * フィルターを設定する
      */
     private void filterAction(ObservableValue<?> observable, Object oldValue, Object newValue) {
-        ItemFilter filter = ItemFilter.DefaultFilter.builder()
+        createFilter();
+        saveConfig();
+    }
+    
+    private void createFilter() {
+        Predicate<Item> filter = ItemFilter.DefaultFilter.builder()
                 .typeFilter(this.typeFilter.isSelected())
                 .typeValue(this.typeValue.getValue() == null ? "" : this.typeValue.getValue())
                 .build();
+        filter = filterAnd(filter, this.parameterFilters.stream()
+            .map(ParameterFilterPane::filterProperty)
+            .map(ReadOnlyObjectProperty::get)
+            .filter(Objects::nonNull)
+            .reduce((acc, val) -> filterAnd(acc, val))
+            .orElse(null));
+
         this.types.setPredicate(filter);
-        saveConfig();
+    }
+
+    private <T> Predicate<T> filterAnd(Predicate<T> base, Predicate<T> add) {
+        if (base != null) {
+            return add != null ? base.and(add) : base;
+        }
+        return add;
     }
 
     /**
@@ -481,19 +517,33 @@ public class ItemItemController extends WindowController {
     }
 
     private void loadConfig() {
-        Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getItemTabConfig).ifPresent(config -> {
-            this.filter.setExpanded(config.isFilterExpanded());
-            this.typeFilter.setSelected(config.isTextFilterEnabled());
-            Optional.ofNullable(config.getTextFilter()).ifPresent(this.typeValue::setValue);
-        });
+        this.disableFilterUpdate = true;
+        try {
+            Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getItemTabConfig).ifPresent(config -> {
+                this.filter.setExpanded(config.isFilterExpanded());
+                this.typeFilter.setSelected(config.isTextFilterEnabled());
+                Optional.ofNullable(config.getTextFilter()).ifPresent(this.typeValue::setValue);
+                Optional.ofNullable(config.getParameterFilters()).ifPresent((list) -> {
+                    for (int i = 0; i < Math.min(list.size(), this.parameterFilters.size()); i++) {
+                        this.parameterFilters.get(i).loadConfig(list.get(i));
+                    }
+                });
+            });
+        } finally {
+            this.disableFilterUpdate = false;
+        }
     }
     
     private void saveConfig() {
+        if (this.disableFilterUpdate) {
+            return;
+        }
         AppItemTableConfig config = AppItemTableConfig.get();
         AppItemTableConfig.ItemTabConfig itemTabConfig = new AppItemTableConfig.ItemTabConfig();
         itemTabConfig.setFilterExpanded(this.filter.isExpanded());
         itemTabConfig.setTextFilterEnabled(this.typeFilter.isSelected());
         Optional.ofNullable(this.typeValue.getValue()).map(String::trim).filter(str -> !str.isEmpty()).ifPresent(itemTabConfig::setTextFilter);
+        itemTabConfig.setParameterFilters(this.parameterFilters.stream().map(ParameterFilterPane::saveConfig).collect(Collectors.toList()));
         config.setItemTabConfig(itemTabConfig);
     }
 

@@ -234,7 +234,36 @@ abstract class ParameterFilterPane<T> extends GridPane {
             super(SHIPITEM_PARAMETERS);
         }
     }
-    
+
+    /**
+     * 装備一覧のパラメータ用のペイン
+     */
+    static class ItemParameterFilterPane extends ParameterFilterPane<Item> {
+        
+        private static final List<IntegerParameter<Item>> ITEM_PARAMETERS;
+        
+        static {
+            ITEM_PARAMETERS = Stream.of(
+                    new IntegerParameter<Item>("所持", Item::getCount, () -> new IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, 1)),
+                    new IntegerParameter<Item>("火力", Item::getHoug, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("命中", Item::getHoum, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("射程", Item::getLeng, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("運", Item::getLuck, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("回避", Item::getHouk, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("爆装", Item::getBaku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("雷装", Item::getRaig, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("索敵", Item::getSaku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("対潜", Item::getTais, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("対空", Item::getTyku, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0)),
+                    new IntegerParameter<Item>("装甲", Item::getSouk, () -> new IntegerSpinnerValueFactory(0, Integer.MAX_VALUE, 0))
+            ).collect(Collectors.toList());
+        }
+
+        ItemParameterFilterPane() {
+            super(ITEM_PARAMETERS);
+        }
+    }
+
     /**
      * 基地航空隊のパラメータ用のペイン
      */
