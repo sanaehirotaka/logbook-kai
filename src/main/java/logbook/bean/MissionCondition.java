@@ -17,7 +17,7 @@ import logbook.internal.Ships;
 import lombok.Data;
 
 @Data
-public class MissionCondition implements Predicate<List<Ship>> {
+public class MissionCondition implements TestAllPredicate<List<Ship>> {
 
     @JsonProperty("description")
     private String description;
@@ -292,5 +292,6 @@ public class MissionCondition implements Predicate<List<Ship>> {
             sb.append("(" + this.description + ")");
         }
         return sb.toString();
-    }
+    }    
+    
 }
