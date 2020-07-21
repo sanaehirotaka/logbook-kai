@@ -1,7 +1,9 @@
 package logbook.internal;
 
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,11 @@ import java.util.function.Predicate;
 import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -35,6 +42,7 @@ import logbook.bean.SlotitemMstCollection;
 import logbook.bean.Stype;
 import logbook.bean.StypeCollection;
 import logbook.internal.Tuple.Pair;
+import logbook.plugin.PluginServices;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -67,6 +75,9 @@ public class Ships {
     private static final Map<SlotItemType, Double> AA_COEFFICIENT = new EnumMap<>(SlotItemType.class);
     /** 対空改修係数 */
     private static final Map<SlotItemType, Double> AALV_COEFFICIENT = new EnumMap<>(SlotItemType.class);
+
+    /** 艦娘付加情報 */
+    private static final Map<Integer, ShipSupplementalInfo> ships;
 
     static {
         // 索敵係数
@@ -150,6 +161,25 @@ public class Ships {
         AALV_COEFFICIENT.put(SlotItemType.小口径主砲, 2D);
         AALV_COEFFICIENT.put(SlotItemType.副砲, 2D);
         AALV_COEFFICIENT.put(SlotItemType.高射装置, 2D);
+        
+        // 付加的な情報の読み込み
+        InputStream is = PluginServices.getResourceAsStream("logbook/supplemental/ships.json");
+        Optional<Map<Integer, ShipSupplementalInfo>> map = Optional.empty();
+        if (is != null) {
+            try {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.enable(Feature.ALLOW_COMMENTS);
+                    Map<String, List<ShipSupplementalInfo>> json = mapper.readValue(is, new TypeReference<Map<String, List<ShipSupplementalInfo>>>() {});
+                    map = Optional.ofNullable(json.get("ships")).map(list -> list.stream().collect(Collectors.toMap(ship -> ship.getId(), ship -> ship)));
+                } finally {
+                    is.close();
+                }
+            } catch (Exception e) {
+                LoggerHolder.get().error("艦娘付加情報の初期化に失敗しました", e);
+            }
+        }
+        ships = map.orElse(Collections.emptyMap());
     }
 
     private Ships() {
@@ -1021,4 +1051,85 @@ public class Ships {
             return (this.branchCoefficient * this.itemView) + this.shipView - this.levelScore + this.fleetScore;
         }
     }
+
+    /**
+     * 装備のパラメータを合計する
+     * @param ship 艦娘
+     * @param mapper 合計するパラメータを返す mapper
+     * @return
+     */
+    public static int sumItemParam(Ship ship, Function<SlotitemMst, Integer> mapper) {
+        Map<Integer, SlotItem> items = SlotItemCollection.get().getSlotitemMap();
+        return Stream.concat(ship.getSlot().stream(), Stream.of(ship.getSlotEx()))
+                .map(items::get)
+                .map(Items::slotitemMst)
+                .mapToInt(e -> e.map(mapper).orElse(0))
+                .sum();
+    }
+
+    /**
+     * 対潜値（素）を計算します。
+     * @param ship 艦娘
+     * @return 対潜値（素）
+     */
+    public static int getTaisen(Ship ship) {
+        ShipSupplementalInfo supp = ships.get(ship.getShipId());
+        if (supp != null) {
+            // 付加情報あり、（Lv99の値 - Lv1の値)*Lv/99 + Lv1の値 + 近代化改修分
+            return (ship.getTaisen().get(1) - supp.getMinTaisen()) * ship.getLv() / 99 + supp.getMinTaisen() + ship.getKyouka().get(6);
+        }
+        // 付加情報なし、現在値 - 装備増分
+        return ship.getTaisen().get(0) - sumItemParam(ship, SlotitemMst::getTais);
+    }
+
+    /**
+     * 索敵値（素）を計算します。
+     * @param ship 艦娘
+     * @return 索敵値（素）
+     */
+    public static int getSakuteki(Ship ship) {
+        ShipSupplementalInfo supp = ships.get(ship.getShipId());
+        if (supp != null) {
+            // 付加情報あり、（Lv99の値 - Lv1の値)*Lv/99 + Lv1の値
+            return (ship.getSakuteki().get(1) - supp.getMinSakuteki()) * ship.getLv() / 99 + supp.getMinSakuteki();
+        }
+        // 付加情報なし、現在値 - 装備増分
+        return ship.getSakuteki().get(0) - Ships.sumItemParam(ship, SlotitemMst::getSaku);
+    }
+
+    /**
+     * 回避値（素）を計算します。
+     * @param ship 艦娘
+     * @return 回避値（素）
+     */
+    public static int getKaihi(Ship ship) {
+        ShipSupplementalInfo supp = ships.get(ship.getShipId());
+        if (supp != null) {
+            // 付加情報あり、（Lv99の値 - Lv1の値)*Lv/99 + Lv1の値
+            return (ship.getKaihi().get(1) - supp.getMinKaihi()) * ship.getLv() / 99 + supp.getMinKaihi();
+        }
+        // 付加情報なし、現在値 - 装備増分
+        return ship.getKaihi().get(0) - Ships.sumItemParam(ship, SlotitemMst::getHouk);
+    }
+
+    /**
+     * 艦娘付加情報
+     */
+    @Data
+    private static class ShipSupplementalInfo {
+        /** ID */
+        private int id;
+        /** 名前 */
+        private String name;
+        /** 最小対潜値 */
+        @JsonProperty("min_taisen")
+        private int minTaisen;
+        /** 最小回避値 */
+        @JsonProperty("min_kaihi")
+        private int minKaihi;
+        /** 最小索敵値 */
+        @JsonProperty("min_sakuteki")
+        private int minSakuteki;
+    }
+
 }

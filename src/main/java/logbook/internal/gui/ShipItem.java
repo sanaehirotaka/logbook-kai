@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.StringJoiner;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -956,17 +955,29 @@ public class ShipItem {
         shipItem.setYPower(Ships.yPower(ship));
         shipItem.setTPower(Ships.tPower(ship));
 
-        shipItem.setKaryoku(ship.getKaryoku().get(0) - sumItemParam(ship, SlotitemMst::getHoug));
-        shipItem.setRaisou(ship.getRaisou().get(0) - sumItemParam(ship, SlotitemMst::getRaig));
-        shipItem.setTaiku(ship.getTaiku().get(0) - sumItemParam(ship, SlotitemMst::getTyku));
-        shipItem.setTais(ship.getTaisen().get(0) - sumItemParam(ship, SlotitemMst::getTais));
-        shipItem.setSakuteki(ship.getSakuteki().get(0) - sumItemParam(ship, SlotitemMst::getSaku));
-        shipItem.setLucky(ship.getLucky().get(0) - sumItemParam(ship, SlotitemMst::getLuck));
+        shipItem.setKaryoku(ship.getKaryoku().get(0) - Ships.sumItemParam(ship, SlotitemMst::getHoug));
+        shipItem.setRaisou(ship.getRaisou().get(0) - Ships.sumItemParam(ship, SlotitemMst::getRaig));
+        shipItem.setTaiku(ship.getTaiku().get(0) - Ships.sumItemParam(ship, SlotitemMst::getTyku));
+        shipItem.setLucky(ship.getLucky().get(0) - Ships.sumItemParam(ship, SlotitemMst::getLuck));
         shipItem.setMaxhp(ship.getMaxhp());
-        shipItem.setSoukou(ship.getSoukou().get(0) - sumItemParam(ship, SlotitemMst::getSouk));
-        shipItem.setKaihi(ship.getKaihi().get(0) - sumItemParam(ship, SlotitemMst::getHouk));
-        if (ship.getSoku() != null)
+        shipItem.setSoukou(ship.getSoukou().get(0) - Ships.sumItemParam(ship, SlotitemMst::getSouk));
+        // 装備からではなく定義から計算する（念のため従来の計算方法も上に残す）
+        Ships.shipMst(ship).filter(s -> ship.getKyouka() != null && ship.getKyouka().size() >= 5).ifPresent((mst) -> {
+            Optional.ofNullable(mst.getHoug()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(0)).ifPresent(shipItem::setKaryoku);
+            Optional.ofNullable(mst.getRaig()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(1)).ifPresent(shipItem::setRaisou);
+            Optional.ofNullable(mst.getTaik()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(2)).ifPresent(shipItem::setTaiku);
+            Optional.ofNullable(mst.getSouk()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(3)).ifPresent(shipItem::setTaiku);
+            Optional.ofNullable(mst.getLuck()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(4)).ifPresent(shipItem::setTaiku);
+        });
+
+        // 以下の対潜・索敵・回避は定義からでは計算できない
+        shipItem.setTais(Ships.getTaisen(ship));
+        shipItem.setSakuteki(Ships.getSakuteki(ship));
+        shipItem.setKaihi(Ships.getKaihi(ship));
+
+        if (ship.getSoku() != null) {
             shipItem.setSoku(ship.getSoku());
+        }
         shipItem.setLeng(ship.getLeng());
 
         int slotNum = ship.getSlotnum();
@@ -980,18 +991,4 @@ public class ShipItem {
         return shipItem;
     }
 
-    /**
-     * 装備のパラメータを合計する
-     * @param ship 艦娘
-     * @param mapper 合計するパラメータを返す mapper
-     * @return
-     */
-    private static int sumItemParam(Ship ship, Function<SlotitemMst, Integer> mapper) {
-        Map<Integer, SlotItem> items = SlotItemCollection.get().getSlotitemMap();
-        return Stream.concat(ship.getSlot().stream(), Stream.of(ship.getSlotEx()))
-                .map(items::get)
-                .map(Items::slotitemMst)
-                .mapToInt(e -> e.map(mapper).orElse(0))
-                .sum();
-    }
 }
