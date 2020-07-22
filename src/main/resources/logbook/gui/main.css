@@ -46,6 +46,9 @@ TabPane .tab.empty .tab-label {
 .hp {
     -fx-min-width: 4.25em;
 }
+.hp-max {
+    -fx-text-fill: rgb(0, 0, 192);
+}
 .deepgreen {
     -fx-text-fill: rgb(0, 160, 0);
 }

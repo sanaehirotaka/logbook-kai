@@ -71,7 +71,9 @@ public class FleetTabShipPane extends HBox {
         this.hp.setText(this.ship.getNowhp() + "/" + this.ship.getMaxhp());
         this.supply.setImage(Ships.supplyGaugeImage(this.ship));
         this.cond.setText(this.ship.getCond() + "cond.");
-
+        if (this.ship.getNowhp() == this.ship.getMaxhp()) {
+            this.hp.getStyleClass().add("hp-max");
+        }
         ObservableList<String> styleClass = this.cond.getStyleClass();
         styleClass.clear();
         styleClass.add("label");
