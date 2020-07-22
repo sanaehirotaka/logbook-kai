@@ -8,16 +8,22 @@
 }
 
 TabPane .deepgreen {
-    -fx-text-fill: rgb(0, 60, 0);
+    -fx-text-fill: rgb(0, 160, 0);
 }
 TabPane .green {
-    -fx-text-fill: rgb(0, 128, 0);
+    -fx-text-fill: rgb(0, 160, 0);
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 160, 0, 0.1);
 }
 TabPane .orange {
     -fx-text-fill: rgb(255, 140, 0);
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(255, 140, 0, 0.1);
 }
 TabPane .red {
     -fx-text-fill: rgb(255, 16, 0);
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(255, 16, 0, 0.1);
 }
 .table-row-cell .none {
     -fx-background-color: lightgray;

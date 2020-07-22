@@ -47,16 +47,22 @@ TabPane .tab.empty .tab-label {
     -fx-min-width: 4.25em;
 }
 .deepgreen {
-    -fx-text-fill: rgb(0, 60, 0);
+    -fx-text-fill: rgb(0, 160, 0);
 }
 .green {
-    -fx-text-fill: rgb(0, 128, 0);
+    -fx-text-fill: rgb(0, 160, 0);
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 160, 0, 0.1);
 }
 .orange {
     -fx-text-fill: rgb(255, 140, 0);
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(255, 140, 0, 0.1);
 }
 .red {
     -fx-text-fill: rgb(255, 16, 0);
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(255, 16, 0, 0.1);
 }
 .value {
     -fx-font-size: 1.1em;
