@@ -397,7 +397,8 @@ class ShipImage {
                 expPer = 0;
             }
         } else {
-            expPer = 0;
+            // 既に max の場合は表示しない
+            return;
         }
         Color color = Color.TRANSPARENT.interpolate(Color.DEEPSKYBLUE, 0.9);
         gc.drawImage(createGauge(w, gaugeHeight, expPer, k -> color, EXPGAUGE_CACHE), 0, h - gaugeHeight);
@@ -419,7 +420,7 @@ class ShipImage {
         return cache.get(size, key -> {
             Canvas canvas = new Canvas(width, height);
             GraphicsContext gc = canvas.getGraphicsContext2D();
-            gc.setFill(Color.TRANSPARENT.interpolate(Color.WHITE, 0.6));
+            gc.setFill(Color.TRANSPARENT.interpolate(Color.ALICEBLUE, 0.9));
             if (width < height) {
                 gc.fillRect(0, 0, width, height - size);
             } else {
