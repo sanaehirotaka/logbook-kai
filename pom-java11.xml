@@ -8,6 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>14</javafx.version>
+        <javafx.platform>current</javafx.platform>
     </properties>
     <build>
         <plugins>
@@ -61,7 +62,7 @@
                             <descriptors>
                                 <descriptor>assembly.xml</descriptor>
                             </descriptors>
-                            <finalName>${project.artifactId}_${project.version}</finalName>
+                            <finalName>${project.artifactId}_${project.version}_${javafx.platform}</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                         </configuration>
                     </execution>
