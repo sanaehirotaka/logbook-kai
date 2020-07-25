@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -47,6 +49,9 @@ public class CheckUpdate {
     /** 検索するtagの名前 */
     /* 例えばv20.1.1 の 20.1.1にマッチ */
     static final Pattern TAG_REGIX = Pattern.compile("\\d+\\.\\d+(?:\\.\\d+)?$");
+
+    /** Prerelease を使う System Property */
+    private static  final String USE_PRERELEASE = "logbook.use.prerelease";
 
     public static void run(Stage stage) {
         run(false, stage);
@@ -104,7 +109,7 @@ public class CheckUpdate {
                             if (releases.getBoolean("draft", false))
                                 return false;
                             // prereleaseではない
-                            if (releases.getBoolean("prerelease", false))
+                            if (!Boolean.getBoolean(USE_PRERELEASE) && releases.getBoolean("prerelease", false))
                                 return false;
                             // assetsが1つ以上ある
                             if (releases.getJsonArray("assets") == null || releases.getJsonArray("assets").size() == 0)
@@ -210,11 +215,20 @@ public class CheckUpdate {
                 // 更新スクリプトを動かすコマンド (JAVA_HOME/bin/jjs)
                 Path command = Paths.get(System.getProperty("java.home"), "bin", "jjs");
 
-                new ProcessBuilder(command.toString(), script.toString(),
-                        "-fx",
-                        "-Dupdate_script=" + script,
-                        "-Dinstall_target=" + dir,
-                        "-Dinstall_version=" + newversion)
+                List<String> args = new ArrayList<>();
+                args.add(command.toString());
+                args.add(script.toString());
+                args.add("-fx");
+                args.add("-Dupdate_script=" + script);
+                args.add("-Dinstall_target=" + dir);
+                args.add("-Dinstall_version=" + newversion);
+                if (Boolean.getBoolean(USE_PRERELEASE)) {
+                    args.add("-Duse_prefix=true");
+                }
+                if ("11".equals(System.getProperty("java.specification.version"))) {
+                    args.add("-Dtarget_java_version=11");
+                }
+                new ProcessBuilder(args)
                                 .inheritIO()
                                 .start();
             } catch (Exception e) {

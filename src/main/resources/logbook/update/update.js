@@ -7,6 +7,7 @@ load("fx:graphics.js");
 load("fx:web.js");
 // import
 var System = java.lang.System;
+var Boolean = java.lang.Boolean;
 var BufferedReader = java.io.BufferedReader;
 var InputStream = java.io.InputStream;
 var InputStreamReader = java.io.InputStreamReader;
@@ -27,6 +28,8 @@ var scriptFile = System.getProperty("update_script");
 var targetDir = System.getProperty("install_target");
 // インストールバージョン
 var version = System.getProperty("install_version");
+// Prerelease を使うかどうか
+var usePrerelease = System.getProperty("use_prerelease");
 // GitHub Releases API
 var releaseURL = "https://api.github.com/repos/sanaehirotaka/logbook-kai/releases/tags/v" + version;
 var release = {};
@@ -64,13 +67,14 @@ UpdateTask.prototype.getReleaseJson = function() {
             release = JSON.parse(jsonText);
 
             if (release["assets"]) {
-                if (release["prerelease"] || release["draft"]) {
+                if ((!Boolean.parseBoolean(usePrerelease) && release["prerelease"]) || release["draft"]) {
                     var msg = release["name"] + "は試験的なバージョンであるため更新されませんでした。手動での更新をお願いします。";
                     throw msg;
                 }
                 for (var i = 0; i < release["assets"].length; i++) {
                     var name = release["assets"][i]["name"];
-                    if (name.startsWith("logbook-kai_") && name.endsWith(".zip")) {
+                    var prefix = "11".equals(System.getProperty("target_java_version")) ? "logbook-kai-java11_" : "logbook-kai_";
+                    if (name.startsWith(prefix) && name.endsWith(".zip")) {
                         asset = release["assets"][i];
                         break;
                     }
