@@ -223,7 +223,7 @@ public class CheckUpdate {
                 args.add("-Dinstall_target=" + dir);
                 args.add("-Dinstall_version=" + newversion);
                 if (Boolean.getBoolean(USE_PRERELEASE)) {
-                    args.add("-Duse_prefix=true");
+                    args.add("-Duse_prerelease=true");
                 }
                 if ("11".equals(System.getProperty("java.specification.version"))) {
                     args.add("-Dtarget_java_version=11");
