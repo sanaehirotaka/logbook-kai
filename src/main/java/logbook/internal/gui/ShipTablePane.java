@@ -1052,10 +1052,9 @@ public class ShipTablePane extends VBox {
         @Override
         protected void updateItem(Integer cond, boolean empty) {
             super.updateItem(cond, empty);
-
+            ObservableList<String> styleClass = this.getStyleClass();
+            styleClass.removeAll("deepgreen", "green", "orange", "red");
             if (!empty) {
-                ObservableList<String> styleClass = this.getStyleClass();
-                styleClass.removeAll("deepgreen", "green", "orange", "red");
                 if (cond >= Ships.DARK_GREEN && cond < Ships.GREEN) {
                     styleClass.add("deepgreen");
                 } else if (cond >= Ships.GREEN) {

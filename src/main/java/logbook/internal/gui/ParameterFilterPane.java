@@ -123,6 +123,7 @@ abstract class ParameterFilterPane<T> extends GridPane {
         this.parameterFilter.selectedProperty().addListener((ob, ov, nv) -> {
             this.parameter.setDisable(!nv);
             this.parameterValue.setDisable(!nv);
+            this.parameterValueChoice.setDisable(!nv);
             this.parameterType.setDisable(!nv);
         });
         this.parameterValue.setEditable(true);
@@ -176,6 +177,7 @@ abstract class ParameterFilterPane<T> extends GridPane {
             Optional.ofNullable(parameterFilterConfig.getValue()).ifPresent(this.parameterValue.getValueFactory()::setValue);
         }
         Optional.ofNullable(parameterFilterConfig.getValueChoice()).ifPresent(this.parameterValueChoice.getSelectionModel()::select);
+        Optional.ofNullable(parameterFilterConfig.getType()).ifPresent(this.parameterType.getSelectionModel()::select);
     }
     
     /**
@@ -194,6 +196,7 @@ abstract class ParameterFilterPane<T> extends GridPane {
         }
         Optional.ofNullable(value).ifPresent(config::setValue);
         Optional.ofNullable(this.parameterValueChoice.getValue()).ifPresent(config::setValueChoice);
+        Optional.ofNullable(this.parameterType.getValue()).ifPresent(config::setType);
         return config;
     }
 
