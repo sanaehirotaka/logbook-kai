@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.TextFields;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -764,6 +767,28 @@ public class ShipTablePane extends VBox {
     }
 
     /**
+     * 艦隊分析
+     */
+    @FXML
+    void kancolleFleetanalysis() {
+        try {
+            List<KancolleFleetanalysisItem> list = ShipCollection.get().getShipMap().values().stream()
+                    .filter(ship -> ship.getLocked())
+                    .map(KancolleFleetanalysisItem::toItem)
+                    .sorted(Comparator.comparing(KancolleFleetanalysisItem::getId)
+                            .thenComparing(Comparator.comparing(KancolleFleetanalysisItem::getLv)))
+                    .collect(Collectors.toList());
+            ObjectMapper mapper = new ObjectMapper();
+            String input = mapper.writeValueAsString(list);
+
+            ClipboardContent content = new ClipboardContent();
+            content.putString(input);
+            Clipboard.getSystemClipboard().setContent(content);
+        } catch (Exception e) {
+            LoggerHolder.get().error("艦隊分析のロック装備をクリップボードにコピーに失敗しました", e);
+        }
+    }
+    /**
      * テーブル列の表示・非表示の設定
      */
     @FXML
@@ -1243,6 +1268,28 @@ public class ShipTablePane extends VBox {
             public String toString() {
                 return this.lv + "." + this.ship.kai;
             }
+        }
+    }
+
+
+    @Data
+    @AllArgsConstructor
+    private static class KancolleFleetanalysisItem {
+
+        @JsonProperty("api_ship_id")
+        private int id;
+
+        @JsonProperty("api_lv")
+        private int lv;
+
+        @JsonProperty("api_kyouka")
+        private List<Integer> kyouka;
+
+        @JsonProperty("api_exp")
+        private List<Integer> exp;
+
+        public static KancolleFleetanalysisItem toItem(Ship ship) {
+            return new KancolleFleetanalysisItem(ship.getShipId(), ship.getLv(), ship.getKyouka(), ship.getExp());
         }
     }
 
