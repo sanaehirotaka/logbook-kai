@@ -14,6 +14,9 @@ import lombok.Data;
 @Data
 public class AppShipTableConfig {
 
+    /** 開いていたタブ */
+    private int tabIndex;
+    
     /** タブ別の設定 */
     private Map<String, AppShipTableTabConfig> tabConfig = new LinkedHashMap<>();
 
