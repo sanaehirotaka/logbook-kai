@@ -70,6 +70,10 @@ public class ShipController extends WindowController {
 
             this.tab.getTabs().add(new Tab("全員", allPane));
 
+            // 全艦隊のタブ
+            if (AppConfig.get().isAllDecksTab()) {
+                this.addAllDecksTab();
+            }
             // 艦隊単位のタブ
             if (AppConfig.get().isDeckTabs()) {
                 this.addDeckTabs();
@@ -91,6 +95,23 @@ public class ShipController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * 全艦隊のタブ
+     */
+    private void addAllDecksTab() {
+        ShipTablePane deckPane = new ShipTablePane(() -> {
+            Map<Integer, Ship> shipMap = ShipCollection.get()
+                    .getShipMap();
+            return DeckPortCollection.get().getDeckPortMap().values().stream()
+                .map(DeckPort::getShip)
+                .flatMap(List::stream)
+                .map(shipMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        }, "全艦隊");
+        this.tab.getTabs().add(new Tab("全艦隊", deckPane));
     }
 
     /**
