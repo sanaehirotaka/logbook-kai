@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -23,7 +24,9 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.TextFields;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -59,6 +62,7 @@ import javafx.stage.Stage;
 import logbook.bean.AppConfig;
 import logbook.bean.AppShipTableConfig;
 import logbook.bean.AppShipTableConfig.AppShipTableTabConfig;
+import logbook.bean.Basic;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -788,6 +792,23 @@ public class ShipTablePane extends VBox {
             LoggerHolder.get().error("艦隊分析のロック装備をクリップボードにコピーに失敗しました", e);
         }
     }
+
+    /**
+     * デッキビルダー形式：表示されている艦をクリップボードにコピー
+     */
+    @FXML
+    void deckBuilderDisplayCopy() {
+        DeckBuilder.displayCopy(this.table);
+    }
+
+    /**
+     * デッキビルダー形式：選択した艦のみクリップボードにコピー
+     */
+    @FXML
+    void deckBuilderSelectionCopy() {
+        DeckBuilder.selectionCopy(this.table);
+    }
+
     /**
      * テーブル列の表示・非表示の設定
      */
@@ -1293,4 +1314,111 @@ public class ShipTablePane extends VBox {
         }
     }
 
+    /**
+     * デッキビルダー形式の出力
+     */
+    public static class DeckBuilder {
+
+        /**
+         * 表示されている艦をクリップボードにコピーする。
+         *
+         * @param table テーブル
+         */
+        public static void displayCopy(TableView<ShipItem> table) {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(text(table.getItems()
+                    .stream()
+                    .map(ShipItem::getShip)
+                    .collect(Collectors.toList())));
+            Clipboard.getSystemClipboard().setContent(content);
+        }
+
+        /**
+         * 選択された艦のみをクリップボードにコピーする。
+         *
+         * @param table テーブル
+         */
+        public static void selectionCopy(TableView<ShipItem> table) {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(text(table.getSelectionModel()
+                    .getSelectedItems()
+                    .stream()
+                    .map(ShipItem::getShip)
+                    .collect(Collectors.toList())));
+            Clipboard.getSystemClipboard().setContent(content);
+        }
+
+        private static String text(Collection<Ship> ships) {
+            Set<Integer> targets = ships.stream().map(Ship::getId).collect(Collectors.toSet());
+            Map<Integer, Ship> shipsMap = ShipCollection.get().getShipMap();
+            Map<String, Object> data = new TreeMap<>();
+            data.put("version", 4);
+            Optional.ofNullable(Basic.get().getLevel()).ifPresent(lv -> data.put("hqlv", lv));
+            DeckPortCollection.get().getDeckPortMap().values().stream().forEach(port -> {
+                Map<String, Kanmusu> fleet = new TreeMap<>();
+                Optional.ofNullable(port.getShip()).ifPresent(list -> {
+                    for (int i = 0; i < list.size(); i++) {
+                        final int index = i+1;
+                        Optional.ofNullable(list.get(i))
+                            .filter(targets::contains)
+                            .map(shipsMap::get)
+                            .map(Kanmusu::new)
+                            .ifPresent(kanmusu -> fleet.put("s" + index, kanmusu));
+                    }
+                });
+                data.put("f" + port.getId(), fleet);
+            });
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.writeValueAsString(data);
+            } catch (JsonProcessingException e) {
+                // ignore
+            }
+            return null;
+        }
+
+        @Data
+        @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+        private static class Item {
+            private final int id;
+            private final Integer rf;
+            private final Integer mas;
+            
+            Item(SlotItem item) {
+                this.id = item.getSlotitemId();
+                this.rf = item.getLevel();
+                this.mas = item.getAlv();
+            }
+        }
+
+        @Data
+        private static class Kanmusu {
+            private final int id;
+            private final int lv;
+            private final int luck;
+            private Map<String, Item> items;
+            
+            Kanmusu(Ship ship) {
+                this.id = ship.getShipId();
+                this.lv = ship.getLv();
+                this.luck = ship.getLucky().get(0);
+                this.items = new TreeMap<>();
+                Map<Integer, SlotItem> slotitemMap = SlotItemCollection.get().getSlotitemMap();
+                Optional.ofNullable(ship.getSlot())
+                    .ifPresent(slot -> {
+                        for (int i = 0; i < slot.size(); i++) {
+                            final int index = i+1;
+                            Optional.ofNullable(slot.get(i))
+                                .map(slotitemMap::get)
+                                .map(Item::new)
+                                .ifPresent(item -> this.items.put("i"+(index), item));
+                        }
+                    });
+                Optional.ofNullable(ship.getSlotEx())
+                    .map(slotitemMap::get)
+                    .map(Item::new)
+                    .ifPresent(item -> this.items.put("ix", item));
+            }
+        }
+    }
 }
