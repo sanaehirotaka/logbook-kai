@@ -1329,7 +1329,7 @@ public class ShipTablePane extends VBox {
             content.putString(text(table.getItems()
                     .stream()
                     .map(ShipItem::getShip)
-                    .collect(Collectors.toList())));
+                    .collect(Collectors.toList()), null));
             Clipboard.getSystemClipboard().setContent(content);
         }
 
@@ -1344,11 +1344,21 @@ public class ShipTablePane extends VBox {
                     .getSelectedItems()
                     .stream()
                     .map(ShipItem::getShip)
-                    .collect(Collectors.toList())));
+                    .collect(Collectors.toList()), null));
+            Clipboard.getSystemClipboard().setContent(content);
+        }
+        
+        public static void airbaseSelectionCopy(TableView<AirBaseItem> table) {
+            ClipboardContent content = new ClipboardContent();
+            content.putString(text(
+                    // 全艦隊の情報をセット
+                    ShipCollection.get().getShipMap().values(),
+                    table.getSelectionModel().getSelectedItems().stream().collect(Collectors.toList())
+            ));
             Clipboard.getSystemClipboard().setContent(content);
         }
 
-        private static String text(Collection<Ship> ships) {
+        private static String text(Collection<Ship> ships, List<AirBaseItem> airbase) {
             Set<Integer> targets = ships.stream().map(Ship::getId).collect(Collectors.toSet());
             Map<Integer, Ship> shipsMap = ShipCollection.get().getShipMap();
             Map<String, Object> data = new TreeMap<>();
@@ -1368,6 +1378,17 @@ public class ShipTablePane extends VBox {
                 });
                 data.put("f" + port.getId(), fleet);
             });
+            Optional.ofNullable(airbase).ifPresent(list -> {
+                Airbase ab = null;
+                for (int i = 0; i < Math.min(list.size(), 12); i++) {
+                    Item item = new Item(list.get(i));
+                    if (i % 4 == 0) {
+                        ab = new Airbase();
+                        data.put("a" + ((i/4)+1), ab);
+                    }
+                    ab.getItems().put("i" + ((i%4)+1), item);
+                }
+            });
             ObjectMapper mapper = new ObjectMapper();
             try {
                 return mapper.writeValueAsString(data);
@@ -1386,6 +1407,12 @@ public class ShipTablePane extends VBox {
             
             Item(SlotItem item) {
                 this.id = item.getSlotitemId();
+                this.rf = item.getLevel();
+                this.mas = item.getAlv();
+            }
+            
+            Item(AirBaseItem item) {
+                this.id = item.getId();
                 this.rf = item.getLevel();
                 this.mas = item.getAlv();
             }
@@ -1419,6 +1446,12 @@ public class ShipTablePane extends VBox {
                     .map(Item::new)
                     .ifPresent(item -> this.items.put("ix", item));
             }
+        }
+        
+        @Data
+        private static class Airbase {
+            private final int mode = 1;     // default
+            private final Map<String, Item> items = new TreeMap<>();
         }
     }
 }

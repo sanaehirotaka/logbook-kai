@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Spinner?>
@@ -58,6 +59,12 @@
                     <MenuItem mnemonicParsing="false" onAction="#copyAirBase" text="クリップボードにコピー" />
                     <MenuItem mnemonicParsing="false" onAction="#selectAllAirBase" text="すべてを選択" />
                     <MenuItem mnemonicParsing="false" onAction="#storeAirBase" text="CSVファイルとして保存" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <Menu mnemonicParsing="false" text="デッキビルダー形式（非公式）">
+                       <items>
+                          <MenuItem mnemonicParsing="false" onAction="#deckBuilderSelectionCopy" text="選択した機体をクリップボードにコピー" />
+                       </items>
+                    </Menu>
                     <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" onAction="#columnVisibleAirBase" text="列の表示・非表示" />
                  </items>
