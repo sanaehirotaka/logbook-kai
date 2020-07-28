@@ -328,6 +328,14 @@ public class ItemAirBaseController extends WindowController {
     }
 
     /**
+     * (基地航空隊)デッキビルダー形式でクリップボードにコピー
+     */
+    @FXML
+    void deckBuilderSelectionCopy() {
+        ShipTablePane.DeckBuilder.airbaseSelectionCopy(this.itemTable);
+    }
+
+    /**
      * (基地航空隊)テーブル列の表示・非表示の設定
      */
     @FXML
