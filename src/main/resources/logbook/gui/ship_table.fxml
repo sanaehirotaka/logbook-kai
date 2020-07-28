@@ -144,6 +144,12 @@
                       <MenuItem mnemonicParsing="false" onAction="#kancolleFleetanalysis" text="ロックされてる艦娘データをクリップボードにコピー" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="デッキビルダー">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#deckBuilderDisplayCopy" text="表示されている艦隊所属艦をクリップボードにコピー" />
+                      <MenuItem mnemonicParsing="false" onAction="#deckBuilderSelectionCopy" text="選択した艦隊所属艦のみクリップボードにコピー" />
+                    </items>
+                  </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#columnVisible" text="列の表示・非表示" />
              </items>
