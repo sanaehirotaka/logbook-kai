@@ -18,6 +18,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logbook.bean.AppConfig;
+import logbook.bean.AppShipTableConfig;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -82,6 +83,15 @@ public class ShipController extends WindowController {
             if (AppConfig.get().isLabelTabs()) {
                 this.addLabelTabs();
             }
+            int index = AppShipTableConfig.get().getTabIndex();
+            if (index < this.tab.getTabs().size()) {
+                this.tab.getSelectionModel().select(index);
+            }
+            this.tab.getSelectionModel().selectedIndexProperty().addListener((ob, o, n) -> {
+                if (n != null) {
+                    AppShipTableConfig.get().setTabIndex(n.intValue());
+                }
+            });
 
             this.addStatistics();
 
