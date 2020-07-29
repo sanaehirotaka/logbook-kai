@@ -359,7 +359,7 @@ public class ItemAirBaseController extends WindowController {
      */
     @FXML
     void deckBuilderSelectionCopy() {
-        ShipTablePane.DeckBuilder.airbaseSelectionCopy(this.itemTable);
+        DeckBuilder.airbaseSelectionCopy(this.itemTable);
     }
 
     /**
