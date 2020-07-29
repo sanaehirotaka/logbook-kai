@@ -17,8 +17,9 @@
     <children>
         <TitledPane fx:id="filter" animated="false" expanded="false" text="フィルター">
            <content>
-              <VBox>
+              <VBox spacing="5">
                  <children>
+                    <ToggleSwitch fx:id="disableGrouping" prefWidth="0.0" style="-fx-font-weight: bold;" text="同一装備、同一属性(改修値・熟練度)でグルーピングしない" />
                     <FlowPane fx:id="filters" />
                  </children>
               </VBox>

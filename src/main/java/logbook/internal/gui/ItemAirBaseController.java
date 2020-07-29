@@ -9,6 +9,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import org.controlsfx.control.ToggleSwitch;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -35,7 +38,6 @@ import logbook.bean.SlotitemMstCollection;
 import logbook.internal.Items;
 import logbook.internal.LoggerHolder;
 import logbook.plugin.PluginServices;
-import lombok.val;
 
 /**
  * 基地航空隊一覧のUIコントローラー
@@ -47,6 +49,10 @@ public class ItemAirBaseController extends WindowController {
     @FXML
     private TitledPane filter;
 
+    /** グルーピングをしない */
+    @FXML
+    private ToggleSwitch disableGrouping;
+    
     @FXML
     private FlowPane filters;
 
@@ -129,7 +135,10 @@ public class ItemAirBaseController extends WindowController {
     private TableColumn<AirBaseItem, Integer> saku;
 
     /** 基地航空隊 */
-    private FilteredList<AirBaseItem> items;
+    private ObservableList<AirBaseItem> items;
+
+    /** フィルターされた基地航空隊リスト */
+    private FilteredList<AirBaseItem> filteredItems;
 
     /** フィルター */
     private List<ParameterFilterPane.AirBaseParameterFilterPane> parameterFilters;
@@ -174,36 +183,54 @@ public class ItemAirBaseController extends WindowController {
 
             this.itemTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             this.itemTable.setOnKeyPressed(TableTool::defaultOnKeyPressedHandler);
+            this.disableGrouping.selectedProperty().addListener((ob, o, n) -> {
+                setItems();
+                saveConfig();
+            });
 
-            // 一覧を作る
-            val itemCount = SlotItemCollection.get()
-                    .getSlotitemMap()
-                    .values().stream()
-                    .filter(AirBaseItem::isTarget)
-                    .map(AirBaseItem::toAirBaseItem)
-                    .collect(Collectors.groupingBy(e -> e));
-            ObservableList<AirBaseItem> items = itemCount
-                    .entrySet().stream()
-                    .map(e -> {
-                        AirBaseItem v = e.getKey();
-                        v.setCount(e.getValue().size());
-                        return v;
-                    })
-                    .sorted(Comparator.comparing(AirBaseItem::getType3)
-                            .thenComparing(AirBaseItem::getType2)
-                            .thenComparing(Comparator.comparing(AirBaseItem::getName))
-                            .thenComparing(Comparator.comparing(item -> item.seikuProperty().get())))
-                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
-
-            this.items = new FilteredList<>(items);
-            SortedList<AirBaseItem> sortedAirBaseItems = new SortedList<>(this.items);
+            this.items = FXCollections.observableArrayList();
+            this.filteredItems = new FilteredList<>(this.items);
+            SortedList<AirBaseItem> sortedAirBaseItems = new SortedList<>(this.filteredItems);
             this.itemTable.setItems(sortedAirBaseItems);
             sortedAirBaseItems.comparatorProperty().bind(this.itemTable.comparatorProperty());
-            
+
             loadConfig();
+            setItems();
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * 装備をセットする
+     */
+    private void setItems() {
+        // 一覧を作る
+        Stream<AirBaseItem> listItems = SlotItemCollection.get()
+                .getSlotitemMap()
+                .values().stream()
+                .filter(AirBaseItem::isTarget)
+                .map(AirBaseItem::toAirBaseItem);
+        
+        if (!this.disableGrouping.isSelected()) {
+            listItems = listItems
+                .collect(Collectors.groupingBy(e -> e))
+                .entrySet().stream()
+                .map(e -> {
+                    AirBaseItem v = e.getKey();
+                    v.setCount(e.getValue().size());
+                    return v;
+                });
+        }
+
+        List<AirBaseItem> items = this.items;
+        items.clear();
+        listItems
+                .sorted(Comparator.comparing(AirBaseItem::getType3)
+                        .thenComparing(AirBaseItem::getType2)
+                        .thenComparing(Comparator.comparing(AirBaseItem::getName))
+                        .thenComparing(Comparator.comparing(item -> item.seikuProperty().get())))
+                .forEach(items::add);
     }
 
     /**
@@ -218,7 +245,7 @@ public class ItemAirBaseController extends WindowController {
      * フィルターを作成して設定する
      */
     private void createFilter() {
-        this.items.setPredicate(this.parameterFilters.stream()
+        this.filteredItems.setPredicate(this.parameterFilters.stream()
             .map(ParameterFilterPane::filterProperty)
             .map(ReadOnlyObjectProperty::get)
             .filter(Objects::nonNull)
@@ -353,6 +380,7 @@ public class ItemAirBaseController extends WindowController {
         try {
             Optional.ofNullable(AppItemTableConfig.get()).map(AppItemTableConfig::getAirbaseTabConfig).ifPresent((config) -> {
                 this.filter.setExpanded(config.isFilterExpanded());
+                this.disableGrouping.setSelected(config.isDisableGrouping());
                 Optional.ofNullable(config.getParameterFilters()).ifPresent((list) -> {
                     for (int i = 0; i < Math.min(list.size(), this.parameterFilters.size()); i++) {
                         this.parameterFilters.get(i).loadConfig(list.get(i));
@@ -372,6 +400,7 @@ public class ItemAirBaseController extends WindowController {
         AppItemTableConfig config = AppItemTableConfig.get();
         AppItemTableConfig.AirbaseTabConfig airbaseTabConfig = new AppItemTableConfig.AirbaseTabConfig();
         airbaseTabConfig.setFilterExpanded(this.filter.isExpanded());
+        airbaseTabConfig.setDisableGrouping(this.disableGrouping.isSelected());
         airbaseTabConfig.setParameterFilters(this.parameterFilters.stream().map(ParameterFilterPane::saveConfig).collect(Collectors.toList()));
         config.setAirbaseTabConfig(airbaseTabConfig);
     }
