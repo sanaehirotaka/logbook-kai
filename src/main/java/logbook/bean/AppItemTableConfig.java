@@ -48,6 +48,9 @@ public class AppItemTableConfig {
         /** フィルターが展開されていたかどうか */
         private boolean filterExpanded;
 
+        /** グルーピングをしない */
+        private boolean disableGrouping;
+
         /** パラメータフィルター */
         private List<ParameterFilterConfig> parameterFilters;
     }
