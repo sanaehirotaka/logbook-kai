@@ -965,9 +965,9 @@ public class ShipItem {
         Ships.shipMst(ship).filter(s -> ship.getKyouka() != null && ship.getKyouka().size() >= 5).ifPresent((mst) -> {
             Optional.ofNullable(mst.getHoug()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(0)).ifPresent(shipItem::setKaryoku);
             Optional.ofNullable(mst.getRaig()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(1)).ifPresent(shipItem::setRaisou);
-            Optional.ofNullable(mst.getTaik()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(2)).ifPresent(shipItem::setTaiku);
-            Optional.ofNullable(mst.getSouk()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(3)).ifPresent(shipItem::setTaiku);
-            Optional.ofNullable(mst.getLuck()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(4)).ifPresent(shipItem::setTaiku);
+            Optional.ofNullable(mst.getTyku()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(2)).ifPresent(shipItem::setTaiku);
+            Optional.ofNullable(mst.getSouk()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(3)).ifPresent(shipItem::setSoukou);
+            Optional.ofNullable(mst.getLuck()).filter(list -> list != null && list.size() > 0).map(list -> list.get(0) + ship.getKyouka().get(4)).ifPresent(shipItem::setLucky);
         });
 
         // 以下の対潜・索敵・回避は定義からでは計算できない
