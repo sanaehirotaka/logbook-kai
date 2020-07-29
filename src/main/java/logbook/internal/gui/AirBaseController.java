@@ -181,6 +181,18 @@ public class AirBaseController extends WindowController {
         }
     }
 
+    @FXML
+    void deckBuilderCopy() {
+        List<AirBase> airbases = new ArrayList<>();
+        addItem(airbases, this.areaTable.getSelectionModel().getSelectedItem());
+        DeckBuilder.airbaseSelectionCopy(airbases);
+    }
+    
+    void addItem(List<AirBase> list, TreeItem<AreaTable> item) {
+        Optional.ofNullable(item.getValue()).map(AreaTable::getAirBase).ifPresent(list::add);
+        Optional.ofNullable(item.getChildren()).ifPresent(children -> children.forEach(child -> addItem(list, child)));
+    }
+
     /**
      * クリップボードにコピー
      */

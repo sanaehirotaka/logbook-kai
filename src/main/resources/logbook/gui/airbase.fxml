@@ -25,6 +25,13 @@
                   <TreeTableColumn fx:id="seiku" prefWidth="50.0" text="制空" />
                   <TreeTableColumn fx:id="distance" prefWidth="50.0" text="半径" />
               </columns>
+              <contextMenu>
+                <ContextMenu>
+                  <items>
+                      <MenuItem mnemonicParsing="false" onAction="#deckBuilderCopy" text="デッキビルダー形式のデータをクリップボードにコピー" />
+                  </items>
+                </ContextMenu>
+             </contextMenu>
             </TreeTableView>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
