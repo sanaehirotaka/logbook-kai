@@ -22,6 +22,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -81,7 +82,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>logbook.internal.gui.Main</mainClass>
+                    <mainClass>logbook.internal.Launcher</mainClass>
                 </configuration>
             </plugin>
         </plugins>
