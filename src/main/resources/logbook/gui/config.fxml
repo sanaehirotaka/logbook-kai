@@ -158,6 +158,7 @@
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
                               <CheckBox fx:id="visibleExpGauge" mnemonicParsing="false" text="艦娘の画像に経験値バーを表示する" GridPane.columnSpan="3" />
@@ -170,8 +171,9 @@
                               <Label text="画像の拡大・縮小(%)" GridPane.rowIndex="3" />
                               <TextField fx:id="imageZoomRate" prefWidth="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="(一部の一覧表示にのみ適用)" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                              <CheckBox fx:id="deckTabs" mnemonicParsing="false" text="所有艦娘一覧に艦隊単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
-                              <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="所有艦娘一覧にラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="allDecksTab" mnemonicParsing="false" text="所有艦娘一覧に全艦隊のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+                              <CheckBox fx:id="deckTabs" mnemonicParsing="false" text="所有艦娘一覧に艦隊単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+                              <CheckBox fx:id="labelTabs" mnemonicParsing="false" text="所有艦娘一覧にラベル単位のタブを追加" GridPane.columnSpan="2147483647" GridPane.rowIndex="6" />
                            </children>
                         </GridPane>
                         <Label styleClass="bold" text="艦隊タブの色" />

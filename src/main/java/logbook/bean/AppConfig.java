@@ -69,6 +69,9 @@ public final class AppConfig implements Serializable {
     /** 戦闘結果時に結果を反映 */
     private boolean applyResult = true;
 
+    /** 艦隊タブに全艦隊のタブを追加 */
+    private boolean allDecksTab = false;
+
     /** 艦隊タブに艦隊単位のタブを追加 */
     private boolean deckTabs = false;
 

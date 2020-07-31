@@ -614,6 +614,7 @@ public class AirBaseItem implements Comparable<AirBaseItem> {
         abitem.setBaku(slotitem.getBaku());
         abitem.setTais(slotitem.getTais());
         abitem.setSaku(slotitem.getSaku());
+        abitem.setCount(1);
         return abitem;
     }
 

@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.control.textfield.TextFields;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -764,6 +767,45 @@ public class ShipTablePane extends VBox {
     }
 
     /**
+     * 艦隊分析
+     */
+    @FXML
+    void kancolleFleetanalysis() {
+        try {
+            List<KancolleFleetanalysisItem> list = ShipCollection.get().getShipMap().values().stream()
+                    .filter(ship -> ship.getLocked())
+                    .map(KancolleFleetanalysisItem::toItem)
+                    .sorted(Comparator.comparing(KancolleFleetanalysisItem::getId)
+                            .thenComparing(Comparator.comparing(KancolleFleetanalysisItem::getLv)))
+                    .collect(Collectors.toList());
+            ObjectMapper mapper = new ObjectMapper();
+            String input = mapper.writeValueAsString(list);
+
+            ClipboardContent content = new ClipboardContent();
+            content.putString(input);
+            Clipboard.getSystemClipboard().setContent(content);
+        } catch (Exception e) {
+            LoggerHolder.get().error("艦隊分析のロック装備をクリップボードにコピーに失敗しました", e);
+        }
+    }
+
+    /**
+     * デッキビルダー形式：表示されている艦をクリップボードにコピー
+     */
+    @FXML
+    void deckBuilderDisplayCopy() {
+        DeckBuilder.displayCopy(this.table);
+    }
+
+    /**
+     * デッキビルダー形式：選択した艦のみクリップボードにコピー
+     */
+    @FXML
+    void deckBuilderSelectionCopy() {
+        DeckBuilder.selectionCopy(this.table);
+    }
+
+    /**
      * テーブル列の表示・非表示の設定
      */
     @FXML
@@ -1052,10 +1094,9 @@ public class ShipTablePane extends VBox {
         @Override
         protected void updateItem(Integer cond, boolean empty) {
             super.updateItem(cond, empty);
-
+            ObservableList<String> styleClass = this.getStyleClass();
+            styleClass.removeAll("deepgreen", "green", "orange", "red");
             if (!empty) {
-                ObservableList<String> styleClass = this.getStyleClass();
-                styleClass.removeAll("deepgreen", "green", "orange", "red");
                 if (cond >= Ships.DARK_GREEN && cond < Ships.GREEN) {
                     styleClass.add("deepgreen");
                 } else if (cond >= Ships.GREEN) {
@@ -1247,4 +1288,25 @@ public class ShipTablePane extends VBox {
         }
     }
 
+
+    @Data
+    @AllArgsConstructor
+    private static class KancolleFleetanalysisItem {
+
+        @JsonProperty("api_ship_id")
+        private int id;
+
+        @JsonProperty("api_lv")
+        private int lv;
+
+        @JsonProperty("api_kyouka")
+        private List<Integer> kyouka;
+
+        @JsonProperty("api_exp")
+        private List<Integer> exp;
+
+        public static KancolleFleetanalysisItem toItem(Ship ship) {
+            return new KancolleFleetanalysisItem(ship.getShipId(), ship.getLv(), ship.getKyouka(), ship.getExp());
+        }
+    }
 }

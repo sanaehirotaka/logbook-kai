@@ -172,6 +172,10 @@ public class ConfigController extends WindowController {
     @FXML
     private TextField imageZoomRate;
 
+    /** 艦隊タブに全艦隊のタブを追加 */
+    @FXML
+    private CheckBox allDecksTab;
+
     /** 艦隊タブに艦隊単位のタブを追加 */
     @FXML
     private CheckBox deckTabs;
@@ -390,6 +394,7 @@ public class ConfigController extends WindowController {
         this.shipFullyThreshold.setText(Integer.toString(conf.getShipFullyThreshold()));
         this.itemFullyThreshold.setText(Integer.toString(conf.getItemFullyThreshold()));
         this.imageZoomRate.setText(Integer.toString(conf.getImageZoomRate()));
+        this.allDecksTab.setSelected(conf.isAllDecksTab());
         this.deckTabs.setSelected(conf.isDeckTabs());
         this.labelTabs.setSelected(conf.isLabelTabs());
         this.tabColorNoDamage.setText(conf.getTabColorNoDamage());
@@ -516,6 +521,7 @@ public class ConfigController extends WindowController {
         conf.setShipFullyThreshold(this.toInt(this.shipFullyThreshold.getText()));
         conf.setItemFullyThreshold(this.toInt(this.itemFullyThreshold.getText()));
         conf.setImageZoomRate(this.toInt(this.imageZoomRate.getText()));
+        conf.setAllDecksTab(this.allDecksTab.isSelected());
         conf.setDeckTabs(this.deckTabs.isSelected());
         conf.setLabelTabs(this.labelTabs.isSelected());
         conf.setTabColorNoDamage(this.tabColorNoDamage.getText());

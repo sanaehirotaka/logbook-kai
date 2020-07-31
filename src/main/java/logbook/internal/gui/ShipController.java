@@ -18,6 +18,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import logbook.bean.AppConfig;
+import logbook.bean.AppShipTableConfig;
 import logbook.bean.DeckPort;
 import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
@@ -70,6 +71,10 @@ public class ShipController extends WindowController {
 
             this.tab.getTabs().add(new Tab("全員", allPane));
 
+            // 全艦隊のタブ
+            if (AppConfig.get().isAllDecksTab()) {
+                this.addAllDecksTab();
+            }
             // 艦隊単位のタブ
             if (AppConfig.get().isDeckTabs()) {
                 this.addDeckTabs();
@@ -78,6 +83,15 @@ public class ShipController extends WindowController {
             if (AppConfig.get().isLabelTabs()) {
                 this.addLabelTabs();
             }
+            int index = AppShipTableConfig.get().getTabIndex();
+            if (index < this.tab.getTabs().size()) {
+                this.tab.getSelectionModel().select(index);
+            }
+            this.tab.getSelectionModel().selectedIndexProperty().addListener((ob, o, n) -> {
+                if (n != null) {
+                    AppShipTableConfig.get().setTabIndex(n.intValue());
+                }
+            });
 
             this.addStatistics();
 
@@ -91,6 +105,23 @@ public class ShipController extends WindowController {
         } catch (Exception e) {
             LoggerHolder.get().error("FXMLの初期化に失敗しました", e);
         }
+    }
+
+    /**
+     * 全艦隊のタブ
+     */
+    private void addAllDecksTab() {
+        ShipTablePane deckPane = new ShipTablePane(() -> {
+            Map<Integer, Ship> shipMap = ShipCollection.get()
+                    .getShipMap();
+            return DeckPortCollection.get().getDeckPortMap().values().stream()
+                .map(DeckPort::getShip)
+                .flatMap(List::stream)
+                .map(shipMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        }, "全艦隊");
+        this.tab.getTabs().add(new Tab("全艦隊", deckPane));
     }
 
     /**
