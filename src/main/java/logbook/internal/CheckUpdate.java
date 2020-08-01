@@ -206,36 +206,22 @@ public class CheckUpdate {
             Path dir = new File(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI())
                     .toPath()
                     .getParent();
-            // 更新スクリプト
-            InputStream is = Launcher.class.getClassLoader().getResourceAsStream("logbook/update/update.js");
-            Path script = Files.createTempFile("logbook-kai-update-", ".js");
-            try {
-                // 更新スクリプトを一時ファイルにコピー
-                Files.copy(is, script, StandardCopyOption.REPLACE_EXISTING);
-                // 更新スクリプトを動かすコマンド (JAVA_HOME/bin/jjs)
-                Path command = Paths.get(System.getProperty("java.home"), "bin", "jjs");
+            // logbook.update.Launcherを起動するコマンド (JAVA_HOME/bin/java)
+            Path command = Paths.get(System.getProperty("java.home"), "bin", "java");
 
-                List<String> args = new ArrayList<>();
-                args.add(command.toString());
-                args.add(script.toString());
-                args.add("-fx");
-                args.add("-Dupdate_script=" + script);
-                args.add("-Dinstall_target=" + dir);
-                args.add("-Dinstall_version=" + newversion);
-                if (Boolean.getBoolean(USE_PRERELEASE)) {
-                    args.add("-Duse_prerelease=true");
-                }
-                if ("11".equals(System.getProperty("java.specification.version"))) {
-                    args.add("-Dtarget_java_version=11");
-                }
-                new ProcessBuilder(args)
-                                .inheritIO()
-                                .start();
-            } catch (Exception e) {
-                // 何か起こったら一時ファイル削除
-                Files.deleteIfExists(script);
-                throw e;
+            List<String> args = new ArrayList<>();
+            args.add(command.toString());
+            args.add("-Dinstall_target=" + dir);
+            args.add("-Dinstall_version=" + newversion);
+            if (Boolean.getBoolean(USE_PRERELEASE)) {
+                args.add("-Duse_prerelease=true");
             }
+            args.add("-cp");
+            args.add(System.getProperty("java.class.path"));
+            args.add(logbook.update.Launcher.class.getCanonicalName());
+            new ProcessBuilder(args)
+                            .inheritIO()
+                            .start();
         } catch (Exception e) {
             LoggerHolder.get().warn("アップデートチェックで例外", e);
             openBrowser();
