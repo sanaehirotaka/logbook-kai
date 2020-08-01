@@ -77,6 +77,24 @@ public final class InternalFXMLLoader {
     static void showWindow(String name, Stage parent, String title, Function<Parent, Scene> sceneFunction,
             Consumer<WindowController> controllerConsumer,
             Consumer<Stage> windowConsumer) throws IOException {
+        showWindow(name, parent, title, null, sceneFunction, controllerConsumer, windowConsumer);
+    }
+
+    /**
+     * ウインドウを開く
+     *
+     * @param name リソース
+     * @param parent 親ウインドウ
+     * @param title ウインドウタイトル
+     * @param subkey 同じクラスでウィンドウ位置の保存を分けたいときに使うキー
+     * @param sceneFunction シーン・グラフを操作するFunction
+     * @param controllerConsumer コントローラーを操作するConsumer
+     * @param windowConsumer ウインドウを操作するConsumer
+     * @throws IOException 入出力例外が発生した場合
+     */
+    static void showWindow(String name, Stage parent, String title, String subkey, Function<Parent, Scene> sceneFunction,
+            Consumer<WindowController> controllerConsumer,
+            Consumer<Stage> windowConsumer) throws IOException {
 
         FXMLLoader loader = load(name);
         Stage stage = new Stage();
@@ -100,8 +118,8 @@ public final class InternalFXMLLoader {
         stage.initOwner(parent);
         stage.setTitle(title);
         Tools.Windows.setIcon(stage);
-        Tools.Windows.defaultCloseAction(controller);
-        Tools.Windows.defaultOpenAction(controller);
+        Tools.Windows.defaultCloseAction(controller, subkey);
+        Tools.Windows.defaultOpenAction(controller, subkey);
         stage.show();
     }
 }

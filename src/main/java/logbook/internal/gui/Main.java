@@ -58,7 +58,7 @@ public class Main extends Application {
                         .put(controller.getClass().getCanonicalName(), controller.getWindowLocation());
             }
         });
-        Tools.Windows.defaultOpenAction(controller);
+        Tools.Windows.defaultOpenAction(controller, null);
 
         stage.show();
     }

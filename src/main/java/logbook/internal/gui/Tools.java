@@ -101,10 +101,10 @@ public class Tools {
          * デフォルトの閉じるアクション
          * @param controller WindowController
          */
-        public static void defaultCloseAction(WindowController controller) {
+        public static void defaultCloseAction(WindowController controller, String subkey) {
             if (controller.getWindow() != null) {
                 EventHandler<WindowEvent> action = e -> {
-                    String key = controller.getClass().getCanonicalName();
+                    String key = controller.getClass().getCanonicalName()+ Optional.ofNullable(subkey).map(str -> "#"+ str).orElse("");
                     AppConfig.get()
                             .getWindowLocationMap()
                             .put(key, controller.getWindowLocation());
@@ -118,8 +118,8 @@ public class Tools {
          * デフォルトのウインドウ設定
          * @param controller WindowController
          */
-        public static void defaultOpenAction(WindowController controller) {
-            String key = controller.getClass().getCanonicalName();
+        public static void defaultOpenAction(WindowController controller, String subkey) {
+            String key = controller.getClass().getCanonicalName() + Optional.ofNullable(subkey).map(str -> "#"+ str).orElse("");
             WindowLocation location = AppConfig.get()
                     .getWindowLocationMap()
                     .get(key);
