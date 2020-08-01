@@ -134,7 +134,7 @@ public class MainMenuController extends WindowController {
             if (log != null && log.getBattle() != null) {
                 BattleLog sendlog = log;
                 InternalFXMLLoader.showWindow("logbook/gui/battle_detail.fxml", this.parentController.getWindow(),
-                        "演習詳細", c -> {
+                        "演習詳細", "practice", null, c -> {
                             ((BattleDetail) c).setInterval(() -> AppCondition.get().getPracticeBattleResult());
                             ((BattleDetail) c).setData(sendlog);
                         }, null);
