@@ -24,8 +24,10 @@ import logbook.bean.DeckPortCollection;
 import logbook.bean.Ship;
 import logbook.bean.ShipCollection;
 import logbook.bean.ShipLabelCollection;
+import logbook.bean.ShipMst;
 import logbook.internal.LoggerHolder;
 import logbook.internal.SeaArea;
+import logbook.internal.Ships;
 
 /**
  * 所有艦娘一覧のコントローラ
@@ -64,8 +66,10 @@ public class ShipController extends WindowController {
                 Map<Integer, Ship> shipMap = ShipCollection.get()
                         .getShipMap();
                 return shipMap.values().stream()
-                        .sorted(Comparator.comparing(Ship::getLv).reversed()
-                                .thenComparing(Comparator.comparing(Ship::getShipId)))
+//                      .sorted(Comparator.comparing(Ship::getLv).reversed()
+//                      .thenComparing(Comparator.comparing(Ship::getShipId)))
+                        .sorted(Comparator.comparingInt((Ship s) -> Ships.shipMst(s).map(ShipMst::getSortId).orElse(Integer.MAX_VALUE))
+                                .thenComparingInt(Ship::getId))
                         .collect(Collectors.toList());
             }, "全員");
 

@@ -27,6 +27,9 @@ public class ShipMst implements Serializable {
     /** 図鑑番号 */
     private Integer sortno;
 
+    /** ソート順 */
+    private Integer sortId;
+
     /** 名前 */
     private String name;
 
@@ -183,6 +186,7 @@ public class ShipMst implements Serializable {
         JsonHelper.bind(json)
                 .setInteger("api_id", bean::setId)
                 .setInteger("api_sortno", bean::setSortno)
+                .setInteger("api_sort_id", bean::setSortId)
                 .setString("api_name", bean::setName)
                 .setString("api_yomi", bean::setYomi)
                 .setInteger("api_stype", bean::setStype)
