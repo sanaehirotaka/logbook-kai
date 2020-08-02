@@ -8,6 +8,8 @@ import javafx.concurrent.Worker.State;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -92,7 +94,12 @@ public class UpdaterController {
     }
 
     @FXML
-    void update(ActionEvent e) {
+    void update(ActionEvent e) throws Exception {
+        FXMLLoader loader = new FXMLLoader(this.getClass().getClassLoader().getResource("logbook/update/progress.fxml"));
+        this.stage.setScene(new Scene(loader.load()));
+        ProgressController controller = loader.getController();
+        controller.setStage(this.stage);
+        controller.setAsset(this.asset);
         return;
     }
 
