@@ -4,7 +4,7 @@
     <name>logbook-kai</name>
     <artifactId>logbook-kai-java11</artifactId>
     <groupId>logbook</groupId>
-    <version>20.7.8</version>
+    <version>20.8.1</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
