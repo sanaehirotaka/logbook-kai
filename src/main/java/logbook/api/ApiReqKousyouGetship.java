@@ -25,7 +25,9 @@ public class ApiReqKousyouGetship implements APIListenerSpi {
         JsonObject data = json.getJsonObject("api_data");
         if (data != null) {
             this.apiShip(data.getJsonObject("api_ship"));
-            this.apiSlotitem(data.getJsonArray("api_slotitem"));
+            if (!data.isNull("api_slotitem")) {
+                this.apiSlotitem(data.getJsonArray("api_slotitem"));
+            }
         }
     }
 
