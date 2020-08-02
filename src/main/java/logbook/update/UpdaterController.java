@@ -3,10 +3,9 @@ package logbook.update;
 import java.awt.Desktop;
 import java.io.BufferedInputStream;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -26,6 +25,8 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
+import logbook.internal.Tuple;
+import logbook.internal.Tuple.Pair;
 import logbook.internal.ThreadManager;
 
 public class UpdaterController {
@@ -58,25 +59,28 @@ public class UpdaterController {
         WebEngine webEngine = this.releaseNote.getEngine();
         String releaseNoteFrame = this.getClass().getClassLoader().getResource("logbook/update/release-note.html").toExternalForm();
         webEngine.load(releaseNoteFrame);
-        ChangeListener<State> listener = (ObservableValue<? extends State> ov, State oldState, State newState) -> {
-            if (newState == State.SUCCEEDED) {
+        webEngine.getLoadWorker().stateProperty().addListener((ob, o, n) -> {
+            if (n == State.SUCCEEDED) {
                 this.updateReleaseNote();
             }
-        };
-        webEngine.getLoadWorker().stateProperty().addListener(listener);
-        try {
-            this.fetchReleaseNote();
-        } catch(Exception e) {
+        });
+        Task<Pair<JsonObject, JsonObject>> task = this.fetchReleaseNote();
+        task.setOnFailed((WorkerStateEvent e) -> {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.initOwner(this.stage);
             alert.setTitle("更新情報を取得できませんでした");
-            alert.setContentText(e.getMessage());
+            alert.setContentText(task.getException().getMessage());
             alert.showAndWait();
 
-            return;
             // this.failed() // 中断シーン
-        }
-        this.updateReleaseNote();
+        });
+        task.setOnSucceeded((WorkerStateEvent e) -> {
+            Pair<JsonObject, JsonObject> result = task.getValue();
+            this.release = result.get1();
+            this.asset = result.get2();
+            this.updateReleaseNote();
+        });
+        ThreadManager.getExecutorService().execute(task);
     }
 
     @FXML
@@ -94,7 +98,11 @@ public class UpdaterController {
 
     private void updateReleaseNote() {
         WebEngine webEngine = this.releaseNote.getEngine();
-        if (this.release == null || this.release.getString("body", null) == null || webEngine.executeScript("window.marked") == null) {
+        if (webEngine.executeScript("window") == null
+                || webEngine.executeScript("window.marked") == null
+                || webEngine.executeScript("document.body") == null
+                || this.release == null
+                || this.release.getString("body", "") == "") {
             return;
         }
 
@@ -117,27 +125,37 @@ public class UpdaterController {
         }
     }
 
-    private void fetchReleaseNote() throws Exception {
-        String releaseURL = RELEASES_API + this.version.getText();
+    private Task<Pair<JsonObject, JsonObject>> fetchReleaseNote() {
+        Task<Pair<JsonObject, JsonObject>> task = new Task<>() {
+            @Override
+            protected Pair<JsonObject, JsonObject> call() throws Exception {
+                String releaseURL = RELEASES_API + System.getProperty("install_version");
 
-        try (JsonReader r = Json.createReader(new BufferedInputStream(URI.create(releaseURL).toURL().openStream()))) {
-            this.release = r.readObject();
-        }
+                JsonObject release;
+                try (JsonReader r = Json.createReader(new BufferedInputStream(URI.create(releaseURL).toURL().openStream()))) {
+                    release = r.readObject();
+                }
 
-        if (this.release.getJsonArray("assets") == null)
-            throw new Exception("リリース情報はありません。");
+                if (release.getJsonArray("assets") == null)
+                    throw new Exception("リリース情報はありません。");
 
-        if ((!Boolean.parseBoolean(System.getProperty("use_prerelease")) && this.release.getBoolean("prerelease", false)) || this.release.getBoolean("draft", false))
-            throw new Exception(this.release.getString("name", "unknown") + "は試験的なバージョンであるため更新されませんでした。手動での更新をお願いします。");
+                if ((!Boolean.parseBoolean(System.getProperty("use_prerelease")) && release.getBoolean("prerelease", false)) || release.getBoolean("draft", false))
+                    throw new Exception(release.getString("name", "unknown") + "は試験的なバージョンであるため更新されませんでした。手動での更新をお願いします。");
 
-        this.asset = this.release.getJsonArray("assets").stream()
-                .map(val -> val.asJsonObject())
-                .filter(val -> {
-                    String name = val.getString("name");
-                    String prefix = "1.8".equals(System.getProperty("java.specification.version")) ? "logbook-kai_" : "logbook-kai-java11_";
-                    return name.startsWith(prefix) && name.endsWith(".zip");
-                })
-                .findFirst()
-                .orElseThrow(() -> new Exception("リリース情報はありません。"));
+                JsonObject asset = release.getJsonArray("assets").stream()
+                    .map(val -> val.asJsonObject())
+                    .filter(val -> {
+                        String name = val.getString("name");
+                        String prefix = "1.8".equals(System.getProperty("java.specification.version")) ? "logbook-kai_" : "logbook-kai-java11_";
+                        return name.startsWith(prefix) && name.endsWith(".zip");
+                    })
+                    .findFirst()
+                    .orElseThrow(() -> new Exception("リリース情報はありません。"));
+
+                return Tuple.of(release, asset);
+            }
+        };
+
+        return task;
     }
 }
