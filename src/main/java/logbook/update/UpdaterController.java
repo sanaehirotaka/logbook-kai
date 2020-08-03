@@ -3,15 +3,13 @@ package logbook.update;
 import java.awt.Desktop;
 import java.io.BufferedInputStream;
 import java.net.URI;
+import java.text.MessageFormat;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker.State;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Text;
@@ -23,8 +21,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Element;
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
 import logbook.internal.Tuple;
@@ -34,6 +30,8 @@ import logbook.internal.ThreadManager;
 public class UpdaterController {
 
     private Stage stage;
+
+    private FXMLLoader failed;
 
     private JsonObject release;
 
@@ -55,9 +53,13 @@ public class UpdaterController {
         this.stage = stage;
     }
 
+    public void setFailed(FXMLLoader failed) {
+        this.failed = failed;
+    }
+
     @FXML
     void initialize() {
-        this.version.setText(System.getProperty("install_version"));
+        this.version.setText(MessageFormat.format(this.version.getText(), System.getProperty("install_version")));
         WebEngine webEngine = this.releaseNote.getEngine();
         String releaseNoteFrame = this.getClass().getClassLoader().getResource("logbook/update/release-note.html").toExternalForm();
         webEngine.load(releaseNoteFrame);
@@ -67,16 +69,10 @@ public class UpdaterController {
             }
         });
         Task<Pair<JsonObject, JsonObject>> task = this.fetchReleaseNote();
-        task.setOnFailed((WorkerStateEvent e) -> {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.initOwner(this.stage);
-            alert.setTitle("更新情報を取得できませんでした");
-            alert.setContentText(task.getException().getMessage());
-            alert.showAndWait();
-
-            // this.failed() // 中断シーン
+        task.setOnFailed(e -> {
+            this.failed(task.getException().getMessage());
         });
-        task.setOnSucceeded((WorkerStateEvent e) -> {
+        task.setOnSucceeded(e -> {
             Pair<JsonObject, JsonObject> result = task.getValue();
             this.release = result.get1();
             this.asset = result.get2();
@@ -100,7 +96,22 @@ public class UpdaterController {
         ProgressController controller = loader.getController();
         controller.setStage(this.stage);
         controller.setAsset(this.asset);
+        controller.setFailed(this.failed);
+        controller.setSucceeded(new FXMLLoader(this.getClass().getClassLoader().getResource("logbook/update/succeeded.fxml")));
         return;
+    }
+
+    private void failed(String message) {
+        try {
+            this.stage.setScene(new Scene(this.failed.load()));
+
+            FailedController controller = this.failed.getController();
+            controller.setStage(stage);
+            controller.setMessage(message);
+        } catch(Exception e) {
+            e.printStackTrace();
+            this.stage.close();
+        }
     }
 
     private void updateReleaseNote() {
@@ -117,18 +128,17 @@ public class UpdaterController {
         JSObject window = (JSObject) webEngine.executeScript("window");
         body.setMember("innerHTML", window.call("marked", this.release.getString("body")));
 
-        EventListener linkListener = (Event ev) -> {
-            String openURL = ((Element) ev.getTarget()).getAttribute("href");
-            try {
-                Desktop.getDesktop().browse(URI.create(openURL));
-            } catch (Exception e) {
-            }
-            ev.preventDefault();
-        };
-
         JSObject nodes = (JSObject) webEngine.executeScript("document.getElementsByTagName('a')");
         for (int i = 0; i < ((Integer) nodes.getMember("length")); i++) {
-            ((EventTarget) nodes.getSlot(i)).addEventListener("click", linkListener, false);
+            ((EventTarget) nodes.getSlot(i)).addEventListener("click", e -> {
+                String openURL = ((Element) e.getTarget()).getAttribute("href");
+                try {
+                    Desktop.getDesktop().browse(URI.create(openURL));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                e.preventDefault();
+            }, false);
         }
     }
 

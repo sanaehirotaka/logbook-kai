@@ -12,11 +12,11 @@ public class Updater extends Application {
         stage.setTitle("航海日誌の更新");
 
         FXMLLoader loader = new FXMLLoader(this.getClass().getClassLoader().getResource("logbook/update/updater.fxml"));
-
         stage.setScene(new Scene(loader.load()));
 
         UpdaterController controller = loader.getController();
         controller.setStage(stage);
+        controller.setFailed(new FXMLLoader(this.getClass().getClassLoader().getResource("logbook/update/failed.fxml")));
 
         stage.show();
     }

@@ -18,9 +18,7 @@
       <children>
          <TextFlow style="-fx-font-weight:bold">
             <children>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="航海日誌 v" />
-               <Text fx:id="version" strokeType="OUTSIDE" strokeWidth="0.0" text="VERSION" />
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="への更新を行います。&#xD;" />
+               <Text fx:id="version" strokeType="OUTSIDE" strokeWidth="0.0" text="航海日誌 v{0}への更新を行います。&#xD;" />
                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="必ず更新の前に航海日誌を終了させてください。&#xD;" />
                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="更新の準備が出来ましたら[更新]を押して更新を行ってください。" />
             </children>

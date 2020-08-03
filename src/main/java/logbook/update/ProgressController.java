@@ -6,13 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.zip.ZipFile;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 import javax.json.JsonObject;
@@ -23,6 +21,10 @@ public class ProgressController {
 
     private Stage stage;
 
+    private FXMLLoader failed;
+
+    private FXMLLoader succeeded;
+
     private JsonObject asset;
 
     @FXML
@@ -32,6 +34,14 @@ public class ProgressController {
         this.stage = stage;
     }
 
+    public void setFailed(FXMLLoader failed) {
+        this.failed = failed;
+    }
+
+    public void setSucceeded(FXMLLoader succeeded) {
+        this.succeeded = succeeded;
+    }
+
     public void setAsset(JsonObject asset) {
         this.asset = asset;
         Task<Void> task = this.downloadAsset();
@@ -39,29 +49,35 @@ public class ProgressController {
             this.progress.getItems().add(n);
         });
         task.setOnFailed(e -> {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.initOwner(this.stage);
-            alert.setTitle("更新が出来ませんでした");
-            alert.setContentText(task.getException().getMessage());
-            alert.showAndWait();
-
-            // this.failed() // 中断シーン
+            this.failed(task.getException().getMessage());
         });
         task.setOnSucceeded(e -> {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.initOwner(this.stage);
-            alert.setTitle("完了しました");
-            alert.setContentText("更新が完了しました");
-            alert.showAndWait();
-
-            // this.succeeded() // 成功シーン
+            this.succeeded();
         });
         ThreadManager.getExecutorService().execute(task);
     }
 
-    @FXML
-    void finish(ActionEvent e) {
-        return;
+    private void failed(String message) {
+        try {
+            this.stage.setScene(new Scene(this.failed.load()));
+
+            FailedController controller = this.failed.getController();
+            controller.setStage(stage);
+            controller.setMessage(message);
+        } catch(Exception e) {
+            this.stage.close();
+        }
+    }
+
+    private void succeeded() {
+        try {
+            this.stage.setScene(new Scene(this.succeeded.load()));
+
+            SucceededController controller = this.succeeded.getController();
+            controller.setStage(stage);
+        } catch(Exception e) {
+            this.failed(e.getMessage());
+        }
     }
 
     private Task<Void> downloadAsset() {
