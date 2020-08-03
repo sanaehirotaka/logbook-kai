@@ -84,7 +84,7 @@ public class ProgressController {
         String DOWNLOAD_URL = this.asset.getString("browser_download_url", "");
         String ASSET_NAME = this.asset.getString("name", "");
         Integer ASSET_SIZE = this.asset.getInt("size", 0);
-        Task<Void> task = new Task<>() {
+        Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 if (DOWNLOAD_URL == "") {

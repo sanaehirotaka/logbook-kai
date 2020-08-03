@@ -143,7 +143,7 @@ public class UpdaterController {
     }
 
     private Task<Pair<JsonObject, JsonObject>> fetchReleaseNote() {
-        Task<Pair<JsonObject, JsonObject>> task = new Task<>() {
+        Task<Pair<JsonObject, JsonObject>> task = new Task<Pair<JsonObject, JsonObject>>() {
             @Override
             protected Pair<JsonObject, JsonObject> call() throws Exception {
                 String releaseURL = RELEASES_API + System.getProperty("install_version");
