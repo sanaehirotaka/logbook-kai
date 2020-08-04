@@ -101,6 +101,15 @@ public class Tools {
          * デフォルトの閉じるアクション
          * @param controller WindowController
          */
+        public static void defaultCloseAction(WindowController controller) {
+            this.defaultCloseAction(controller, null);
+        }
+
+        /**
+         * デフォルトの閉じるアクション
+         * @param controller WindowController
+         * @param subkey String
+         */
         public static void defaultCloseAction(WindowController controller, String subkey) {
             if (controller.getWindow() != null) {
                 EventHandler<WindowEvent> action = e -> {
@@ -117,6 +126,15 @@ public class Tools {
         /**
          * デフォルトのウインドウ設定
          * @param controller WindowController
+         */
+        public static void defaultOpenAction(WindowController controller) {
+            this.defaultOpenAction(controller, null);
+        }
+
+        /**
+         * デフォルトのウインドウ設定
+         * @param controller WindowController
+         * @param subkey String
          */
         public static void defaultOpenAction(WindowController controller, String subkey) {
             String key = controller.getClass().getCanonicalName() + Optional.ofNullable(subkey).map(str -> "#"+ str).orElse("");
