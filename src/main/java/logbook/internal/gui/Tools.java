@@ -102,7 +102,7 @@ public class Tools {
          * @param controller WindowController
          */
         public static void defaultCloseAction(WindowController controller) {
-            this.defaultCloseAction(controller, null);
+            defaultCloseAction(controller, null);
         }
 
         /**
@@ -128,7 +128,7 @@ public class Tools {
          * @param controller WindowController
          */
         public static void defaultOpenAction(WindowController controller) {
-            this.defaultOpenAction(controller, null);
+            defaultOpenAction(controller, null);
         }
 
         /**
