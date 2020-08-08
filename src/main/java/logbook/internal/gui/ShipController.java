@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -158,7 +159,7 @@ public class ShipController extends WindowController {
                 })
                 .filter(Objects::nonNull)
                 .distinct()
-                .sorted()
+                .sorted(Comparator.comparing(ShipController::labelSortOrder))
                 .forEach(label -> {
                     ShipTablePane labelPane = new ShipTablePane(() -> {
                         Map<Integer, Ship> shipMap = ShipCollection.get()
@@ -179,6 +180,19 @@ public class ShipController extends WindowController {
                     }, label);
                     this.tab.getTabs().add(new Tab(label, labelPane));
                 });
+    }
+
+    /**
+     * ラベルのソート順を返します
+     * @param label ラベル文字列
+     * @return ソート順、もし定義にないものの場合は Integer.MAX_VALUE
+     */
+    private static int labelSortOrder(String label) {
+        return Stream.of(SeaArea.values())
+                .filter(s -> s.getName().equals(label))
+                .findAny()
+                .map(SeaArea::getArea)
+                .orElse(Integer.MAX_VALUE);
     }
 
     /**
