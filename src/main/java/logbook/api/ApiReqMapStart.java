@@ -71,7 +71,7 @@ public class ApiReqMapStart implements APIListenerSpi {
                 if (AppCondition.get().isCombinedFlag()) {
                     badlyShips.addAll(DeckPortCollection.get()
                             .getDeckPortMap()
-                            .get(2).getBadlyShips());
+                            .get(2).getBadlyShips(AppConfig.get().isIgnoreSecondFlagship()));
                 }
 
                 if (!badlyShips.isEmpty()) {

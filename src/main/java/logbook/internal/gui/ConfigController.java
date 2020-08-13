@@ -100,6 +100,10 @@ public class ConfigController extends WindowController {
     @FXML
     private CheckBox alertBadlyNext;
 
+    /** 大破警告から第二艦隊旗艦を除外する */
+    @FXML
+    private CheckBox ignoreSecondFlagship;
+
     /** 通知でサウンドを鳴らす */
     @FXML
     private CheckBox useSound;
@@ -375,6 +379,7 @@ public class ConfigController extends WindowController {
         this.useNotification.setSelected(conf.isUseNotification());
         this.alertBadlyStart.setSelected(conf.isAlertBadlyStart());
         this.alertBadlyNext.setSelected(conf.isAlertBadlyNext());
+        this.ignoreSecondFlagship.setSelected(conf.isIgnoreSecondFlagship());
         this.useSound.setSelected(conf.isUseSound());
         this.defaultNotifySound.setText(conf.getDefaultNotifySound());
         this.useToast.setSelected(conf.isUseToast());
@@ -498,6 +503,7 @@ public class ConfigController extends WindowController {
         conf.setUseNotification(this.useNotification.isSelected());
         conf.setAlertBadlyStart(this.alertBadlyStart.isSelected());
         conf.setAlertBadlyNext(this.alertBadlyNext.isSelected());
+        conf.setIgnoreSecondFlagship(this.ignoreSecondFlagship.isSelected());
         conf.setUseSound(this.useSound.isSelected());
         conf.setDefaultNotifySound(this.defaultNotifySound.getText());
         conf.setUseToast(this.useToast.isSelected());

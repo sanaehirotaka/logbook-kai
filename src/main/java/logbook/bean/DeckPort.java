@@ -54,10 +54,20 @@ public class DeckPort implements Serializable, Cloneable {
      */
     @JsonIgnore
     public List<Ship> getBadlyShips() {
+        return getBadlyShips(false);
+    }
+    
+    /**
+     * 大破した艦娘を返します
+     *
+     * @return 大破した艦娘
+     */
+    public List<Ship> getBadlyShips(boolean ignoreFlagship) {
         Map<Integer, Ship> shipMap = ShipCollection.get().getShipMap();
         return this.getShip()
                 .stream()
                 .map(shipMap::get)
+                .skip(ignoreFlagship ? 1:0)
                 .filter(Objects::nonNull)
                 .filter(Ships::isBadlyDamage)
                 .filter(s -> !Ships.isEscape(s))
