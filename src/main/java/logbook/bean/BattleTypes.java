@@ -1590,7 +1590,9 @@ public class BattleTypes {
         戦爆連合CI("戦爆連合CI"),
         NelsonTouch("NelsonTouch"),
         胸熱CI("一斉射かッ…胸が熱いな！"),
-        陸奥タッチ("長門、いい？ いくわよ！ 主砲一斉射ッ！");
+        陸奥タッチ("長門、いい？ いくわよ！ 主砲一斉射ッ！"),
+        ColoradoTouch("特殊攻撃(Colorado)"),
+        僚艦夜戦突撃("僚艦夜戦突撃");   // 夜戦専用だが念のため
 
         private String name;
 
@@ -1627,6 +1629,10 @@ public class BattleTypes {
                 return 胸熱CI;
             case 102:
                 return 陸奥タッチ;
+            case 103:
+                return ColoradoTouch;
+            case 104:
+                return 僚艦夜戦突撃;
             default:
                 return 通常攻撃;
             }
@@ -1657,7 +1663,9 @@ public class BattleTypes {
         魚雷見張員電探CI("魚雷見張員電探CI"),
         NelsonTouch("NelsonTouch"),
         胸熱CI("一斉射かッ…胸が熱いな！"),
-        陸奥タッチ("長門、いい？ いくわよ！ 主砲一斉射ッ！");
+        陸奥タッチ("長門、いい？ いくわよ！ 主砲一斉射ッ！"),
+        ColoradoTouch("特殊攻撃(Colorado)"),
+        僚艦夜戦突撃("僚艦夜戦突撃");
 
         private String name;
 
@@ -1696,6 +1704,10 @@ public class BattleTypes {
                 return 胸熱CI;
             case 102:
                 return 陸奥タッチ;
+            case 103:
+                return ColoradoTouch;
+            case 104:
+                return 僚艦夜戦突撃;
             default:
                 return 通常攻撃;
             }

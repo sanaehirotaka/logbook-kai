@@ -578,6 +578,12 @@ public class PhaseState {
                         .map(l -> l.get(index))
                         .map(MidnightSpList::toMidnightSpList)
                         .orElse(MidnightSpList.toMidnightSpList(0));
+                // 僚艦夜戦突撃が連合艦隊で発動すると、なぜか at_list の艦が0（本隊旗艦）を指すため
+                // そのままだと本隊の一番艦が攻撃したかのような表示になってしまう。
+                // 恐らく艦これ側のバグなのでいつか修正されることを想定して連合艦隊でかつ index が0の場合のみ対応しておく。
+                if (atType == MidnightSpList.僚艦夜戦突撃 && at == 0 && at < this.afterFriendCombined.size()) {
+                    at += 6;
+                }
             } else {
                 atType = Optional.ofNullable(hougeki.getAtType())
                         .map(l -> l.get(index))
