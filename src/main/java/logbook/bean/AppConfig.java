@@ -36,6 +36,9 @@ public final class AppConfig implements Serializable {
     /** 進撃時に大破艦がいる場合に通知をする */
     private boolean alertBadlyNext = true;
 
+    /** 第二艦隊の旗艦の大破は通知しない */
+    private boolean ignoreSecondFlagship = false;
+
     /** 通知でサウンドを鳴らす */
     private boolean useSound = true;
 
