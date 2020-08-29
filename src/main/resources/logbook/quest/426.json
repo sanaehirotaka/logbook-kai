@@ -1,0 +1,12 @@
+/* [426]海上通商航路の警戒を厳とせよ！*/
+{
+    "type": "遠征",
+    "resetType" : "クオータリー",
+    "conditions" : [
+        {"missions": ["警備任務"], "count": 1},
+        {"missions": ["対潜警戒任務"], "count": 1},
+        {"missions": ["海上護衛任務"], "count": 1},
+        {"missions": ["強行偵察任務"], "count": 1}
+    ]
+}
+

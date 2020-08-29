@@ -1,0 +1,9 @@
+/* [404]大規模遠征作戦、発令！ */
+{
+    "type": "遠征",
+    "resetType" : "ウィークリー",
+    "conditions" : [
+        {"missions": [], "count": 30}
+    ]
+}
+

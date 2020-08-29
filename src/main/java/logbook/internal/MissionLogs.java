@@ -67,6 +67,8 @@ public class MissionLogs {
     @Data
     public static class SimpleMissionLog {
 
+        /** 日付文字列 */
+        private String dateString;
         /** 日付 */
         private ZonedDateTime date;
         /** 結果 */
@@ -101,7 +103,8 @@ public class MissionLogs {
          */
         public SimpleMissionLog(String line) {
             String[] columns = line.split(",", -1);
-
+            
+            this.setDateString(columns[0]);
             // 任務の更新時間が午前5時のため
             // 日付文字列を日本時間として解釈した後、GMT+04:00のタイムゾーンに変更します
             TemporalAccessor ta = Logs.DATE_FORMAT.parse(columns[0]);
