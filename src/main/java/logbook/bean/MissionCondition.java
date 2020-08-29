@@ -158,7 +158,7 @@ public class MissionCondition implements TestAllPredicate<List<Ship>> {
             current = this.fleetStatus(ships, ship -> ship.getKaryoku().get(0));
         }
         if ("対潜".equals(this.countType)) {
-            current = this.fleetStatus(ships, ship -> ship.getTaisen().get(0));
+            current = this.fleetStatus(ships , ship -> Ships.getTaisen(ship) + Ships.sumItemParam(ship, SlotitemMst::getTais, true));
         }
         if ("対空".equals(this.countType)) {
             current = this.fleetStatus(ships, ship -> ship.getTaiku().get(0));
