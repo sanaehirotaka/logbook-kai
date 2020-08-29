@@ -1,0 +1,9 @@
+/* [402] 「遠征」を３回成功させよう！*/
+{
+    "type": "遠征",
+    "resetType" : "デイリー",
+    "conditions" : [
+        {"missions": [], "count": 3}
+    ]
+}
+

@@ -12,6 +12,8 @@ import logbook.internal.BattleLogs;
 import logbook.internal.BattleLogs.SimpleBattleLog;
 import logbook.internal.Config;
 import logbook.internal.Logs;
+import logbook.internal.MissionLogs;
+import logbook.internal.MissionLogs.SimpleMissionLog;
 import lombok.Data;
 import lombok.val;
 
@@ -109,6 +111,29 @@ public class AppQuestDuration {
             return Optional.empty();
 
         return Optional.of(BattleLogs.readSimpleLog(log -> {
+            String date = log.getDateString();
+            for (Duration duration : durations) {
+                String from = duration.getFrom();
+                String to = duration.getTo();
+                if (date.compareTo(from) >= 0 && (to == null || date.compareTo(to) <= 0)) {
+                    return true;
+                }
+            }
+            return false;
+        }));
+    }
+
+    @JsonIgnore
+    public Optional<List<SimpleMissionLog>> getMissionCondition(AppQuest quest) {
+        val durationMap = this.map.get(quest.getExpire());
+        if (durationMap == null)
+            return Optional.empty();
+
+        val durations = durationMap.get(quest.getNo());
+        if (durations == null)
+            return Optional.empty();
+
+        return Optional.of(MissionLogs.readSimpleLog(log -> {
             String date = log.getDateString();
             for (Duration duration : durations) {
                 String from = duration.getFrom();

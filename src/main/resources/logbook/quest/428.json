@@ -1,0 +1,11 @@
+/* [428]近海に侵入する敵潜を制圧せよ！ */
+{
+    "type": "遠征",
+    "resetType" : "クオータリー",
+    "conditions" : [
+        {"missions": ["対潜警戒任務"], "count": 2},
+        {"missions": ["海峡警備行動"], "count": 2},
+        {"missions": ["長時間対潜警戒"], "count": 2}
+    ]
+}
+

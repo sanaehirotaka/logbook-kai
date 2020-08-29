@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import logbook.bean.AppQuest;
 import logbook.bean.AppQuestCondition;
 import logbook.bean.AppQuestCondition.FilterCondition;
+import logbook.bean.AppQuestCondition.Type;
 import logbook.bean.AppQuestDuration;
 import logbook.bean.BattleLog;
 import logbook.bean.Enemy;
@@ -21,6 +22,7 @@ import logbook.bean.MapinfoMstCollection;
 import logbook.bean.ShipMst;
 import logbook.bean.Stype;
 import logbook.internal.BattleLogs.SimpleBattleLog;
+import logbook.internal.MissionLogs.SimpleMissionLog;
 import lombok.Data;
 
 /**
@@ -35,6 +37,8 @@ public class QuestCollect {
     private Map<String, Count> area = new HashMap<>();
 
     private Map<String, Integer> stype = new HashMap<>();
+
+    private Map<String, Long> missions = new HashMap<>();
 
     @Data
     public static class Count {
@@ -74,6 +78,24 @@ public class QuestCollect {
     }
 
     public static QuestCollect collect(AppQuest quest, AppQuestCondition condition) {
+        if (condition.getType() == Type.遠征) {
+            return missionCollect(quest, condition);
+        } else{
+            return battleCollect(quest, condition);
+        }
+    }
+
+    private static QuestCollect missionCollect(AppQuest quest, AppQuestCondition condition) {
+        QuestCollect collect = new QuestCollect();
+        List<SimpleMissionLog> logs = AppQuestDuration.get().getMissionCondition(quest)
+                .orElse(Collections.emptyList());
+        collect.setMissions(logs.stream()
+                .filter(log -> !"失敗".equals(log.getResult()))
+                .collect(Collectors.groupingBy(SimpleMissionLog::getName, Collectors.counting())));
+        return collect;
+    }
+    
+    private static QuestCollect battleCollect(AppQuest quest, AppQuestCondition condition) {
         QuestCollect collect = new QuestCollect();
         List<SimpleBattleLog> logs = AppQuestDuration.get().getCondition(quest)
                 .orElse(Collections.emptyList());

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -25,6 +26,9 @@ import lombok.Data;
  */
 @Data
 public class AppQuestCondition implements Predicate<QuestCollect> {
+
+    /** 任務のタイプ(enum: 出撃, 遠征) */
+    private Type type;
 
     /** 任務期間(文字列:単発,デイリー,ウィークリー,マンスリー,クオータリー) */
     private String resetType;
@@ -290,6 +294,10 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         }
     }
 
+    public enum Type {
+        出撃, 遠征
+    }
+
     /**
      * 集計条件
      */
@@ -319,6 +327,9 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
 
         /** カウント */
         private int count;
+        
+        /** 遠征名 */
+        private List<String> missions;
 
         private Boolean result;
 
@@ -326,7 +337,12 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
 
         @Override
         public boolean test(QuestCollect t) {
-            int count = this.count(t);
+            int count;
+            if (this.missions != null) {
+                count = this.missionCount(t);
+            } else {
+                count = this.count(t);
+            }
             this.current = String.valueOf(count);
             return this.result = (count >= this.count);
         }
@@ -335,7 +351,21 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
         public String toString() {
             StringBuilder sb = new StringBuilder();
 
-            if (this.stype != null && !this.stype.isEmpty()) {
+            if (this.missions != null) {
+                if (this.missions.size() == 0) {
+                    sb.append("任意の遠征");
+                } else {
+                    List<String> labels = this.missions.stream()
+                        .map(name -> MissionCollection.get().getMissionMap().values().stream()
+                                .filter(mission -> mission.getName().equals(name))
+                                .map(mission -> "「" + mission.getDispNo() + " " + mission.getName() + "」")
+                                .findAny()
+                                .orElse(name))
+                        .collect(Collectors.toList());
+                    sb.append(String.join("または", labels));
+                }
+                sb.append("を").append(this.count).append("回成功");
+            } else if (this.stype != null && !this.stype.isEmpty()) {
                 sb.append(this.stype.stream().collect(Collectors.joining("または")))
                         .append("を")
                         .append(this.count)
@@ -386,6 +416,21 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
             return sb.toString();
         }
 
+        /**
+         * 遠征カウント
+         * @param t 集計結果
+         * @return カウント
+         */
+        private int missionCount(QuestCollect t) {
+            Map<String, Long> map = t.getMissions();
+            if (this.missions.size() == 0) {
+                return map.values().stream().mapToInt(Long::intValue).sum();
+            } else {
+                return this.missions.stream().map(mission -> map.getOrDefault(mission, 0L)).mapToInt(Long::intValue).sum();
+            }
+        }
+
+        
         /**
          * カウント
          * @param t 集計結果
