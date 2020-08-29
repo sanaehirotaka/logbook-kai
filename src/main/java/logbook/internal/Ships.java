@@ -1059,11 +1059,40 @@ public class Ships {
      * @return
      */
     public static int sumItemParam(Ship ship, Function<SlotitemMst, Integer> mapper) {
+        return sumItemParam(ship, mapper, false);
+    }
+
+    /**
+     * 装備のパラメータを合計する
+     * @param ship 艦娘
+     * @param mapper 合計するパラメータを返す mapper
+     * @param excludeEmptyAircraft 搭載数が0のスロットを除外するかどうか
+     * @return
+     */
+    public static int sumItemParam(Ship ship, Function<SlotitemMst, Integer> mapper, boolean excludeEmptyAircraft) {
         Map<Integer, SlotItem> items = SlotItemCollection.get().getSlotitemMap();
-        return Stream.concat(ship.getSlot().stream(), Stream.of(ship.getSlotEx()))
-                .map(items::get)
-                .map(Items::slotitemMst)
-                .mapToInt(e -> e.map(mapper).orElse(0))
+        List<SlotitemMst> list = new ArrayList<>();
+        for (int i = 0; i < ship.getSlot().size(); i++) {
+            final int index = i;
+            Items.slotitemMst(items.get(ship.getSlot().get(i)))
+                .filter(item -> {
+                    if (Items.isAircraft(item) && excludeEmptyAircraft) {
+                        // 航空機なら搭載数が1以上のときのみ加算する
+                        Integer onSlot = (index < ship.getOnslot().size()) ? ship.getOnslot().get(index) : -1;
+                        return onSlot.intValue() > 0;
+                    } else {
+                        // それ以外は常に加算
+                        return true;
+                    }
+                })
+                .ifPresent(list::add);
+        }
+        // exslot は航空機が乗らない
+        Items.slotitemMst(items.get(ship.getSlotEx())).ifPresent(list::add);
+        
+        return list.stream()
+                .map(mapper)
+                .mapToInt(i -> i.intValue())
                 .sum();
     }
 
