@@ -58,7 +58,11 @@ public class ImageListener implements ContentListenerSpi {
             }
             // 汎用画像
             if (uri.startsWith("/kcs2/img/common/")) {
-                this.common(request, response);
+                this.images(request, response, "common");
+            }
+            // 任務関連画像
+            if (uri.startsWith("/kcs2/img/duty/")) {
+                this.images(request, response, "duty");
             }
         } catch (Exception e) {
             LoggerHolder.get().warn("画像ファイル処理中に例外が発生しました", e);
@@ -114,9 +118,9 @@ public class ImageListener implements ContentListenerSpi {
         }
     }
 
-    private void common(RequestMetaData request, ResponseMetaData response) throws IOException {
+    private void images(RequestMetaData request, ResponseMetaData response, String dirname) throws IOException {
         String uri = request.getRequestURI();
-        Path dir = Paths.get(AppConfig.get().getResourcesDir(), "common");
+        Path dir = Paths.get(AppConfig.get().getResourcesDir(), dirname);
         Path path = dir.resolve(Paths.get(URI.create(uri).getPath()).getFileName());
         if (response.getResponseBody().isPresent()) {
             this.write(response.getResponseBody().get(), path);
