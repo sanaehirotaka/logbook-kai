@@ -3426,6 +3426,12 @@
     "min_kaihi" : 39,
     "min_sakuteki" : 12
   }, {
+    "id" : 610,
+    "name" : "加賀改二戊",
+    "min_taisen" : 0,
+    "min_kaihi" : 28,
+    "min_sakuteki" : 50
+  }, {
     "id" : 611,
     "name" : "御蔵",
     "min_taisen" : 40,
@@ -3582,6 +3588,12 @@
     "min_kaihi" : 35,
     "min_sakuteki" : 10
   }, {
+    "id" : 646,
+    "name" : "加賀改二護",
+    "min_taisen" : 72,
+    "min_kaihi" : 26,
+    "min_sakuteki" : 54
+  }, {
     "id" : 678,
     "name" : "日振改",
     "min_taisen" : 40,
@@ -3683,6 +3695,12 @@
     "min_taisen" : 0,
     "min_kaihi" : 36,
     "min_sakuteki" : 0
+  }, {
+    "id" : 698,
+    "name" : "加賀改二",
+    "min_taisen" : 0,
+    "min_kaihi" : 28,
+    "min_sakuteki" : 51
   }, {
     "id" : 700,
     "name" : "薄雲改",
