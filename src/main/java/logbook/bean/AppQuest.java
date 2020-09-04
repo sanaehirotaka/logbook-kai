@@ -1,18 +1,12 @@
 package logbook.bean;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import logbook.bean.QuestList.Quest;
-import logbook.internal.LoggerHolder;
 import logbook.internal.Logs;
-import logbook.plugin.PluginServices;
 import lombok.Data;
 
 /**
@@ -64,21 +58,9 @@ public class AppQuest implements Serializable {
 
         int type = quest.getType();
 
-        InputStream is = PluginServices.getResourceAsStream("logbook/quest/" + quest.getNo() + ".json");
-        if (is != null) {
-            String resetType = null;
-            try {
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    mapper.enable(Feature.ALLOW_COMMENTS);
-                    AppQuestCondition condition = mapper.readValue(is, AppQuestCondition.class);
-                    resetType = condition.getResetType();
-                } finally {
-                    is.close();
-                }
-            } catch (Exception e) {
-                LoggerHolder.get().info("任務設定ファイルが読み込めませんでした。", e);
-            }
+        AppQuestCondition condition = AppQuestCondition.loadFromResource(quest.getNo());
+        if (condition != null) {
+            String resetType = condition.getResetType();
             if (resetType != null) {
                 switch (resetType) {
                 case "デイリー":

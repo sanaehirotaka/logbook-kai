@@ -1,14 +1,10 @@
 package logbook.internal.gui;
 
-import java.io.InputStream;
 import java.util.Optional;
 
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-
-import com.fasterxml.jackson.core.JsonParser.Feature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -26,7 +22,6 @@ import logbook.bean.AppQuestCondition.FleetCondition;
 import logbook.internal.LoggerHolder;
 import logbook.internal.QuestCollect;
 import logbook.internal.ThreadManager;
-import logbook.plugin.PluginServices;
 
 /**
  * 任務進捗確認
@@ -59,18 +54,10 @@ public class QuestProgress extends WindowController {
                 @Override
                 protected Optional<AppQuestCondition> call() throws Exception {
                     AppQuest quest = QuestProgress.this.quest;
-                    InputStream is = PluginServices.getResourceAsStream("logbook/quest/" + quest.getNo() + ".json");
-                    if (is != null) {
+                    AppQuestCondition condition = AppQuestCondition.loadFromResource(quest.getNo());
+                    if (condition != null) {
                         if (this.isCancelled()) {
                             return Optional.empty();
-                        }
-                        AppQuestCondition condition;
-                        try {
-                            ObjectMapper mapper = new ObjectMapper();
-                            mapper.enable(Feature.ALLOW_COMMENTS);
-                            condition = mapper.readValue(is, AppQuestCondition.class);
-                        } finally {
-                            is.close();
                         }
                         QuestCollect collect = QuestCollect.collect(quest, condition);
                         if (collect == null) {
