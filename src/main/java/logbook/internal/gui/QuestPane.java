@@ -134,7 +134,7 @@ public class QuestPane extends HBox {
             this.detail.setText(quest.getDetail().replaceAll("<br>", ""));
             this.setOnContextMenuRequested(this::showContextMenu);
 
-            if (PluginServices.getResource("logbook/quest/" + quest.getNo() + ".json") == null) {
+            if (PluginServices.getQuestResource(quest.getNo()) == null) {
                 this.condition.setVisible(false);
             }
         } catch (Exception e) {

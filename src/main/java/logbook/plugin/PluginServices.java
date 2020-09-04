@@ -59,4 +59,28 @@ public final class PluginServices {
     public static InputStream getResourceAsStream(String name) {
         return getClassLoader().getResourceAsStream(name);
     }
+
+    /**
+     * 任務のリソースを取得します。
+     * （どのコードが任務のリソースを使用しているかわかりやすくするため専用のメソッドを用意）
+     * 
+     * @param questNo 任務No
+     * @return リソースを読み込むためのURL
+     */
+    public static URL getQuestResource(int questNo) {
+        return getResource("logbook/quest/" + questNo + ".json");
+    }
+
+    /**
+     * 任務のリソースを読み込む入力ストリームを返します。
+     *（どのコードが任務のリソースを使用しているかわかりやすくするため専用のメソッドを用意）
+     *
+     * @param questNo 任務No
+     * @return リソースを読み込むための入力ストリーム
+     * @see ClassLoader#getResourceAsStream(String)
+     */
+    public static InputStream getQuestResourceAsStream(int questNo) {
+        return getResourceAsStream("logbook/quest/" + questNo + ".json");
+    }
+
 }

@@ -1,5 +1,6 @@
 package logbook.bean;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -7,10 +8,15 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonParser.Feature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import logbook.internal.LoggerHolder;
 import logbook.internal.Operator;
 import logbook.internal.QuestCollect;
 import logbook.internal.QuestCollect.Count;
 import logbook.internal.QuestCollect.Rank;
+import logbook.plugin.PluginServices;
 import lombok.Data;
 
 /**
@@ -31,6 +37,24 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
 
     /** 結果 */
     private Boolean result;
+
+    public static AppQuestCondition loadFromResource(int questNo) {
+        InputStream is = PluginServices.getQuestResourceAsStream(questNo);
+        if (is != null) {
+            try {
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.enable(Feature.ALLOW_COMMENTS);
+                    return mapper.readValue(is, AppQuestCondition.class);
+                } finally {
+                    is.close();
+                }
+            } catch (Exception e) {
+                LoggerHolder.get().info("任務設定ファイルが読み込めませんでした。", e);
+            }
+        }
+        return null;
+    }
 
     // internal use only
     public boolean isCollectStypeInternal() {
