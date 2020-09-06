@@ -1,0 +1,14 @@
+/* [436]練習航海及び警備任務を実施せよ！ */
+{
+    "type": "遠征",
+    "resetType" : "イヤリー",
+    "yearlyResetMonth": 3,
+    "conditions" : [
+        {"missions": ["練習航海"], "count": 1},
+        {"missions": ["長距離練習航海"], "count": 1},
+        {"missions": ["警備任務"], "count": 1},
+        {"missions": ["対潜警戒任務"], "count": 1},
+        {"missions": ["強行偵察任務"], "count": 1}
+    ]
+}
+

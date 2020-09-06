@@ -71,13 +71,19 @@ public class AppQuestDurationTest {
                 Assert.assertNotNull(value.get(249));
                 Assert.assertNull(value.get(249).get(0).getTo());
 
-                String quarterly = today.plusMonths(3-today.getMonthValue()%3).withZoneSameInstant(ZoneId.of("Asia/Tokyo")).format(DateTimeFormatter.ofPattern(dtf));
+                String quarterly = today.plusMonths(3-today.getMonthValue()%3).withDayOfMonth(1).withZoneSameInstant(ZoneId.of("Asia/Tokyo")).format(DateTimeFormatter.ofPattern(dtf));
                 Assert.assertNotNull(duration.getMap().get(quarterly));
                 value = duration.getMap().get(quarterly);
                 Assert.assertNotNull(value.get(861));
                 Assert.assertNull(value.get(861).get(0).getTo());
-                
-                // 本来ならイヤリー（8月）としてカウントすべきものだが、サポートするまでこうしておく
+
+                ZonedDateTime tmp = today.plusMonths(1).withDayOfMonth(1);
+                while (tmp.getMonthValue() != 8) {
+                    tmp = tmp.plusMonths(1);
+                }
+                String yearly8 = tmp.withZoneSameInstant(ZoneId.of("Asia/Tokyo")).format(DateTimeFormatter.ofPattern(dtf));
+                Assert.assertNotNull(duration.getMap().get(yearly8));
+                value = duration.getMap().get(yearly8);
                 Assert.assertNotNull(value.get(438));
                 Assert.assertNull(value.get(438).get(0).getTo());
                 

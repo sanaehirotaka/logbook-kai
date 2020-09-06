@@ -1,0 +1,14 @@
+/* [434]特設護衛船団司令部、活動開始！ */
+{
+    "type": "遠征",
+    "resetType" : "イヤリー",
+    "yearlyResetMonth": 2,
+    "conditions" : [
+        {"missions": ["警備任務"], "count": 1},
+        {"missions": ["海上護衛任務"], "count": 1},
+        {"missions": ["兵站強化任務"], "count": 1},
+        {"missions": ["海峡警備行動"], "count": 1},
+        {"missions": ["タンカー護衛任務"], "count": 1}
+    ]
+}
+

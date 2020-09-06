@@ -27,6 +27,8 @@ public class AppQuest implements Serializable {
     private static final int ONECE = 4;
     /** クォータリー */
     private static final int QUARTRELY = 5;
+    /** イヤリー */
+    private static final int YEARLY = 100;  // 艦これ的には「その他(5)」なためかぶらないように大きな数字にする
 
     /** No */
     private Integer no;
@@ -57,7 +59,8 @@ public class AppQuest implements Serializable {
         ZonedDateTime expire = null;
 
         int type = quest.getType();
-
+        int yearlyResetMonth = 0;
+        
         AppQuestCondition condition = AppQuestCondition.loadFromResource(quest.getNo());
         if (condition != null) {
             String resetType = condition.getResetType();
@@ -78,6 +81,10 @@ public class AppQuest implements Serializable {
                 case "クオータリー":
                 case "クォータリー":
                     type = QUARTRELY;
+                    break;
+                case "イヤリー":
+                    type = YEARLY;
+                    yearlyResetMonth = condition.getYearlyResetMonth();
                     break;
                 }
             }
@@ -119,6 +126,12 @@ public class AppQuest implements Serializable {
             // クオータリー最終月の翌月1日
             expire = base.withDayOfMonth(1)
                     .plusMonths(addMonth)
+                    .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
+        } else if (type == YEARLY) {
+            // 100 = イヤリー、艦これ上は5=他
+            expire = (base.getMonthValue() >= yearlyResetMonth ? base.plusYears(1) : base)
+                    .withMonth(yearlyResetMonth)
+                    .withDayOfMonth(1)
                     .withZoneSameInstant(ZoneId.of("Asia/Tokyo"));
         }
         if (expire != null) {

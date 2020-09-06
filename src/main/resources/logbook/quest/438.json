@@ -1,0 +1,13 @@
+/* [438]南西諸島方面の海上護衛を強化せよ！ */
+{
+    "type": "遠征",
+    "resetType" : "イヤリー",
+    "yearlyResetMonth": 8,
+    "conditions" : [
+        {"missions": ["兵站強化任務"], "count": 1},
+        {"missions": ["対潜警戒任務"], "count": 1},
+        {"missions": ["タンカー護衛任務"], "count": 1},
+        {"missions": ["南西諸島捜索撃滅戦"], "count": 1}
+    ]
+}
+

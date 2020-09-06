@@ -33,6 +33,9 @@ public class AppQuestCondition implements Predicate<QuestCollect> {
     /** 任務期間(文字列:単発,デイリー,ウィークリー,マンスリー,クオータリー) */
     private String resetType;
 
+    /** イヤリーのリセット月（イヤリー8月なら8） */
+    private Integer yearlyResetMonth;
+
     /** フィルター条件 */
     private FilterCondition filter;
 
