@@ -1,0 +1,27 @@
+/* [903]拡張「六水戦」、最前線へ！ */
+{
+    "resetType" : "クオータリー",
+    "filter" : {
+        "area": ["5-1", "5-4", "6-4", "6-5"],
+        "fleet": {
+            "operator": "AND",
+            "conditions": [
+                {"name": ["夕張改二"], "order": 1},
+                {
+                    "operator": "OR",
+                    "conditions": [
+                        {"name": ["睦月", "如月", "弥生", "卯月", "菊月", "望月"], "count": 2, "operator": "GE"},
+                        {"name": ["由良改二"]}
+                    ]
+                }
+                
+            ]
+        }
+    },
+    "conditions" : [
+        {"boss": true, "area": ["5-1"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["5-4"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["6-4"], "rank": ["S"], "count": 1},
+        {"boss": true, "area": ["6-5"], "rank": ["S"], "count": 1}
+    ]
+}
