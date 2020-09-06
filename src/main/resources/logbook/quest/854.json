@@ -2,9 +2,9 @@
 {
     "resetType" : "クオータリー",
     "conditions" : [
-        {"boss": true, "area": ["2-4"], "rank": ["A"], "count": 1},
-        {"boss": true, "area": ["6-1"], "rank": ["A"], "count": 1},
-        {"boss": true, "area": ["6-3"], "rank": ["A"], "count": 1},
+        {"boss": true, "area": ["2-4"], "rank": ["S", "A"], "count": 1},
+        {"boss": true, "area": ["6-1"], "rank": ["S", "A"], "count": 1},
+        {"boss": true, "area": ["6-3"], "rank": ["S", "A"], "count": 1},
         {"boss": true, "area": ["6-4"], "rank": ["S"], "count": 1}
     ]
 }
