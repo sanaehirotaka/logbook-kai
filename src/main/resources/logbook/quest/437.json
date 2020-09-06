@@ -1,0 +1,13 @@
+/* [437]小笠原沖哨戒線の強化を実施せよ！ */
+{
+    "type": "遠征",
+    "resetType" : "イヤリー",
+    "yearlyResetMonth": 5,
+    "conditions" : [
+        {"missions": ["対潜警戒任務"], "count": 1},
+        {"missions": ["小笠原沖哨戒線"], "count": 1},
+        {"missions": ["小笠原沖戦闘哨戒"], "count": 1},
+        {"missions": ["南西方面航空偵察作戦"], "count": 1}
+    ]
+}
+
