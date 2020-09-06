@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import logbook.internal.Logs;
-import logbook.internal.gui.MissionLogController.SimpleMissionLog;
+import logbook.internal.MissionLogs.SimpleMissionLog;
 
 /**
  * 遠征ログの詳細行
