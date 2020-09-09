@@ -19,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import logbook.internal.CheckUpdate;
 import logbook.internal.LoggerHolder;
 import logbook.internal.ThreadManager;
 import logbook.internal.Version;
@@ -76,7 +77,7 @@ public class VersionController extends WindowController {
             ThreadManager.getExecutorService()
                     .submit(() -> {
                         Desktop.getDesktop()
-                                .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/releases"));
+                                .browse(URI.create("https://github.com/" + CheckUpdate.REPOSITORY_PATH + "/releases"));
                         return null;
                     });
         } catch (Exception e) {
@@ -90,7 +91,7 @@ public class VersionController extends WindowController {
             ThreadManager.getExecutorService()
                     .submit(() -> {
                         Desktop.getDesktop()
-                                .browse(URI.create("https://github.com/sanaehirotaka/logbook-kai/issues"));
+                                .browse(URI.create("https://github.com/" + CheckUpdate.REPOSITORY_PATH + "/issues"));
                         return null;
                     });
         } catch (Exception e) {
