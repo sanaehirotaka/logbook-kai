@@ -31,7 +31,7 @@ var version = System.getProperty("install_version");
 // Prerelease を使うかどうか
 var usePrerelease = System.getProperty("use_prerelease");
 // GitHub Releases API
-var releaseURL = "https://api.github.com/repos/sanaehirotaka/logbook-kai/releases/tags/v" + version;
+var releaseURL = "https://api.github.com/repos/Sdk0815/logbook-kai/releases/tags/v" + version;
 var release = {};
 var asset = {};
 

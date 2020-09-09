@@ -5,6 +5,14 @@
 [![GitHub All Releases](https://img.shields.io/github/downloads/sanaehirotaka/logbook-kai/total)](https://github.com/sanaehirotaka/logbook-kai/releases)
 [![GitHub Release Date](https://img.shields.io/github/release-date/sanaehirotaka/logbook-kai)](https://github.com/sanaehirotaka/logbook-kai/releases)
 
+## ****重要なお知らせ****
+v20.9.2 以降のバージョンはオリジナルの [sanaehirotaka さんのリポジトリ](https://github.com/sanaehirotaka/logbook-kai/)ではなく
+[Sdk0815 の fork](https://github.com/Sdk0815/logbook-kai/)にて開発を行います。
+最新バージョンも[こちら](https://github.com/Sdk0815/logbook-kai/releases)からダウンロードしてください。
+今後は[Issue（問題報告・要望）](https://github.com/Sdk0815/logbook-kai/issues)や[Pull Request（変更要求）](https://github.com/Sdk0815/logbook-kai/pulls)などもそちらにオープンしていただきますようお願いします。
+
+### 概要
+
 **航海日誌 (logbook-kai)** は、「艦隊これくしょん ～艦これ～」をより遊びやすくするための外部ツールです。
 
 画面がコンパクトなのが特徴です。

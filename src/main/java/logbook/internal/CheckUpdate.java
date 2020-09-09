@@ -37,14 +37,17 @@ import logbook.internal.gui.Tools;
  */
 public class CheckUpdate {
 
+    /** GitHub リポジトリのパス */
+    public static final String REPOSITORY_PATH = "Sdk0815/logbook-kai";
+
     /** 更新確認先 Github tags API */
-    private static final String TAGS = "https://api.github.com/repos/sanaehirotaka/logbook-kai/tags";
+    private static final String TAGS = "https://api.github.com/repos/" + REPOSITORY_PATH + "/tags";
 
     /** 更新確認先 Github releases API */
-    private static final String RELEASES = "https://api.github.com/repos/sanaehirotaka/logbook-kai/releases/tags/";
+    private static final String RELEASES = "https://api.github.com/repos/" + REPOSITORY_PATH + "/releases/tags/";
 
     /** ダウンロードサイトを開くを選択したときに開くURL */
-    private static final String OPEN_URL = "https://github.com/sanaehirotaka/logbook-kai/releases";
+    private static final String OPEN_URL = "https://github.com/" + REPOSITORY_PATH + "/releases";
 
     /** 検索するtagの名前 */
     /* 例えばv20.1.1 の 20.1.1にマッチ */
