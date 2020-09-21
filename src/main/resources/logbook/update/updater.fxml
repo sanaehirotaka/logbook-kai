@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.web.WebView?>
+
+<StackPane prefHeight="600.0" prefWidth="700.0" styleClass="updaterWindow" xmlns:fx="http://javafx.com/fxml" fx:controller="logbook.update.UpdaterController">
+   <padding>
+      <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+   </padding>
+   <VBox>
+      <children>
+         <TextFlow style="-fx-font-weight:bold">
+            <children>
+               <Text fx:id="version" strokeType="OUTSIDE" strokeWidth="0.0" text="航海日誌 v{0}への更新を行います。&#xD;" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="必ず更新の前に航海日誌を終了させてください。&#xD;" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="更新の準備が出来ましたら[更新]を押して更新を行ってください。" />
+            </children>
+         </TextFlow>
+         <StackPane VBox.vgrow="ALWAYS">
+            <children>
+               <WebView fx:id="releaseNote" />
+            </children>
+         </StackPane>
+         <StackPane>
+            <VBox alignment="CENTER">
+               <children>
+                  <CheckBox onAction="#hadQuit" mnemonicParsing="false" text="航海日誌を終了しました" />
+                  <Button fx:id="updateButton" onAction="#update" disable="true" mnemonicParsing="false" text="更新" />
+               </children>
+            </VBox>
+         </StackPane>
+      </children>
+   </VBox>
+   <stylesheets>
+      <URL value="@updater.css" />
+   </stylesheets>
+</StackPane>

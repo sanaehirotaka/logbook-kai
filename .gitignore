@@ -24,3 +24,9 @@ hs_err_pid*
 /launch.bat
 /README.url
 /*.csv
+
+# IDE config
+/.settings/
+/.classpath
+/.factorypath
+/.project

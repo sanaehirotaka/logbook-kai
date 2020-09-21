@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane prefHeight="200.0" prefWidth="700.0" styleClass="progressWindow" xmlns:fx="http://javafx.com/fxml" fx:controller="logbook.update.ProgressController">
+   <padding>
+      <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+   </padding>
+   <VBox>
+      <children>
+         <Label text="更新を確認しています" />
+         <ListView fx:id="progress" focusTraversable="false" />
+      </children>
+   </VBox>
+   <stylesheets>
+      <URL value="@updater.css" />
+   </stylesheets>
+</StackPane>
